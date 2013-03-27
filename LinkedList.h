@@ -34,16 +34,17 @@ public:
             this->size = 1;
         }
     }
-    ~LinkedList(){
-        while(this->head){
-            this->remove();
-        }
-    }
+//    ~LinkedList(){//looping infinitely
+//        while(this->size > 0){
+//            //cout << "check" << endl;
+//            this->remove();
+//        }
+//    }
     // Insert new element into list, defaults to the end.
     bool insert(T *data){
         // Critical failure, inconsistency detected.
         if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
-            cout << "failure" << endl;//debug
+            cout << "critical failure" << endl;//debug
             return false;
         }
 
@@ -66,11 +67,13 @@ public:
 
         // Normal list, insert at tail.
         if(this->tail){
+            //cout << "test" << endl;
             this->cur = new struct NODE<T>;
             this->cur->data = data;
             this->cur->prev = this->tail;
             this->tail->next = this->cur;
             this->cur->next = NULL; 
+            this->tail = this->cur;
             this->cur = NULL;
 
             this->size++;
@@ -134,17 +137,24 @@ public:
                 this->cur = this->cur->next;
             }
         }
+        T ret = *this->cur->data;
         this->cur = NULL;
-        return *this->cur->data;
+        return ret;
     }
 
     // Deletes and returns the value of head.
+    // Cases necessary:
+    //   1. Inconsistencies.
+    //   2. One item in list.
+    //   3. No items remaining.
+    //   4. Normally populated list.
     T remove(){
-        // If size == 1.
+        // Inconsistent.
         if((this->head != this->tail)&&(this->size==1)){
             cout << "critical failure" << endl;
             return 0;
         }
+        // One item remaining.
         if((this->head == this->tail)&&(this->size == 1)){
             cout << "\tremove size == 1" << endl;//debug
             this->cur = this->head;
@@ -156,24 +166,40 @@ public:
             this->size--;
             return ret;
         }
-        if(this->size > 0){
-            cout<<"test"<<endl;//debug
+        // List is empty.
+        if(this->head == NULL && this->tail == NULL && this->size == 0){
+            cout << "list is empty!" << endl;
+            return 0;
+        }
+        // Normally populated.
+        if(this->head != this->tail && this->size > 0){
+            //cout << "normal remove" << endl;
             this->cur = this->head;
             T ret = *this->cur->data;
-            this->cur->next->prev = NULL;//fails here, need to put this code in an if statement.
+            this->cur->next->prev = NULL;
             this->head = this->cur->next;
             delete this->cur;
             this->size--;
             return ret;
         }
-        //if(){
-            
-        //}
-    // Catch error.
+        // Catch error.
+        cout << "\tfailure" << endl;
+        if(this->head == this->tail){
+            cout << "fuck" << endl;
+        }
         return 0;//replace with error checking
     }
 
     // Deletes and returns the value of <index>.
+    // Cases to check:
+    // 1.Check valid index
+    // 2.Index is head
+    // 3.Index is tail
+    // 4.Normal index
+    // 4a.Find correct node
+    // 4b.Isolate node
+    // 4c.Connect sibling nodes
+    // 4d.Delete isolated node
     T remove(int index){
         // Index is head.
         if(index == 0){
@@ -208,7 +234,7 @@ public:
 
     // Returns the number of elements in the list.
     int getSize(){
-        return size;
+        return this->size;
     }
 
 };
