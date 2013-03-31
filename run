@@ -1,0 +1,4 @@
+#!/bin/bash
+MAIN="main"
+
+make clean && make && ./$(MAIN)
