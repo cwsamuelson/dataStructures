@@ -2,7 +2,19 @@
 #define LINKED_LIST_H
 
 #include<cstdlib>
+#include<cstdio>
 #include<iostream>
+
+#ifdef  DEBUG
+#define DEBUG_TEST 1
+#else
+#define DEBUG_TEST 0
+#endif
+
+#define debug_print(fmt)\
+        do{if(DEBUG_TEST) fprintf(stderr, "%s:%d:%s() " fmt, __FILE__,\
+                            __LINE__,__func__);} while(0)
+
 using namespace std;
 
 template <class T>
@@ -11,7 +23,6 @@ private:
     template <class X>
     struct NODE{
         X *data;
-        struct NODE<X> *prev;
         struct NODE<X> *next;
     };
 
@@ -26,6 +37,7 @@ public:
         this->tail = NULL;
         this->size = 0;
     }
+
     LinkedList(T *data){
         if(data){
             this->head = new struct NODE<T>;
@@ -36,7 +48,7 @@ public:
     }
 //    ~LinkedList(){//looping infinitely
 //        while(this->size > 0){
-//            //cout << "check" << endl;
+//            debug_print("\tcheck\n");
 //            this->remove();
 //        }
 //    }
@@ -44,16 +56,16 @@ public:
     bool insert(T *data){
         // Critical failure, inconsistency detected.
         if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
-            cout << "critical failure" << endl;//debug
+            debug_print("\tcritical failure\n");
             return false;
         }
 
         // List is empty, create first node with new data.
-        if(this->head == NULL && this->tail == NULL){
+        if(this->head == NULL && this->tail == NULL && this->size == 0){
+            debug_print("\tempty list\n");
             // Set up a new node and assign it to head and tail as the only existing node.
             this->cur = new struct NODE<T>;
             this->cur->data = data;
-            this->cur->prev = NULL;
             this->cur->next = NULL;
 
             this->head = this->cur;
@@ -66,13 +78,12 @@ public:
         }
 
         // Normal list, insert at tail.
-        if(this->tail){
-            //cout << "test" << endl;
+        if(this->tail != NULL){
+            debug_print("\tnormal\n");
             this->cur = new struct NODE<T>;
             this->cur->data = data;
-            this->cur->prev = this->tail;
-            this->tail->next = this->cur;
             this->cur->next = NULL; 
+            this->tail->next = this->cur;
             this->tail = this->cur;
             this->cur = NULL;
 
@@ -107,10 +118,7 @@ public:
             if(this.tail){
                 struct NODE<T> temp = new struct NODE<T>;
                 temp.data = data;
-                temp.prev = this.cur;
                 temp.next = this.cur.next;
-                temp.next.prev = temp;
-                temp.prev.next = temp;
                 this.cur = NULL;
 
                 this.size++;
@@ -121,23 +129,35 @@ public:
     }
 
     // Returns value of first element.
-    T get(){
-        if(this->head != NULL){
-            return *this->head->data;
+    T* get(){
+        if(this->head == NULL){
+            debug_print("\ttestnullehad\n");
+            return NULL;
+        }else{
+            debug_print("\ttestelse\n");
+            return this->head->data;
+        }
+        if(this->size == 0){
+            debug_print("\ttestsize0\n");
+            return NULL;
         }
         else
-            return 0;//replace with error testing
+            return NULL;
     }
 
     // Returns value of element at <index>.
-    T get(int index){
+    T* get(int index){
+        if(index == 0){
+            debug_print("\tindex is 0! \n");
+            return NULL;
+        }
         this->cur = this->head;
         for(int i = 0; i < index; i++){
             if(this->cur->next){
                 this->cur = this->cur->next;
             }
         }
-        T ret = *this->cur->data;
+        T *ret = this->cur->data;
         this->cur = NULL;
         return ret;
     }
@@ -151,12 +171,19 @@ public:
     T remove(){
         // Inconsistent.
         if((this->head != this->tail)&&(this->size==1)){
-            cout << "critical failure" << endl;
-            return 0;
+            debug_print("\tcritical failure\n");
+            return -1;
         }
+
+        // List is empty.
+        if(this->head == NULL && this->tail == NULL && this->size == 0){
+            debug_print("\tlist is empty, no remove\n");
+            return -1;
+        }
+
         // One item remaining.
         if((this->head == this->tail)&&(this->size == 1)){
-            cout << "\tremove size == 1" << endl;//debug
+            debug_print("\tremove size == 1\n");
             this->cur = this->head;
             T ret = *this->cur->data;
             this->head = NULL;
@@ -166,28 +193,21 @@ public:
             this->size--;
             return ret;
         }
-        // List is empty.
-        if(this->head == NULL && this->tail == NULL && this->size == 0){
-            cout << "list is empty!" << endl;
-            return 0;
-        }
+
         // Normally populated.
         if(this->head != this->tail && this->size > 0){
-            //cout << "normal remove" << endl;
+            debug_print("normal remove\n");
             this->cur = this->head;
             T ret = *this->cur->data;
-            this->cur->next->prev = NULL;
             this->head = this->cur->next;
             delete this->cur;
             this->size--;
             return ret;
         }
+
         // Catch error.
-        cout << "\tfailure" << endl;
-        if(this->head == this->tail){
-            cout << "fuck" << endl;
-        }
-        return 0;//replace with error checking
+        debug_print("\tfailure\n");
+        return -1;//replace with error checking
     }
 
     // Deletes and returns the value of <index>.
@@ -203,29 +223,25 @@ public:
     T remove(int index){
         // Index is head.
         if(index == 0){
-            cout << "check 0" << endl;//debug
+            debug_print("\tcheck 0\n");
             return this->remove();
         }else
         // Index is tail.
         if(index == this->size - 1){
-            cout << "tail" << endl;//debug
+            debug_print("\ttail\n");
             this->cur = this->tail;
             T ret = *this->cur->data;
-            this->cur->prev->next = NULL;
-            this->tail = this->cur->prev;
             delete this->cur;
             this->size--;
             return ret;
         }else{// Index is normal.
-            cout << "normal" << endl;//debug
+            debug_print("\tnormal\n");
             for(int i = 0; i < index; i++){
                 if(this->cur->next){
                     this->cur = this->cur->next;
                 }
             }
             T ret = *this->cur->data;
-            this->cur->next->prev = this->cur->prev;
-            this->cur->prev->next = this->cur->next;
             delete this->cur;
             this->size--;
             return ret;
