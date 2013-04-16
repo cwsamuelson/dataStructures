@@ -129,6 +129,7 @@ public:
     }
 
     // Returns value of first element.
+    // Requires protection by user.
     T* get(){
         if(this->head == NULL){
             debug_print("\ttestnullehad\n");
@@ -146,6 +147,7 @@ public:
     }
 
     // Returns value of element at <index>.
+    // Requires protection by user.
     T* get(int index){
         if(index == 0){
             debug_print("\tindex is 0! \n");
