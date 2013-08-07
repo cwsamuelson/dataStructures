@@ -2,11 +2,11 @@ all: LinkedList
 
 default: LinkedList
 
-LinkedList: LinkedList.h main.c
-	g++  -Wall -o main main.c
+LinkedList: LinkedList.hh main.cc
+	g++  -Wall -o main main.cc
 
-debug: LinkedList.h main.c
-	g++ -DDEBUG -g -Wall -o main main.c
+debug: LinkedList.hh main.cc
+	g++ -DDEBUG -g -Wall -o main main.cc
 
 clean:
 	rm -f main
