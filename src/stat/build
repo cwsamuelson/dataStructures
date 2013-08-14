@@ -1,0 +1,6 @@
+#!/bin/bash
+
+g++ -o LinkedList.o LinkedList.cc
+
+g++ -o main test.cc LinkedList.cc
+
