@@ -1,0 +1,6 @@
+#!/bin/bash
+
+g++ -o stack.o stack.cc
+
+g++ -o main test.cc stack.cc
+
