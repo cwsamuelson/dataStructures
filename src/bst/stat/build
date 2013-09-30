@@ -1,0 +1,8 @@
+#!/bin/bash
+
+g++ -c bst.cc
+
+g++ -c test.cc
+
+g++ -o main test.o bst.o
+
