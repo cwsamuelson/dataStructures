@@ -137,17 +137,17 @@ public:
     // Requires protection by user.
         if(this->head == NULL){
             debug_print("\ttestnullehad\n");
-            return NULL;
+            return -1;
         }else{
             debug_print("\ttestelse\n");
             return this->head->data;
         }
         if(this->size == 0){
             debug_print("\ttestsize0\n");
-            return NULL;
+            return -2;
         }
         else
-            return NULL;
+            return -3;
     }
 
     // Returns the number of elements in the list.

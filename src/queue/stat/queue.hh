@@ -27,14 +27,15 @@ private:
     NODE *cur;
     int size;
 
+    void init();
+
 public:
     queue();
-
     queue(int data);
 
 //    ~queue(){//looping infinitely
 
-    bool enqueue(int data);
+    int enqueue(int data);
     int dequeue();
     int peek();
 
@@ -44,3 +45,4 @@ public:
 };
 
 #endif
+

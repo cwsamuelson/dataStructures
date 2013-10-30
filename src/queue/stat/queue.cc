@@ -1,20 +1,17 @@
 #include"queue.hh"
 
-using namespace std;
-
-queue::queue(){
+void queue::init(){
     this->head = NULL;
     this->tail = NULL;
     this->size = 0;
 }
+queue::queue(){
+    this->init();
+}
 
 queue::queue(int data){
-    if(data){
-        this->head = new struct NODE;
-        this->head->data = data;
-        this->tail = this->head;
-        this->size = 1;
-    }
+    this->init();
+    this->enqueue(data);
 }
 
 //    ~queue(){//looping infinitely
@@ -24,11 +21,11 @@ queue::queue(int data){
 //        }
 //    }
 
-bool enqueue(int data){
+int queue::enqueue(int data){
     // Critical failure, inconsistency detected.
     if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
         debug_print("\tcritical failure\n");
-        return false;
+        return -1;
     }
 
     // List is empty, create first node with new data.
@@ -45,7 +42,7 @@ bool enqueue(int data){
 
         this->size = 1;
         // Success!
-        return true;
+        return data;
     }
 
     // Normal list, insert at tail.
@@ -60,14 +57,14 @@ bool enqueue(int data){
 
         this->size++;
         // Success!
-        return true;
+        return data;
     }
 
     // Execution should never reach this point, return failure when it does.
-    return false;
+    return -2;
 }
 
-int dequeue(){
+int queue::dequeue(){
     // Inconsistent.
     if((this->head != this->tail) && (this->size==1)){
         debug_print("\tcritical failure\n");
@@ -77,14 +74,14 @@ int dequeue(){
     // List is empty.
     if(this->head == NULL && this->tail == NULL && this->size == 0){
         debug_print("\tlist is empty, no remove\n");
-        return -1;
+        return -2;
     }
 
     // One item remaining.
     if((this->head == this->tail) && (this->size == 1)){
         debug_print("\tremove size == 1\n");
         this->cur = this->head;
-        int ret = *this->cur->data;
+        int ret = this->cur->data;
         this->head = NULL;
         this->tail = NULL;
         delete this->cur;
@@ -97,7 +94,7 @@ int dequeue(){
     if(this->head != this->tail && this->size > 0){
         debug_print("normal remove\n");
         this->cur = this->head;
-        int ret = *this->cur->data;
+        int ret = this->cur->data;
         this->head = this->cur->next;
         delete this->cur;
         this->size--;
@@ -106,25 +103,25 @@ int dequeue(){
 
     // Catch error.
     debug_print("\tfailure\n");
-    return -1;//replace with error checking
+    return -3;//replace with error checking
 }
 
-int peek(){
+int queue::peek(){
 // Returns value of first element.
 // Requires protection by user.
     if(this->head == NULL){
-        debug_print("\ttestnullehad\n");
-        return NULL;
+        debug_print("\ttestnullhead\n");
+        return -1;
     }else{
         debug_print("\ttestelse\n");
         return this->head->data;
     }
     if(this->size == 0){
         debug_print("\ttestsize0\n");
-        return NULL;
+        return 0;
     }
     else
-        return NULL;
+        return -2;
 }
 
 // Returns the number of elements in the list.

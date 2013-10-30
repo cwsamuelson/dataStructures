@@ -1,6 +1,6 @@
 #!/bin/bash
 
-g++ -o queue.o queue.cc
+g++ -c -Wall queue.cc
 
-g++ -o main test.cc queue.cc
+g++ -o main -Wall test.cc queue.o
 
