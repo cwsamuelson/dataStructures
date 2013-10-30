@@ -48,11 +48,11 @@ public:
 
 //    ~stack(){//looping infinitely
 
-    bool push(int data){
+    int push(int data){
         // Critical failure, inconsistency detected.
         if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
             debug_print("\tcritical failure\n");
-            return false;
+            return -1;
         }
 
         // stack is empty, create first node with new data.
@@ -69,7 +69,7 @@ public:
 
             this->size = 1;
             // Success!
-            return true;
+            return data;
         }
 
         // Normal state push head
@@ -82,10 +82,10 @@ public:
             this->cur = NULL;
             this->size++;
             // Success!
-            return true;
+            return data;
         }
         // Execution should never reach this point, return failure when it does.
-        return false;
+        return -3;
     }
 
     int pop(){
@@ -98,7 +98,7 @@ public:
         // List is empty.
         if(this->head == NULL && this->tail == NULL && this->size == 0){
             debug_print("\tlist is empty, no remove\n");
-            return -1;
+            return -2;
         }
 
         // One item remaining.
@@ -128,7 +128,7 @@ public:
 
         // Catch error.
         debug_print("\tfailure\n");
-        return -1;//replace with error checking
+        return -3;//replace with error checking
     }
 
     int peek(){
@@ -141,7 +141,7 @@ public:
         // List is empty.
         if(this->head == NULL && this->tail == NULL && this->size == 0){
             debug_print("\tlist is empty, nothing to return\n");
-            return -1;
+            return -2;
         }
 
         // One item remaining.
@@ -162,7 +162,7 @@ public:
 
         // Catch error.
         debug_print("\tfailure\n");
-        return -1;//replace with error checking
+        return -3;//replace with error checking
     }
 
     // Returns the number of elements in the list.
@@ -172,3 +172,4 @@ public:
 };
 
 #endif
+

@@ -1,20 +1,17 @@
 #include"stack.hh"
 
-using namespace std;
-
-stack::stack(){
+void stack::init(){
     this->head = NULL;
     this->tail = NULL;
     this->size = 0;
 }
+stack::stack(){
+    this->init();
+}
 
 stack::stack(int data){
-    if(data){
-        this->head = new struct NODE;
-        this->head->data = data;
-        this->tail = this->head;
-        this->size = 1;
-    }
+    this->init();
+    this->push(data);
 }
 
 //    ~stack(){//looping infinitely
@@ -25,11 +22,11 @@ stack::stack(int data){
 //    }
 
     // Insert new element onto stack
-bool stack::push(int data){
+int stack::push(int data){
     // Critical failure, inconsistency detected.
     if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
         debug_print("\tcritical failure\n");
-        return false;
+        return -1;
     }
 
     // stack is empty, create first node with new data.
@@ -46,7 +43,7 @@ bool stack::push(int data){
 
         this->size = 1;
         // Success!
-        return true;
+        return data;
     }
 
     // Normal state push head
@@ -59,10 +56,10 @@ bool stack::push(int data){
         this->cur = NULL;
         this->size++;
         // Success!
-        return true;
+        return data;
     }
     // Execution should never reach this point, return failure when it does.
-    return false;
+    return -2;
 }
 
     // Deletes and returns the value of head.
@@ -81,7 +78,7 @@ int stack::pop(){
     // List is empty.
     if(this->head == NULL && this->tail == NULL && this->size == 0){
         debug_print("\tlist is empty, no remove\n");
-        return -1;
+        return -2;
     }
 
     // One item remaining.
@@ -124,7 +121,7 @@ int stack::peek(){
     // List is empty.
     if(this->head == NULL && this->tail == NULL && this->size == 0){
         debug_print("\tlist is empty, nothing to return\n");
-        return -1;
+        return -2;
     }
 
     // One item remaining.

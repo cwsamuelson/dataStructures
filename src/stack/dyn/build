@@ -1,4 +1,4 @@
 #!/bin/bash
 
-g++ -o main test.cc
+g++ -o main -Wall test.cc
 

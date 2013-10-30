@@ -28,14 +28,15 @@ private:
     NODE *cur;
     int size;
 
+    void init();
+
 public:
     stack();
-
     stack(int data);
 
-//    ~stack(){//looping infinitely
+//    ~stack();//looping infinitely
 
-    bool push(int data);
+    int push(int data);
     int pop();
     int peek();
 
@@ -44,3 +45,4 @@ public:
 };
 
 #endif
+
