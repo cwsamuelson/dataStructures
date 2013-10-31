@@ -1,6 +1,6 @@
 #!/bin/bash
 
-g++ -o LinkedList.o LinkedList.cc
+g++ -c -Wall LinkedList.cc
 
-g++ -o main test.cc LinkedList.cc
+g++ -o main -Wall test.cc LinkedList.o
 

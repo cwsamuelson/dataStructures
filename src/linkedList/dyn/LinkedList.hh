@@ -22,7 +22,7 @@ class LinkedList{
 private:
     template <class X>
     struct NODE{
-        X *data;
+        X data;
         struct NODE<X> *next;
     };
 
@@ -38,7 +38,7 @@ public:
         this->size = 0;
     }
 
-    LinkedList(T *data){
+    LinkedList(T data){
         if(data){
             this->head = new struct NODE<T>;
             this->head->data = data;
@@ -53,11 +53,11 @@ public:
 //        }
 //    }
     // Insert new element into list, defaults to the end.
-    bool insert(T *data){
+    int insert(T data){
         // Critical failure, inconsistency detected.
         if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
             debug_print("\tcritical failure\n");
-            return false;
+            return -1;
         }
 
         // List is empty, create first node with new data.
@@ -74,7 +74,7 @@ public:
 
             this->size = 1;
             // Success!
-            return true;
+            return data;
         }
 
         // Normal list, insert at tail.
@@ -89,21 +89,21 @@ public:
 
             this->size++;
             // Success!
-            return true;
+            return data;
         }
         // Execution should never reach this point, return failure when it does.
-        return false;
+        return -3;
     }
     // Insert new element into list, new element will be element number <index>.
-    bool insert(T *data, int index){
+    int insert(T data, int index){
         // Bad index value.
         if(index > this.size){
-            return false;
+            return -1;
         }
 
         // Critical failure, inconsistency detected.
         if((this.head = NULL && this.tail) || (this.head && this.tail == NULL)){
-            return false;
+            return -2;
         }
 
         // Normal list.
@@ -123,35 +123,35 @@ public:
 
                 this.size++;
                 // Success!
-                return true;
+                return data;
             }
         }
     }
 
     // Returns value of first element.
     // Requires protection by user.
-    T* get(){
+    T get(){
         if(this->head == NULL){
             debug_print("\ttestnullehad\n");
-            return NULL;
+            return -1;
         }else{
             debug_print("\ttestelse\n");
             return this->head->data;
         }
         if(this->size == 0){
             debug_print("\ttestsize0\n");
-            return NULL;
+            return -2;
         }
         else
-            return NULL;
+            return -3;
     }
 
     // Returns value of element at <index>.
     // Requires protection by user.
-    T* get(int index){
+    T get(int index){
         if(index == 0){
             debug_print("\tindex is 0! \n");
-            return NULL;
+            return -1;
         }
         this->cur = this->head;
         for(int i = 0; i < index; i++){
@@ -159,7 +159,7 @@ public:
                 this->cur = this->cur->next;
             }
         }
-        T *ret = this->cur->data;
+        T ret = this->cur->data;
         this->cur = NULL;
         return ret;
     }
@@ -180,14 +180,14 @@ public:
         // List is empty.
         if(this->head == NULL && this->tail == NULL && this->size == 0){
             debug_print("\tlist is empty, no remove\n");
-            return -1;
+            return -2;
         }
 
         // One item remaining.
         if((this->head == this->tail)&&(this->size == 1)){
             debug_print("\tremove size == 1\n");
             this->cur = this->head;
-            T ret = *this->cur->data;
+            T ret = this->cur->data;
             this->head = NULL;
             this->tail = NULL;
             delete this->cur;
@@ -200,7 +200,7 @@ public:
         if(this->head != this->tail && this->size > 0){
             debug_print("normal remove\n");
             this->cur = this->head;
-            T ret = *this->cur->data;
+            T ret = this->cur->data;
             this->head = this->cur->next;
             delete this->cur;
             this->size--;
@@ -209,7 +209,7 @@ public:
 
         // Catch error.
         debug_print("\tfailure\n");
-        return -1;//replace with error checking
+        return -3;//replace with error checking
     }
 
     // Deletes and returns the value of <index>.
@@ -232,7 +232,7 @@ public:
         if(index == this->size - 1){
             debug_print("\ttail\n");
             this->cur = this->tail;
-            T ret = *this->cur->data;
+            T ret = this->cur->data;
             delete this->cur;
             this->size--;
             return ret;
@@ -243,7 +243,7 @@ public:
                     this->cur = this->cur->next;
                 }
             }
-            T ret = *this->cur->data;
+            T ret = this->cur->data;
             delete this->cur;
             this->size--;
             return ret;

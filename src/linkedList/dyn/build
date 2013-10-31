@@ -1,4 +1,4 @@
 #!/bin/bash
 
-g++ -o main LinkedList.cc
+g++ -o main test.cc
 

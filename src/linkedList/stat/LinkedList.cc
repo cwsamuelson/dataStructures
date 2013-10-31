@@ -1,20 +1,18 @@
 #include"LinkedList.hh"
 
-using namespace std;
-
-LinkedList::LinkedList(){
+void LinkedList::init(){
     this->head = NULL;
     this->tail = NULL;
     this->size = 0;
 }
 
-LinkedList::LinkedList(int *data){
-    if(data){
-        this->head = new struct NODE;
-        this->head->data = data;
-        this->tail = this->head;
-        this->size = 1;
-    }
+LinkedList::LinkedList(){
+    this->init();
+}
+
+LinkedList::LinkedList(int data){
+    this->init();
+    this->insert(data);
 }
 
 //    ~LinkedList(){//looping infinitely
@@ -25,11 +23,11 @@ LinkedList::LinkedList(int *data){
 //    }
 
     // Insert new element into list, defaults to the end.
-bool LinkedList::insert(int *data){
+int LinkedList::insert(int data){
     // Critical failure, inconsistency detected.
     if((this->head == NULL && this->tail != NULL) || (this->head != NULL && this->tail == NULL)){
         debug_print("\tcritical failure\n");
-        return false;
+        return -1;
     }
 
     // List is empty, create first node with new data.
@@ -46,7 +44,7 @@ bool LinkedList::insert(int *data){
 
         this->size = 1;
         // Success!
-        return true;
+        return data;
     }
 
     // Normal list, insert at tail.
@@ -61,21 +59,21 @@ bool LinkedList::insert(int *data){
 
         this->size++;
         // Success!
-        return true;
+        return data;
     }
     // Execution should never reach this point, return failure when it does.
-    return false;
+    return -2;
 }
     // Insert new element into list, new element will be element number <index>.
-bool LinkedList::insert(int *data, int index){
+int LinkedList::insert(int data, int index){
     // Bad index value.
     if(index > this->size){
-        return false;
+        return -1;
     }
 
     // Critical failure, inconsistency detected.
     if((this->head = NULL && this->tail) || (this->head && this->tail == NULL)){
-        return false;
+        return -2;
     }
 
     // Normal list.
@@ -95,35 +93,36 @@ bool LinkedList::insert(int *data, int index){
 
             this->size++;
             // Success!
-            return true;
+            return data;
         }
     }
+    return -3;
 }
 
     // Returns value of first element.
     // Requires protection by user.
-int* LinkedList::get(){
+int LinkedList::get(){
     if(this->head == NULL){
         debug_print("\ttestnullehad\n");
-        return NULL;
+        return -1;
     }else{
         debug_print("\ttestelse\n");
         return this->head->data;
     }
     if(this->size == 0){
         debug_print("\ttestsize0\n");
-        return NULL;
+        return -2;
     }
     else
-        return NULL;
+        return -3;
 }
 
     // Returns value of element at <index>.
     // Requires protection by user.
-int* LinkedList::get(int index){
+int LinkedList::get(int index){
     if(index == 0){
         debug_print("\tindex is 0! \n");
-        return NULL;
+        return -1;
     }
     this->cur = this->head;
     for(int i = 0; i < index; i++){
@@ -131,7 +130,7 @@ int* LinkedList::get(int index){
             this->cur = this->cur->next;
         }
     }
-    int *ret = this->cur->data;
+    int ret = this->cur->data;
     this->cur = NULL;
     return ret;
 }
@@ -152,14 +151,14 @@ int LinkedList::remove(){
     // List is empty.
     if(this->head == NULL && this->tail == NULL && this->size == 0){
         debug_print("\tlist is empty, no remove\n");
-        return -1;
+        return -2;
     }
 
     // One item remaining.
     if((this->head == this->tail)&&(this->size == 1)){
         debug_print("\tremove size == 1\n");
         this->cur = this->head;
-        int ret = *this->cur->data;
+        int ret = this->cur->data;
         this->head = NULL;
         this->tail = NULL;
         delete this->cur;
@@ -172,7 +171,7 @@ int LinkedList::remove(){
     if(this->head != this->tail && this->size > 0){
         debug_print("normal remove\n");
         this->cur = this->head;
-        int ret = *this->cur->data;
+        int ret = this->cur->data;
         this->head = this->cur->next;
         delete this->cur;
         this->size--;
@@ -181,7 +180,7 @@ int LinkedList::remove(){
 
     // Catch error.
     debug_print("\tfailure\n");
-    return -1;//replace with error checking
+    return -3;//replace with error checking
 }
 
     // Deletes and returns the value of <index>.
@@ -204,7 +203,7 @@ int LinkedList::remove(int index){
     if(index == this->size - 1){
         debug_print("\ttail\n");
         this->cur = this->tail;
-        int ret = *this->cur->data;
+        int ret = this->cur->data;
         delete this->cur;
         this->size--;
         return ret;
@@ -215,7 +214,7 @@ int LinkedList::remove(int index){
                 this->cur = this->cur->next;
             }
         }
-        int ret = *this->cur->data;
+        int ret = this->cur->data;
         delete this->cur;
         this->size--;
         return ret;

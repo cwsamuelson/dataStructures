@@ -18,7 +18,7 @@
 class LinkedList{
 private:
     struct NODE{
-        int *data;
+        int data;
         struct NODE *next;
     };
 
@@ -28,26 +28,28 @@ private:
     NODE *cur;
     int size;
 
+    void init();
+
 public:
     LinkedList();
 
-    LinkedList(int *data);
+    LinkedList(int data);
 
 //    ~LinkedList(){//looping infinitely
 
     // Insert new element into list, defaults to the end.
-    bool insert(int *data);
+    int insert(int data);
 
     // Insert new element into list, new element will be element number <index>.
-    bool insert(int *data, int index);
+    int insert(int data, int index);
 
     // Returns value of first element.
     // Requires protection by user.
-    int* get();
+    int get();
 
     // Returns value of element at <index>.
     // Requires protection by user.
-    int* get(int index);
+    int get(int index);
 
     // Deletes and returns the value of head.
     int remove();
