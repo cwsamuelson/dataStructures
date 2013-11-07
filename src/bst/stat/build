@@ -1,8 +1,8 @@
 #!/bin/bash
 
-g++ -c bst.cc
+g++ -c -Wall bst.cc
 
-g++ -c test.cc
+g++ -c -Wall test.cc
 
-g++ -o main test.o bst.o
+g++ -o main -Wall test.o bst.o
 

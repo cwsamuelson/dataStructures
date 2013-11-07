@@ -1,19 +1,18 @@
 #include"bst.hh"
 
-using namespace std;
-
-bst::bst(){
+void bst::init(){
     this->left = NULL;
     this->right = NULL;
     this->size = 0;
 }
 
+bst::bst(){
+    init();
+}
+
 bst::bst(int key, int data){
-    this->key = key;
-    this->data = data;
-    this->left = NULL;
-    this->right = NULL;
-    this->size = 1;
+    init();
+    this->insert(key, data);
 }
 
 //    ~bst(){//looping infinitely
@@ -25,11 +24,10 @@ bst::bst(int key, int data){
 
 // Insert new element into list.
 int bst::insert(int key, int data){
-    int ret;
     // Critical failure, inconsistency detected.
     if((this->size < 0)
     || (this->size == 0 && (this->left != NULL || this->right != NULL))
-    || (this->size != 0 && (this->left == NULL && this->right == NULL))){
+    || (this->size > 1 && (this->left == NULL && this->right == NULL))){
         debug_print("\tcritical failure\n");
         debug_print("\tinconsistency detected\n");
         return -1;
@@ -46,7 +44,7 @@ int bst::insert(int key, int data){
 
         this->size = 1;
         // Success!
-        return 0;
+        return data;
     }
 
     // Normal list.
@@ -70,12 +68,12 @@ int bst::insert(int key, int data){
         this->size++;
 
         // Success!
-        return 0;
+        return data;
     }
 
     // Execution should never reach this point, return failure when it does.
     debug_print("\tcritical failure\n");
-    return -1;
+    return -2;
 }
 
 // Returns value of element at <index>.
@@ -83,56 +81,63 @@ int bst::get(int index){
     if(index == this->key){
         return this->data;
     }
-    else if(index < this->key){
+    else if(index < this->key && this->left != NULL){
         return this->left->get(index);
     }
-    else if(index > this->key){
+    else if(index > this->key && this->right != NULL){
         return this->right->get(index);
     }
     // Failure, no item found...handle this properly...
+    return -1;
 }
 
 int bst::remove(int index){
     if(index == this->key){
+        // no children
         if(this->left == NULL && this->right == NULL){
             // Clear for deletion.
+            return -1;
+        }
+        // One child
+        else if((this->left == NULL && this->right != NULL) || (this->left != NULL && this->right == NULL)){
+            int ret;
+            if(this->left != NULL){
+                ret = (int)this->left;
+            }
+            else if(this->right != NULL){
+                ret = (int)this->right;
+            }
+            return ret;
+        }
+        // Two child
+        else if(this->left != NULL && this->right != NULL){
             return -2;
-        }
-        else if(this->left != NULL && this->right == NULL){
-            // Sub-tree needs to be moved up before deleting node.
-            return (int)this->left;
-        }
-        else if(this->left == NULL && this->right != NULL){
-            // Sub-tree needs to be moved up before deleting node.
-            return (int)this->right;
         }
     }
     else if(index < this->key){
         int res = this->left->remove(index);
-        if(res == -2){
+        if(res == -1){
             delete this->left;
-            this->size--;
         }
-        else{
+        else if(res >= 0){
             bst *temp = this->left;
             this->left = (bst *)res;
             delete temp;
-            this->size--;
         }
     }
     else if(index > this->key){
         int res = this->right->remove(index);
-        if(res == -2){
+        if(res == -1){
             delete this->right;
-            this->size--;
         }
-        else{
+        else if(res >= 0){
             bst *temp = this->right;
             this->right = (bst *)res;
             delete temp;
-            this->size--;
         }
     }
+    this->size--;
+    return -3;
 }
 
     // Returns the number of elements in the list.

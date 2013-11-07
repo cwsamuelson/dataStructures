@@ -1,71 +1,35 @@
 #include"bst.hh"
 #include<iostream>
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 int main(int argc, char **argv){
     cout << "start" << endl;
-    int foo1 = 1;// key
-    int foo2 = 1;// data
-    int bar1 = 2;// key
-    int bar2 = 2;// data
-    int fu1  = 3;// key
-    int fu2  = 3;// data
-    int baz1 = 4;// key
-    int baz2 = 2;// data
+    int number = 4;
     bst test;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
+
+    cout << "\ttest.getSize():\t\t\t"       << test.getSize()   << endl;
     cout << endl;
-    cout << "\ttest.insert(foo):\t\t"       << test.insert(foo1, foo2)      << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get(foo1)               << endl;
-    cout << endl;
-    cout << "\ttest.insert(bar):\t\t"       << test.insert(bar1, bar2)      << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get(foo1)               << endl;
-    cout << endl;
-    cout << "\ttest.insert(fu):\t\t"        << test.insert(fu1, fu2)        << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get(foo1)               << endl;
-    cout << endl;
-    cout << "\ttest.insert(baz):\t\t"       << test.insert(baz1, baz2)      << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get(foo1)               << endl;
-    cout << endl;
-    cout << "\ttest.insert(bar):\t\t"       << test.insert(bar1, bar2)      << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << *test.get(foo1)              << endl;
-    cout << endl;
-    cout << "\ttest.remove(baz):\t\t\t"     << test.remove(baz)             << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get()                   << endl;
-    cout << endl;
-    cout << "\ttest.remove(fu):\t\t\t"      << test.remove(fu)              << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get()                   << endl;
-    cout << endl;
-    cout << "\ttest.remove(bar):\t\t\t"     << test.remove(bar)             << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get()                   << endl;
-    cout << endl;
-    cout << "\ttest.remove(foo):\t\t\t"     << test.remove(foo)             << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()               << endl;
-    cout << "\ttest.get():\t\t\t"           << test.get()                   << endl;
-    //below should not seg fault
-    //below should not seg fault
-    //below should not seg fault
-    //below should not seg fault
-    //it does anyway
-    cout << endl;
-    cout << "\ttest.remove():\t\t\t"        << test.remove()     << endl;
-    cout << "\ttest.getSize():\t\t\t"       << test.getSize()    << endl;
-    if(test.get() != NULL){
-        cout << "\ttest.get():\t\t\t"       << test.get()       << endl;
+    for(int i = 0; i < number; i++){
+        cout << "\ttest.insert(" << i << "):\t\t\t"   << test.insert(i, i)    << endl;
+        cout << "\ttest.getSize():\t\t\t"   << test.getSize()               << endl;
+        for(int j = 0; j < i; j++){
+            cout << "\ttest.get(" << j << "):\t\t\t"       << test.get(j)   << endl;
+        }
+        cout << "\ttest.getMin():\t\t\t" << test.getMin() << endl;
+        cout << "\ttest.getMax():\t\t\t" << test.getMax() << endl;
+        cout << endl;
     }
-    if(test.get(test.getSize()) != NULL){
-        cout << "fail" << endl;
-        cout << "\ttest.get(test.getSize()):\t" << *test.get(test.getSize()) << endl;
+    cout << endl;
+    for(int i = number - 1; i > 0; i--){
+        cout << "\ttest.remove(" << i << "):\t\t\t" << test.remove(i)       << endl;
+        cout << "\ttest.getSize():\t\t\t"   << test.getSize()               << endl;
+        cout << "\ttest.get(" << i << "):\t\t\t"       << test.get(i)       << endl;
+        cout << endl;
     }
+    cout << endl;
     cout << "end" << endl;
+
     return 0;
 }

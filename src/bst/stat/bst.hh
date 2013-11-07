@@ -3,7 +3,6 @@
 
 #include<cstdlib>
 #include<cstdio>
-#include<iostream>
 
 #ifdef  DEBUG
 #define DEBUG_TEST 1
@@ -22,6 +21,7 @@ private:
     bst *left;
     bst *right;
     int size;
+    void init();
 
 public:
     bst();
@@ -52,3 +52,4 @@ public:
 };
 
 #endif
+
