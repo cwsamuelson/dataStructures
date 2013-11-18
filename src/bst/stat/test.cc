@@ -10,6 +10,8 @@ int main(int argc, char **argv){
     bst test;
 
     cout << "\ttest.getSize():\t\t\t"       << test.getSize()   << endl;
+    cout << "\ttest.getMin():\t\t\t" << test.getMin() << endl;
+    cout << "\ttest.getMax():\t\t\t" << test.getMax() << endl;
     cout << endl;
     for(int i = 0; i < number; i++){
         cout << "\ttest.insert(" << i << "):\t\t\t"   << test.insert(i, i)    << endl;
@@ -28,7 +30,6 @@ int main(int argc, char **argv){
         cout << "\ttest.get(" << i << "):\t\t\t"       << test.get(i)       << endl;
         cout << endl;
     }
-    cout << endl;
     cout << "end" << endl;
 
     return 0;

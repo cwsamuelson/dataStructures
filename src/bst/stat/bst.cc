@@ -163,3 +163,31 @@ int bst::getMax(){
     }
 }
 
+bstException::bstException(){
+    this->msg = NULL;
+}
+
+bstException::bstException(const char* nMsg){
+    int len = 0;
+    while(nMsg[len]){
+        len++;
+    }
+    this->msg = (char *)malloc(sizeof(char) * len);
+    for(int i = 0; i < len; i++){
+        this->msg[i] = nMsg[i];
+    }
+}
+
+bstException::~bstException(){
+    free(this->msg);
+}
+
+const char* bstException::what() const throw(){
+    if(!this->msg){
+        return "BST error has occured!";
+    }
+    else{
+        return this->msg;
+    }
+}
+

@@ -51,5 +51,17 @@ public:
 
 };
 
+class bstException{
+private:
+    char* msg;
+
+public:
+    bstException();
+    bstException(const char* nMsg);
+    ~bstException();
+    virtual const char* what() const throw();
+
+};
+
 #endif
 
