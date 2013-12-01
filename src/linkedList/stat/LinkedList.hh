@@ -13,7 +13,10 @@
 
 #define debug_print(fmt)\
         do{if(DEBUG_TEST) fprintf(stderr, "%s:%d:%s() " fmt, __FILE__,\
-                            __LINE__,__func__);} while(0)
+                          __LINE__,__func__);} while(0)
+
+using std::cout;
+using std::endl;
 
 class LinkedList{
 private:
@@ -21,7 +24,6 @@ private:
         int data;
         struct NODE *next;
     };
-
 
     NODE *head;
     NODE *tail;
@@ -37,7 +39,7 @@ public:
 
 //    ~LinkedList(){//looping infinitely
 
-    // Insert new element into list, defaults to the end.
+    // Insert new element into list, defaults at head.
     int insert(int data);
 
     // Insert new element into list, new element will be element number <index>.
@@ -59,7 +61,7 @@ public:
 
     // Returns the number of elements in the list.
     int getSize();
-
 };
 
 #endif
+
