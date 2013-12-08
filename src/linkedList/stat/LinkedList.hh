@@ -20,24 +20,19 @@ using std::endl;
 
 class LinkedList{
 private:
-    struct NODE{
-        int data;
-        struct NODE *next;
-    };
-
-    NODE *head;
-    NODE *tail;
-    NODE *cur;
+    int data;
     int size;
+    LinkedList *next;
 
     void init();
+    bool inited;
 
 public:
     LinkedList();
 
     LinkedList(int data);
 
-//    ~LinkedList(){//looping infinitely
+    ~LinkedList();//looping infinitely
 
     // Insert new element into list, defaults at head.
     int insert(int data);
