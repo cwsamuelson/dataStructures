@@ -16,14 +16,14 @@ LinkedList::LinkedList(int data){
     this->insert(data);
 }
 
-// remove not yet implemented? lol
-LinkedList::~LinkedList(){//looping infinitely
+//LinkedList::~LinkedList(){//looping infinitely
 //    debug_print("\tRemoving\n");
 //    while(this->size > 0){
+//        printf("%d\n", this->size);
 //        debug_print("\t\tNext\n");
 //        this->remove();
 //    }
-}
+//}
 
     // Insert new element into list, defaults to the end.
 int LinkedList::insert(int data){
@@ -36,6 +36,7 @@ int LinkedList::insert(int data, int index){
     //insert order is being weird
     // Bad index value.
     if(index > this->size){
+        printf("idx:%d, size:%d\n", index, this->size);
         debug_print("\tBad index\n");
         return -1;
     }
@@ -70,18 +71,19 @@ int LinkedList::insert(int data, int index){
 
     // Returns value of first element.
     // Requires protection by user.
-int LinkedList::get(){
+int LinkedList::get() const{
     return this->get(0);
 }
 
     // Returns value of element at <index>.
     // Requires protection by user.
-int LinkedList::get(int index){
+int LinkedList::get(int index) const{
     if(index == 0){
         return this->data;
     }else if(this->next != NULL){
         return this->next->get(index - 1);
     }
+    return -3;
 }
 
     // Deletes and returns the value of head.
@@ -94,6 +96,7 @@ int LinkedList::remove(int index){
     //insert order is being weird
     // Bad index value.
     if(index > this->size){
+        printf("idx:%d, size:%d\n", index, this->size);
         debug_print("\tBad index\n");
         return -1;
     }
@@ -105,7 +108,12 @@ int LinkedList::remove(int index){
             this->data = temp->data;
             this->size = temp->size;
             this->next = temp->next;
+            this->size--;
             delete temp;
+        }else{
+            this->data = 0;
+            this->size--;
+            this->inited = false;
         }
         return ret;
     }else{
@@ -116,7 +124,7 @@ int LinkedList::remove(int index){
 }
 
     // Returns the number of elements in the list.
-int LinkedList::getSize(){
+int LinkedList::getSize() const{
     return this->size;
 }
 

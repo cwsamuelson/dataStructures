@@ -3,7 +3,6 @@
 
 #include<cstdlib>
 #include<cstdio>
-#include<iostream>
 
 #ifdef  DEBUG
 #define DEBUG_TEST 1
@@ -15,24 +14,21 @@
         do{if(DEBUG_TEST) fprintf(stderr, "%s:%d:%s() " fmt, __FILE__,\
                           __LINE__,__func__);} while(0)
 
-using std::cout;
-using std::endl;
-
 class LinkedList{
 private:
     int data;
     int size;
+    bool inited;
     LinkedList *next;
 
     void init();
-    bool inited;
 
 public:
     LinkedList();
 
     LinkedList(int data);
 
-    ~LinkedList();//looping infinitely
+//    ~LinkedList();//looping infinitely
 
     // Insert new element into list, defaults at head.
     int insert(int data);
@@ -42,11 +38,11 @@ public:
 
     // Returns value of first element.
     // Requires protection by user.
-    int get();
+    int get() const;
 
     // Returns value of element at <index>.
     // Requires protection by user.
-    int get(int index);
+    int get(int index) const;
 
     // Deletes and returns the value of head.
     int remove();
@@ -54,8 +50,11 @@ public:
     // Deletes and returns the value of <index>.
     int remove(int index);
 
+    void swap(int A,int B);
+    void copy();
+
     // Returns the number of elements in the list.
-    int getSize();
+    int getSize() const;
 };
 
 #endif
