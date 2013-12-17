@@ -36,7 +36,6 @@ int LinkedList::insert(int data, int index){
     //insert order is being weird
     // Bad index value.
     if(index > this->size){
-        printf("idx:%d, size:%d\n", index, this->size);
         debug_print("\tBad index\n");
         return -1;
     }
@@ -96,7 +95,6 @@ int LinkedList::remove(int index){
     //insert order is being weird
     // Bad index value.
     if(index > this->size){
-        printf("idx:%d, size:%d\n", index, this->size);
         debug_print("\tBad index\n");
         return -1;
     }

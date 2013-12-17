@@ -12,10 +12,10 @@ int main(int argc, char **argv){
     cout << "start" << endl;
     int number = 5;
 
-//    testNorm(number);
-//    testRef(number);
-//    testMallocFree(number);
-//    testNewDel(number);
+    testNorm(number);
+    testRef(number);
+    testMallocFree(number);
+    testNewDel(number);
 
     cout << "end" << endl;
     return 0;
