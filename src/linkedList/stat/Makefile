@@ -7,18 +7,17 @@ default: all
 
 all:main
 
-main:test.o LinkedList.o
-	$(CC) $(flags) -o main test.o LinkedList.o
+list:list.o
+
+main:test.o list.o
+	$(CC) $(flags) -o main test.o list.o
 
 test.o:test.cc
 	$(CC) $(dflags) $(cflags) $(flags) test.cc
 
-LinkedList.o:LinkedList.cc
-	$(CC) $(dflags) $(cflags) $(flags) LinkedList.cc
-
-pch.hh.gch:pch.hh
-	$(CC) pch.hh
+list.o:list.cc
+	$(CC) $(dflags) $(cflags) $(flags) list.cc
 
 clean:
-	rm *.o main pch.hh.gch
+	rm *.o main
 

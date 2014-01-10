@@ -43,7 +43,7 @@ void testNewDel(int number){
     // Remove one more than exists
     for(int i = 0; i <= number; ++i){
         cout << "\tfoo1->remove():\t\t\t"        << foo1->remove()     << endl;
-        cout << "\tfoo1->getSize():\t\t\t"       << foo1->getSize()    << endl;
+        cout << "\tfoo1->getSize():\t\t"       << foo1->getSize()    << endl;
         cout << "\tfoo1->get():\t\t\t"           << foo1->get()       << endl;
         // Get one more than exists
         for(int j = 0; j <= foo1->getSize(); ++j){
