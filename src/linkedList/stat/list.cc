@@ -222,8 +222,13 @@ T ArrayList<T>::listNode::remove(index_t n){
 
 template<class T>
 T ArrayList<T>::listNode::get(index_t n) const{
-  if(n > 0)
-    return this->next->get(n - 1);
+  if(n > 0){
+    if(this->next != 0){
+      return this->next->get(n - 1);
+    } else {
+      return 0;
+    }
+  }
   if(n == 0)
     return this->data;
   //else

@@ -8,10 +8,10 @@ namespace Jing{
 
 template<class T>
 class ArrayList:public Collection<T>{
+private:
   typedef unsigned int index_t;
   typedef unsigned int size_t;
 
-private:
   class listNode{
     friend class ArrayList<T>;
   private:
