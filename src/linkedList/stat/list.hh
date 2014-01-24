@@ -1,104 +1,95 @@
-#ifndef LINKED_LIST_H
-#define LINKED_LIST_H
+#ifndef __ARRAYLIST_H__
+#define __ARRAYLIST_H__
 
-#ifdef  DEBUG
-#define DEBUG_TEST 1
-#else
-#define DEBUG_TEST 0
-#endif
-
-#define debug_print(fmt)\
-        do{if(DEBUG_TEST) fprintf(stderr, "%s:%d:%s() " fmt, __FILE__,\
-                          __LINE__,__func__);} while(0)
+#include"Collection.hh"
+#include<Jing/Misc.h>
 
 namespace Jing{
 
-template<class T>//, class Alloc = allocator<T> >
-class list{
+template<class T>
+class ArrayList:public Collection<T>{
+  typedef unsigned int index_t;
+  typedef unsigned int size_t;
+
 private:
-    bool inited;
-    int data;
-    list *next;
-    list *last;
-    size_t size;
-    size_t max_size;
+  class listNode{
+    friend class ArrayList<T>;
+  private:
+    T data;
+    listNode *next;
+    listNode *prev;
 
     void init();
 
+  public:
+    listNode(T t);
+
+    bool add(T t);
+    bool add(T t, index_t n);
+    T remove(index_t n);
+    T get(index_t n) const;
+    index_t find(T t, index_t n);
+    index_t backFind(T t, index_t n);
+  };
+
+  class listIterator:public Iterator<T>{
+    private:
+      index_t idx;
+      ArrayList* theList;
+
+    public:
+      listIterator(ArrayList* thisList);
+      listIterator(ArrayList* thisList, index_t n);
+      bool hasNext();
+      T next();
+      void remove();
+      void reset();
+  };
+
+  listNode *first;
+  listNode *last;
+  size_t count;
+  listIterator *iter;
+
+  void init();
+
 public:
-    list();
+  ArrayList();
+  ArrayList(Collection<T> *c);
+  ArrayList(int initialCapacity);
 
-    list(T val);
-
-    explicit list(size_t n);
-
-    list(const list& x);
-
-    list(const list&& x);
-
-    ~list();
-
-    list& operator=(const list& x);
-
-    list& operator=(list&& x);
-
-    bool empty() const noexcept;
-    
-    size_t size() const noexcept;
-
-    void assign(size_t n, const T& val);
-
-    void push_front(const T& val);
-
-    void push_front(T&& val);
-
-    void pop_front();
-
-    void push_back(const T& val);
-
-    void push_front(T&& val);
-
-    void pop_back();
-
-    list& insert(size_t n, const T& val);
-
-    list& insert(size_t n, size_t i, T& val);
-
-    list& insert(size_t n, T&& val);
-
-    list& erase(size_t n);
-
-    list& erase(size_t first, size_t last);
-
-    void swap(list& x);
-
-    void swap(size_t a, size_t b);
-
-    void clear() noexcept;
-
-    void splice(size_t n, list& x);
-
-    void splice(size_t n, list&& x);
-
-    void splice(size_t n, list& x, size_t i);
-
-    void splice(size_t n, list&& x, size_t i);
-
-    void splice(size_t n, list& x, size_t i, size_t first, size_t last);
-
-    void splice(size_t n, list&& x, size_t i, size_t first, size_t last);
-
-    void remove(const T& val);
-
-    void unique();
-
-    void sort();
-
-    void reverse() noexcept;
-
+  bool add(T t);
+  bool add(T t, index_t n);
+  bool addAll(Collection<T> *c);
+  bool addAll(Collection<T> *c, index_t n);
+  void clear();
+  T clone();
+  bool contains(T t);
+  bool containsAll(Collection<T> *c);
+  bool equals(T t);
+  void ensureCapacity(int minCapacity);
+  T get(index_t n) const;
+  index_t indexOf(T t) const;
+  index_t lastIndexOf(T t) const;
+  bool isEmpty();
+  Iterator<T> *iterator();
+  Iterator<T> *iterator(index_t n);
+  T remove();
+  T remove(index_t n);
+  bool remove(T t);
+  bool removeAll(Collection<T> *c);
+  bool retainAll(Collection<T> *c);
+  void removeRange(int fromIndex, int toIndex);
+  int  hashCode();
+  size_t  size();
+  T* toArray();
+  T* toArray(T* arr);
+  void trimToSize();
 };
 
 }
+
+#include"list.cc"
 
 #endif
 

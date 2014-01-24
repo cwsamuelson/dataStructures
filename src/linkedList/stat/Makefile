@@ -7,16 +7,13 @@ default: all
 
 all:main
 
-list:list.o
+main:test.o list.h
+	$(CC) $(dflags) -o main test.o
 
-main:test.o list.o
-	$(CC) $(flags) -o main test.o list.o
-
-test.o:test.cc
+test.o:test.cc list.h
 	$(CC) $(dflags) $(cflags) $(flags) test.cc
 
-list.o:list.cc
-	$(CC) $(dflags) $(cflags) $(flags) list.cc
+list.h:list.cc
 
 clean:
 	rm *.o main

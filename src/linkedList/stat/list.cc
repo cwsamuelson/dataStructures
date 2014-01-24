@@ -1,241 +1,304 @@
-#include"list.hh"
 
 using namespace Jing;
 
-void list::init(){
-    this->inited = false;
-    this->data = 0;
-    this->next = NULL;
-    this->last = NULL;
-    this->size = 0;
-    this->max_size = -1;
+template<class T>
+void ArrayList<T>::init(){
+  this->first = 0;
+  this->last = 0;
+  this->count = 0;
+  this->iter = new listIterator(this);
 }
 
-list::list(){
-    this->init();
+template<class T>
+ArrayList<T>::ArrayList(){
+  this->init();
 }
 
-explicit list::list(size_t n){
-    this->init();
-    this->max_size = n;
+template<class T>
+ArrayList<T>::ArrayList(Collection<T> *c){
+  this->init();
+  this->addAll(c);
 }
 
-// Copy x
-list::list(const list& x){
-    this->init();
+template<class T>
+bool ArrayList<T>::add(T t){
+  return this->add(t, 0);
 }
 
-// Move x
-list::list(const list&& x){
-    this->init();
+template<class T>
+bool ArrayList<T>::add(T t, index_t n){
+  if(n > this->size()){
+    this->last->add(t);
+  }else if(this->first == 0){
+    ++this->count;
+    this->first = new listNode(t);
+    return true;
+  }else
+    return this->first->add(t, n);
+  return false;
 }
 
-list::~list(){
+template<class T>
+bool ArrayList<T>::addAll(Collection<T> *c){
+  listIterator *iter = (listIterator*)c->iterator();
+  bool ret = true;
+  while(iter->hasNext()){
+    if( !this->add(iter->next()) )
+      ret = false;
+  }
+  return ret;
 }
 
-list& list::operator=(const list& x){
+template<class T>
+void ArrayList<T>::clear(){
+  while(this->size() > 0){
+    this->remove();
+  }
 }
 
-list& list::operator=(list&& x){
+template<class T>
+bool ArrayList<T>::contains(T t){
+  if(this->first->find(t, 0) > this->size())
+    return false;
+  else return true;
 }
 
-bool list::empty() const noexcept{
-    if(this->size == 0)
-        return true;
-    else
-        return false;
+template<class T>
+bool ArrayList<T>::containsAll(Collection<T> *c){
+  Iterator<T> *temp = c->iterator();
+  while(temp->hasNext())
+    if(!this->contains(temp->next()))
+      return false;
+  return true;
 }
 
-size_t list::size() const noexcept{
-    return this->size;
+template<class T>
+bool ArrayList<T>::equals(T t){
+  return false;
 }
 
-void list::assign(size_t n, const T& val){
+template<class T>
+typename ArrayList<T>::index_t ArrayList<T>::indexOf(T t) const{
+  return this->first->find(t, 0);
 }
 
-void list::push_front(const T& val){
-    this->insert(0, val);
+template<class T>
+typename ArrayList<T>::index_t ArrayList<T>::lastIndexOf(T t) const{
+  return this->last->backFind(this->size());
 }
 
-void list::push_front(T&& val){
-    //may want to reference the other overload
-    this->insert(0, val);
+template<class T>
+T ArrayList<T>::get(index_t n) const{
+  return this->first->get(n);
 }
 
-void list::pop_front(){
-    this->erase(0);
+template<class T>
+int ArrayList<T>::hashCode(){
+  return 0;
 }
 
-void list::push_back(const T& val){
-    this->insert(this->size(), val);
+template<class T>
+bool ArrayList<T>::isEmpty(){
+  if(this->size() == 0)
+    return true;
+  else
+    return false;
 }
 
-void list::push_front(T&& val){
-    this->insert(this->size(), val);
+template<class T>
+Iterator<T> *ArrayList<T>::iterator(){
+  this->iter->reset();
+  return this->iter;
 }
 
-void list::pop_back(){
-    this->erase(this->size()-1);
+template<class T>
+T ArrayList<T>::remove(){
+  return this->remove((index_t)0);
 }
 
-list& list::erase(size_t n){
+template<class T>
+T ArrayList<T>::remove(index_t n){
+  --this->count;
+  listNode *temp = first;
+  if(n == 0)
+    this->first = this->first->next;
+  return temp->remove(n);
 }
 
-list& list::erase(size_t first, size_t last){
+template<class T>
+bool ArrayList<T>::remove(T t){
+  this->remove(this->indexOf(t));
+  return true;
 }
 
-void list::swap(list& x){
+template<class T>
+bool ArrayList<T>::removeAll(Collection<T> *c){
+  Iterator<T> *temp = c->iterator();
+  while(temp->hasNext()){
+    this->remove(temp->next());
+  }
+  return false;
 }
 
-void list::swap(size_t a, size_t b){
+template<class T>
+bool ArrayList<T>::retainAll(Collection<T> *c){
+  return false;
 }
 
-void list::clear() noexcept{
+template<class T>
+typename ArrayList<T>::size_t ArrayList<T>::size(){
+  return this->count;
 }
 
-void list::splice(size_t n, list& x){
+//create a new array containing all elements in proper order.
+template<class T>
+T* ArrayList<T>::toArray(){
+  return 0;
 }
 
-void list::splice(size_t n, list&& x){
+//take argument pointer to create and return an array containing all elements in proper order
+template<class T>
+T* ArrayList<T>::toArray(T* arr){
+  return 0;
 }
 
-void list::splice(size_t n, list& x, size_t i){
+
+/********************************************************/
+/* List Node                                            */
+/********************************************************/
+
+
+template<class T>
+ArrayList<T>::listNode::listNode(T t){
+  this->init();
+  this->data = t;
 }
 
-void list::splice(size_t n, list&& x, size_t i){
+template<class T>
+bool ArrayList<T>::listNode::add(T t){
+  if(this->prev == 0){
+    this->prev = new listNode(t);
+    this->prev->next = this;
+  }else{
+    this->prev->next = new listNode(t);
+    this->prev->next->next = this;
+    this->prev = this->prev->next;
+  }
+  return true;
 }
 
-void list::splice(size_t n, list& x, size_t i, size_t first, size_t last){
+template<class X>
+bool ArrayList<X>::listNode::add(X x, index_t n){
+  if(n > 0)
+    return this->next->add(x, n - 1);
+  else if(n == 0)
+    return this->next->add(x);
+  return false;
 }
 
-void list::splice(size_t n, list&& x, size_t i, size_t first, size_t last){
-}
-
-void list::remove(const T& val){
-}
-
-void list::unique(){
-}
-
-void list::sort(){
-}
-
-void list::reverse() noexcept{
-}
-
-list::~list(){
-    while(this->size > 0){
-        printf("%d\n", this->size);
-        this->remove();
-    }
-}
-
-bool list::empty() const{
-    if(this->size == 0)
-        return true;
-    else
-        return false;
-}
-
-size_t list::size() const{
-    return this->size;
-}
-
-size_t list::max_size() const{
-    return this->maxSize;
-}
-
-    // Insert new element into list, defaults to the end.
-int list::insert(int data){
-    return this->insert(data, 0);
-}
-
-    // Insert new element into list, new element will be element number <index>.
-//should return resultant node
-int list::insert(int data, int index){
-    //insert order is being weird
-    // Bad index value.
-    if(index > this->size){
-        debug_print("\tBad index\n");
-        return -1;
-    }
-
-    if(this->inited == false){
-        this->data = data;
-        this->size++;
-        this->inited = true;
-        return data;
-    }
-
-    // List is empty, create first node with new data.
-    if(index == 0){
-        list *temp = new list(this->data);
-        temp->next = this->next;
-        temp->size = this->size;
-        this->data = data;
-        this->next = temp;
-        this->size++;
-        return data;
-    }else if(this->next != NULL){
-        this->next->insert(data, index - 1);
-        this->size++;
-        return data;
-    }else{
-        this->next = new list(data);
-        return data;
-    }
-    // Execution should never reach this point, return failure when it does.
-    return -3;
-}
-
-    // Returns value of first element.
-    // Requires protection by user.
-int list::get(int *data) const{
-    return this->get(data, 0);
-}
-
-int list::get(int *data, int index) const{
-    if(index == 0){
-        *data = this->data;
-        return 0;
-    }else if(this->next != NULL){
-        this->next->get(data, index - 1);
-        return 0;
-    }
-    return -3;
-}
-
-int list::remove(){
-    return this->remove(0);
-}
-
-int list::remove(int index){
-    // Bad index value.
-    if(index > this->size){
-        debug_print("\tBad index\n");
-        return -1;
+template<class T>
+T ArrayList<T>::listNode::remove(index_t n){
+  if(n > 0)
+    return this->next->remove(n - 1);
+  else if(n == 0){
+    if(this->prev != 0 && this->next != 0){
+      this->prev->next = this->next;
+      this->next->prev = this->prev;
+    } else if(this->prev != 0 && this->next == 0){
+      this->prev->next = 0;
+    } else if(this->prev == 0 && this->next != 0){
+      this->next->prev = 0;
     }
 
-    if(index == 0){
-        int ret = this->data;
-        if(this->next != NULL){
-            list *temp = this->next;
-            this->data = temp->data;
-            this->size = temp->size;
-            this->next = temp->next;
-            this->size--;
-            delete temp;
-        }else{
-            this->data = 0;
-            this->size--;
-            this->inited = false;
-        }
-        return ret;
-    }else{
-        return this->next->remove(index - 1);
-    }
-    // Execution should never reach this point, return failure when it does.
-    return -3;
+    T temp = this->data;
+    //be careful.  only if generated with 'new', and may not be thread safe.
+    delete this;
+    return temp;
+  }
+  //else
+    //derp
+  return 0;
 }
 
+template<class T>
+T ArrayList<T>::listNode::get(index_t n) const{
+  if(n > 0)
+    return this->next->get(n - 1);
+  if(n == 0)
+    return this->data;
+  //else
+    //wtf
+  return 0;
+}
+
+template<class T>
+typename ArrayList<T>::index_t ArrayList<T>::listNode::find(T t, index_t n){
+  if(this->data != t){
+    if(this->next != 0){
+      return this->next->find(t, n + 1);
+    }
+  }
+  else if(this->data == t)
+    return n;
+  return -1;
+}
+
+template<class T>
+typename ArrayList<T>::index_t ArrayList<T>::listNode::backFind(T t, index_t n){
+  if(this->data != t){
+    if(this->prev != 0){
+      return this->prev->backFind(t, n - 1);
+    }
+  }
+  else if(this->data == t)
+    return n;
+  return -1;
+}
+
+template<class T>
+void ArrayList<T>::listNode::init(){
+  this->next = 0;
+  this->prev = 0;
+}
+
+
+/********************************************************/
+/* List Iterator                                        */
+/********************************************************/
+
+
+template<class T>
+ArrayList<T>::listIterator::listIterator(ArrayList<T> *thisList){
+  this->theList = thisList;
+  this->idx = 0;
+}
+
+template<class T>
+ArrayList<T>::listIterator::listIterator(ArrayList<T> *thisList, index_t n){
+  this->theList = thisList;
+  this->idx = n;
+}
+
+template<class T>
+bool ArrayList<T>::listIterator::hasNext(){
+  if(this->idx < theList->size())
+    return true;
+  else
+    return false;
+}
+
+template<class T>
+T ArrayList<T>::listIterator::next(){
+  return theList->get(this->idx++);
+}
+
+template<class T>
+void ArrayList<T>::listIterator::remove(){
+  theList->remove(idx);
+}
+
+template<class T>
+void ArrayList<T>::listIterator::reset(){
+  this->idx = 0;
+}
 
