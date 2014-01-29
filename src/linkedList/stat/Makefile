@@ -16,5 +16,5 @@ test.o:test.cc list.h
 list.h:list.cc
 
 clean:
-	rm *.o main
+	rm *.o main core
 

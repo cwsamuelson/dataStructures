@@ -27,14 +27,26 @@ bool ArrayList<T>::add(T t){
 
 template<class T>
 bool ArrayList<T>::add(T t, index_t n){
-  if(n > this->size()){
+  if(n == 0){
+    if(this->first == 0){
+      ++this->count;
+      this->first = new listNode(t);
+      this->last = this->first;
+      return true;
+    }else{
+      bool ret = this->first->add(t);
+      this->first = this->first->prev;
+      ++this->count;
+      return ret;
+    }
+  }else if(n > this->size()){
     this->last->add(t);
-  }else if(this->first == 0){
+    this->last = this->last->next;
     ++this->count;
-    this->first = new listNode(t);
-    return true;
-  }else
+  }else{
+    ++this->count;
     return this->first->add(t, n);
+  }
   return false;
 }
 
@@ -66,9 +78,11 @@ bool ArrayList<T>::contains(T t){
 template<class T>
 bool ArrayList<T>::containsAll(Collection<T> *c){
   Iterator<T> *temp = c->iterator();
-  while(temp->hasNext())
-    if(!this->contains(temp->next()))
+  while(temp->hasNext()){
+    if(!this->contains(temp->next())){
       return false;
+    }
+  }
   return true;
 }
 
@@ -176,23 +190,26 @@ ArrayList<T>::listNode::listNode(T t){
 
 template<class T>
 bool ArrayList<T>::listNode::add(T t){
-  if(this->prev == 0){
-    this->prev = new listNode(t);
-    this->prev->next = this;
-  }else{
-    this->prev->next = new listNode(t);
-    this->prev->next->next = this;
-    this->prev = this->prev->next;
-  }
-  return true;
+  return this->add(t, 0);
+
 }
 
-template<class X>
-bool ArrayList<X>::listNode::add(X x, index_t n){
-  if(n > 0)
-    return this->next->add(x, n - 1);
-  else if(n == 0)
-    return this->next->add(x);
+template<class T>
+bool ArrayList<T>::listNode::add(T t, index_t n){
+  if(n > 0){
+    return this->next->add(t, n - 1);
+  }
+  else if(n == 0){
+    if(this->prev == 0){
+      this->prev = new listNode(t);
+      this->prev->next = this;
+    }else{
+      this->prev->next = new listNode(t);
+      this->prev->next->next = this;
+      this->prev = this->prev->next;
+    }
+    return true;
+  }
   return false;
 }
 
