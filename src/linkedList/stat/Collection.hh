@@ -20,7 +20,7 @@ public:
   virtual bool removeAll(Collection<T> *c) = 0;
   virtual bool retainAll(Collection<T> *c) = 0;
   virtual Iterator<T> *iterator() = 0;
-  virtual unsigned int  size() = 0;
+  virtual unsigned int  size() const = 0;
 //  virtual Object[] toArray() = 0;
   virtual T* toArray() = 0;
 };

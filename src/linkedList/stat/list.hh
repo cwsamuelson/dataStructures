@@ -63,7 +63,7 @@ public:
   bool addAll(Collection<T> *c);
   bool addAll(Collection<T> *c, index_t n);
   void clear();
-  T clone();
+//  T clone();
   bool contains(T t);
   bool containsAll(Collection<T> *c);
   bool equals(T t);
@@ -81,7 +81,7 @@ public:
   bool retainAll(Collection<T> *c);
   void removeRange(int fromIndex, int toIndex);
   int  hashCode();
-  size_t  size();
+  size_t size() const;
   T* toArray();
   T* toArray(T* arr);
   void trimToSize();

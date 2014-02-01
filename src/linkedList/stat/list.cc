@@ -27,6 +27,8 @@ bool ArrayList<T>::add(T t){
 
 template<class T>
 bool ArrayList<T>::add(T t, index_t n){
+  if(n < 0)
+    return false; 
   if(n == 0){
     if(this->first == 0){
       ++this->count;
@@ -39,10 +41,11 @@ bool ArrayList<T>::add(T t, index_t n){
       ++this->count;
       return ret;
     }
-  }else if(n > this->size()){
-    this->last->add(t);
+  }else if(n >= this->size()){
+    this->last->add(t, 1);
     this->last = this->last->next;
     ++this->count;
+    return true;
   }else{
     ++this->count;
     return this->first->add(t, n);
@@ -98,7 +101,7 @@ typename ArrayList<T>::index_t ArrayList<T>::indexOf(T t) const{
 
 template<class T>
 typename ArrayList<T>::index_t ArrayList<T>::lastIndexOf(T t) const{
-  return this->last->backFind(this->size());
+  return this->last->backFind(t, this->size() - 1);
 }
 
 template<class T>
@@ -134,15 +137,25 @@ template<class T>
 T ArrayList<T>::remove(index_t n){
   --this->count;
   listNode *temp = first;
-  if(n == 0)
+  if(n == 0){
     this->first = this->first->next;
+  } else if( (n >= this->size()) && (n < -1) ){
+    this->last = this->last->prev;
+    return this->last->next->remove((unsigned int)0);
+  }else if(n == -1){
+    return -1;
+  }
   return temp->remove(n);
 }
 
 template<class T>
 bool ArrayList<T>::remove(T t){
-  this->remove(this->indexOf(t));
-  return true;
+  index_t idx = this->indexOf(t);
+  if(idx != -1){
+    this->remove(idx);
+    return true;
+  }
+  return false;
 }
 
 template<class T>
@@ -160,7 +173,7 @@ bool ArrayList<T>::retainAll(Collection<T> *c){
 }
 
 template<class T>
-typename ArrayList<T>::size_t ArrayList<T>::size(){
+typename ArrayList<T>::size_t ArrayList<T>::size() const{
   return this->count;
 }
 
@@ -196,7 +209,14 @@ bool ArrayList<T>::listNode::add(T t){
 
 template<class T>
 bool ArrayList<T>::listNode::add(T t, index_t n){
+  if(n < 0)
+    return false; 
   if(n > 0){
+    if(this->next == 0){
+      this->next = new listNode(t);
+      this->next->prev = this;
+      return true;
+    }
     return this->next->add(t, n - 1);
   }
   else if(n == 0){
