@@ -1,7 +1,7 @@
 #ifndef __ITERABLE_H__
 #define __ITERABLE_H__
 
-#include"Iterator.hh"
+#include<Jing/Iterator.hh>
 
 namespace Jing{
 

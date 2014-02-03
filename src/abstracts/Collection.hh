@@ -1,7 +1,7 @@
 #ifndef __COLLECTION_H__
 #define __COLLECTION_H__
 
-#include"Iterable.hh"
+#include<Jing/Iterable.hh>
 
 namespace Jing{
 

@@ -1,7 +1,7 @@
 #ifndef __ARRAYLIST_H__
 #define __ARRAYLIST_H__
 
-#include"Collection.hh"
+#include<Jing/Collection.hh>
 #include<Jing/Misc.h>
 
 namespace Jing{
