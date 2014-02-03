@@ -11,6 +11,7 @@ void addTests();
 void clearTests();
 void containsTests();
 void indexTests();
+void iteratorTests();
 void equalsTests();
 
 int main(int argc, char **argv){
@@ -18,7 +19,32 @@ int main(int argc, char **argv){
   clearTests();
   containsTests();
   indexTests();
+  iteratorTests();
   return 0;
+}
+
+void iteratorTests(){
+  cout << "iteraterTests" << endl;
+  ArrayList<char> foo;
+  foo.add('a');
+  foo.add('b');
+  foo.add('c');
+
+  Iterator<char> *temp = foo.iterator();
+
+  while(temp->hasNext()){
+    cout << temp->next() << endl;
+  }
+
+  cout << endl;
+  cout << endl;
+}
+
+void equalsTests(){
+  cout << "indexTests" << endl;
+
+  cout << endl;
+  cout << endl;
 }
 
 void indexTests(){
@@ -42,6 +68,9 @@ void indexTests(){
   cout << foo.indexOf('b') << endl;
   cout << foo.lastIndexOf('b') << endl;
 
+  cout << endl;
+
+  cout << endl;
   cout << endl;
 }
 
@@ -98,7 +127,21 @@ void containsTests(){
   bop.add('z');
 
   cout << "bad mixed contains all 'b,c,x,y,z'" << endl;
-  foo.containsAll(&baz) ? cout << "succeeded" : cout << "failed";cout << endl;
+  foo.containsAll(&bop) ? cout << "succeeded" : cout << "failed";cout << endl;
+  cout << endl;
+
+  bop.clear();
+  bop.add('x');
+  bop.add('y');
+  bop.add('z');
+  bop.add('b');
+  bop.add('c');
+  cout << "bad mixed contains all 'x,y,z,b,c'" << endl;
+  foo.containsAll(&bop) ? cout << "succeeded" : cout << "failed";cout << endl;
+  cout << endl;
+
+
+  cout << endl;
   cout << endl;
 }
 
@@ -128,6 +171,9 @@ void clearTests(){
   for(int i = 0; i < foo.size(); ++i){
     cout << foo.get(i);
   }
+  cout << endl;
+
+  cout << endl;
   cout << endl;
 }
 
