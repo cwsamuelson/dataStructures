@@ -13,7 +13,7 @@ public:
   virtual void clear() = 0;
 //  virtual bool contains(Object o) = 0;
   virtual bool containsAll(Collection<T> *c) = 0;
-//  virtual bool equals(Object o) = 0;
+  virtual bool equals(Collection* c) const = 0;
   virtual int  hashCode() = 0;
   virtual bool isEmpty() = 0;
 //  virtual bool remove(Object o) = 0;

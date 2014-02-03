@@ -90,7 +90,7 @@ bool ArrayList<T>::containsAll(Collection<T> *c){
 }
 
 template<class T>
-bool ArrayList<T>::equals(T t){
+bool ArrayList<T>::equals(Collection<T> *c) const{
   return false;
 }
 

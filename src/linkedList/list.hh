@@ -66,7 +66,7 @@ public:
 //  T clone();
   bool contains(T t);
   bool containsAll(Collection<T> *c);
-  bool equals(T t);
+  bool equals(Collection<T> *c) const;
   void ensureCapacity(int minCapacity);
   T get(index_t n) const;
   index_t indexOf(T t) const;
