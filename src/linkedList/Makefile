@@ -1,19 +1,20 @@
-CC=g++
-CFLAGS=-c -Wall
-DBGFLAGS=-DDEBUG -g -Wall
+CC:= g++
+flags:=-Wall
+dflags:=-g -DDEBUG
+cflags:=-c
 
-all: LinkedList
+default: all
 
-default: LinkedList
+all:main
 
-LinkedList:
+main:test.o list.h
+	$(CC) $(dflags) -o main test.o
 
-debug: LinkedList.hh test.o
-	$(CC) $(DBGFLAGS) -o test test.cc
+test.o:test.cc list.h
+	$(CC) $(dflags) $(cflags) $(flags) test.cc
 
-test.o: test.cc
-	$(CC) $(CFLAGS) test.cc
+list.h:list.cc
 
 clean:
-	rm -f *.o test
+	rm *.o main core
 
