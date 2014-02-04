@@ -15,7 +15,7 @@ ArrayList<T>::ArrayList(){
 }
 
 template<class T>
-ArrayList<T>::ArrayList(Collection<T> *c){
+ArrayList<T>::ArrayList(AbstractList<T> *c){
   this->init();
   this->addAll(c);
 }
@@ -54,7 +54,7 @@ bool ArrayList<T>::add(T t, index_t n){
 }
 
 template<class T>
-bool ArrayList<T>::addAll(Collection<T> *c){
+bool ArrayList<T>::addAll(AbstractList<T> *c){
   listIterator *iter = (listIterator*)c->iterator();
   bool ret = true;
   while(iter->hasNext()){
@@ -72,14 +72,14 @@ void ArrayList<T>::clear(){
 }
 
 template<class T>
-bool ArrayList<T>::contains(T t){
+bool ArrayList<T>::contains(T t) const{
   if(this->first->find(t, 0) > this->size())
     return false;
   else return true;
 }
 
 template<class T>
-bool ArrayList<T>::containsAll(Collection<T> *c){
+bool ArrayList<T>::containsAll(Collection<T> *c) const{
   Iterator<T> *temp = c->iterator();
   while(temp->hasNext()){
     if(!this->contains(temp->next())){
@@ -110,7 +110,7 @@ T ArrayList<T>::get(index_t n) const{
 }
 
 template<class T>
-int ArrayList<T>::hashCode(){
+int ArrayList<T>::hashCode() const{
   return 0;
 }
 
@@ -123,7 +123,7 @@ bool ArrayList<T>::isEmpty(){
 }
 
 template<class T>
-Iterator<T> *ArrayList<T>::iterator(){
+Iterator<T> *ArrayList<T>::iterator() const{
   this->iter->reset();
   return this->iter;
 }
@@ -159,7 +159,7 @@ bool ArrayList<T>::remove(T t){
 }
 
 template<class T>
-bool ArrayList<T>::removeAll(Collection<T> *c){
+bool ArrayList<T>::removeAll(AbstractList<T> *c){
   Iterator<T> *temp = c->iterator();
   while(temp->hasNext()){
     this->remove(temp->next());
@@ -168,7 +168,7 @@ bool ArrayList<T>::removeAll(Collection<T> *c){
 }
 
 template<class T>
-bool ArrayList<T>::retainAll(Collection<T> *c){
+bool ArrayList<T>::retainAll(AbstractList<T> *c){
   return false;
 }
 
@@ -185,7 +185,7 @@ T* ArrayList<T>::toArray(){
 
 //take argument pointer to create and return an array containing all elements in proper order
 template<class T>
-T* ArrayList<T>::toArray(T* arr){
+void ArrayList<T>::toArray(T* arr){
   return 0;
 }
 

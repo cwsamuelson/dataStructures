@@ -33,7 +33,7 @@ void iteratorTests(){
   Iterator<char> *temp = foo.iterator();
 
   while(temp->hasNext()){
-    cout << temp->next() << endl;
+    cout << temp->next();
   }
 
   cout << endl;
@@ -56,8 +56,10 @@ void indexTests(){
   foo.add('c');
   foo.add('b');
 
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  Iterator<char> *temp = foo.iterator();
+
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
   cout << "contains 'a', 'd', 'c'" << endl;
@@ -83,8 +85,11 @@ void containsTests(){
   foo.add('c');
   foo.add('b');
   foo.add('a');
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+
+  Iterator<char> *temp = foo.iterator();
+
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
@@ -161,15 +166,19 @@ void clearTests(){
   foo.add('d');
   foo.add('e');
   cout << "print filled list" << endl;
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+
+  Iterator<char> *temp = foo.iterator();
+
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   cout << "full list clear" << endl;
   foo.clear();
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
@@ -182,66 +191,77 @@ void addTests(){
   ArrayList<char> foo;
 
   cout << "print empty list" << endl;
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+
+  Iterator<char> *temp = foo.iterator();
+
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
   cout << "add basic characters" << endl;
   foo.add('a');
   foo.add('c');
   foo.add('d');
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   cout << "arbitrary good insert" << endl;
   foo.add('b', 1);
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   //inserting to wrong index
   cout << "arbitrary bad insert 1" << endl;
   foo.add('z', foo.size() + 2);
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   //seg faulting
   cout << "arbitrary bad insert 2" << endl;
   foo.add('x', -1);
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   cout << "remove first value" << endl;
   foo.remove((unsigned int) 0);
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
   cout << "remove last value" << endl;
   foo.remove(foo.size());
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   cout << "remove good 'a' value" << endl;
   foo.remove('a');
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 
   cout << "remove bad 'l' value" << endl;
   foo.remove('l');
-  for(int i = 0; i < foo.size(); ++i){
-    cout << foo.get(i);
+  temp->reset();
+  while(temp->hasNext()){
+    cout << temp->next();
   }
   cout << endl;
 

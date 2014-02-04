@@ -1,13 +1,13 @@
 #ifndef __ARRAYLIST_H__
 #define __ARRAYLIST_H__
 
-#include<Jing/Collection.hh>
+#include<Jing/AbstractList.hh>
 #include<Jing/Misc.h>
 
 namespace Jing{
 
 template<class T>
-class ArrayList:public Collection<T>{
+class ArrayList:public AbstractList<T>{
 private:
   typedef unsigned int index_t;
   typedef unsigned int size_t;
@@ -55,35 +55,35 @@ private:
 
 public:
   ArrayList();
-  ArrayList(Collection<T> *c);
+  ArrayList(AbstractList<T> *c);
   ArrayList(int initialCapacity);
 
   bool add(T t);
   bool add(T t, index_t n);
-  bool addAll(Collection<T> *c);
-  bool addAll(Collection<T> *c, index_t n);
+  bool addAll(AbstractList<T> *c);
+  bool addAll(AbstractList<T> *c, index_t n);
   void clear();
 //  T clone();
-  bool contains(T t);
-  bool containsAll(Collection<T> *c);
+  bool contains(T t) const;
+  bool containsAll(Collection<T> *c) const;
   bool equals(Collection<T> *c) const;
   void ensureCapacity(int minCapacity);
   T get(index_t n) const;
   index_t indexOf(T t) const;
   index_t lastIndexOf(T t) const;
   bool isEmpty();
-  Iterator<T> *iterator();
-  Iterator<T> *iterator(index_t n);
+  Iterator<T> *iterator() const;
+  Iterator<T> *iterator(index_t n) const;
   T remove();
   T remove(index_t n);
   bool remove(T t);
-  bool removeAll(Collection<T> *c);
-  bool retainAll(Collection<T> *c);
+  bool removeAll(AbstractList<T> *c);
+  bool retainAll(AbstractList<T> *c);
   void removeRange(int fromIndex, int toIndex);
-  int  hashCode();
+  int  hashCode() const;
   size_t size() const;
   T* toArray();
-  T* toArray(T* arr);
+  void toArray(T* arr);
   void trimToSize();
 };
 
