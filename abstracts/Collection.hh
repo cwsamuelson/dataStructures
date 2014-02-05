@@ -13,7 +13,7 @@ public:
   virtual bool containsAll(Collection<T> *c) const = 0;
   virtual bool equals(Collection<T>* c) const = 0;
   virtual int  hashCode() const = 0;
-  virtual bool isEmpty() = 0;
+  virtual bool isEmpty() const = 0;
   virtual unsigned int  size() const = 0;
 };
 

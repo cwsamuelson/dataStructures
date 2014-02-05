@@ -2,11 +2,12 @@
 #define __ABSTRACT_TREE_H__
 
 #include<Jing/Collection.hh>
+#include<Jing/AbstractList.hh>
 
 namespace Jing{
 
 template<class X, class Y>
-class AbstractTree:public Collection<X>{
+class AbstractTree:public Collection<Y>{
 public:
   virtual bool add(X x, Y y) = 0;
   virtual bool addAll(AbstractTree<X, Y> *at) = 0;

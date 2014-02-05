@@ -7,13 +7,13 @@ default: all
 
 all:main
 
-main:test.o list.hh
+main:test.o bst.hh
 	$(CC) $(dflags) -o main test.o
 
-test.o:test.cc list.hh
+test.o:test.cc bst.hh
 	$(CC) $(dflags) $(cflags) $(flags) test.cc
 
-list.hh:list.cc
+bst.hh:bst.cc
 
 clean:
 	rm *.o main core

@@ -1,3 +1,0 @@
-The binary search tree has a couple possible imlpementations.
-The one chosen here is to story the entire tree as one class, but use recursive functions to find elements.
-As opposed to each tree being a root pointing to two additional trees.  This method may actually be simpler.

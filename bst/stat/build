@@ -1,8 +1,0 @@
-#!/bin/bash
-
-g++ -c -Wall bst.cc
-
-g++ -c -Wall test.cc
-
-g++ -o main -Wall test.o bst.o
-

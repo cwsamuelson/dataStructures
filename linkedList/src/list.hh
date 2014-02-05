@@ -71,14 +71,12 @@ public:
   T get(index_t n) const;
   index_t indexOf(T t) const;
   index_t lastIndexOf(T t) const;
-  bool isEmpty();
+  bool isEmpty() const;
   Iterator<T> *iterator() const;
-  Iterator<T> *iterator(index_t n) const;
   T remove();
   T remove(index_t n);
   bool remove(T t);
   bool removeAll(AbstractList<T> *c);
-  bool retainAll(AbstractList<T> *c);
   void removeRange(int fromIndex, int toIndex);
   int  hashCode() const;
   size_t size() const;

@@ -29,25 +29,22 @@ template<class T>
 bool ArrayList<T>::add(T t, index_t n){
   if(n < 0)
     return false; 
+  ++this->count;
   if(n == 0){
     if(this->first == 0){
-      ++this->count;
       this->first = new listNode(t);
       this->last = this->first;
       return true;
     }else{
       bool ret = this->first->add(t);
       this->first = this->first->prev;
-      ++this->count;
       return ret;
     }
   }else if(n >= this->size()){
     this->last->add(t, 1);
     this->last = this->last->next;
-    ++this->count;
     return true;
   }else{
-    ++this->count;
     return this->first->add(t, n);
   }
   return false;
@@ -115,7 +112,7 @@ int ArrayList<T>::hashCode() const{
 }
 
 template<class T>
-bool ArrayList<T>::isEmpty(){
+bool ArrayList<T>::isEmpty() const{
   if(this->size() == 0)
     return true;
   else
@@ -135,8 +132,8 @@ T ArrayList<T>::remove(){
 
 template<class T>
 T ArrayList<T>::remove(index_t n){
-  --this->count;
   listNode *temp = first;
+  --this->count;
   if(n == 0){
     this->first = this->first->next;
   } else if( (n >= this->size()) && (n < -1) ){
@@ -168,8 +165,7 @@ bool ArrayList<T>::removeAll(AbstractList<T> *c){
 }
 
 template<class T>
-bool ArrayList<T>::retainAll(AbstractList<T> *c){
-  return false;
+void ArrayList<T>::removeRange(int fromIndex, int toIndex){
 }
 
 template<class T>
