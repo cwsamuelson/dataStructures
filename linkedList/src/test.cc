@@ -226,6 +226,9 @@ void addTests(){
   }
   cout << endl;
 
+  cout << "try bad get size + 1" << endl;
+  cout << foo.get(foo.size()) << endl;
+
   cout << "arbitrary good insert" << endl;
   cout << "list size:" << foo.size() << endl;
   foo.add('b', 1);
@@ -247,7 +250,6 @@ void addTests(){
   }
   cout << endl;
 
-  //seg faulting
   cout << "arbitrary bad insert 2" << endl;
   cout << "list size:" << foo.size() << endl;
   foo.add('x', -1);
