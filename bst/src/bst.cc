@@ -64,7 +64,7 @@ Y bst<X, Y>::remove(X x){
 
 template<class X, class Y>
 bool bst<X, Y>::removeAll(AbstractList<X> *al){
-  Iterator<Y> *it = al->iterator();
+  Iterator<X> *it = al->iterator();
   while(it->hasNext())
     this->remove(it->next());
 }
@@ -116,11 +116,26 @@ bool bst<X, Y>::isEmpty() const{
 }
 
 template<class X, class Y>
+bool bst<X, Y>::equals(AbstractTree<X, Y> *at) const{
+}
+
+template<class X, class Y>
+bool bst<X, Y>::equals(Collection<Y> *c) const{
+}
+
+template<class X, class Y>
+int bst<X, Y>::hashCode() const{
+  return 0;
+}
+
+template<class X, class Y>
 void bst<X, Y>::toArray(X *x, Y *y) const{
 }
 
 template<class X, class Y>
 Iterator<Y> *bst<X, Y>::iterator() const{
+  this->iter->reset();
+  return this->iter;
 }
 
 template<class X, class Y>
@@ -154,17 +169,21 @@ bool bst<X, Y>::treeNode::add(X x, Y y){
   if(x == this->key){
     return false;
   } else if(x < this->key){
-    temp = this->left;
-  } else {
-    temp = this->right;
-  }
-
-  if(this->temp == 0){
-    this->temp = new treeNode(x, y);
-    this->temp->parent = this;
-    return true;
-  } else {
-    return this->temp->add(x, y);
+    if(this->left == 0){
+      this->left = new treeNode(x, y);
+      this->left->parent = this;
+      return true;
+    } else {
+      return temp->add(x, y);
+    }
+  } else if(x > this->key){
+    if(this->right == 0){
+      this->right = new treeNode(x, y);
+      this->right->parent = this;
+      return true;
+    } else {
+      return temp->add(x, y);
+    }
   }
 }
 
@@ -179,8 +198,7 @@ Y bst<X, Y>::treeNode::remove(X x){
       treeNode *child;
       if(this->left != 0 && this->right == 0){
         child = this->left;
-      }
-      if(this->right != 0 && this->left == 0){
+      } else if(this->left == 0 && this->right != 0){
         child = this->right;
       }
       if(child->key < parent->key){
@@ -190,19 +208,28 @@ Y bst<X, Y>::treeNode::remove(X x){
       }
       child->parent = this->parent;
     } else {
-      //well shit, not sure how to handle this.
+      //well shit, not sure how to handle this yet.
     }
+  } else if(x < this->key){
+    return this->left->remove(x);
+  } else if(x > this->key){
+    return this->right->remove(x);
   }
 }
 
 template<class X, class Y>
 Y bst<X, Y>::treeNode::get(X x) const{
-  if(x == this->key)
+  if(x == this->key){
     return this->value;
-  else if(x < this->key)
+  }
+  else if(x < this->key){
     return this->left->get(x);
-  else if(x > this->key)
+  }
+  else if(x > this->key){
     return this->right->get(x);
+  }
+  else
+    return 0;
 }
 
 template<class X, class Y>

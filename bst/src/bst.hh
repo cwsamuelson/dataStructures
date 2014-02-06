@@ -61,7 +61,7 @@ public:
   bool add(X x, Y y);
   bool addAll(AbstractTree<X, Y> *at);
   bool addAll(AbstractList<X> *alx, AbstractList<Y> *aly);
-  Y remove(X x);
+  Y    remove(X x);
   bool removeAll(AbstractList<X> *al);
 //uh? maybe?
   bool removeAll(AbstractTree<X, Y> *at);
@@ -74,6 +74,7 @@ public:
   bool containsAll(Collection<Y> *cy) const;
   bool isEmpty() const;
   bool equals(AbstractTree<X, Y> *at) const;
+  bool equals(Collection<Y> *at) const;
   int  hashCode() const;
   void toArray(X *x, Y *y) const;
   Iterator<Y> *iterator() const;

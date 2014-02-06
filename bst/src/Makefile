@@ -7,10 +7,10 @@ default: all
 
 all:main
 
-main:test.o bst.hh
+main:test.o
 	$(CC) $(dflags) -o main test.o
 
-test.o:test.cc bst.hh
+test.o:test.cc bst.hh bst.cc
 	$(CC) $(dflags) $(cflags) $(flags) test.cc
 
 bst.hh:bst.cc
