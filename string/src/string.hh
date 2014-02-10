@@ -1,72 +1,79 @@
 #ifndef STRING_H
 #define STRING_H
 
-#include<cstdlib>
-#include<iostream>
+#include<Jing/Misc.hh>
 
-using std::ostream;
-using std::istream;
+namespace Jing{
 
 class string{
 private:
-//    typedef unsigned int size_t;
-    static const size_t npos = -1;
-    char* data;
-    size_t size;
+  static const size_t npos = -1;
+  char* data;
+  size_t size;
 
-    void init();
+  void init();
 
 public:
-    string();
-    string(string& str);
-    string(const char* s);
-    ~string();
+  //add regex methods in the futur
 
-    const char* getString() const;
-    const char* getString(size_t pos, size_t len) const;
+  string();
+  string(string& str);
+  string(string& str, size_t length);
+  string(string& str, index_t offset, size_t length);
+  string(const char* s);
+  string(const char* s, size_t length);
+  string(const char* s, index_t offset, size_t length);
+  ~string();
 
-    string& append(const string& str);
-    string& append(const string& str, size_t subpos, size_t sublen);
-    string& append(const char* s);
-    string& append(const char* s, size_t n);
-    string& append(size_t n, char c);
+  char charAt(index_t idx) const;
+  //IgnoreCase
+  int compareToIC(const string& str) const;
+  int compareTo(const string& str) const;
+  string* concat(const string& str);
+  string* concat(char* s);
+  bool contains(const string& str) const;
+  bool endsWith(const string& suffix) const;
+  bool startsWith(const string& prefix) const;
+  //IgnoreCase
+  bool equalsIC(const string& str) const;
+  bool equalsIC(const char* s) const;
+  bool equals(const string& str) const;
+  bool equals(const char* s) const;
+//formats a string using a format string and args list..
+//  string& format(
+  //uses uninitialized pointer
+  void getChars(char* dest) const;
+  void getChars(char* dest, index_t start, index_t end) const;
+  int hashCode() const;
+  index_t indexOf(char ch) const;
+  index_t indexOf(char ch, index_t start) const;
+  index_t indexOf(const string& str) const;
+  index_t indexOf(const string& str, index_t start) const;
+  index_t lastIndexOf(char ch) const;
+  index_t lastIndexOf(char ch, index_t start) const;
+  index_t lastIndexOf(const string& str) const;
+  index_t lastIndexOf(const string& str, index_t start) const;
+  bool isEmpty() const;
+  size_t length() const;
+  string* replace(char oldChar, char newChar);
+  string* subString(index_t idx) const;
+  string* subString(index_t start, index_t end) const;
+  char* toCharArray() const;
+  string* toUpper() const;
+  string* toLower() const;
+  string* trim();
 
-    string& assign(const string& str);
-    string& assign(const string& str, size_t subpos, size_t sublen);
-    string& assign(const char* s);
-    string& assign(const char* s, size_t n);
-    string& assign(size_t n, char c);
-
-    string& erase(size_t pos = 0, size_t len = npos);
-    size_t copy(char* s, size_t len = 0, size_t pos = 0) const;
-    size_t find(char c);
-    size_t find(const string& str, size_t pos = 0) const;
-    size_t find(const char* s, size_t pos = 0) const;
-    size_t rfind(const string& str, size_t pos = 0) const;
-    size_t rfind(const char* s, size_t pos = 0) const;
-    size_t length() const;
-    bool empty() const;
-    void clear();
-
-    string& operator=(const string& str);
-    string& operator=(const char* s);
-
-    string& operator+=(const char* s);
-    string& operator+=(const string& s);
-
-    string  operator+(const string& opstr) const;
-    string  operator+(const char* ops) const;
-    string  operator+(const char opc) const;
-
-//    string  operator+(const char* lhs, const string& rhs);
-//    string  operator+(const char* lhs, const char* rhs);
-//    string  operator+(const char lhs, const string& rhs);
-
-    char& operator[](size_t pos);
+  //returned string must be deleted by user.
+  //factory methods
+  static string& copyValue(char* data);
+  static string& copyValue(char* data, size_t length);
+  static string& copyValue(char* data, index_t offset, size_t length);
 
 };
 
-ostream& operator<<(ostream& os, const string& str);
+//ostream& operator<<(ostream& os, const string& str);
+
+}
 
 // STRING_H
 #endif
