@@ -20,7 +20,6 @@ bst<X, Y>::bst(AbstractTree<X, Y> *at){
 }
 
 template<class X, class Y>
-//bst<X, Y>::bst(Collection<X> *cx, Collection<Y> *cy){
 bst<X, Y>::bst(AbstractList<X> *alx, AbstractList<Y> *aly){
   this->init();
   this->add(alx, aly);
@@ -139,7 +138,7 @@ Iterator<Y> *bst<X, Y>::iterator() const{
 }
 
 template<class X, class Y>
-typename bst<X, Y>::size_t bst<X, Y>::size() const{
+size_t bst<X, Y>::size() const{
   return this->count;
 }
 

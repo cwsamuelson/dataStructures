@@ -10,8 +10,6 @@ namespace Jing{
 template<class X, class Y>
 class bst:public AbstractTree<X, Y>{
 private:
-  typedef unsigned int size_t;
-
   class treeNode{
     friend class bst<X,Y>;
   private:
