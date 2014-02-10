@@ -92,12 +92,12 @@ bool ArrayList<T>::equals(Collection<T> *c) const{
 }
 
 template<class T>
-typename ArrayList<T>::index_t ArrayList<T>::indexOf(T t) const{
+index_t ArrayList<T>::indexOf(T t) const{
   return this->first->find(t, 0);
 }
 
 template<class T>
-typename ArrayList<T>::index_t ArrayList<T>::lastIndexOf(T t) const{
+index_t ArrayList<T>::lastIndexOf(T t) const{
   return this->last->backFind(t, this->size() - 1);
 }
 
@@ -169,7 +169,7 @@ void ArrayList<T>::removeRange(int fromIndex, int toIndex){
 }
 
 template<class T>
-typename ArrayList<T>::size_t ArrayList<T>::size() const{
+size_t ArrayList<T>::size() const{
   return this->count;
 }
 
@@ -270,7 +270,7 @@ T ArrayList<T>::listNode::get(index_t n) const{
 }
 
 template<class T>
-typename ArrayList<T>::index_t ArrayList<T>::listNode::find(T t, index_t n){
+index_t ArrayList<T>::listNode::find(T t, index_t n){
   if(this->data != t){
     if(this->next != 0){
       return this->next->find(t, n + 1);
@@ -282,7 +282,7 @@ typename ArrayList<T>::index_t ArrayList<T>::listNode::find(T t, index_t n){
 }
 
 template<class T>
-typename ArrayList<T>::index_t ArrayList<T>::listNode::backFind(T t, index_t n){
+index_t ArrayList<T>::listNode::backFind(T t, index_t n){
   if(this->data != t){
     if(this->prev != 0){
       return this->prev->backFind(t, n - 1);

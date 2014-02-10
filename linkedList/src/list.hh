@@ -2,16 +2,13 @@
 #define __ARRAYLIST_H__
 
 #include<Jing/AbstractList.hh>
-#include<Jing/Misc.h>
+#include<Jing/Misc.hh>
 
 namespace Jing{
 
 template<class T>
 class ArrayList:public AbstractList<T>{
 private:
-  typedef unsigned int index_t;
-  typedef unsigned int size_t;
-
   class listNode{
     friend class ArrayList<T>;
   private:
