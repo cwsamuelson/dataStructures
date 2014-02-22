@@ -1,4 +1,4 @@
-#include"list.hh"
+#include<Jing/list>
 #include<iostream>
 
 using std::cout;
