@@ -2,6 +2,10 @@
 #define STRING_H
 
 #include<Jing/Misc.hh>
+#include<iostream>
+
+using std::ostream;
+using std::istream;
 
 namespace Jing{
 
@@ -14,12 +18,12 @@ private:
   void init();
 
 public:
-  //add regex methods in the futur
+  //add regex methods in the future
 
   string();
-  string(string& str);
-  string(string& str, size_t length);
-  string(string& str, index_t offset, size_t length);
+  string(const string& str);
+  string(const string& str, size_t length);
+  string(const string& str, index_t offset, size_t length);
   string(const char* s);
   string(const char* s, size_t length);
   string(const char* s, index_t offset, size_t length);
@@ -69,9 +73,35 @@ public:
   static string& copyValue(char* data, size_t length);
   static string& copyValue(char* data, index_t offset, size_t length);
 
+  string& operator=(const string& rhs);
+  string& operator=(const char* rhs);
+
+  string& operator+=(const string& rhs);
+  string& operator+=(const char* rhs);
+
+  const string operator+(const string& rhs) const;
+  const string operator+(const char* rhs) const;
+
+  bool operator==(const string& rhs) const;
+  bool operator==(const char* rhs) const;
+
+  bool operator!=(const string& rhs) const;
+  bool operator!=(const char* rhs) const;
+
+  friend ostream& operator<<(ostream& os, const string& str);
+  friend string& operator+=(const char* lhs, const string& rhs);
+  friend const string operator+(const char* lhs, const string& rhs);
+  friend bool operator==(const char* lhs, const string& rhs);
+
 };
 
-//ostream& operator<<(ostream& os, const string& str);
+ostream& operator<<(ostream& os, const string& str);
+
+string& operator+=(const char* lhs, const string& rhs);
+
+const string operator+(const char* lhs, const string& rhs);
+
+bool operator==(const char* lhs, const string& rhs);
 
 }
 

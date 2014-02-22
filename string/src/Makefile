@@ -1,29 +1,34 @@
 CC:=g++
 
-default:test
-
-test:main
+default:main
 
 lib:static
 
-main:string.o test.o
-	$(CC) -L/usr/local/lib/Jing/ -lstring test.o -o main
+static:libstring.a
+dynamic:libstring.so
+dyn:dynamic
+dynamic:libstring.so
+
+main:libstring.a test.o
+	$(CC) test.o -L/usr/local/lib/Jing/ -lstring -o main
 
 string.o:string.cc
 	$(CC) -c string.cc
 
 test.o:test.cc
-	$(CC) test.cc -c string.cc
+	$(CC) -c test.cc
 
-static:string.o
-	ar -cvq libstring.a string.o
+libstring.a:string.o
+	ar rcs libstring.a string.o
 
 dynstring.o:string.cc
-	$(CC) -Wall -fPIC -c string.cc
+	$(CC) -fPIC -c string.cc -o dynstring.o
 
-dynamic:dynstring.o
+libstring.so:dynstring.o
 	$(CC) -shared -fPIC -Wl,-soname,libstring.so.1 -o libstring.so.1.0 dynstring.o -lc
 
 clean:
 	rm *.o core main
 
+cleanlib:
+	rm libstring.a

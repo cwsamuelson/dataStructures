@@ -1,4 +1,4 @@
-#include"string.hh"
+#include<Jing/string.hh>
 
 using namespace Jing;
 
@@ -11,17 +11,17 @@ string::string(){
   this->init();
 }
 
-string::string(string& str){
+string::string(const string& str){
   this->init();
   str.getChars(this->data, 0, str.length());
 }
 
-string::string(string& str, size_t length){
+string::string(const string& str, size_t length){
   this->init();
   str.getChars(this->data, 0, length);
 }
 
-string::string(string& str, index_t offset, size_t length){
+string::string(const string& str, index_t offset, size_t length){
   this->init();
   str.getChars(this->data, offset, length);
 }
@@ -75,7 +75,8 @@ string::string(const char* s, index_t offset, size_t length){
 }
 
 string::~string(){
-  delete this->data;
+  if(this->data != 0)
+    delete this->data;
 }
 
 char string::charAt(index_t idx) const{
@@ -282,5 +283,84 @@ string* string::toLower() const{
 }
 
 string* string::trim(){
+}
+
+string& string::operator=(const string& rhs){
+  //Self assignment?  You sneaky devil.
+  if(this != &rhs){
+    size_t len = rhs.length();
+    if(this->data != 0)
+      delete this->data;
+    this->size = len;
+    this->data = new char[len];
+    for(int i = 0; i < len; ++i){
+      this->data[i] = rhs.charAt(i);
+    }
+    this->data[len] = '\0';
+  }
+  return *this;
+}
+
+string& string::operator=(const char* rhs){
+  string *temp = new string(rhs);
+  *this = rhs;
+  delete temp;
+  return *this;
+}
+
+string& string::operator+=(const string& rhs){
+  *this->concat(rhs);
+  return *this;
+}
+
+string& string::operator+=(const char* rhs){
+  *this->concat(rhs);
+  return *this;
+}
+
+const string string::operator+(const string& rhs) const{
+  return string(*this) += rhs;
+}
+
+const string string::operator+(const char* rhs) const{
+  return string(*this) += rhs;
+}
+
+bool string::operator==(const char* rhs) const{
+  return this->equals(rhs);
+}
+
+bool string::operator==(const string& rhs) const{
+  return this->equals(rhs);
+}
+
+bool string::operator!=(const char* rhs) const{
+  return !this->equals(rhs);
+}
+
+bool string::operator!=(const string& rhs) const{
+  return !this->equals(rhs);
+}
+
+//----------------------
+// non-member operators.
+//----------------------
+
+ostream& Jing::operator<<(ostream& os, const string& str){
+  if(str.data != 0)
+    os << str.data;
+  return os;
+}
+
+string& operator+=(const char* lhs, const string& rhs){
+  return (string(lhs) += rhs);
+}
+
+const string operator+(const char* lhs, const string& rhs){
+  return (string(lhs) + rhs);
+}
+
+bool operator==(const char* lhs, const string& rhs){
+  return rhs.equals(lhs);
 }
 
