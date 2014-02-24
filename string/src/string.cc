@@ -13,17 +13,17 @@ string::string(){
 
 string::string(const string& str){
   this->init();
-  str.getChars(this->data, 0, str.length());
+  str.getChars(&(this->data), 0, str.length());
 }
 
 string::string(const string& str, size_t length){
   this->init();
-  str.getChars(this->data, 0, length);
+  str.getChars(&(this->data), 0, length);
 }
 
 string::string(const string& str, index_t offset, size_t length){
   this->init();
-  str.getChars(this->data, offset, length);
+  str.getChars(&(this->data), offset, length);
 }
 
 string::string(const char* s){
@@ -80,7 +80,10 @@ string::~string(){
 }
 
 char string::charAt(index_t idx) const{
-  return this->data[idx];
+  if(this->data != 0)
+    return this->data[idx];
+//probably want an exception..
+  return 0;
 }
 
 int string::compareToIC(const string& str) const{
@@ -154,17 +157,21 @@ bool string::equals(const char* s) const{
   return this->equals(string(s));
 }
 
-void string::getChars(char* dest) const{
+void string::getChars(char** dest) const{
   this->getChars(dest, 0, this->length());
 }
 
-void string::getChars(char* dest, index_t start, index_t end) const{
+void string::getChars(char** dest, size_t length) const{
+  this->getChars(dest, 0, length);
+}
+
+void string::getChars(char** dest, index_t start, index_t end) const{
   unsigned int size = end - start + 1;
-  dest = new char[size + 1];
-  for(int i = 0; i < size; ++i){
-    dest[i] = this->data[i];
+  char * temp = new char[size + 1];
+  for(int i = start; i < end; ++i){
+    temp[i] = this->data[i];
   }
-  dest[size] = '\0';
+  *dest = temp;
 }
 
 int string::hashCode() const{

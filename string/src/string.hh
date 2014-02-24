@@ -46,8 +46,9 @@ public:
 //formats a string using a format string and args list..
 //  string& format(
   //uses uninitialized pointer
-  void getChars(char* dest) const;
-  void getChars(char* dest, index_t start, index_t end) const;
+  void getChars(char** dest) const;
+  void getChars(char** dest, size_t length) const;
+  void getChars(char** dest, index_t start, index_t end) const;
   int hashCode() const;
   index_t indexOf(char ch) const;
   index_t indexOf(char ch, index_t start) const;

@@ -13,7 +13,8 @@ int main(int argc, char** argv){
   cout << foo.charAt(1) << endl;
   cout << foo << endl;
   cout << foo.charAt(1) << endl;
-  cout << bar.charAt(1);
+
+  cout << bar.charAt(1) << endl;
   cout << bar << endl;
 
   return 0;
