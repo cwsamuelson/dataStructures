@@ -13,10 +13,10 @@ main:libexcept.a test.o
 	$(CC) test.o -L/usr/local/lib/Jing/ -lexcept -o main
 
 except.o:except.cc
-	$(CC) -c except.cc
+	$(CC) -c -Wall except.cc
 
 test.o:test.cc
-	$(CC) -c test.cc
+	$(CC) -c -Wall test.cc
 
 libexcept.a:except.o
 	ar rcs libexcept.a except.o

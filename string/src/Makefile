@@ -10,13 +10,13 @@ dyn:dynamic
 dynamic:libstring.so
 
 main:libstring.a test.o
-	$(CC) test.o -L/usr/local/lib/Jing/ -lstring -o main
+	$(CC) test.o -L/usr/local/lib/Jing/ -lstring -lexcept -o main
 
 string.o:string.cc
-	$(CC) -c string.cc
+	$(CC) -c -Wall string.cc
 
 test.o:test.cc
-	$(CC) -c test.cc
+	$(CC) -c -Wall test.cc
 
 libstring.a:string.o
 	ar rcs libstring.a string.o
@@ -32,3 +32,4 @@ clean:
 
 cleanlib:
 	rm libstring.a
+

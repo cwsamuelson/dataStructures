@@ -1,7 +1,7 @@
 #ifndef __EXCEPTION_H__
 #define __EXCEPTION_H__
 
-#include<Jing/string.hh>
+#include<Jing/string>
 
 namespace Jing{
 

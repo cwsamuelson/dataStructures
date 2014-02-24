@@ -1,4 +1,4 @@
-#include<Jing/string.hh>
+#include<Jing/string>
 #include<iostream>
 
 using std::cout;

@@ -103,6 +103,8 @@ index_t ArrayList<T>::lastIndexOf(T t) const{
 
 template<class T>
 T ArrayList<T>::get(index_t n) const{
+  if(n >= this->size())
+    throw listIndexOutOfBounds(string("shit sucks"));
   return this->first->get(n);
 }
 
@@ -338,5 +340,18 @@ void ArrayList<T>::listIterator::remove(){
 template<class T>
 void ArrayList<T>::listIterator::reset(){
   this->idx = 0;
+}
+
+/**********************
+ *  IndexOutOfBounds  *
+ **********************/
+
+listIndexOutOfBounds::listIndexOutOfBounds(const char * message):exception(message){
+}
+
+listIndexOutOfBounds::listIndexOutOfBounds(const string& message):exception(message){
+}
+
+const string& listIndexOutOfBounds::what() const{
 }
 

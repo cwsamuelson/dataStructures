@@ -2,9 +2,18 @@
 #define __ARRAYLIST_H__
 
 #include<Jing/AbstractList.hh>
+#include<Jing/except>
 #include<Jing/Misc.hh>
 
 namespace Jing{
+
+class listIndexOutOfBounds : public exception{
+public:
+  listIndexOutOfBounds(const char * message);
+  listIndexOutOfBounds(const string& message);
+
+  const string& what() const;
+};
 
 template<class T>
 class ArrayList:public AbstractList<T>{

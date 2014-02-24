@@ -3,17 +3,13 @@ flags:=-Wall
 dflags:=-g -DDEBUG
 cflags:=-c
 
-default: all
+default:main
 
-all:main
+main:test.o list.cc
+	$(CC) test.o -L/usr/local/lib/Jing -lexcept -lstring -o main
 
-main:test.o list.hh
-	$(CC) $(dflags) -o main test.o
-
-test.o:test.cc list.hh
-	$(CC) $(dflags) $(cflags) $(flags) test.cc
-
-list.hh:list.cc
+test.o:test.cc
+	$(CC) -c -Wall test.cc
 
 clean:
 	rm *.o main core

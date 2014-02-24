@@ -1,4 +1,4 @@
-#include<Jing/string.hh>
+#include<Jing/string>
 
 using namespace Jing;
 
@@ -82,7 +82,6 @@ string::~string(){
 char string::charAt(index_t idx) const{
   if(this->data != 0)
     return this->data[idx];
-//probably want an exception..
   return 0;
 }
 

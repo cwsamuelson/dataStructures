@@ -227,7 +227,11 @@ void addTests(){
   cout << endl;
 
   cout << "try bad get size + 1" << endl;
+  try{
   cout << foo.get(foo.size()) << endl;
+  } catch(listIndexOutOfBounds& iob) {
+    cout << "oops!" << iob.what() << endl;
+  }
 
   cout << "arbitrary good insert" << endl;
   cout << "list size:" << foo.size() << endl;
