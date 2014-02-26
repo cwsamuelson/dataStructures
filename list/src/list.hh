@@ -12,7 +12,7 @@ public:
   listIndexOutOfBounds(const char * message);
   listIndexOutOfBounds(const string& message);
 
-  const string& what() const;
+//  const string& what() const;
 };
 
 template<class T>

@@ -103,8 +103,11 @@ index_t ArrayList<T>::lastIndexOf(T t) const{
 
 template<class T>
 T ArrayList<T>::get(index_t n) const{
-  if(n >= this->size())
-    throw listIndexOutOfBounds(string("shit sucks"));
+  if(n >= this->size()){
+//    string* temp = new string("Index: ");
+//    temp += n;
+    throw listIndexOutOfBounds( string("Index: " n "is out of list bounds.\nList size is: " this->size()) );
+  }
   return this->first->get(n);
 }
 
@@ -352,6 +355,6 @@ listIndexOutOfBounds::listIndexOutOfBounds(const char * message):exception(messa
 listIndexOutOfBounds::listIndexOutOfBounds(const string& message):exception(message){
 }
 
-const string& listIndexOutOfBounds::what() const{
-}
-
+//const string& listIndexOutOfBounds::what() const{
+//}
+//

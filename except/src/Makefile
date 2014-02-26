@@ -9,8 +9,11 @@ dynamic:libexcept.so
 dyn:dynamic
 dynamic:libexcept.so
 
-main:libexcept.a test.o
-	$(CC) test.o -L/usr/local/lib/Jing/ -lexcept -o main
+main:libexcept.a test.o testing.o
+	$(CC) testing.o test.o -L/usr/local/lib/Jing/ -lexcept -lstring -o main
+
+testing.o:testing.cc
+	$(CC) -c -Wall testing.cc
 
 except.o:except.cc
 	$(CC) -c -Wall except.cc
