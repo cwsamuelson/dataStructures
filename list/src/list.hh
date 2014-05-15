@@ -7,19 +7,11 @@
 
 namespace Jing{
 
-class listIndexOutOfBounds : public exception{
-public:
-  listIndexOutOfBounds(const char * message);
-  listIndexOutOfBounds(const string& message);
-
-//  const string& what() const;
-};
-
 template<class T>
-class ArrayList:public AbstractList<T>{
+class list:public AbstractList<T>{
 private:
   class listNode{
-    friend class ArrayList<T>;
+    friend class list<T>;
   private:
     T data;
     listNode *next;
@@ -41,11 +33,11 @@ private:
   class listIterator:public Iterator<T>{
     private:
       index_t idx;
-      ArrayList* theList;
+      list* theList;
 
     public:
-      listIterator(ArrayList* thisList);
-      listIterator(ArrayList* thisList, index_t n);
+      listIterator(list* thisList);
+      listIterator(list* thisList, index_t n);
       bool hasNext();
       T next();
       void remove();
@@ -60,9 +52,9 @@ private:
   void init();
 
 public:
-  ArrayList();
-  ArrayList(AbstractList<T> *c);
-  ArrayList(int initialCapacity);
+  list();
+  list(AbstractList<T> *c);
+  list(int initialCapacity);
 
   bool add(T t);
   bool add(T t, index_t n);
@@ -89,6 +81,19 @@ public:
   T* toArray();
   void toArray(T* arr);
   void trimToSize();
+
+  class listIndexOutOfBounds : public exception{
+  private:
+    void initWithList(const Jing::list<T>& theList);
+  public:
+    listIndexOutOfBounds(const char * message);
+    listIndexOutOfBounds(const string& message);
+    listIndexOutOfBounds(const list<T>& theList);
+    listIndexOutOfBounds(const list<T>& theList, int index);
+  
+  //  const string& what() const;
+  };
+
 };
 
 }

@@ -7,12 +7,15 @@ namespace Jing{
 
 class exception{
 private:
-  string& msg = *(new string());
+  void init();
+protected:
+  Jing::string& msg;
 public:
+  exception();
   exception(const char* message);
   exception(const string& message);
 
-  const string& what() const;
+  virtual const Jing::string& what() const;
 };
 
 }

@@ -1,8 +1,9 @@
 
 using namespace Jing;
+//using Jing::exception;
 
 template<class T>
-void ArrayList<T>::init(){
+void list<T>::init(){
   this->first = 0;
   this->last = 0;
   this->count = 0;
@@ -10,23 +11,23 @@ void ArrayList<T>::init(){
 }
 
 template<class T>
-ArrayList<T>::ArrayList(){
+list<T>::list(){
   this->init();
 }
 
 template<class T>
-ArrayList<T>::ArrayList(AbstractList<T> *c){
+list<T>::list(AbstractList<T> *c){
   this->init();
   this->addAll(c);
 }
 
 template<class T>
-bool ArrayList<T>::add(T t){
+bool list<T>::add(T t){
   return this->add(t, 0);
 }
 
 template<class T>
-bool ArrayList<T>::add(T t, index_t n){
+bool list<T>::add(T t, index_t n){
   if(n < 0)
     return false; 
   ++this->count;
@@ -51,7 +52,7 @@ bool ArrayList<T>::add(T t, index_t n){
 }
 
 template<class T>
-bool ArrayList<T>::addAll(AbstractList<T> *c){
+bool list<T>::addAll(AbstractList<T> *c){
   listIterator *iter = (listIterator*)c->iterator();
   bool ret = true;
   while(iter->hasNext()){
@@ -62,21 +63,21 @@ bool ArrayList<T>::addAll(AbstractList<T> *c){
 }
 
 template<class T>
-void ArrayList<T>::clear(){
+void list<T>::clear(){
   while(this->size() > 0){
     this->remove();
   }
 }
 
 template<class T>
-bool ArrayList<T>::contains(T t) const{
+bool list<T>::contains(T t) const{
   if(this->first->find(t, 0) > this->size())
     return false;
   else return true;
 }
 
 template<class T>
-bool ArrayList<T>::containsAll(Collection<T> *c) const{
+bool list<T>::containsAll(Collection<T> *c) const{
   Iterator<T> *temp = c->iterator();
   while(temp->hasNext()){
     if(!this->contains(temp->next())){
@@ -87,37 +88,35 @@ bool ArrayList<T>::containsAll(Collection<T> *c) const{
 }
 
 template<class T>
-bool ArrayList<T>::equals(Collection<T> *c) const{
+bool list<T>::equals(Collection<T> *c) const{
   return false;
 }
 
 template<class T>
-index_t ArrayList<T>::indexOf(T t) const{
+index_t list<T>::indexOf(T t) const{
   return this->first->find(t, 0);
 }
 
 template<class T>
-index_t ArrayList<T>::lastIndexOf(T t) const{
+index_t list<T>::lastIndexOf(T t) const{
   return this->last->backFind(t, this->size() - 1);
 }
 
 template<class T>
-T ArrayList<T>::get(index_t n) const{
+T list<T>::get(index_t n) const{
   if(n >= this->size()){
-//    string* temp = new string("Index: ");
-//    temp += n;
-    throw listIndexOutOfBounds( string("Index: " n "is out of list bounds.\nList size is: " this->size()) );
+    throw listIndexOutOfBounds(*this, n);
   }
   return this->first->get(n);
 }
 
 template<class T>
-int ArrayList<T>::hashCode() const{
+int list<T>::hashCode() const{
   return 0;
 }
 
 template<class T>
-bool ArrayList<T>::isEmpty() const{
+bool list<T>::isEmpty() const{
   if(this->size() == 0)
     return true;
   else
@@ -125,18 +124,18 @@ bool ArrayList<T>::isEmpty() const{
 }
 
 template<class T>
-Iterator<T> *ArrayList<T>::iterator() const{
+Iterator<T> *list<T>::iterator() const{
   this->iter->reset();
   return this->iter;
 }
 
 template<class T>
-T ArrayList<T>::remove(){
+T list<T>::remove(){
   return this->remove((index_t)0);
 }
 
 template<class T>
-T ArrayList<T>::remove(index_t n){
+T list<T>::remove(index_t n){
   listNode *temp = first;
   --this->count;
   if(n == 0){
@@ -151,7 +150,7 @@ T ArrayList<T>::remove(index_t n){
 }
 
 template<class T>
-bool ArrayList<T>::remove(T t){
+bool list<T>::remove(T t){
   index_t idx = this->indexOf(t);
   if(idx != -1){
     this->remove(idx);
@@ -161,7 +160,7 @@ bool ArrayList<T>::remove(T t){
 }
 
 template<class T>
-bool ArrayList<T>::removeAll(AbstractList<T> *c){
+bool list<T>::removeAll(AbstractList<T> *c){
   Iterator<T> *temp = c->iterator();
   while(temp->hasNext()){
     this->remove(temp->next());
@@ -170,23 +169,23 @@ bool ArrayList<T>::removeAll(AbstractList<T> *c){
 }
 
 template<class T>
-void ArrayList<T>::removeRange(int fromIndex, int toIndex){
+void list<T>::removeRange(int fromIndex, int toIndex){
 }
 
 template<class T>
-size_t ArrayList<T>::size() const{
+size_t list<T>::size() const{
   return this->count;
 }
 
 //create a new array containing all elements in proper order.
 template<class T>
-T* ArrayList<T>::toArray(){
+T* list<T>::toArray(){
   return 0;
 }
 
 //take argument pointer to create and return an array containing all elements in proper order
 template<class T>
-void ArrayList<T>::toArray(T* arr){
+void list<T>::toArray(T* arr){
   return 0;
 }
 
@@ -197,19 +196,19 @@ void ArrayList<T>::toArray(T* arr){
 
 
 template<class T>
-ArrayList<T>::listNode::listNode(T t){
+list<T>::listNode::listNode(T t){
   this->init();
   this->data = t;
 }
 
 template<class T>
-bool ArrayList<T>::listNode::add(T t){
+bool list<T>::listNode::add(T t){
   return this->add(t, 0);
 
 }
 
 template<class T>
-bool ArrayList<T>::listNode::add(T t, index_t n){
+bool list<T>::listNode::add(T t, index_t n){
   if(n < 0)
     return false; 
   if(n > 0){
@@ -235,7 +234,7 @@ bool ArrayList<T>::listNode::add(T t, index_t n){
 }
 
 template<class T>
-T ArrayList<T>::listNode::remove(index_t n){
+T list<T>::listNode::remove(index_t n){
   if(n > 0)
     return this->next->remove(n - 1);
   else if(n == 0){
@@ -259,7 +258,7 @@ T ArrayList<T>::listNode::remove(index_t n){
 }
 
 template<class T>
-T ArrayList<T>::listNode::get(index_t n) const{
+T list<T>::listNode::get(index_t n) const{
   if(n > 0){
     if(this->next != 0){
       return this->next->get(n - 1);
@@ -275,7 +274,7 @@ T ArrayList<T>::listNode::get(index_t n) const{
 }
 
 template<class T>
-index_t ArrayList<T>::listNode::find(T t, index_t n){
+index_t list<T>::listNode::find(T t, index_t n){
   if(this->data != t){
     if(this->next != 0){
       return this->next->find(t, n + 1);
@@ -287,7 +286,7 @@ index_t ArrayList<T>::listNode::find(T t, index_t n){
 }
 
 template<class T>
-index_t ArrayList<T>::listNode::backFind(T t, index_t n){
+index_t list<T>::listNode::backFind(T t, index_t n){
   if(this->data != t){
     if(this->prev != 0){
       return this->prev->backFind(t, n - 1);
@@ -299,7 +298,7 @@ index_t ArrayList<T>::listNode::backFind(T t, index_t n){
 }
 
 template<class T>
-void ArrayList<T>::listNode::init(){
+void list<T>::listNode::init(){
   this->next = 0;
   this->prev = 0;
 }
@@ -311,19 +310,19 @@ void ArrayList<T>::listNode::init(){
 
 
 template<class T>
-ArrayList<T>::listIterator::listIterator(ArrayList<T> *thisList){
+list<T>::listIterator::listIterator(list<T> *thisList){
   this->theList = thisList;
   this->idx = 0;
 }
 
 template<class T>
-ArrayList<T>::listIterator::listIterator(ArrayList<T> *thisList, index_t n){
+list<T>::listIterator::listIterator(list<T> *thisList, index_t n){
   this->theList = thisList;
   this->idx = n;
 }
 
 template<class T>
-bool ArrayList<T>::listIterator::hasNext(){
+bool list<T>::listIterator::hasNext(){
   if(this->idx < theList->size())
     return true;
   else
@@ -331,17 +330,17 @@ bool ArrayList<T>::listIterator::hasNext(){
 }
 
 template<class T>
-T ArrayList<T>::listIterator::next(){
+T list<T>::listIterator::next(){
   return theList->get(this->idx++);
 }
 
 template<class T>
-void ArrayList<T>::listIterator::remove(){
+void list<T>::listIterator::remove(){
   theList->remove(idx);
 }
 
 template<class T>
-void ArrayList<T>::listIterator::reset(){
+void list<T>::listIterator::reset(){
   this->idx = 0;
 }
 
@@ -349,12 +348,37 @@ void ArrayList<T>::listIterator::reset(){
  *  IndexOutOfBounds  *
  **********************/
 
-listIndexOutOfBounds::listIndexOutOfBounds(const char * message):exception(message){
+template<class T>
+void list<T>::listIndexOutOfBounds::initWithList(const list<T>& theList){
+  this->msg = "\n";
+  this->msg += "Index out of bounds.\n";
+  this->msg += "List length: ";
+  this->msg += theList.size();
+  this->msg += "\n";
 }
 
-listIndexOutOfBounds::listIndexOutOfBounds(const string& message):exception(message){
+template<class T>
+list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const char * message):exception(message){
 }
 
-//const string& listIndexOutOfBounds::what() const{
+template<class T>
+list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const string& message):exception(message){
+}
+
+template<class T>
+list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const list<T>& theList){
+  this->initWithList(theList);
+}
+
+template<class T>
+list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const list<T>& theList, int index){
+  this->initWithList(theList);
+  this->msg += "Given index: ";
+  this->msg += (index);
+  this->msg += "\n";
+}
+
+//const string& listIndexOutOfBounds::listIndexOutOfBounds::what() const{
 //}
 //
+

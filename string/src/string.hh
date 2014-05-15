@@ -27,14 +27,17 @@ public:
   string(const char* s);
   string(const char* s, size_t length);
   string(const char* s, index_t offset, size_t length);
+  string(const int i);
+  string(const char c);
   ~string();
 
   char charAt(index_t idx) const;
   //IgnoreCase
   int compareToIC(const string& str) const;
   int compareTo(const string& str) const;
-  string* concat(const string& str);
-  string* concat(char* s);
+  string& concat(const string& str);
+  string& concat(char* s);
+  string& concat(int i);
   bool contains(const string& str) const;
   bool endsWith(const string& suffix) const;
   bool startsWith(const string& prefix) const;
@@ -60,13 +63,13 @@ public:
   index_t lastIndexOf(const string& str, index_t start) const;
   bool isEmpty() const;
   size_t length() const;
-  string* replace(char oldChar, char newChar);
-  string* subString(index_t idx) const;
-  string* subString(index_t start, index_t end) const;
+  string& replace(char oldChar, char newChar);
+  string& subString(index_t idx) const;
+  string& subString(index_t start, index_t end) const;
   char* toCharArray() const;
-  string* toUpper() const;
-  string* toLower() const;
-  string* trim();
+  string& toUpper() const;
+  string& toLower() const;
+  string& trim();
 
   //returned string must be deleted by user.
   //factory methods
@@ -74,14 +77,19 @@ public:
   static string& copyValue(char* data, size_t length);
   static string& copyValue(char* data, index_t offset, size_t length);
 
+  static const string& intToString(int i);
+
   string& operator=(const string& rhs);
   string& operator=(const char* rhs);
+  string& operator=(const int rhs);
 
   string& operator+=(const string& rhs);
   string& operator+=(const char* rhs);
+  string& operator+=(const int rhs);
 
   const string operator+(const string& rhs) const;
   const string operator+(const char* rhs) const;
+  const string operator+(const int rhs);
 
   bool operator==(const string& rhs) const;
   bool operator==(const char* rhs) const;
@@ -92,6 +100,7 @@ public:
   friend ostream& operator<<(ostream& os, const string& str);
   friend string& operator+=(const char* lhs, const string& rhs);
   friend const string operator+(const char* lhs, const string& rhs);
+  friend const string operator+(char lhs, const string& rhs);
   friend bool operator==(const char* lhs, const string& rhs);
 
 };
@@ -101,6 +110,7 @@ ostream& operator<<(ostream& os, const string& str);
 string& operator+=(const char* lhs, const string& rhs);
 
 const string operator+(const char* lhs, const string& rhs);
+const string operator+(char lhs, const string& rhs);
 
 bool operator==(const char* lhs, const string& rhs);
 

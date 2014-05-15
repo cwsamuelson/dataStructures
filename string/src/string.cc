@@ -7,6 +7,64 @@ void string::init(){
     this->size = 0;
 }
 
+const string& string::intToString(int i){
+  string *temp = new string();
+//  char *temp;
+  int num = i;
+  int digit;
+  char c;
+  c = '\0';
+  while(num > 0){
+    switch(num % 10){
+    case 0:
+      digit = 0;
+      c = '0';
+      break;
+    case 1:
+      digit = 1;
+      c = '1';
+      break;
+    case 2:
+      digit = 2;
+      c = '2';
+      break;
+    case 3:
+      digit = 3;
+      c = '3';
+      break;
+    case 4:
+      digit = 4;
+      c = '4';
+      break;
+    case 5:
+      digit = 5;
+      c = '5';
+      break;
+    case 6:
+      digit = 6;
+      c = '6';
+      break;
+    case 7:
+      digit = 7;
+      c = '7';
+      break;
+    case 8:
+      digit = 8;
+      c = '8';
+      break;
+    case 9:
+      digit = 9;
+      c = '9';
+      break;
+    }
+
+    num -= digit;
+    num /=10;
+    temp = c + temp;
+  }
+  return *temp;
+}
+
 string::string(){
   this->init();
 }
@@ -74,6 +132,18 @@ string::string(const char* s, index_t offset, size_t length){
   this->size = idx;
 }
 
+string::string(const int i){
+  *this = intToString(i);
+}
+
+string::string(const char c){
+  this->init();
+  this->data = new char[2];
+  this->data[0] = c;
+  this->data[1] = '\0';
+  this->size = 1;
+}
+
 string::~string(){
   if(this->data != 0)
     delete this->data;
@@ -101,7 +171,7 @@ int string::compareTo(const string& str) const{
   return res;
 }
 
-string* string::concat(const string& str){
+string& string::concat(const string& str){
 //might be getting extra null characters
   size_t newSize = this->length() + str.length() + 1;
   //NEED TO CLEAN UP TEMP
@@ -115,12 +185,15 @@ string* string::concat(const string& str){
   }
   temp[newSize] = '\0';
 
-  return new string(temp);
+  return *(new string(temp));
 }
 
-string* string::concat(char* s){
+string& string::concat(char* s){
   string temp(s);
   return this->concat(temp);
+}
+
+string& string::concat(int i){
 }
 
 bool string::contains(const string& str) const{
@@ -227,11 +300,11 @@ bool string::isEmpty() const{
   return false;
 }
 
-size_t string::length() const{
+Jing::size_t string::length() const{
   return this->size;
 }
 
-string* string::replace(char oldChar, char newChar){
+string& string::replace(char oldChar, char newChar){
   char* ret = new char[this->length()];
   for(int i = 0; i < this->length(); i++){
     if(this->charAt(i) == oldChar){
@@ -242,17 +315,17 @@ string* string::replace(char oldChar, char newChar){
   }
   string* str = new string(ret);
   delete ret;
-  return str;
+  return *str;
 }
 
-string* string::subString(index_t idx) const{
+string& string::subString(index_t idx) const{
   return this->subString(idx, this->length());
 }
 
 //Returned reference must be deleted by user.
-string* string::subString(index_t start, index_t end) const{
+string& string::subString(index_t start, index_t end) const{
   if(start < this->length() && end < this->length()){
-    return new string(this->data, start, end - start);
+    return *(new string(this->data, start, end - start));
   }
   //throw exception
 }
@@ -267,28 +340,28 @@ char* string::toCharArray() const{
 }
 
 //Returned reference must be deleted by user.
-string* string::toUpper() const{
+string& string::toUpper() const{
   string* ret = new string(this->data);
   for(int i = 0; i < this->length(); ++i){
     if(ret->data[i] >= 97 && ret->data[i] <= 122){
       ret->data[i] -= 32;
     }
   }
-  return ret;
+  return *ret;
 }
 
 //Returned reference must be deleted by user.
-string* string::toLower() const{
+string& string::toLower() const{
   string* ret = new string(this->data);
   for(int i = 0; i < this->length(); ++i){
     if(ret->data[i] >= 65 && ret->data[i] <= 90){
       ret->data[i] += 32;
     }
   }
-  return ret;
+  return *ret;
 }
 
-string* string::trim(){
+string& string::trim(){
 }
 
 string& string::operator=(const string& rhs){
@@ -309,18 +382,30 @@ string& string::operator=(const string& rhs){
 
 string& string::operator=(const char* rhs){
   string *temp = new string(rhs);
-  *this = rhs;
+  *this = *temp;
+  delete temp;
+  return *this;
+}
+
+string& string::operator=(const int rhs){
+  string *temp = new string(rhs);
+  *this = *temp;
   delete temp;
   return *this;
 }
 
 string& string::operator+=(const string& rhs){
-  *this->concat(rhs);
+  this->concat(rhs);
   return *this;
 }
 
 string& string::operator+=(const char* rhs){
-  *this->concat(rhs);
+  this->concat(rhs);
+  return *this;
+}
+
+string& string::operator+=(const int rhs){
+  this->concat(rhs);
   return *this;
 }
 
@@ -329,6 +414,10 @@ const string string::operator+(const string& rhs) const{
 }
 
 const string string::operator+(const char* rhs) const{
+  return string(*this) += rhs;
+}
+
+const string string::operator+(const int rhs){
   return string(*this) += rhs;
 }
 
@@ -353,8 +442,9 @@ bool string::operator!=(const string& rhs) const{
 //----------------------
 
 ostream& Jing::operator<<(ostream& os, const string& str){
-  if(str.data != 0)
+  if(str.data != 0){
     os << str.data;
+  }
   return os;
 }
 
@@ -363,6 +453,10 @@ string& operator+=(const char* lhs, const string& rhs){
 }
 
 const string operator+(const char* lhs, const string& rhs){
+  return (string(lhs) + rhs);
+}
+
+const string operator+(char lhs, const string& rhs){
   return (string(lhs) + rhs);
 }
 

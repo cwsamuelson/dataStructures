@@ -10,7 +10,7 @@ public:
   testEx(const char * message);
   testEx(const string& message);
 
-//  const string& what() const;
+  const string& what() const;
 };
 
 class testing{

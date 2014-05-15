@@ -25,7 +25,7 @@ int main(int argc, char **argv){
 
 void iteratorTests(){
   cout << "iteraterTests" << endl;
-  ArrayList<char> foo;
+  list<char> foo;
   cout << "list size:" << foo.size() << endl;
   foo.add('a');
   foo.add('b');
@@ -51,7 +51,7 @@ void equalsTests(){
 
 void indexTests(){
   cout << "indexTests" << endl;
-  ArrayList<char> foo;
+  list<char> foo;
   cout << "list size:" << foo.size() << endl;
   foo.add('a');
   foo.add('a');
@@ -82,7 +82,7 @@ void indexTests(){
 
 void containsTests(){
   cout << "containsTests" << endl;
-  ArrayList<char> foo;
+  list<char> foo;
 
   cout << "starting list" << endl;
   cout << "list size:" << foo.size() << endl;
@@ -112,8 +112,9 @@ void containsTests(){
   cout << "contain ";
   foo.contains('z') ? cout << "succeeded" : cout << "failed";cout << endl;
   cout << endl;
+  cout << endl;
 
-  ArrayList<char> bar;
+  list<char> bar;
   cout << "list size:" << bar.size() << endl;
   bar.add('b');
   bar.add('c');
@@ -122,8 +123,9 @@ void containsTests(){
   cout << "contains all 'b,c'" << endl;
   foo.containsAll(&bar) ? cout << "succeeded" : cout << "failed";cout << endl;
   cout << endl;
+  cout << endl;
 
-  ArrayList<char> baz;
+  list<char> baz;
   cout << "list size:" << baz.size() << endl;
   baz.add('x');
   baz.add('y');
@@ -133,8 +135,9 @@ void containsTests(){
   cout << "bad contains all 'x,y,z'" << endl;
   foo.containsAll(&baz) ? cout << "succeeded" : cout << "failed";cout << endl;
   cout << endl;
+  cout << endl;
 
-  ArrayList<char> bop;
+  list<char> bop;
   cout << "list size:" << bop.size() << endl;
   bop.add('b');
   bop.add('c');
@@ -145,6 +148,7 @@ void containsTests(){
 
   cout << "bad mixed contains all 'b,c,x,y,z'" << endl;
   foo.containsAll(&bop) ? cout << "succeeded" : cout << "failed";cout << endl;
+  cout << endl;
   cout << endl;
 
   bop.clear();
@@ -158,6 +162,7 @@ void containsTests(){
   cout << "bad mixed contains all 'x,y,z,b,c'" << endl;
   foo.containsAll(&bop) ? cout << "succeeded" : cout << "failed";cout << endl;
   cout << endl;
+  cout << endl;
 
 
   cout << endl;
@@ -166,12 +171,13 @@ void containsTests(){
 
 void clearTests(){
   cout << "clearTests" << endl;
-  ArrayList<char> foo;
+  list<char> foo;
 
   cout << "prelim clear" << endl;
   cout << "before size:" << foo.size() << endl;
   foo.clear();
   cout << "after size:" << foo.size() << endl;
+  cout << endl;
   cout << endl;
 
   cout << "list size:" << foo.size() << endl;
@@ -189,6 +195,7 @@ void clearTests(){
     cout << temp->next();
   }
   cout << endl;
+  cout << endl;
 
   cout << "full list clear" << endl;
   foo.clear();
@@ -197,6 +204,7 @@ void clearTests(){
     cout << temp->next();
   }
   cout << endl;
+  cout << endl;
 
   cout << endl;
   cout << endl;
@@ -204,7 +212,7 @@ void clearTests(){
 
 void addTests(){
   cout << "addTests" << endl;
-  ArrayList<char> foo;
+  list<char> foo;
 
   cout << "print empty list" << endl;
 
@@ -213,6 +221,7 @@ void addTests(){
   while(temp->hasNext()){
     cout << temp->next();
   }
+  cout << endl;
   cout << endl;
   cout << "add basic characters" << endl;
   cout << "list size:" << foo.size() << endl;
@@ -225,12 +234,19 @@ void addTests(){
     cout << temp->next();
   }
   cout << endl;
+  cout << endl;
 
   cout << "try bad get size + 1" << endl;
   try{
     cout << foo.get(foo.size()) << endl;
-  } catch(listIndexOutOfBounds& iob) {
-    cout << "oops! " << iob.what() << endl;
+  } catch(list<char>::listIndexOutOfBounds& iob) {
+    cout << "size:" << iob.what().length() << endl;
+    for(int i = 0; i < iob.what().length(); ++i){
+      cout << iob.what().charAt(i) << endl;
+      cout << "?" << i << endl;
+    }
+    cout << iob.what() << endl;
+    cout << "wiggle wiggle!" << endl;
   }
 
   cout << "arbitrary good insert" << endl;
@@ -241,6 +257,7 @@ void addTests(){
   while(temp->hasNext()){
     cout << temp->next();
   }
+  cout << endl;
   cout << endl;
 
   //inserting to wrong index
@@ -253,6 +270,7 @@ void addTests(){
     cout << temp->next();
   }
   cout << endl;
+  cout << endl;
 
   cout << "arbitrary bad insert 2" << endl;
   cout << "list size:" << foo.size() << endl;
@@ -262,6 +280,7 @@ void addTests(){
   while(temp->hasNext()){
     cout << temp->next();
   }
+  cout << endl;
   cout << endl;
 
   cout << "remove first value" << endl;
@@ -273,6 +292,7 @@ void addTests(){
     cout << temp->next();
   }
   cout << endl;
+  cout << endl;
   cout << "remove last value" << endl;
   cout << "list size:" << foo.size() << endl;
   foo.remove(foo.size());
@@ -281,6 +301,7 @@ void addTests(){
   while(temp->hasNext()){
     cout << temp->next();
   }
+  cout << endl;
   cout << endl;
 
   cout << "remove good 'a' value" << endl;
@@ -292,6 +313,7 @@ void addTests(){
     cout << temp->next();
   }
   cout << endl;
+  cout << endl;
 
   cout << "remove bad 'l' value" << endl;
   cout << "list size:" << foo.size() << endl;
@@ -301,6 +323,7 @@ void addTests(){
   while(temp->hasNext()){
     cout << temp->next();
   }
+  cout << endl;
   cout << endl;
 
   cout << endl;
