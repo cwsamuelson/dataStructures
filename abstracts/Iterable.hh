@@ -5,10 +5,9 @@
 
 namespace Jing{
 
-template<class T>
 class Iterable{
 public:
-  virtual Iterator<T> *iterator() const = 0;
+  virtual Iterator *iterator() const = 0;
 };
 
 }

@@ -6,6 +6,16 @@ using std::endl;
 
 using namespace Jing;
 
+class beep:public Object{
+public:
+  int boop(){ cout << "BEEP BOOP" << endl; }
+  friend ostream& operator<<(ostream& os, const string& str);
+};
+ostream& operator<<(ostream& os, const string& str){
+  os << "BOOP BEEP" << endl;
+  return os;
+}
+
 //add includes add, remove, get, and isempty
 void addTests();
 void clearTests();
@@ -25,14 +35,14 @@ int main(int argc, char **argv){
 
 void iteratorTests(){
   cout << "iteraterTests" << endl;
-  list<char> foo;
+  list foo;
   cout << "list size:" << foo.size() << endl;
-  foo.add('a');
-  foo.add('b');
-  foo.add('c');
+  foo.add(beep a);
+  foo.add(beep b);
+  foo.add(beep c);
   cout << "list size:" << foo.size() << endl;
 
-  Iterator<char> *temp = foo.iterator();
+  Iterator *temp = foo.iterator();
 
   while(temp->hasNext()){
     cout << temp->next();
@@ -51,13 +61,13 @@ void equalsTests(){
 
 void indexTests(){
   cout << "indexTests" << endl;
-  list<char> foo;
+  list foo;
   cout << "list size:" << foo.size() << endl;
-  foo.add('a');
-  foo.add('a');
-  foo.add('b');
-  foo.add('c');
-  foo.add('b');
+  foo.add(beep a);
+  foo.add(beep a);
+  foo.add(beep b);
+  foo.add(beep c);
+  foo.add(beep b);
   cout << "list size:" << foo.size() << endl;
 
   Iterator<char> *temp = foo.iterator();
@@ -82,7 +92,7 @@ void indexTests(){
 
 void containsTests(){
   cout << "containsTests" << endl;
-  list<char> foo;
+  list foo;
 
   cout << "starting list" << endl;
   cout << "list size:" << foo.size() << endl;
@@ -92,7 +102,7 @@ void containsTests(){
   foo.add('a');
   cout << "list size:" << foo.size() << endl;
 
-  Iterator<char> *temp = foo.iterator();
+  Iterator *temp = foo.iterator();
 
   while(temp->hasNext()){
     cout << temp->next();
@@ -114,7 +124,7 @@ void containsTests(){
   cout << endl;
   cout << endl;
 
-  list<char> bar;
+  list bar;
   cout << "list size:" << bar.size() << endl;
   bar.add('b');
   bar.add('c');
@@ -125,7 +135,7 @@ void containsTests(){
   cout << endl;
   cout << endl;
 
-  list<char> baz;
+  list baz;
   cout << "list size:" << baz.size() << endl;
   baz.add('x');
   baz.add('y');
@@ -137,7 +147,7 @@ void containsTests(){
   cout << endl;
   cout << endl;
 
-  list<char> bop;
+  list bop;
   cout << "list size:" << bop.size() << endl;
   bop.add('b');
   bop.add('c');
@@ -171,7 +181,7 @@ void containsTests(){
 
 void clearTests(){
   cout << "clearTests" << endl;
-  list<char> foo;
+  list foo;
 
   cout << "prelim clear" << endl;
   cout << "before size:" << foo.size() << endl;
@@ -189,7 +199,7 @@ void clearTests(){
   cout << "list size:" << foo.size() << endl;
   cout << "print filled list" << endl;
 
-  Iterator<char> *temp = foo.iterator();
+  Iterator *temp = foo.iterator();
 
   while(temp->hasNext()){
     cout << temp->next();
@@ -212,11 +222,11 @@ void clearTests(){
 
 void addTests(){
   cout << "addTests" << endl;
-  list<char> foo;
+  list foo;
 
   cout << "print empty list" << endl;
 
-  Iterator<char> *temp = foo.iterator();
+  Iterator *temp = foo.iterator();
 
   while(temp->hasNext()){
     cout << temp->next();
@@ -239,7 +249,7 @@ void addTests(){
   cout << "try bad get size + 1" << endl;
   try{
     cout << foo.get(foo.size()) << endl;
-  } catch(list<char>::listIndexOutOfBounds& iob) {
+  } catch(list::listIndexOutOfBounds& iob) {
     cout << "size:" << iob.what().length() << endl;
     for(int i = 0; i < iob.what().length(); ++i){
       cout << iob.what().charAt(i) << endl;

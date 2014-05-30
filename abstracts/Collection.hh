@@ -5,13 +5,12 @@
 
 namespace Jing{
 
-template<class T>
-class Collection:public Iterable<T>{
+class Collection:public Iterable{
 public:
   virtual void clear() = 0;
-  virtual bool contains(T t) const = 0;
-  virtual bool containsAll(Collection<T> *c) const = 0;
-  virtual bool equals(Collection<T>* c) const = 0;
+  virtual bool contains(Object obj) const = 0;
+  virtual bool containsAll(Collection *c) const = 0;
+  virtual bool equals(Collection* c) const = 0;
   virtual int  hashCode() const = 0;
   virtual bool isEmpty() const = 0;
   virtual unsigned int  size() const = 0;

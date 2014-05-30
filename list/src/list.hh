@@ -7,30 +7,29 @@
 
 namespace Jing{
 
-template<class T>
-class list:public AbstractList<T>{
+class list:public AbstractList{
 private:
   class listNode{
-    friend class list<T>;
+    friend class list;
   private:
-    T data;
+    Object data;
     listNode *next;
     listNode *prev;
 
     void init();
 
   public:
-    listNode(T t);
+    listNode(Object obj);
 
-    bool add(T t);
-    bool add(T t, index_t n);
-    T remove(index_t n);
-    T get(index_t n) const;
-    index_t find(T t, index_t n);
-    index_t backFind(T t, index_t n);
+    bool add(Object obj);
+    bool add(Object obj, index_t n);
+    Object remove(index_t n);
+    Object get(index_t n) const;
+    index_t find(Object obj, index_t n);
+    index_t backFind(Object obj, index_t n);
   };
 
-  class listIterator:public Iterator<T>{
+  class listIterator:public Iterator{
     private:
       index_t idx;
       list* theList;
@@ -39,7 +38,7 @@ private:
       listIterator(list* thisList);
       listIterator(list* thisList, index_t n);
       bool hasNext();
-      T next();
+      Object next();
       void remove();
       void reset();
   };
@@ -53,43 +52,43 @@ private:
 
 public:
   list();
-  list(AbstractList<T> *c);
+  list(AbstractList *c);
   list(int initialCapacity);
 
-  bool add(T t);
-  bool add(T t, index_t n);
-  bool addAll(AbstractList<T> *c);
-  bool addAll(AbstractList<T> *c, index_t n);
+  bool add(Object obj);
+  bool add(Object obj, index_t n);
+  bool addAll(AbstractList *c);
+  bool addAll(AbstractList *c, index_t n);
   void clear();
-//  T clone();
-  bool contains(T t) const;
-  bool containsAll(Collection<T> *c) const;
-  bool equals(Collection<T> *c) const;
+//  Object clone();
+  bool contains(Object obj) const;
+  bool containsAll(Collection *c) const;
+  bool equals(Collection *c) const;
   void ensureCapacity(int minCapacity);
-  T get(index_t n) const;
-  index_t indexOf(T t) const;
-  index_t lastIndexOf(T t) const;
+  Object get(index_t n) const;
+  index_t indexOf(Object obj) const;
+  index_t lastIndexOf(Object obj) const;
   bool isEmpty() const;
-  Iterator<T> *iterator() const;
-  T remove();
-  T remove(index_t n);
-  bool remove(T t);
-  bool removeAll(AbstractList<T> *c);
+  Iterator *iterator() const;
+  Object remove();
+  Object remove(index_t n);
+  bool remove(Object obj);
+  bool removeAll(AbstractList *c);
   void removeRange(int fromIndex, int toIndex);
   int  hashCode() const;
   size_t size() const;
-  T* toArray();
-  void toArray(T* arr);
+  Object* toArray();
+  void toArray(Object* arr);
   void trimToSize();
 
   class listIndexOutOfBounds : public exception{
   private:
-    void initWithList(const Jing::list<T>& theList);
+    void initWithList(const Jing::list& theList);
   public:
     listIndexOutOfBounds(const char * message);
     listIndexOutOfBounds(const string& message);
-    listIndexOutOfBounds(const list<T>& theList);
-    listIndexOutOfBounds(const list<T>& theList, int index);
+    listIndexOutOfBounds(const list& theList);
+    listIndexOutOfBounds(const list& theList, int index);
   
   //  const string& what() const;
   };

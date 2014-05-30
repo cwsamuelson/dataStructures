@@ -2,32 +2,27 @@
 using namespace Jing;
 //using Jing::exception;
 
-template<class T>
-void list<T>::init(){
+void list::init(){
   this->first = 0;
   this->last = 0;
   this->count = 0;
   this->iter = new listIterator(this);
 }
 
-template<class T>
-list<T>::list(){
+list::list(){
   this->init();
 }
 
-template<class T>
-list<T>::list(AbstractList<T> *c){
+list::list(AbstractList *c){
   this->init();
   this->addAll(c);
 }
 
-template<class T>
-bool list<T>::add(T t){
+bool list::add(Object obj){
   return this->add(t, 0);
 }
 
-template<class T>
-bool list<T>::add(T t, index_t n){
+bool list::add(Object obj, index_t n){
   if(n < 0)
     return false; 
   ++this->count;
@@ -51,8 +46,7 @@ bool list<T>::add(T t, index_t n){
   return false;
 }
 
-template<class T>
-bool list<T>::addAll(AbstractList<T> *c){
+bool list::addAll(AbstractList *c){
   listIterator *iter = (listIterator*)c->iterator();
   bool ret = true;
   while(iter->hasNext()){
@@ -62,23 +56,20 @@ bool list<T>::addAll(AbstractList<T> *c){
   return ret;
 }
 
-template<class T>
-void list<T>::clear(){
+void list::clear(){
   while(this->size() > 0){
     this->remove();
   }
 }
 
-template<class T>
-bool list<T>::contains(T t) const{
+bool list::contains(Object obj) const{
   if(this->first->find(t, 0) > this->size())
     return false;
   else return true;
 }
 
-template<class T>
-bool list<T>::containsAll(Collection<T> *c) const{
-  Iterator<T> *temp = c->iterator();
+bool list::containsAll(Collection *c) const{
+  Iterator *temp = c->iterator();
   while(temp->hasNext()){
     if(!this->contains(temp->next())){
       return false;
@@ -87,55 +78,46 @@ bool list<T>::containsAll(Collection<T> *c) const{
   return true;
 }
 
-template<class T>
-bool list<T>::equals(Collection<T> *c) const{
+bool list::equals(Collection *c) const{
   return false;
 }
 
-template<class T>
-index_t list<T>::indexOf(T t) const{
+index_t list::indexOf(Object obj) const{
   return this->first->find(t, 0);
 }
 
-template<class T>
-index_t list<T>::lastIndexOf(T t) const{
+index_t list::lastIndexOf(Object obj) const{
   return this->last->backFind(t, this->size() - 1);
 }
 
-template<class T>
-T list<T>::get(index_t n) const{
+Object list::get(index_t n) const{
   if(n >= this->size()){
     throw listIndexOutOfBounds(*this, n);
   }
   return this->first->get(n);
 }
 
-template<class T>
-int list<T>::hashCode() const{
+int list::hashCode() const{
   return 0;
 }
 
-template<class T>
-bool list<T>::isEmpty() const{
+bool list::isEmpty() const{
   if(this->size() == 0)
     return true;
   else
     return false;
 }
 
-template<class T>
-Iterator<T> *list<T>::iterator() const{
+Iterator *list::iterator() const{
   this->iter->reset();
   return this->iter;
 }
 
-template<class T>
-T list<T>::remove(){
+Object list::remove(){
   return this->remove((index_t)0);
 }
 
-template<class T>
-T list<T>::remove(index_t n){
+Object list::remove(index_t n){
   listNode *temp = first;
   --this->count;
   if(n == 0){
@@ -149,8 +131,7 @@ T list<T>::remove(index_t n){
   return temp->remove(n);
 }
 
-template<class T>
-bool list<T>::remove(T t){
+bool list::remove(Object obj){
   index_t idx = this->indexOf(t);
   if(idx != -1){
     this->remove(idx);
@@ -159,33 +140,28 @@ bool list<T>::remove(T t){
   return false;
 }
 
-template<class T>
-bool list<T>::removeAll(AbstractList<T> *c){
-  Iterator<T> *temp = c->iterator();
+bool list::removeAll(AbstractList *c){
+  Iterator *temp = c->iterator();
   while(temp->hasNext()){
     this->remove(temp->next());
   }
   return false;
 }
 
-template<class T>
-void list<T>::removeRange(int fromIndex, int toIndex){
+void list::removeRange(int fromIndex, int toIndex){
 }
 
-template<class T>
-size_t list<T>::size() const{
+size_t list::size() const{
   return this->count;
 }
 
 //create a new array containing all elements in proper order.
-template<class T>
-T* list<T>::toArray(){
+Object* list::toArray(){
   return 0;
 }
 
 //take argument pointer to create and return an array containing all elements in proper order
-template<class T>
-void list<T>::toArray(T* arr){
+void list::toArray(Object* arr){
   return 0;
 }
 
@@ -195,20 +171,17 @@ void list<T>::toArray(T* arr){
 /********************************************************/
 
 
-template<class T>
-list<T>::listNode::listNode(T t){
+list::listNode::listNode(Object obj){
   this->init();
   this->data = t;
 }
 
-template<class T>
-bool list<T>::listNode::add(T t){
+bool list::listNode::add(Object obj){
   return this->add(t, 0);
 
 }
 
-template<class T>
-bool list<T>::listNode::add(T t, index_t n){
+bool list::listNode::add(Object obj, index_t n){
   if(n < 0)
     return false; 
   if(n > 0){
@@ -233,8 +206,7 @@ bool list<T>::listNode::add(T t, index_t n){
   return false;
 }
 
-template<class T>
-T list<T>::listNode::remove(index_t n){
+Object list::listNode::remove(index_t n){
   if(n > 0)
     return this->next->remove(n - 1);
   else if(n == 0){
@@ -247,7 +219,7 @@ T list<T>::listNode::remove(index_t n){
       this->next->prev = 0;
     }
 
-    T temp = this->data;
+    Object temp = this->data;
     //be careful.  only if generated with 'new', and may not be thread safe.
     delete this;
     return temp;
@@ -257,8 +229,7 @@ T list<T>::listNode::remove(index_t n){
   return 0;
 }
 
-template<class T>
-T list<T>::listNode::get(index_t n) const{
+Object list::listNode::get(index_t n) const{
   if(n > 0){
     if(this->next != 0){
       return this->next->get(n - 1);
@@ -273,8 +244,7 @@ T list<T>::listNode::get(index_t n) const{
   return 0;
 }
 
-template<class T>
-index_t list<T>::listNode::find(T t, index_t n){
+index_t list::listNode::find(Object obj, index_t n){
   if(this->data != t){
     if(this->next != 0){
       return this->next->find(t, n + 1);
@@ -285,8 +255,7 @@ index_t list<T>::listNode::find(T t, index_t n){
   return -1;
 }
 
-template<class T>
-index_t list<T>::listNode::backFind(T t, index_t n){
+index_t list::listNode::backFind(Object obj, index_t n){
   if(this->data != t){
     if(this->prev != 0){
       return this->prev->backFind(t, n - 1);
@@ -297,8 +266,7 @@ index_t list<T>::listNode::backFind(T t, index_t n){
   return -1;
 }
 
-template<class T>
-void list<T>::listNode::init(){
+void list::listNode::init(){
   this->next = 0;
   this->prev = 0;
 }
@@ -309,38 +277,32 @@ void list<T>::listNode::init(){
 /********************************************************/
 
 
-template<class T>
-list<T>::listIterator::listIterator(list<T> *thisList){
+list::listIterator::listIterator(list *thisList){
   this->theList = thisList;
   this->idx = 0;
 }
 
-template<class T>
-list<T>::listIterator::listIterator(list<T> *thisList, index_t n){
+list::listIterator::listIterator(list *thisList, index_t n){
   this->theList = thisList;
   this->idx = n;
 }
 
-template<class T>
-bool list<T>::listIterator::hasNext(){
+bool list::listIterator::hasNext(){
   if(this->idx < theList->size())
     return true;
   else
     return false;
 }
 
-template<class T>
-T list<T>::listIterator::next(){
+Object list::listIterator::next(){
   return theList->get(this->idx++);
 }
 
-template<class T>
-void list<T>::listIterator::remove(){
+void list::listIterator::remove(){
   theList->remove(idx);
 }
 
-template<class T>
-void list<T>::listIterator::reset(){
+void list::listIterator::reset(){
   this->idx = 0;
 }
 
@@ -348,8 +310,7 @@ void list<T>::listIterator::reset(){
  *  IndexOutOfBounds  *
  **********************/
 
-template<class T>
-void list<T>::listIndexOutOfBounds::initWithList(const list<T>& theList){
+void list::listIndexOutOfBounds::initWithList(const list& theList){
   this->msg = "\n";
   this->msg += "Index out of bounds.\n";
   this->msg += "List length: ";
@@ -357,21 +318,17 @@ void list<T>::listIndexOutOfBounds::initWithList(const list<T>& theList){
   this->msg += "\n";
 }
 
-template<class T>
-list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const char * message):exception(message){
+list::listIndexOutOfBounds::listIndexOutOfBounds(const char * message):exception(message){
 }
 
-template<class T>
-list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const string& message):exception(message){
+list::listIndexOutOfBounds::listIndexOutOfBounds(const string& message):exception(message){
 }
 
-template<class T>
-list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const list<T>& theList){
+list::listIndexOutOfBounds::listIndexOutOfBounds(const list& theList){
   this->initWithList(theList);
 }
 
-template<class T>
-list<T>::listIndexOutOfBounds::listIndexOutOfBounds(const list<T>& theList, int index){
+list::listIndexOutOfBounds::listIndexOutOfBounds(const list& theList, int index){
   this->initWithList(theList);
   this->msg += "Given index: ";
   this->msg += (index);

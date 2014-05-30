@@ -5,14 +5,13 @@
 
 namespace Jing{
 
-template<class T>
-class AbstractList:public Collection<T>{
+class AbstractList:public Collection{
 public:
-  virtual bool add(T t) = 0;
-  virtual bool addAll(AbstractList<T> *c) = 0;
-  virtual bool remove(T t) = 0;
-  virtual bool removeAll(AbstractList<T> *c) = 0;
-  virtual T* toArray() = 0;
+  virtual bool add(Object obj) = 0;
+  virtual bool addAll(AbstractList *c) = 0;
+  virtual bool remove(Object obj) = 0;
+  virtual bool removeAll(AbstractList *c) = 0;
+  virtual Object* toArray() = 0;
 //  virtual Object[] toArray() = 0;
 };
 
