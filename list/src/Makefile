@@ -5,12 +5,35 @@ cflags:=-c
 
 default:main
 
-main:test.o list.cc
-	$(CC) test.o -L/usr/local/lib/Jing -lexcept -lstring -o main
+lib:static
+static:liblist.a
+dynamic:liblist.so
+dyn:dynamic
+
+main:liblist.a test.o testing.o
+	$(CC) testing.o test.o -L/usr/local/lib/Jing/ -lexcept -lstring -o main
+
+testing.o:testing.cc
+	$(CC) -c -Wall testing.cc
+
+list.o:list.cc
+	$(CC) -c -Wall list.cc
 
 test.o:test.cc
 	$(CC) -c -Wall test.cc
 
+liblist.a:list.o
+	ar rcs liblist.a list.o
+
+dynlist.o:list.cc
+	$(CC) -fPIC -c list.cc -o dynlist.o
+
+liblist.so:dynlist.o
+	$(CC) -shared -fPIC -Wl,-soname,liblist.so.1 -o liblist.so.1.0 dynlist.o -lc
+
 clean:
-	rm *.o main core
+	rm *.o core main
+
+cleanlib:
+	rm liblist.a
 

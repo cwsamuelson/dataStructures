@@ -9,7 +9,7 @@ using std::istream;
 
 namespace Jing{
 
-class string{
+class string:public Object{
 private:
   static const size_t npos = -1;
   char* data;

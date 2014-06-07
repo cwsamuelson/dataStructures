@@ -6,13 +6,21 @@ using std::endl;
 
 using namespace Jing;
 
-class beep:public Object{
+class character:public Object{
+protected:
+  char letter;
 public:
-  int boop(){ cout << "BEEP BOOP" << endl; }
-  friend ostream& operator<<(ostream& os, const string& str);
+  character(char c){ this->letter = c; }
+  bool equals(character& c){
+    if(this->letter == c.letter)
+      return true;
+    else
+      return false;
+  }
+  friend ostream& operator<<(ostream&os, const character& str);
 };
-ostream& operator<<(ostream& os, const string& str){
-  os << "BOOP BEEP" << endl;
+ostream& operator<<(ostream&os, const character& let){
+  os << let->letter;
   return os;
 }
 
@@ -37,15 +45,15 @@ void iteratorTests(){
   cout << "iteraterTests" << endl;
   list foo;
   cout << "list size:" << foo.size() << endl;
-  foo.add(beep a);
-  foo.add(beep b);
-  foo.add(beep c);
+  foo.add(character('a'));
+  foo.add(character('b'));
+  foo.add(character('c'));
   cout << "list size:" << foo.size() << endl;
 
-  Iterator *temp = foo.iterator();
+  Iterator& iter = foo.iterator();
 
-  while(temp->hasNext()){
-    cout << temp->next();
+  while(iter.hasNext()){
+    cout << iter.next();
   }
 
   cout << endl;
@@ -63,11 +71,11 @@ void indexTests(){
   cout << "indexTests" << endl;
   list foo;
   cout << "list size:" << foo.size() << endl;
-  foo.add(beep a);
-  foo.add(beep a);
-  foo.add(beep b);
-  foo.add(beep c);
-  foo.add(beep b);
+  foo.add(character('a'));
+  foo.add(character('a'));
+  foo.add(character('b'));
+  foo.add(character('c'));
+  foo.add(character('b'));
   cout << "list size:" << foo.size() << endl;
 
   Iterator<char> *temp = foo.iterator();
@@ -78,11 +86,11 @@ void indexTests(){
   cout << endl;
   cout << "contains 'a', 'd', 'c'" << endl;
   cout << "first and last index of 'a'" << endl;
-  cout << foo.indexOf('a') << endl;
-  cout << foo.lastIndexOf('a') << endl;
+  cout << foo.indexOf(character('a')) << endl;
+  cout << foo.lastIndexOf(character('a')) << endl;
   cout << "first and last index of 'b'" << endl;
-  cout << foo.indexOf('b') << endl;
-  cout << foo.lastIndexOf('b') << endl;
+  cout << foo.indexOf(character('b')) << endl;
+  cout << foo.lastIndexOf(character('b')) << endl;
 
   cout << endl;
 

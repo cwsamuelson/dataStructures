@@ -2,12 +2,25 @@
 #define __ITERABLE_H__
 
 #include<Jing/Iterator.hh>
+#include<Jing/Object.hh>
 
 namespace Jing{
 
-class Iterable{
+class Iterable:public Object{
 public:
-  virtual Iterator *iterator() const = 0;
+//Equality
+//  [inherited from Object]
+//  virtual bool equals(Object& obj) const = 0;
+//States
+//  [inherited from Object]
+//  hash
+//  virtual int hash() const = 0;
+//  ID
+//  virtual int classID() const = 0;
+//  clone
+//  virtual Object clone() const = 0;
+//Iterator
+  virtual Iterator& iterator() const = 0;
 };
 
 }
