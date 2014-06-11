@@ -10,11 +10,8 @@ static:liblist.a
 dynamic:liblist.so
 dyn:dynamic
 
-main:liblist.a test.o testing.o
+main:liblist.a test.o
 	$(CC) testing.o test.o -L/usr/local/lib/Jing/ -lexcept -lstring -o main
-
-testing.o:testing.cc
-	$(CC) -c -Wall testing.cc
 
 list.o:list.cc
 	$(CC) -c -Wall list.cc

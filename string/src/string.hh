@@ -31,6 +31,18 @@ public:
   string(const char c);
   ~string();
 
+//Equality
+//  [inherited from Object]
+  bool equals(Object& obj) const;
+//States
+//  [inherited from Object]
+//  hash
+  int hash() const;
+//  ID
+  int classID() const;
+//  clone
+  Object* clone() const;
+
   char charAt(index_t idx) const;
   //IgnoreCase
   int compareToIC(const string& str) const;

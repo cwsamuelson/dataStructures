@@ -6,6 +6,7 @@
 namespace Jing{
 
 typedef unsigned int index_t;
+typedef unsigned int size_t;
 
 class AbstractList:public Collection{
 public:
@@ -46,7 +47,7 @@ public:
 //  ID
 //  virtual int classID() const = 0;
 //  clone
-//  virtual Object clone() const = 0;
+//  virtual const Object* clone() const = 0;
   virtual Object* toArray() const = 0;
   virtual void toArray(Object* arr);
 //  isempty

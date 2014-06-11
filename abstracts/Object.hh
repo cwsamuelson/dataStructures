@@ -16,7 +16,7 @@ public:
 //  ID
   virtual int classID() const = 0;
 //  clone
-  virtual Object clone() const = 0;
+  virtual const Object* clone() const = 0;
 };
 
 }

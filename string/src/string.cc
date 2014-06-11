@@ -1,14 +1,12 @@
 #include<Jing/string>
 
-using namespace Jing;
-
-void string::init(){
+void Jing::string::init(){
     this->data = 0;
     this->size = 0;
 }
 
-const string& string::intToString(int i){
-  string *temp = new string();
+const Jing::string& Jing::string::intToString(int i){
+  Jing::string *temp = new Jing::string();
 //  char *temp;
   int num = i;
   int digit;
@@ -65,26 +63,26 @@ const string& string::intToString(int i){
   return *temp;
 }
 
-string::string(){
+Jing::string::string(){
   this->init();
 }
 
-string::string(const string& str){
+Jing::string::string(const Jing::string& str){
   this->init();
   str.getChars(&(this->data), 0, str.length());
 }
 
-string::string(const string& str, size_t length){
+Jing::string::string(const Jing::string& str, size_t length){
   this->init();
   str.getChars(&(this->data), 0, length);
 }
 
-string::string(const string& str, index_t offset, size_t length){
+Jing::string::string(const Jing::string& str, index_t offset, size_t length){
   this->init();
   str.getChars(&(this->data), offset, length);
 }
 
-string::string(const char* s){
+Jing::string::string(const char* s){
   this->init();
   unsigned int idx = 0;
   while(s[idx] != '\0'){
@@ -98,7 +96,7 @@ string::string(const char* s){
   this->size = idx;
 }
 
-string::string(const char* s, size_t length){
+Jing::string::string(const char* s, size_t length){
   this->init();
   unsigned int idx = 0;
   while(s[idx] != '\0'){
@@ -115,7 +113,7 @@ string::string(const char* s, size_t length){
   this->size = length;
 }
 
-string::string(const char* s, index_t offset, size_t length){
+Jing::string::string(const char* s, index_t offset, size_t length){
   this->init();
   unsigned int idx = 0;
   while(s[idx] != '\0'){
@@ -132,11 +130,11 @@ string::string(const char* s, index_t offset, size_t length){
   this->size = idx;
 }
 
-string::string(const int i){
+Jing::string::string(const int i){
   *this = intToString(i);
 }
 
-string::string(const char c){
+Jing::string::string(const char c){
   this->init();
   this->data = new char[2];
   this->data[0] = c;
@@ -144,21 +142,37 @@ string::string(const char c){
   this->size = 1;
 }
 
-string::~string(){
+Jing::string::~string(){
   if(this->data != 0)
     delete this->data;
 }
 
-char string::charAt(index_t idx) const{
+bool Jing::string::equals(Object& obj) const{
+  return false;
+}
+
+int Jing::string::hash() const{
+  return 0;
+}
+
+int Jing::string::classID() const{
+  return 0;
+}
+
+Object* clone() const{
+  return this;
+}
+
+char Jing::string::charAt(index_t idx) const{
   if(this->data != 0)
     return this->data[idx];
   return 0;
 }
 
-int string::compareToIC(const string& str) const{
+int Jing::string::compareToIC(const Jing::string& str) const{
 }
 
-int string::compareTo(const string& str) const{
+int Jing::string::compareTo(const Jing::string& str) const{
   int res = 0;
   while(this->length() > 0 && str.length() > 0){
     for(int i = 0; i < this->length() && i < str.length(); ++i){
@@ -171,7 +185,7 @@ int string::compareTo(const string& str) const{
   return res;
 }
 
-string& string::concat(const string& str){
+Jing::string& string::concat(const Jing::string& str){
 //might be getting extra null characters
   size_t newSize = this->length() + str.length() + 1;
   //NEED TO CLEAN UP TEMP
@@ -188,23 +202,23 @@ string& string::concat(const string& str){
   return *(new string(temp));
 }
 
-string& string::concat(char* s){
-  string temp(s);
+Jing::string& Jing::string::concat(char* s){
+  Jing::string temp(s);
   return this->concat(temp);
 }
 
-string& string::concat(int i){
+Jing::string& Jing::string::concat(int i){
 }
 
-bool string::contains(const string& str) const{
+bool Jing::string::contains(const Jing::string& str) const{
   return false;
 }
 
-bool string::endsWith(const string& suffix) const{
+bool Jing::string::endsWith(const Jing::string& suffix) const{
   return false;
 }
 
-bool string::startsWith(const string& prefix) const{
+bool Jing::string::startsWith(const Jing::string& prefix) const{
   for(int i = 0; i < this->length() && i < prefix.length(); i++){
     if(this->charAt(i) != prefix.charAt(i)){
       return false;
@@ -213,31 +227,31 @@ bool string::startsWith(const string& prefix) const{
   return true;
 }
 
-bool string::equalsIC(const string& str) const{
+bool Jing::string::equalsIC(const Jing::string& str) const{
   return this->equals(str);
 }
 
-bool string::equalsIC(const char* s) const{
+bool Jing::string::equalsIC(const char* s) const{
   return this->equalsIC(string(s));
 }
 
-bool string::equals(const string& str) const{
+bool Jing::string::equals(const Jing::string& str) const{
   return false;
 }
 
-bool string::equals(const char* s) const{
+bool Jing::string::equals(const char* s) const{
   return this->equals(string(s));
 }
 
-void string::getChars(char** dest) const{
+void Jing::string::getChars(char** dest) const{
   this->getChars(dest, 0, this->length());
 }
 
-void string::getChars(char** dest, size_t length) const{
+void Jing::string::getChars(char** dest, size_t length) const{
   this->getChars(dest, 0, length);
 }
 
-void string::getChars(char** dest, index_t start, index_t end) const{
+void Jing::string::getChars(char** dest, index_t start, index_t end) const{
   unsigned int size = end - start + 1;
   char * temp = new char[size + 1];
   for(int i = start; i < end; ++i){
@@ -246,15 +260,15 @@ void string::getChars(char** dest, index_t start, index_t end) const{
   *dest = temp;
 }
 
-int string::hashCode() const{
+int Jing::string::hashCode() const{
   return 0;
 }
 
-index_t string::indexOf(char ch) const{
+index_t Jing::string::indexOf(char ch) const{
   return this->indexOf(ch, 0);
 }
 
-index_t string::indexOf(char ch, index_t start) const{
+index_t Jing::string::indexOf(char ch, index_t start) const{
   for(int i = start; i < this->length(); i++){
     if(this->charAt(i) == ch){
       return i;
@@ -263,20 +277,20 @@ index_t string::indexOf(char ch, index_t start) const{
   return -1;
 }
 
-index_t string::indexOf(const string& str) const{
+index_t Jing::string::indexOf(const Jing::string& str) const{
   return this->indexOf(str, 0);
 }
 
-index_t string::indexOf(const string& str, index_t start) const{
+index_t Jing::string::indexOf(const Jing::string& str, index_t start) const{
 //  for(int i = 0; i < this->length(); i++){
 //    while(i < this->length && 
 }
 
-index_t string::lastIndexOf(char ch) const{
+index_t Jing::string::lastIndexOf(char ch) const{
   return this->lastIndexOf(ch, this->length());
 }
 
-index_t string::lastIndexOf(char ch, index_t start) const{
+index_t Jing::string::lastIndexOf(char ch, index_t start) const{
   for(int i = this->length(); i > start; i--){
     if(this->charAt(i) == ch){
       return i;
@@ -285,26 +299,26 @@ index_t string::lastIndexOf(char ch, index_t start) const{
   return -1;
 }
 
-index_t string::lastIndexOf(const string& str) const{
+index_t Jing::string::lastIndexOf(const Jing::string& str) const{
   return this->lastIndexOf(str, this->length());
 }
 
-index_t string::lastIndexOf(const string& str, index_t start) const{
+index_t Jing::string::lastIndexOf(const Jing::string& str, index_t start) const{
   return -1;
 }
 
-bool string::isEmpty() const{
+bool Jing::string::isEmpty() const{
   if(this->size == 0){
     return true;
   }
   return false;
 }
 
-Jing::size_t string::length() const{
+Jing::size_t Jing::string::length() const{
   return this->size;
 }
 
-string& string::replace(char oldChar, char newChar){
+Jing::string& Jing::string::replace(char oldChar, char newChar){
   char* ret = new char[this->length()];
   for(int i = 0; i < this->length(); i++){
     if(this->charAt(i) == oldChar){
@@ -313,17 +327,17 @@ string& string::replace(char oldChar, char newChar){
       ret[i] = this->charAt(i);
     }
   }
-  string* str = new string(ret);
+  Jing::string* str = new string(ret);
   delete ret;
   return *str;
 }
 
-string& string::subString(index_t idx) const{
+Jing::string& Jing::string::subString(index_t idx) const{
   return this->subString(idx, this->length());
 }
 
 //Returned reference must be deleted by user.
-string& string::subString(index_t start, index_t end) const{
+Jing::string& Jing::string::subString(index_t start, index_t end) const{
   if(start < this->length() && end < this->length()){
     return *(new string(this->data, start, end - start));
   }
@@ -331,7 +345,7 @@ string& string::subString(index_t start, index_t end) const{
 }
 
 //Returned pointer must be deleted by user.
-char* string::toCharArray() const{
+char* Jing::string::toCharArray() const{
   char* ret = new char[this->length()];
   for(int i = 0; i < this->length(); i++){
     ret[i] = this->data[i];
@@ -340,8 +354,8 @@ char* string::toCharArray() const{
 }
 
 //Returned reference must be deleted by user.
-string& string::toUpper() const{
-  string* ret = new string(this->data);
+Jing::string& Jing::string::toUpper() const{
+  Jing::string* ret = new string(this->data);
   for(int i = 0; i < this->length(); ++i){
     if(ret->data[i] >= 97 && ret->data[i] <= 122){
       ret->data[i] -= 32;
@@ -351,8 +365,8 @@ string& string::toUpper() const{
 }
 
 //Returned reference must be deleted by user.
-string& string::toLower() const{
-  string* ret = new string(this->data);
+Jing::string& Jing::string::toLower() const{
+  Jing::string* ret = new string(this->data);
   for(int i = 0; i < this->length(); ++i){
     if(ret->data[i] >= 65 && ret->data[i] <= 90){
       ret->data[i] += 32;
@@ -361,10 +375,10 @@ string& string::toLower() const{
   return *ret;
 }
 
-string& string::trim(){
+Jing::string& Jing::string::trim(){
 }
 
-string& string::operator=(const string& rhs){
+Jing::string& Jing::string::operator=(const Jing::string& rhs){
   //Self assignment?  You sneaky devil.
   if(this != &rhs){
     size_t len = rhs.length();
@@ -380,60 +394,60 @@ string& string::operator=(const string& rhs){
   return *this;
 }
 
-string& string::operator=(const char* rhs){
-  string *temp = new string(rhs);
+Jing::string& Jing::string::operator=(const char* rhs){
+  Jing::string *temp = new string(rhs);
   *this = *temp;
   delete temp;
   return *this;
 }
 
-string& string::operator=(const int rhs){
-  string *temp = new string(rhs);
+Jing::string& Jing::string::operator=(const int rhs){
+  Jing::string *temp = new Jing::string(rhs);
   *this = *temp;
   delete temp;
   return *this;
 }
 
-string& string::operator+=(const string& rhs){
+Jing::string& Jing::string::operator+=(const Jing::string& rhs){
   this->concat(rhs);
   return *this;
 }
 
-string& string::operator+=(const char* rhs){
+Jing::string& Jing::string::operator+=(const char* rhs){
   this->concat(rhs);
   return *this;
 }
 
-string& string::operator+=(const int rhs){
+Jing::string& Jing::string::operator+=(const int rhs){
   this->concat(rhs);
   return *this;
 }
 
-const string string::operator+(const string& rhs) const{
+const Jing::string Jing::string::operator+(const Jing::string& rhs) const{
   return string(*this) += rhs;
 }
 
-const string string::operator+(const char* rhs) const{
+const Jing::string Jing::string::operator+(const char* rhs) const{
   return string(*this) += rhs;
 }
 
-const string string::operator+(const int rhs){
+const Jing::string Jing::string::operator+(const int rhs){
   return string(*this) += rhs;
 }
 
-bool string::operator==(const char* rhs) const{
+bool Jing::string::operator==(const char* rhs) const{
   return this->equals(rhs);
 }
 
-bool string::operator==(const string& rhs) const{
+bool Jing::string::operator==(const Jing::string& rhs) const{
   return this->equals(rhs);
 }
 
-bool string::operator!=(const char* rhs) const{
+bool Jing::string::operator!=(const char* rhs) const{
   return !this->equals(rhs);
 }
 
-bool string::operator!=(const string& rhs) const{
+bool Jing::string::operator!=(const Jing::string& rhs) const{
   return !this->equals(rhs);
 }
 
@@ -441,26 +455,26 @@ bool string::operator!=(const string& rhs) const{
 // non-member operators.
 //----------------------
 
-ostream& Jing::operator<<(ostream& os, const string& str){
+ostream& Jing::operator<<(ostream& os, const Jing::string& str){
   if(str.data != 0){
     os << str.data;
   }
   return os;
 }
 
-string& operator+=(const char* lhs, const string& rhs){
+Jing::string& operator+=(const char* lhs, const Jing::string& rhs){
   return (string(lhs) += rhs);
 }
 
-const string operator+(const char* lhs, const string& rhs){
+const Jing::string operator+(const char* lhs, const Jing::string& rhs){
   return (string(lhs) + rhs);
 }
 
-const string operator+(char lhs, const string& rhs){
+const Jing::string operator+(char lhs, const Jing::string& rhs){
   return (string(lhs) + rhs);
 }
 
-bool operator==(const char* lhs, const string& rhs){
+bool operator==(const char* lhs, const Jing::string& rhs){
   return rhs.equals(lhs);
 }
 
