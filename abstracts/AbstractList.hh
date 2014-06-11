@@ -6,7 +6,6 @@
 namespace Jing{
 
 typedef unsigned int index_t;
-typedef unsigned int size_t;
 
 class AbstractList:public Collection{
 public:

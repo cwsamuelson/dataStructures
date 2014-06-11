@@ -5,6 +5,7 @@
 
 namespace Jing{
 
+typedef unsigned int size_t;
 class Collection:public Iterable{
 public:
 //Inserts
@@ -33,7 +34,7 @@ public:
 //  isempty
   virtual bool isEmpty() const = 0;
 //  size
-  virtual int size() const = 0;
+  virtual size_t size() const = 0;
 //  clear
   virtual void clear() = 0;
 };
