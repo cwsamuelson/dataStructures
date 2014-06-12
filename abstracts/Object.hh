@@ -5,8 +5,6 @@ namespace Jing{
 
 class Object{
 protected:
-//Unique ID that identifies a class.
-  int IDNUM = 0;
 public:
 //Equality
   virtual bool equals(Object& obj) const = 0;
@@ -16,7 +14,9 @@ public:
 //  ID
   virtual int classID() const = 0;
 //  clone
-  virtual const Object* clone() const = 0;
+//memory management may be up to the user.
+//clean up with delete
+  virtual Object* clone() const = 0;
 };
 
 }

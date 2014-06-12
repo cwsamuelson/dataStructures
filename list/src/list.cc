@@ -1,20 +1,14 @@
 #include<Jing/list>
 
-void Jing::list::init(){
-  this->sameType = false;
-  this->storedID = 0;
+Jing::list::list(){
+  this->sameType = true;
   this->first = 0;
   this->last = 0;
   this->count = 0;
   this->iter = new listIterator(*this);
 }
 
-Jing::list::list(){
-  this->init();
-}
-
-Jing::list::list(Collection& c){
-  this->init();
+Jing::list::list(Collection& c):list(){
   this->insertAll(c);
 }
 
@@ -90,6 +84,16 @@ Jing::Object& Jing::list::remove(Jing::index_t idx){
   return temp->remove(idx);
 }
 
+void Jing::list::removeAll(Collection& c, Jing::index_t idx){
+  Iterator& iter = c.iterator();
+  for(int i = 0; i < idx; ++i){
+    iter.next();
+  }
+  while(iter.hasNext()){
+    this->remove(iter.next());
+  }
+}
+
 void Jing::list::remove(Jing::Object& obj){
   Jing::index_t idx = this->indexOf(obj);
   if(idx != -1){
@@ -104,7 +108,6 @@ void Jing::list::removeAll(Collection& c){
   while(iter.hasNext()){
     this->remove(iter.next());
   }
-  return;
 }
 
 void Jing::list::removeRange(Jing::index_t fromIndex, Jing::index_t toIndex){
@@ -122,7 +125,12 @@ Jing::Object& Jing::list::get(Jing::index_t idx) const{
   return this->first->get(idx);
 }
 
-void assign(Jing::index_t idx, Jing::Object& obj){
+void Jing::list::assign(Jing::index_t idx, Jing::Object& obj){
+  if(idx > this->size()){
+    this->assign(this->size() - 1, obj);
+  } else {
+    this->first->assign(idx, obj);
+  }
 }
 
 void Jing::list::clear(){
@@ -156,7 +164,7 @@ Jing::index_t Jing::list::lastIndexOf(Jing::Object& obj) const{
   return this->last->backFind(obj, this->size() - 1);
 }
 
-bool Jing::list::equals(Object& c) const{
+bool Jing::list::equals(Jing::Object& c) const{
   return false;
 }
 
@@ -170,11 +178,12 @@ int Jing::list::hash() const{
 }
 
 int Jing::list::classID() const{
-  return this->IDNUM;
+  return 1;
 }
 
-const Jing::Object* Jing::list::clone() const{
-  return this;
+Jing::Object* Jing::list::clone() const{
+  Jing::list* temp = new list(*this);
+  return temp;
 }
 
 //create a new array containing all elements in proper order.
@@ -183,8 +192,11 @@ Jing::Object* Jing::list::toArray() const{
 }
 
 //take argument pointer to create and return an array containing all elements in proper order
+//assumes enough memory was allocated by user
 void Jing::list::toArray(Jing::Object* arr) const{
-  return;
+  for(int i = 0; i < this->size(); ++i){
+    arr[i] = this->get(i);
+  }
 }
 
 bool Jing::list::isEmpty() const{
@@ -194,7 +206,7 @@ bool Jing::list::isEmpty() const{
     return false;
 }
 
-size_t Jing::list::size() const{
+Jing::size_t Jing::list::size() const{
   return this->count;
 }
 
@@ -204,8 +216,7 @@ size_t Jing::list::size() const{
 /********************************************************/
 
 
-Jing::list::listNode::listNode(Jing::Object& obj):data(obj){
-  this->init();
+Jing::list::listNode::listNode(Jing::Object& obj):data(obj),next(0),prev(0){
 }
 
 bool Jing::list::listNode::add(Jing::Object& obj){
@@ -273,6 +284,14 @@ Jing::Object& Jing::list::listNode::get(Jing::index_t idx) const{
   }
 }
 
+bool Jing::list::listNode::assign(Jing::index_t idx, Jing::Object& obj){
+  if(idx > 0){
+    return this->next->assign(idx - 1, obj);
+  } else if(idx == 0){
+    this->data = obj;
+  }
+}
+
 Jing::index_t Jing::list::listNode::find(Jing::Object& obj, Jing::index_t idx){
   if(!this->data.equals(obj)){
     if(this->next != 0){
@@ -295,11 +314,6 @@ Jing::index_t Jing::list::listNode::backFind(Jing::Object& obj, Jing::index_t id
   return -1;
 }
 
-void Jing::list::listNode::init(){
-  this->next = 0;
-  this->prev = 0;
-}
-
 
 /********************************************************
  * List Iterator                                        *
@@ -310,8 +324,7 @@ void Jing::list::listNode::init(){
 Jing::listIterator::listIterator(Jing::list& thisList):listIterator(thisList, 0){
 }
 
-Jing::listIterator::listIterator(Jing::list& thisList, Jing::index_t idx):theList(thisList){
-  this->idx = idx;
+Jing::listIterator::listIterator(Jing::list& thisList, Jing::index_t idx):idx(idx), theList(thisList){
 }
 
 bool Jing::listIterator::hasNext(){

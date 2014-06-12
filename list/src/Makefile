@@ -1,7 +1,8 @@
 CC:= g++
-flags:=-Wall
+flags:=-Wall -std=c++11
 dflags:=-g -DDEBUG
 cflags:=-c
+libraries:=-lexcept -lstring -llist
 
 default:main
 
@@ -11,26 +12,23 @@ dynamic:liblist.so
 dyn:dynamic
 
 main:liblist.a test.o
-	$(CC) testing.o test.o -L/usr/local/lib/Jing/ -lexcept -lstring -o main
+	$(CC) test.o -L/usr/local/lib/Jing/ $(libraries) -o main
 
 list.o:list.cc
-	$(CC) -c -Wall list.cc
+	$(CC) $(cflags) $(flags) list.cc
 
 test.o:test.cc
-	$(CC) -c -Wall test.cc
+	$(CC) $(cflags) $(flags) test.cc
 
 liblist.a:list.o
 	ar rcs liblist.a list.o
 
 dynlist.o:list.cc
-	$(CC) -fPIC -c list.cc -o dynlist.o
+	$(CC) -fPIC $(cflags) list.cc -o dynlist.o
 
 liblist.so:dynlist.o
 	$(CC) -shared -fPIC -Wl,-soname,liblist.so.1 -o liblist.so.1.0 dynlist.o -lc
 
 clean:
-	rm *.o core main
-
-cleanlib:
-	rm liblist.a
+	rm *.o core main liblist.a liblist.so.1.0
 

@@ -2,8 +2,7 @@
 #define __ARRAYLIST_H__
 
 #include<Jing/AbstractList.hh>
-#include<Jing/except>
-#include<Jing/Misc.hh>
+//#include<Jing/except>
 
 namespace Jing{
 
@@ -11,9 +10,7 @@ class listIterator;
 
 class list:public AbstractList{
 private:
-  void init();
   bool sameType;
-  int storedID;
 
 protected:
   class listNode{
@@ -23,8 +20,6 @@ protected:
     listNode *next;
     listNode *prev;
 
-    void init();
-
   public:
     listNode(Object& obj);
 
@@ -32,7 +27,8 @@ protected:
     bool add(Object& obj, Jing::index_t n);
     Object& remove(Jing::index_t n);
     Object& get(Jing::index_t n) const;
-    Jing::index_t find(Object& obj, Jing::index_t n);
+    bool assign(Jing::index_t idx, Jing::Object& obj);
+    Jing::index_t find(Jing::Object& obj, Jing::index_t n);
     Jing::index_t backFind(Object& obj, Jing::index_t n);
   };
 
@@ -92,10 +88,12 @@ public:
   int hash() const;
 //  ID
 //  [inherited from Object]
-  int classID() const;
+  virtual int classID() const;
 //  clone
 //  [inherited from Object]
-  const Object* clone() const;
+//memory management may be up to the user.
+//clean up with delete
+  Object* clone() const;
 //  [inherited from abstractlist]
   Object* toArray() const;
   void toArray(Object* arr) const;

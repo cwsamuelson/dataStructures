@@ -46,9 +46,9 @@ public:
 //  ID
 //  virtual int classID() const = 0;
 //  clone
-//  virtual const Object* clone() const = 0;
+//  virtual Object* clone() const = 0;
   virtual Object* toArray() const = 0;
-  virtual void toArray(Object* arr);
+  virtual void toArray(Object* arr) const = 0;
 //  isempty
 //  [inherited from collection]
 //  virtual bool isEmpty() const = 0;
