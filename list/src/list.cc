@@ -1,4 +1,9 @@
 #include<Jing/list>
+#include<iostream>
+#include"character.hh"
+
+using std::cout;
+using std::endl;
 
 Jing::list::list(){
   this->sameType = true;
@@ -13,37 +18,32 @@ Jing::list::list(Collection& c):list(){
 }
 
 void Jing::list::insert(Jing::Object& obj){
-  return this->insert(obj, 0);
+  this->insert(obj, 0);
 }
 
+//OPTIMIZE: Insert from back using negative indexes
 void Jing::list::insert(Jing::Object& obj, Jing::index_t idx){
-  //invalid index
-  if(idx < 0)
-    return; 
-  ++this->count;
-  //insert beginning
-  if(idx == 0){
-    //uninitialized beginning
-    if(this->first == 0){
-      this->first = new listNode(obj);
-      this->last = this->first;
-      return;
-    //already initialized beginning
-    }else{
-      this->first->add(obj);
-      this->first = this->first->prev;
-      return;
-    }
-  //index is too big, just add at the end
-  }else if(idx >= this->size()){
-    this->last->add(obj, 1);
+  //uninitialized list
+  if(this->size() == 0){
+  //  update first
+    this->first = new listNode(obj, 0, this->first);
+  //  update last
+    this->last = this->first;
+  //insert at beginning
+  } else if(idx == 0){
+  //  update first
+    this->first->prev = new listNode(obj, 0, this->first);
+    this->first = this->first->prev;
+  //insert at end
+  } else if(idx >= this->count - 1){
+  //  update last
+    this->last->next = new listNode(obj, this->last, 0);
     this->last = this->last->next;
-    return;
-  //normal index, just crawl list for insert
-  }else{
+  //insert normally
+  } else {
     this->first->add(obj, idx);
-    return;
   }
+  ++this->count;
   return;
 }
 
@@ -66,32 +66,38 @@ Jing::Object& Jing::list::remove(){
 }
 
 Jing::Object& Jing::list::remove(Jing::index_t idx){
-  listNode *temp = first;
-  --this->count;
-  //adjust first pointer
-  if(idx == 0){
+  Object& ret = this->first->data;
+  //uninitialized list
+//don't delete from uninit list yet
+//  probably throwing exception...?
+/*
+  if(this->size() == 0){
+    return;
+  //delete only remaining
+  } else */if(this->size() == 1){
+    ret = this->first->data;
+    delete this->first;
+    this->first = this->last = 0;
+  //delete at beginning
+  } else if(idx == 0){
+  //  update first
+    ret = this->first->data;
     this->first = this->first->next;
-  //remove last value
-  //might not need && (idx < -1)
-  } else if( (idx >= this->size()) && (idx < -1) ){
+    delete this->first->prev;
+    this->first->prev = 0;
+  //delete at end
+  } else if(idx == this->size() - 1){
+  //  update last
+    ret = this->last->data;
     this->last = this->last->prev;
-    return this->last->next->remove((index_t)0);
+    delete this->last->next;
+    this->last->next = 0;
+  //delete normally
+  } else {
+    ret = this->first->remove(idx);
   }
-  //idx is unsigned int
-  //  will never be < 0
-
-  //remove current first item
-  return temp->remove(idx);
-}
-
-void Jing::list::removeAll(Collection& c, Jing::index_t idx){
-  Iterator& iter = c.iterator();
-  for(int i = 0; i < idx; ++i){
-    iter.next();
-  }
-  while(iter.hasNext()){
-    this->remove(iter.next());
-  }
+  --this->count;
+  return ret;
 }
 
 void Jing::list::remove(Jing::Object& obj){
@@ -123,6 +129,14 @@ Jing::Object& Jing::list::get(Jing::index_t idx) const{
     //throw listIndexOutOfBounds(*this, idx);
   }
   return this->first->get(idx);
+}
+
+Jing::AbstractList& Jing::list::get(Jing::index_t start, Jing::index_t end) const{
+  list& ret = *new list();
+  for(int i = start; i < end; ++i){
+    ret.insert(this->get(i));
+  }
+  return (AbstractList&)ret;
 }
 
 void Jing::list::assign(Jing::index_t idx, Jing::Object& obj){
@@ -164,7 +178,7 @@ Jing::index_t Jing::list::lastIndexOf(Jing::Object& obj) const{
   return this->last->backFind(obj, this->size() - 1);
 }
 
-bool Jing::list::equals(Jing::Object& c) const{
+bool Jing::list::equals(Jing::Object& obj) const{
   return false;
 }
 
@@ -216,23 +230,89 @@ Jing::size_t Jing::list::size() const{
 /********************************************************/
 
 
-Jing::list::listNode::listNode(Jing::Object& obj):data(obj),next(0),prev(0){
-}
+Jing::list::listNode::listNode(Jing::Object& obj):
+  data(obj),
+  prev(0),
+  next(0){  }
+
+Jing::list::listNode::listNode(Object& obj, listNode* prev, listNode* next):
+  data(obj),
+  prev(prev),
+  next(next){ }
 
 bool Jing::list::listNode::add(Jing::Object& obj){
-  return this->add(obj, 0);
+  return this->add(obj, -1);
 }
 
 bool Jing::list::listNode::add(Jing::Object& obj, Jing::index_t idx){
-  if(idx < 0)
-    return false; 
   if(idx > 0){
     if(this->next == 0){
       this->next = new listNode(obj);
       this->next->prev = this;
       return true;
+    } else {
+      return this->next->add(obj, idx - 1);
     }
+  } else if(idx == 0){
+    if(this->prev != 0){
+      this->prev = new listNode(obj, this->prev, this);
+      this->prev->prev->next = this->prev;
+    } else {
+      this->prev = new listNode(obj, 0, this);
+    }
+    return true;
+  }
+  return false;
+/*
+  if(idx > 0){
     return this->next->add(obj, idx - 1);
+  } else if(idx == 0){
+    if(this->prev != 0){
+      this->prev->next = new listNode(obj);
+      this->prev->next->prev = this->prev;
+      this->prev = this->prev->next;
+      this->prev->next = this;
+    } else {
+      this->prev = new listNode(obj);
+      this->prev->next = this;
+    }
+    return true;
+  }
+  return false;
+*/
+/*
+  if(idx > 0){
+    if(this->next == 0){
+      this->next = new listNode(obj);
+      this->next->prev = this;
+      return true;
+    } else {
+      return this->next->add(obj, idx - 1);
+    }
+  }
+  else if(idx == 0){
+    if(this->prev == 0){
+      this->prev = new listNode(obj);
+      this->prev->next = this;
+    }else{
+      this->prev->next = new listNode(obj);
+      this->prev->next->next = this;
+      this->prev = this->prev->next;
+      this->prev->prev;
+    }
+    return true;
+  }
+  return false;
+*/
+/*
+  if(idx > 0){
+    if(this->next == 0){
+      this->next = new listNode(obj);
+      this->next->prev = this;
+      return true;
+    } else {
+      return this->next->add(obj, idx - 1);
+    }
   }
   else if(idx == 0){
     if(this->prev == 0){
@@ -246,6 +326,7 @@ bool Jing::list::listNode::add(Jing::Object& obj, Jing::index_t idx){
     return true;
   }
   return false;
+*/
 }
 
 Jing::Object& Jing::list::listNode::remove(Jing::index_t idx){

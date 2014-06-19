@@ -17,13 +17,13 @@ public:
 //  virtual void insertAll(Collection& c) = 0;
 //Removes
   virtual Object& remove(index_t idx) = 0;
-  virtual void removeAll(Collection& c, index_t idx) = 0;
   virtual void removeRange(index_t srtIdx, index_t endIdx) = 0;
 //  [inherited from collection]
 //  virtual void remove(Object& obj) = 0;
 //  virtual void removeAll(Collection& c) = 0;
 //Gets
   virtual Object& get(index_t idx) const = 0;
+  virtual AbstractList& get(index_t start, index_t end) const = 0;
 //Assign
   virtual void assign(index_t idx, Object& obj) = 0;
 //Contains

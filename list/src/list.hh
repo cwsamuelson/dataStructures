@@ -6,6 +6,7 @@
 
 namespace Jing{
 
+//listIterator defined at bottom of the file.
 class listIterator;
 
 class list:public AbstractList{
@@ -17,15 +18,16 @@ protected:
     friend class list;
   private:
     Object& data;
-    listNode *next;
     listNode *prev;
+    listNode *next;
 
   public:
     listNode(Object& obj);
+    listNode(Object& obj, listNode* prev, listNode* next);
 
     bool add(Object& obj);
     bool add(Object& obj, Jing::index_t n);
-    Object& remove(Jing::index_t n);
+    Object& remove(Jing::index_t idx);
     Object& get(Jing::index_t n) const;
     bool assign(Jing::index_t idx, Jing::Object& obj);
     Jing::index_t find(Jing::Object& obj, Jing::index_t n);
@@ -38,10 +40,11 @@ protected:
   listIterator *iter;
 
 public:
-//Allow dynamic additions?
-//  using constructor option objects or something
-//  'emplace'
-//use iterators as optional insertion points
+//TODO:equals method
+//TODO:hashing
+//TODO:classID dynamic infrastructure
+//TODO:allow iterators to be used as insertion points
+//TODO:Allow for multiple iterators
 
 //Constructors
   list();
@@ -57,7 +60,6 @@ public:
   Object& remove();
 //  [inherited from abstractlist]
   Object& remove(Jing::index_t idx);
-  void removeAll(Collection& c, Jing::index_t idx);
   void removeRange(Jing::index_t srtIdx, Jing::index_t endIdx);
 //  [inherited from collection]
   void remove(Object& obj);
@@ -65,6 +67,8 @@ public:
 //Gets
 //  [inherited from abstractlist]
   Object& get(Jing::index_t idx) const;
+//clean up with delete
+  virtual AbstractList& get(index_t start, index_t end) const;
 //Assign
 //  [inherited from abstractlist]
   void assign(Jing::index_t idx, Object& obj);
@@ -88,7 +92,7 @@ public:
   int hash() const;
 //  ID
 //  [inherited from Object]
-  virtual int classID() const;
+  int classID() const;
 //  clone
 //  [inherited from Object]
 //memory management may be up to the user.
@@ -129,7 +133,7 @@ public:
 
 class listIterator:public Iterator{
 private:
-//must be friend to optimize?
+//OPTIMIZE:Make friend to list to point directly to nodes.
 //  friend class list;
   Jing::index_t idx;
   list& theList;

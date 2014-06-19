@@ -1,5 +1,6 @@
 #include<Jing/list>
 #include<iostream>
+#include"character.hh"
 
 using std::cout;
 using std::endl;
@@ -7,46 +8,74 @@ using std::ostream;
 
 using namespace Jing;
 
-class character:public Object{
-protected:
-  char letter;
-public:
-  character(char c){ this->letter = c; }
-
-  bool equals(Object& c) const{
-    return false;
-  }
-
-  int hash() const{
-    return 0;
-  }
-
-  int classID() const{
-    return 99;
-  }
-
-  Object* clone() const{
-    return new character(this->letter);
-  }
-
-  friend ostream& operator<<(ostream&os, const character& let);
-};
-
-ostream& operator<<(ostream&os, const character& let){
-  os << let.letter;
-  return os;
-}
-
-
 //update collection addition as new collections are created
 bool testConstructors(){
   list foo;
+  cout << "Insert one value and check it." << endl;
   foo.insert(*new character('a'));
   cout << (character&)foo.get(0) << endl;
+
+  cout << "Insert one value and check it, and the existing value." << endl;
+  foo.insert(*new character('b'));
+  cout << (character&)foo.get(0) << endl;
+  cout << (character&)foo.get(1) << endl;
+
+  cout << "Remove and check one value and check remainder." << endl;
+  cout << (character&)foo.remove(1) << endl;;
+  cout << (character&)foo.get(0) << endl;
+
+  cout << "Create new list using collection constructor, and check it." << endl;
+  list bar(foo);
+  cout << (character&)bar.get(0) << endl;
+  cout << (character&)bar.get(1) << endl;
+
+  cout << "Expected: ababbb" << endl;
   return true;
 }
 
 bool testInserts(){
+  list foo;
+  Iterator& iter = foo.iterator();
+  foo.insert(*new character('a'));
+  foo.insert(*new character('b'));
+  foo.insert(*new character('c'));
+  foo.insert(*new character('d'));
+
+  iter.reset();
+  while(iter.hasNext()){
+    cout << (character&)iter.next() << endl;
+  }
+
+  cout << "Expected: dcba" << endl;
+
+  foo.insert(*new character('e'), 0);
+  foo.insert(*new character('f'), 1);
+
+  iter.reset();
+  while(iter.hasNext()){
+    cout << (character&)iter.next() << endl;
+  }
+
+  cout << "Expected: efdcba" << endl;
+
+  foo.insert(*new character('g'), foo.size() + 1);
+  foo.insert(*new character('h'), foo.size());
+  foo.insert(*new character('i'), foo.size() - 1);
+  foo.insert(*new character('j'), foo.size() - 2);
+
+  cout << "for loop" << endl;
+  for(int i = 0; i < foo.size(); ++i){
+    cout << (character&)foo.get(i) << endl;
+  }
+  cout << "Expected: efdcbaghji" << endl;
+
+  cout << "iterator" << endl;
+  iter.reset();
+  while(iter.hasNext()){
+    cout << (character&)iter.next() << endl;
+  }
+
+  cout << "Expected: efdcbaghji" << endl;
   return true;
 }
 
@@ -83,7 +112,7 @@ bool testStates(){
 }
 
 int main(int argc, char **argv){
-  cout << "Testing list class" << endl;
+  cout << "Testing class list" << endl;
   cout << endl;
 
   cout << "Testing constructors" << endl;

@@ -1,8 +1,8 @@
 CC:= g++
 flags:=-Wall -std=c++11
 dflags:=-g -DDEBUG
-cflags:=-c
-libraries:=-lexcept -lstring -llist
+cflags:=-c -g3
+libraries:=-lstring -llist
 
 default:main
 
@@ -11,11 +11,14 @@ static:liblist.a
 dynamic:liblist.so
 dyn:dynamic
 
-main:liblist.a test.o
-	$(CC) test.o -L/usr/local/lib/Jing/ $(libraries) -o main
+main:liblist.a test.o character.o
+	$(CC) character.o test.o -L/usr/local/lib/Jing/ $(libraries) -o main
 
 list.o:list.cc
 	$(CC) $(cflags) $(flags) list.cc
+
+character.o:character.cc
+	$(CC) $(cflags) $(flags) character.cc
 
 test.o:test.cc
 	$(CC) $(cflags) $(flags) test.cc
