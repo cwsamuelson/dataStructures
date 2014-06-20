@@ -18,7 +18,7 @@ Jing::list::list(Collection& c):list(){
 }
 
 void Jing::list::insert(Jing::Object& obj){
-  this->insert(obj, 0);
+  this->insert(obj, this->size());
 }
 
 //OPTIMIZE: Insert from back using negative indexes
@@ -48,7 +48,7 @@ void Jing::list::insert(Jing::Object& obj, Jing::index_t idx){
 }
 
 void Jing::list::insertAll(Collection& c){
-  this->insertAll(c, 0);
+  this->insertAll(c, this->size() - 1);
 }
 
 void Jing::list::insertAll(Collection& c, Jing::index_t idx){

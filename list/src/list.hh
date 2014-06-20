@@ -40,11 +40,14 @@ protected:
   listIterator *iter;
 
 public:
+//TODO:clear warnings
 //TODO:equals method
 //TODO:hashing
 //TODO:classID dynamic infrastructure
 //TODO:allow iterators to be used as insertion points
 //TODO:Allow for multiple iterators
+//TODO:remove character include
+//TODO:remove iostream pieces and parts
 
 //Constructors
   list();

@@ -11,25 +11,20 @@ using namespace Jing;
 //update collection addition as new collections are created
 bool testConstructors(){
   list foo;
-  cout << "Insert one value and check it." << endl;
   foo.insert(*new character('a'));
-  cout << (character&)foo.get(0) << endl;
-
-  cout << "Insert one value and check it, and the existing value." << endl;
   foo.insert(*new character('b'));
-  cout << (character&)foo.get(0) << endl;
-  cout << (character&)foo.get(1) << endl;
 
-  cout << "Remove and check one value and check remainder." << endl;
-  cout << (character&)foo.remove(1) << endl;;
-  cout << (character&)foo.get(0) << endl;
-
-  cout << "Create new list using collection constructor, and check it." << endl;
   list bar(foo);
-  cout << (character&)bar.get(0) << endl;
-  cout << (character&)bar.get(1) << endl;
 
-  cout << "Expected: ababbb" << endl;
+  if(foo.size() != bar.size()){
+    return false;
+  } else {
+    for(int i = 0; i < foo.size(); ++i){
+      if(!(((character&)foo.get(i)).equals((character&)bar.get(i))))
+        return false;
+    }
+  }
+
   return true;
 }
 
@@ -115,8 +110,11 @@ int main(int argc, char **argv){
   cout << "Testing class list" << endl;
   cout << endl;
 
-  cout << "Testing constructors" << endl;
-  testConstructors();
+  if(testConstructors())
+    cout << "Constructors check out" << endl;
+  else
+    cout << "Constructors DON'T check out" << endl;
+
   cout << "Testing inserts" << endl;
   testInserts();
   cout << "Testing removes" << endl;

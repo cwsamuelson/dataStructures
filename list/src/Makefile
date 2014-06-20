@@ -1,17 +1,16 @@
 CC:= g++
 flags:=-Wall -std=c++11
 dflags:=-g -DDEBUG
-cflags:=-c -g3
-libraries:=-lstring -llist
+cflags:=-c
+libraries:=-llist
 
 default:main
 
 lib:static
 static:liblist.a
-dynamic:liblist.so
-dyn:dynamic
+dynamic:liblist.so.1.0
 
-main:liblist.a test.o character.o
+main:liblist.a liblist.so.1.0 test.o character.o
 	$(CC) character.o test.o -L/usr/local/lib/Jing/ $(libraries) -o main
 
 list.o:list.cc
@@ -27,11 +26,14 @@ liblist.a:list.o
 	ar rcs liblist.a list.o
 
 dynlist.o:list.cc
-	$(CC) -fPIC $(cflags) list.cc -o dynlist.o
+	$(CC) -fPIC $(cflags) $(flags) list.cc -o dynlist.o
 
-liblist.so:dynlist.o
+liblist.so.1.0:dynlist.o
 	$(CC) -shared -fPIC -Wl,-soname,liblist.so.1 -o liblist.so.1.0 dynlist.o -lc
 
 clean:
 	rm *.o core main liblist.a liblist.so.1.0
+
+wipe:
+	rm *.o main core
 
