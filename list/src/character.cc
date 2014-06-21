@@ -3,7 +3,8 @@
 Jing::character::character(char c):letter(c){ }
 
 
-bool Jing::character::equals(Jing::Object& c) const{
+bool Jing::character::equals(Jing::Object& obj) const{
+  this->equals((character&)obj);
   return false;
 }
 

@@ -20,7 +20,7 @@ bool testConstructors(){
   if(foo.size() != bar.size()){
     return false;
   } else {
-    for(int i = 0; i < foo.size(); ++i){
+    for(Jing::index_t i = 0; i < foo.size(); ++i){
       if(!(((character&)foo.get(i)).equals((character&)bar.get(i))))
         return false;
     }
@@ -36,7 +36,7 @@ bool testEmptyInserts(){
   while(iter.hasNext()){
     cout << (character&)iter.next() << endl;
   }
-  for(int i = 0; i < foo.size(); ++i){
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
     cout << (character&)foo.get(i) << endl;
   }
   return true;
@@ -50,7 +50,7 @@ bool testBasicInserts(){
   foo.insert(*new character('c'));
   foo.insert(*new character('d'));
 
-  for(int i = 0; i < foo.size(); ++i){
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!((character&)foo.get(i)).equals(tester[i]))
       return false;
   }
@@ -64,21 +64,21 @@ bool testArbitraryInserts(){
   foo.insert(*new character('b'), 1);
 
   char tester1[] = {'a', 'b', 'c'};
-  for(int i = 0; i < foo.size(); ++i){
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!((character&)foo.get(i)).equals(tester1[i]))
       return false;
   }
 
   foo.insert(*new character('f'), foo.size() + 2);
   char tester2[] = {'a', 'b', 'c', 'f'};
-  for(int i = 0; i < foo.size(); ++i){
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!((character&)foo.get(i)).equals(tester2[i]))
       return false;
   }
 
   foo.insert(*new character('g'), -1);
   char tester3[] = {'a', 'b', 'c', 'f', 'g'};
-  for(int i = 0; i < foo.size(); ++i){
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!((character&)foo.get(i)).equals(tester3[i]))
       return false;
   }
@@ -86,7 +86,7 @@ bool testArbitraryInserts(){
   foo.insert(*new character('d'), foo.size() - 2);
   foo.insert(*new character('e'), foo.size() - 2);
   char finalTester[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
-  for(int i = 0; i < foo.size(); ++i){
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!((character&)foo.get(i)).equals(finalTester[i]))
       return false;
   }
@@ -110,33 +110,37 @@ bool testRemoves(){
   foo.insert(*new character('c'));
   foo.insert(*new character('d'));
   foo.insert(*new character('e'));
-  while(iter.hasNext()){
-    cout << (character&)iter.next() << endl;
+  char tester1[] = {'a', 'b', 'c', 'd', 'e'};
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester1[i]))
+      return false;
   }
-  cout << endl;
-
 
   foo.remove();
   iter.reset();
-  while(iter.hasNext()){
-    cout << (character&)iter.next() << endl;
+  char tester2[] = {'b', 'c', 'd', 'e'};
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester2[i]))
+      return false;
   }
-  cout << endl;
 
   foo.remove(1);
   iter.reset();
-  while(iter.hasNext()){
-    cout << (character&)iter.next() << endl;
+  char tester3[] = {'b', 'd', 'e'};
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester3[i]))
+      return false;
   }
-  cout << endl;
-
+  return true;
+//TODO:Find a way to implement equals methods in Object subclasses that allows them to take an Object parameter, and not a parameter of the same class type.
   foo.remove(*new character('e'));
   iter.reset();
-  while(iter.hasNext()){
-    cout << (character&)iter.next() << endl;
+  char tester4[] = {'b', 'd'};
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester4[i]))
+      return false;
   }
-  cout << endl;
-  return false;
+  return true;
 }
 
 bool testGets(){

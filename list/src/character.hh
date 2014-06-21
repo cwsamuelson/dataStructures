@@ -12,7 +12,7 @@ protected:
 public:
   character(char c);
 
-  bool equals(Object& c) const;
+  bool equals(Object& obj) const;
   bool equals(character& ch) const;
   bool equals(char ch) const;
   int hash() const;

@@ -102,7 +102,7 @@ Jing::Object& Jing::list::remove(Jing::index_t idx){
 
 void Jing::list::remove(Jing::Object& obj){
   Jing::index_t idx = this->indexOf(obj);
-  if(idx != -1){
+  if(idx != (Jing::index_t)-1){
     this->remove(idx);
     return;
   }
@@ -133,7 +133,7 @@ Jing::Object& Jing::list::get(Jing::index_t idx) const{
 
 Jing::AbstractList& Jing::list::get(Jing::index_t start, Jing::index_t end) const{
   list& ret = *new list();
-  for(int i = start; i < end; ++i){
+  for(Jing::index_t i = start; i < end; ++i){
     ret.insert(this->get(i));
   }
   return (AbstractList&)ret;
@@ -208,7 +208,7 @@ Jing::Object* Jing::list::toArray() const{
 //take argument pointer to create and return an array containing all elements in proper order
 //assumes enough memory was allocated by user
 void Jing::list::toArray(Jing::Object* arr) const{
-  for(int i = 0; i < this->size(); ++i){
+  for(Jing::index_t i = 0; i < this->size(); ++i){
     arr[i] = this->get(i);
   }
 }
@@ -267,9 +267,10 @@ bool Jing::list::listNode::add(Jing::Object& obj, Jing::index_t idx){
 }
 
 Jing::Object& Jing::list::listNode::remove(Jing::index_t idx){
-  if(idx > 0)
-    return this->next->remove(idx - 1);
-  else if(idx == 0){
+  Jing::Object& ret = this->data;
+  if(idx > 0){
+    ret = this->next->remove(idx - 1);
+  }else if(idx == 0){
     if(this->prev != 0 && this->next != 0){
       this->prev->next = this->next;
       this->next->prev = this->prev;
@@ -279,35 +280,36 @@ Jing::Object& Jing::list::listNode::remove(Jing::index_t idx){
       this->next->prev = 0;
     }
 
-    Jing::Object& temp = this->data;
+    ret = this->data;
     //be careful.  only if generated with 'new', and may not be thread safe.
     delete this;
-    return temp;
   }
+  return ret;
 }
 
 Jing::Object& Jing::list::listNode::get(Jing::index_t idx) const{
+  Jing::Object& ret = this->data;
   if(idx > 0){
     if(this->next != 0){
-      return this->next->get(idx - 1);
+      ret = this->next->get(idx - 1);
+    } else {
+      ret = this->data;
     }
-    //inconsistent state, bigger problems, ignoring for now.
-  /*
-     else {
-      return 0;
-    }
-  */
   } else if(idx == 0){
-    return this->data;
+    ret = this->data;
   }
+  return ret;
 }
 
 bool Jing::list::listNode::assign(Jing::index_t idx, Jing::Object& obj){
+  bool ret = false;
   if(idx > 0){
-    return this->next->assign(idx - 1, obj);
+    ret = this->next->assign(idx - 1, obj);
   } else if(idx == 0){
     this->data = obj;
+    ret = true;
   }
+  return ret;
 }
 
 Jing::index_t Jing::list::listNode::find(Jing::Object& obj, Jing::index_t idx){
