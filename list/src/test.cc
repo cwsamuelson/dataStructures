@@ -1,6 +1,7 @@
 #include<Jing/list>
 #include<iostream>
 #include"character.hh"
+#include<Jing/Misc.hh>
 
 using std::cout;
 using std::endl;
@@ -28,82 +29,142 @@ bool testConstructors(){
   return true;
 }
 
+bool testEmptyInserts(){
+  list foo;
+  Iterator& iter = foo.iterator();
+  cout << "Empty checks" << endl;
+  while(iter.hasNext()){
+    cout << (character&)iter.next() << endl;
+  }
+  for(int i = 0; i < foo.size(); ++i){
+    cout << (character&)foo.get(i) << endl;
+  }
+  return true;
+}
+
+bool testBasicInserts(){
+  char tester[] = {'a', 'b', 'c', 'd'};
+  list foo;
+  foo.insert(*new character('a'));
+  foo.insert(*new character('b'));
+  foo.insert(*new character('c'));
+  foo.insert(*new character('d'));
+
+  for(int i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester[i]))
+      return false;
+  }
+  return true;
+}
+
+bool testArbitraryInserts(){
+  list foo;
+  foo.insert(*new character('a'));
+  foo.insert(*new character('c'));
+  foo.insert(*new character('b'), 1);
+
+  char tester1[] = {'a', 'b', 'c'};
+  for(int i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester1[i]))
+      return false;
+  }
+
+  foo.insert(*new character('f'), foo.size() + 2);
+  char tester2[] = {'a', 'b', 'c', 'f'};
+  for(int i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester2[i]))
+      return false;
+  }
+
+  foo.insert(*new character('g'), -1);
+  char tester3[] = {'a', 'b', 'c', 'f', 'g'};
+  for(int i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester3[i]))
+      return false;
+  }
+
+  foo.insert(*new character('d'), foo.size() - 2);
+  foo.insert(*new character('e'), foo.size() - 2);
+  char finalTester[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
+  for(int i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(finalTester[i]))
+      return false;
+  }
+  return true;
+}
+
 bool testInserts(){
+  if( testEmptyInserts() && 
+      testBasicInserts() && 
+      testArbitraryInserts())
+    return true;
+  else
+    return false;
+}
+
+bool testRemoves(){
   list foo;
   Iterator& iter = foo.iterator();
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
   foo.insert(*new character('c'));
   foo.insert(*new character('d'));
+  foo.insert(*new character('e'));
+  while(iter.hasNext()){
+    cout << (character&)iter.next() << endl;
+  }
+  cout << endl;
 
+
+  foo.remove();
   iter.reset();
   while(iter.hasNext()){
     cout << (character&)iter.next() << endl;
   }
+  cout << endl;
 
-  cout << "Expected: dcba" << endl;
-
-  foo.insert(*new character('e'), 0);
-  foo.insert(*new character('f'), 1);
-
+  foo.remove(1);
   iter.reset();
   while(iter.hasNext()){
     cout << (character&)iter.next() << endl;
   }
+  cout << endl;
 
-  cout << "Expected: efdcba" << endl;
-
-  foo.insert(*new character('g'), foo.size() + 1);
-  foo.insert(*new character('h'), foo.size());
-  foo.insert(*new character('i'), foo.size() - 1);
-  foo.insert(*new character('j'), foo.size() - 2);
-
-  cout << "for loop" << endl;
-  for(int i = 0; i < foo.size(); ++i){
-    cout << (character&)foo.get(i) << endl;
-  }
-  cout << "Expected: efdcbaghji" << endl;
-
-  cout << "iterator" << endl;
+  foo.remove(*new character('e'));
   iter.reset();
   while(iter.hasNext()){
     cout << (character&)iter.next() << endl;
   }
-
-  cout << "Expected: efdcbaghji" << endl;
-  return true;
-}
-
-bool testRemoves(){
-  return true;
+  cout << endl;
+  return false;
 }
 
 bool testGets(){
-  return true;
+  return false;
 }
 
 bool testAssigns(){
-  return true;
+  return false;
 }
 
 bool testContains(){
-  return true;
+  return false;
 }
 
 bool testReversegets(){
-  return true;
+  return false;
 }
 
 bool testEquality(){
-  return true;
+  return false;
 }
 
 bool testIterator(){
-  return true;
+  return false;
 }
 
 bool testStates(){
-  return true;
+  return false;
 }
 
 int main(int argc, char **argv){
@@ -115,22 +176,49 @@ int main(int argc, char **argv){
   else
     cout << "Constructors DON'T check out" << endl;
 
-  cout << "Testing inserts" << endl;
-  testInserts();
-  cout << "Testing removes" << endl;
-  testRemoves();
-  cout << "Testing gets" << endl;
-  testGets();
-  cout << "Testing assigns" << endl;
-  testAssigns();
-  cout << "Testing contains" << endl;
-  testContains();
-  cout << "Testing reverse gets" << endl;
-  testReversegets();
-  cout << "Testing equality" << endl;
-  testEquality();
-  cout << "Testing iterator" << endl;
-  testIterator();
-  cout << "Testing states" << endl;
-  testStates();
+  if(testInserts())
+    cout << "Inserts check out" << endl;
+  else
+    cout << "Inserts DON'T check out" << endl;
+  
+  if(testRemoves())
+    cout << "Removes check out" << endl;
+  else
+    cout << "Removes DON'T check out" << endl;
+  
+  if(testGets())
+    cout << "Gets check out" << endl;
+  else
+    cout << "Gets DON'T check out" << endl;
+  
+  if(testAssigns())
+    cout << "Assigns check out" << endl;
+  else
+    cout << "Assigns DON'T check out" << endl;
+  
+  if(testContains())
+    cout << "Contains check out" << endl;
+  else
+    cout << "Contains DON'T check out" << endl;
+  
+  if(testReversegets())
+    cout << "Reversegets check out" << endl;
+  else
+    cout << "Reversegets DON'T check out" << endl;
+  
+  if(testEquality())
+    cout << "Equality check out" << endl;
+  else
+    cout << "Equality DON'T check out" << endl;
+  
+  if(testIterator())
+    cout << "Iterator check out" << endl;
+  else
+    cout << "Iterator DON'T check out" << endl;
+  
+  if(testStates())
+    cout << "States check out" << endl;
+  else
+    cout << "States DON'T check out" << endl;
 }
+

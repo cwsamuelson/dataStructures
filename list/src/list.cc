@@ -35,7 +35,7 @@ void Jing::list::insert(Jing::Object& obj, Jing::index_t idx){
     this->first->prev = new listNode(obj, 0, this->first);
     this->first = this->first->prev;
   //insert at end
-  } else if(idx >= this->count - 1){
+  } else if(idx >= this->count){
   //  update last
     this->last->next = new listNode(obj, this->last, 0);
     this->last = this->last->next;
@@ -246,6 +246,7 @@ bool Jing::list::listNode::add(Jing::Object& obj){
 
 bool Jing::list::listNode::add(Jing::Object& obj, Jing::index_t idx){
   if(idx > 0){
+    //idx is too big.  o well!
     if(this->next == 0){
       this->next = new listNode(obj);
       this->next->prev = this;
@@ -263,70 +264,6 @@ bool Jing::list::listNode::add(Jing::Object& obj, Jing::index_t idx){
     return true;
   }
   return false;
-/*
-  if(idx > 0){
-    return this->next->add(obj, idx - 1);
-  } else if(idx == 0){
-    if(this->prev != 0){
-      this->prev->next = new listNode(obj);
-      this->prev->next->prev = this->prev;
-      this->prev = this->prev->next;
-      this->prev->next = this;
-    } else {
-      this->prev = new listNode(obj);
-      this->prev->next = this;
-    }
-    return true;
-  }
-  return false;
-*/
-/*
-  if(idx > 0){
-    if(this->next == 0){
-      this->next = new listNode(obj);
-      this->next->prev = this;
-      return true;
-    } else {
-      return this->next->add(obj, idx - 1);
-    }
-  }
-  else if(idx == 0){
-    if(this->prev == 0){
-      this->prev = new listNode(obj);
-      this->prev->next = this;
-    }else{
-      this->prev->next = new listNode(obj);
-      this->prev->next->next = this;
-      this->prev = this->prev->next;
-      this->prev->prev;
-    }
-    return true;
-  }
-  return false;
-*/
-/*
-  if(idx > 0){
-    if(this->next == 0){
-      this->next = new listNode(obj);
-      this->next->prev = this;
-      return true;
-    } else {
-      return this->next->add(obj, idx - 1);
-    }
-  }
-  else if(idx == 0){
-    if(this->prev == 0){
-      this->prev = new listNode(obj);
-      this->prev->next = this;
-    }else{
-      this->prev->next = new listNode(obj);
-      this->prev->next->next = this;
-      this->prev = this->prev->next;
-    }
-    return true;
-  }
-  return false;
-*/
 }
 
 Jing::Object& Jing::list::listNode::remove(Jing::index_t idx){

@@ -6,11 +6,11 @@ libraries:=-llist
 
 default:main
 
-lib:static
 static:liblist.a
 dynamic:liblist.so.1.0
+libs:static dynamic
 
-main:liblist.a liblist.so.1.0 test.o character.o
+main:liblist.a test.o character.o
 	$(CC) character.o test.o -L/usr/local/lib/Jing/ $(libraries) -o main
 
 list.o:list.cc
@@ -20,7 +20,7 @@ character.o:character.cc
 	$(CC) $(cflags) $(flags) character.cc
 
 test.o:test.cc
-	$(CC) $(cflags) $(flags) test.cc
+	$(CC) $(cflags) -DDEBUG $(flags) test.cc
 
 liblist.a:list.o
 	ar rcs liblist.a list.o
