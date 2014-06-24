@@ -32,7 +32,6 @@ bool testConstructors(){
 bool testEmptyInserts(){
   list foo;
   Iterator& iter = foo.iterator();
-  cout << "Empty checks" << endl;
   while(iter.hasNext()){
     cout << (character&)iter.next() << endl;
   }
@@ -94,12 +93,23 @@ bool testArbitraryInserts(){
 }
 
 bool testInserts(){
-  if( testEmptyInserts() && 
-      testBasicInserts() && 
-      testArbitraryInserts())
-    return true;
-  else
-    return false;
+  bool ret = true;
+  if(testEmptyInserts()){
+  } else {
+    cout << "\tEmpty Inserts DON'T check out" << endl;
+    ret = false;
+  }
+  if(testBasicInserts()){
+  } else {
+    cout << "\tBasic Inserts DON'T check out" << endl;
+    ret = false;
+  }
+  if(testArbitraryInserts()){
+  } else {
+    cout << "\tArbitrary Inserts DON'T check out" << endl;
+    ret = false;
+  }
+  return ret;
 }
 
 bool testRemoves(){

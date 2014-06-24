@@ -288,17 +288,17 @@ Jing::Object& Jing::list::listNode::remove(Jing::index_t idx){
 }
 
 Jing::Object& Jing::list::listNode::get(Jing::index_t idx) const{
-  Jing::Object& ret = this->data;
+  Jing::Object* ret = &this->data;
   if(idx > 0){
     if(this->next != 0){
-      ret = this->next->get(idx - 1);
+      ret = &this->next->get(idx - 1);
     } else {
-      ret = this->data;
+      ret = &this->data;
     }
   } else if(idx == 0){
-    ret = this->data;
+    ret = &this->data;
   }
-  return ret;
+  return *ret;
 }
 
 bool Jing::list::listNode::assign(Jing::index_t idx, Jing::Object& obj){
