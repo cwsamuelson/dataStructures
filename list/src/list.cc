@@ -122,6 +122,10 @@ void Jing::list::removeRange(Jing::index_t fromIndex, Jing::index_t toIndex){
   }
 }
 
+Jing::Object& Jing::list::get() const{
+  return this->get(0);
+}
+
 Jing::Object& Jing::list::get(Jing::index_t idx) const{
   //just return last
   if(idx >= this->size()){
@@ -139,12 +143,17 @@ Jing::AbstractList& Jing::list::get(Jing::index_t start, Jing::index_t end) cons
   return (AbstractList&)ret;
 }
 
-void Jing::list::assign(Jing::index_t idx, Jing::Object& obj){
+Jing::Object& Jing::list::assign(Jing::index_t idx, Jing::Object& obj){
+  Jing::Object& ret = this->remove(idx);
+  this->insert(obj, idx);
+  return ret;
+/*
   if(idx > this->size()){
     this->assign(this->size() - 1, obj);
   } else {
     this->first->assign(idx, obj);
   }
+*/
 }
 
 void Jing::list::clear(){

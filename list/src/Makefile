@@ -1,6 +1,6 @@
 CC:= g++
 flags:=-Wall -std=c++11
-dflags:=-g -DDEBUG
+dflags:=-g
 cflags:=-c
 libraries:=-llist
 

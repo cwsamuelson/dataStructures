@@ -2,6 +2,7 @@
 #include<iostream>
 #include"character.hh"
 #include<Jing/Misc.hh>
+//#include<stdlib.h>
 
 using std::cout;
 using std::endl;
@@ -153,12 +154,104 @@ bool testRemoves(){
   return true;
 }
 
+bool testGetsBasic(){
+  Jing::index_t siz = 10;
+  //Test some random gets inside the list.
+  list foo;
+  char* tester = new char[siz];
+  for(int i = 0; i < siz; ++i){
+    tester[i] = (char)(i+97);
+    foo.insert(*new character((char)(i+97)));
+  }
+
+  for(Jing::index_t i = 0; i < foo.size(); ++i){
+    if(!((character&)foo.get(i)).equals(tester[i]))
+      return false;
+  }
+
+  Jing:: index_t i = siz + 20;
+  if(!((character&)foo.get(i)).equals(tester[siz - 1]))
+    return false;
+  i = -1;
+  if(!((character&)foo.get(i)).equals(tester[siz - 1]))
+    return false;
+
+  delete[] tester;
+  //Test some gets that are beyond the bounds of the list, should grab nearest index instead.
+  return true;
+}
+
+bool testGet(){
+  list foo;
+  foo.insert(*new character('a'));
+  if(!((character&)foo.get()).equals('a')){
+    return false;
+  }
+
+  foo.insert(*new character('b'), 0);
+  if(!((character&)foo.get()).equals('b')){
+    return false;
+  }
+
+  foo.insert(*new character('c'), 0);
+  if(!((character&)foo.get()).equals('c')){
+    return false;
+  }
+
+  return true;
+}
+
+bool testGetRange(){
+  list foo;
+  char chs[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
+  for(int i = 0; i < 9; ++i){
+    foo.insert(*new character(chs[i]));
+  }
+
+  Collection& coll = foo.get(3, 6);
+  Iterator& iter = coll.iterator();
+  for(Jing::index_t i = 0; i < coll.size(); ++i){
+    if(!((character&)foo.get(i)).equals(chs[i]))
+      return false;
+  }
+  
+  return true;
+}
+
 bool testGets(){
-  return false;
+  bool ret = true;
+
+  if(testGetsBasic()){
+  } else {
+    cout << "\tBasic Gets DON'T check out" << endl;
+    ret = false;
+  }
+
+  if(testGet()){
+  } else {
+    cout << "\tEmpty Get DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testGetRange()){
+  } else {
+    cout << "\tRange Gets DON'T check out" << endl;
+    ret = false;
+  }
+
+  return ret;
 }
 
 bool testAssigns(){
-  return false;
+  //TODO:Probably need more test cases here.
+  list foo;
+  foo.insert(*new character('a'));
+  //possible memory problem
+  delete &(character&)foo.assign(0, *new character('b'));
+  if(!((character&)foo.get()).equals('b')){
+    return false;
+  }
+  return true;
 }
 
 bool testContains(){
@@ -182,57 +275,83 @@ bool testStates(){
 }
 
 int main(int argc, char **argv){
+  bool ret = true;
   cout << "Testing class list" << endl;
   cout << endl;
 
-  if(testConstructors())
+  if(testConstructors()){
     cout << "Constructors check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Constructors DON'T check out" << endl;
+  }
 
-  if(testInserts())
+  if(testInserts()){
     cout << "Inserts check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Inserts DON'T check out" << endl;
+  }
   
-  if(testRemoves())
+  if(testRemoves()){
     cout << "Removes check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Removes DON'T check out" << endl;
+  }
   
-  if(testGets())
+  if(testGets()){
     cout << "Gets check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Gets DON'T check out" << endl;
+  }
   
-  if(testAssigns())
+  if(testAssigns()){
     cout << "Assigns check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Assigns DON'T check out" << endl;
+  }
   
-  if(testContains())
+  if(testContains()){
     cout << "Contains check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Contains DON'T check out" << endl;
+  }
   
-  if(testReversegets())
+  if(testReversegets()){
     cout << "Reversegets check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Reversegets DON'T check out" << endl;
+  }
   
-  if(testEquality())
+  if(testEquality()){
     cout << "Equality check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Equality DON'T check out" << endl;
+  }
   
-  if(testIterator())
+  if(testIterator()){
     cout << "Iterator check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "Iterator DON'T check out" << endl;
+  }
   
-  if(testStates())
+  if(testStates()){
     cout << "States check out" << endl;
-  else
+  } else {
+    ret = false;
     cout << "States DON'T check out" << endl;
+  }
+  if(ret){
+    cout << endl << "Overall list checks out" << endl;
+  } else {
+    cout << endl << "Overall list DOESN'T check out" << endl;
+  }
 }
 

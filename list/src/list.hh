@@ -69,12 +69,13 @@ public:
   void removeAll(Collection& c);
 //Gets
 //  [inherited from abstractlist]
+  Object& get() const;
   Object& get(Jing::index_t idx) const;
 //clean up with delete
   virtual AbstractList& get(index_t start, index_t end) const;
 //Assign
 //  [inherited from abstractlist]
-  void assign(Jing::index_t idx, Object& obj);
+  Jing::Object& assign(Jing::index_t idx, Object& obj);
 //Contains
 //  [inherited from collection]
   bool contains(Object& obj) const;

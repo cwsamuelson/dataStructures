@@ -22,10 +22,11 @@ public:
 //  virtual void remove(Object& obj) = 0;
 //  virtual void removeAll(Collection& c) = 0;
 //Gets
+  virtual Object& get() const = 0;
   virtual Object& get(index_t idx) const = 0;
   virtual AbstractList& get(index_t start, index_t end) const = 0;
 //Assign
-  virtual void assign(index_t idx, Object& obj) = 0;
+  virtual Object& assign(index_t idx, Object& obj) = 0;
 //Contains
 //  [inherited from collection]
 //  virtual bool contains(Object& obj) const = 0;
