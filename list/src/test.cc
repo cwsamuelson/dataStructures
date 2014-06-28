@@ -2,7 +2,6 @@
 #include<iostream>
 #include"character.hh"
 #include<Jing/Misc.hh>
-//#include<stdlib.h>
 
 using std::cout;
 using std::endl;
@@ -254,8 +253,32 @@ bool testAssigns(){
   return true;
 }
 
+bool testContain(){
+  list foo;
+  if(foo.contains(character('a'))){
+    cout << "check!" << endl;
+  }
+}
+
+bool testAllContain(){
+}
+
 bool testContains(){
-  return false;
+  bool ret = true;
+
+  if(testContain()){
+  } else {
+    cout << "\tBasic Contain DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testAllContain()){
+  } else {
+    cout << "\tAll Contain DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  return ret;
 }
 
 bool testReversegets(){
