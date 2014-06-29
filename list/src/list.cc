@@ -1,8 +1,4 @@
 #include<Jing/list>
-#include<iostream>
-
-using std::cout;
-using std::endl;
 
 template<class T>
 Jing::list<T>::list(){
