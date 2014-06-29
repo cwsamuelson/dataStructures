@@ -6,6 +6,7 @@
 
 namespace Jing{
 
+template<class T>
 class Iterable:public Object{
 public:
 //Equality
@@ -20,7 +21,7 @@ public:
 //  clone
 //  virtual Object* clone() const = 0;
 //Iterator
-  virtual Iterator& iterator() const = 0;
+  virtual Iterator<T>& iterator() const = 0;
 };
 
 }

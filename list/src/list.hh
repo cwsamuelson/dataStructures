@@ -1,15 +1,13 @@
-#ifndef __ARRAYLIST_H__
-#define __ARRAYLIST_H__
+#ifndef __LIST_H__
+#define __LIST_H__
 
 #include<Jing/AbstractList.hh>
-//#include<Jing/except>
+#include<Jing/Misc.hh>
 
 namespace Jing{
 
-//listIterator defined at bottom of the file.
-class listIterator;
-
-class list:public AbstractList{
+template<class T>
+class list:public AbstractList<T>{
 private:
   bool sameType;
 
@@ -17,21 +15,39 @@ protected:
   class listNode{
     friend class list;
   private:
-    Object& data;
+    T& data;
     listNode *prev;
     listNode *next;
 
   public:
-    listNode(Object& obj);
-    listNode(Object& obj, listNode* prev, listNode* next);
+    listNode(T& obj);
+    listNode(T& obj, listNode* prev, listNode* next);
 
-    bool add(Object& obj);
-    bool add(Object& obj, Jing::index_t n);
-    Object& remove(Jing::index_t idx);
-    Object& get(Jing::index_t n) const;
-    bool assign(Jing::index_t idx, Jing::Object& obj);
-    Jing::index_t find(Jing::Object& obj, Jing::index_t n);
-    Jing::index_t backFind(Object& obj, Jing::index_t n);
+    bool add(T& obj);
+    bool add(T& obj, Jing::index_t n);
+    T& remove(Jing::index_t idx);
+    T& get(Jing::index_t n) const;
+    bool assign(Jing::index_t idx, T& obj);
+    Jing::index_t find(T& obj, Jing::index_t n);
+    Jing::index_t backFind(T& obj, Jing::index_t n);
+  };
+
+  //Might neeed to make this a template, implies making iterable and iterator templates as well
+  class listIterator:public Iterator<T>{
+  private:
+  //OPTIMIZE:Make friend to list to point directly to nodes.
+  //  friend class list;
+    Jing::index_t idx;
+    list<T>& theList;
+
+  public:
+    listIterator(Jing::list<T>& thisList);
+    listIterator(Jing::list<T>& thisList, Jing::index_t n);
+
+    bool hasNext();
+    T& next();
+    void remove();
+    void reset();
   };
 
   listNode *first;
@@ -51,45 +67,45 @@ public:
 
 //Constructors
   list();
-  list(Collection& c);
+  list(Collection<T>& c);
 //Inserts
 //  [inherited from abstractlist]
-  void insert(Object& obj, Jing::index_t idx);
-  void insertAll(Collection& c, Jing::index_t idx);
+  void insert(T& obj, Jing::index_t idx);
+  void insertAll(Collection<T>& c, Jing::index_t idx);
 //  [inherited from collection]
-  void insert(Object& obj);
-  void insertAll(Collection& c);
+  void insert(T& obj);
+  void insertAll(Collection<T>& c);
 //Removes
-  Object& remove();
+  T& remove();
 //  [inherited from abstractlist]
-  Object& remove(Jing::index_t idx);
+  T& remove(Jing::index_t idx);
   void removeRange(Jing::index_t srtIdx, Jing::index_t endIdx);
 //  [inherited from collection]
-  void remove(Object& obj);
-  void removeAll(Collection& c);
+  void remove(T& obj);
+  void removeAll(Collection<T>& c);
 //Gets
 //  [inherited from abstractlist]
-  Object& get() const;
-  Object& get(Jing::index_t idx) const;
+  T& get() const;
+  T& get(Jing::index_t idx) const;
 //clean up with delete
-  virtual AbstractList& get(index_t start, index_t end) const;
+  virtual AbstractList<T>& get(index_t start, index_t end) const;
 //Assign
 //  [inherited from abstractlist]
-  Jing::Object& assign(Jing::index_t idx, Object& obj);
+  T& assign(Jing::index_t idx, T& obj);
 //Contains
 //  [inherited from collection]
-  bool contains(Object& obj) const;
-  bool containsAll(Collection& c) const;
+  bool contains(T& obj) const;
+  bool containsAll(Collection<T>& c) const;
 //Reverse gets
 //  [inherited from abstractlist]
-  Jing::index_t indexOf(Object& obj) const;
-  Jing::index_t lastIndexOf(Object& obj) const;
+  Jing::index_t indexOf(T& obj) const;
+  Jing::index_t lastIndexOf(T& obj) const;
 //Equality
 //  [inherited from Object]
   bool equals(Object& obj) const;
 //Iterator
 //  [inherited from Iterable]
-  Iterator& iterator() const;
+  Iterator<T>& iterator() const;
 //States
 //  hash
 //  [inherited from Object]
@@ -135,26 +151,10 @@ public:
 };
 */
 
-class listIterator:public Iterator{
-private:
-//OPTIMIZE:Make friend to list to point directly to nodes.
-//  friend class list;
-  Jing::index_t idx;
-  list& theList;
-
-public:
-  listIterator(Jing::list& thisList);
-  listIterator(Jing::list& thisList, Jing::index_t n);
-
-  bool hasNext();
-  Object& next();
-  void remove();
-  void reset();
-};
 
 }
 
-//#include"list.cc"
+#include"list.cc"
 
 #endif
 

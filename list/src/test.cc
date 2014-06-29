@@ -11,17 +11,17 @@ using namespace Jing;
 
 //update collection addition as new collections are created
 bool testConstructors(){
-  list foo;
+  list<character&> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
 
-  list bar(foo);
+  list<character&> bar(foo);
 
   if(foo.size() != bar.size()){
     return false;
   } else {
     for(Jing::index_t i = 0; i < foo.size(); ++i){
-      if(!(((character&)foo.get(i)).equals((character&)bar.get(i))))
+      if(!((foo.get(i)).equals(bar.get(i))))
         return false;
     }
   }
@@ -30,55 +30,55 @@ bool testConstructors(){
 }
 
 bool testEmptyInserts(){
-  list foo;
-  Iterator& iter = foo.iterator();
+  list<character&> foo;
+  Iterator<character&>& iter = foo.iterator();
   while(iter.hasNext()){
-    cout << (character&)iter.next() << endl;
+    cout << iter.next() << endl;
   }
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    cout << (character&)foo.get(i) << endl;
+    cout << foo.get(i) << endl;
   }
   return true;
 }
 
 bool testBasicInserts(){
   char tester[] = {'a', 'b', 'c', 'd'};
-  list foo;
+  list<character&> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
   foo.insert(*new character('c'));
   foo.insert(*new character('d'));
 
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester[i]))
+    if(!(foo.get(i)).equals(tester[i]))
       return false;
   }
   return true;
 }
 
 bool testArbitraryInserts(){
-  list foo;
+  list<character&> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('c'));
   foo.insert(*new character('b'), 1);
 
   char tester1[] = {'a', 'b', 'c'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester1[i]))
+    if(!(foo.get(i)).equals(tester1[i]))
       return false;
   }
 
   foo.insert(*new character('f'), foo.size() + 2);
   char tester2[] = {'a', 'b', 'c', 'f'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester2[i]))
+    if(!(foo.get(i)).equals(tester2[i]))
       return false;
   }
 
   foo.insert(*new character('g'), -1);
   char tester3[] = {'a', 'b', 'c', 'f', 'g'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester3[i]))
+    if(!(foo.get(i)).equals(tester3[i]))
       return false;
   }
 
@@ -86,7 +86,7 @@ bool testArbitraryInserts(){
   foo.insert(*new character('e'), foo.size() - 2);
   char finalTester[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(finalTester[i]))
+    if(!(foo.get(i)).equals(finalTester[i]))
       return false;
   }
   return true;
@@ -113,8 +113,8 @@ bool testInserts(){
 }
 
 bool testRemoves(){
-  list foo;
-  Iterator& iter = foo.iterator();
+  list<character&> foo;
+  Iterator<character&>& iter = foo.iterator();
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
   foo.insert(*new character('c'));
@@ -122,7 +122,7 @@ bool testRemoves(){
   foo.insert(*new character('e'));
   char tester1[] = {'a', 'b', 'c', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester1[i]))
+    if(!(foo.get(i)).equals(tester1[i]))
       return false;
   }
 
@@ -130,7 +130,7 @@ bool testRemoves(){
   iter.reset();
   char tester2[] = {'b', 'c', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester2[i]))
+    if(!(foo.get(i)).equals(tester2[i]))
       return false;
   }
 
@@ -138,7 +138,7 @@ bool testRemoves(){
   iter.reset();
   char tester3[] = {'b', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester3[i]))
+    if(!(foo.get(i)).equals(tester3[i]))
       return false;
   }
   return true;
@@ -147,7 +147,7 @@ bool testRemoves(){
   iter.reset();
   char tester4[] = {'b', 'd'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester4[i]))
+    if(!(foo.get(i)).equals(tester4[i]))
       return false;
   }
   return true;
@@ -156,7 +156,7 @@ bool testRemoves(){
 bool testGetsBasic(){
   Jing::index_t siz = 10;
   //Test some random gets inside the list.
-  list foo;
+  list<character&> foo;
   char* tester = new char[siz];
   for(int i = 0; i < siz; ++i){
     tester[i] = (char)(i+97);
@@ -164,15 +164,15 @@ bool testGetsBasic(){
   }
 
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!((character&)foo.get(i)).equals(tester[i]))
+    if(!(foo.get(i)).equals(tester[i]))
       return false;
   }
 
   Jing:: index_t i = siz + 20;
-  if(!((character&)foo.get(i)).equals(tester[siz - 1]))
+  if(!(foo.get(i)).equals(tester[siz - 1]))
     return false;
   i = -1;
-  if(!((character&)foo.get(i)).equals(tester[siz - 1]))
+  if(!(foo.get(i)).equals(tester[siz - 1]))
     return false;
 
   delete[] tester;
@@ -181,19 +181,19 @@ bool testGetsBasic(){
 }
 
 bool testGet(){
-  list foo;
+  list<character&> foo;
   foo.insert(*new character('a'));
-  if(!((character&)foo.get()).equals('a')){
+  if(!(foo.get()).equals('a')){
     return false;
   }
 
   foo.insert(*new character('b'), 0);
-  if(!((character&)foo.get()).equals('b')){
+  if(!(foo.get()).equals('b')){
     return false;
   }
 
   foo.insert(*new character('c'), 0);
-  if(!((character&)foo.get()).equals('c')){
+  if(!(foo.get()).equals('c')){
     return false;
   }
 
@@ -201,16 +201,15 @@ bool testGet(){
 }
 
 bool testGetRange(){
-  list foo;
+  list<character&> foo;
   char chs[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
   for(int i = 0; i < 9; ++i){
     foo.insert(*new character(chs[i]));
   }
 
-  Collection& coll = foo.get(3, 6);
-  Iterator& iter = coll.iterator();
+  Collection<character&>& coll = foo.get(3, 6);
   for(Jing::index_t i = 0; i < coll.size(); ++i){
-    if(!((character&)foo.get(i)).equals(chs[i]))
+    if(!(foo.get(i)).equals(chs[i]))
       return false;
   }
   
@@ -243,19 +242,19 @@ bool testGets(){
 
 bool testAssigns(){
   //TODO:Probably need more test cases here.
-  list foo;
+  list<character&> foo;
   foo.insert(*new character('a'));
   //possible memory problem
-  delete &(character&)foo.assign(0, *new character('b'));
-  if(!((character&)foo.get()).equals('b')){
+  delete &foo.assign(0, *new character('b'));
+  if(!(foo.get()).equals('b')){
     return false;
   }
   return true;
 }
 
 bool testContain(){
-  list foo;
-  if(foo.contains(character('a'))){
+  list<character&> foo;
+  if(foo.contains(*new character('a'))){
     cout << "check!" << endl;
   }
 }
@@ -301,6 +300,9 @@ int main(int argc, char **argv){
   bool ret = true;
   cout << "Testing class list" << endl;
   cout << endl;
+
+  //Uncomment below to confirm inheritance check.
+  //list<int> foo;
 
   if(testConstructors()){
     cout << "Constructors check out" << endl;

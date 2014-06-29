@@ -7,29 +7,30 @@ namespace Jing{
 
 typedef unsigned int size_t;
 
-class Collection:public Iterable{
+template<class T>
+class Collection:public Iterable<T>{
 public:
 //*Alls might need to use const parameter.
 //Inserts
-  virtual void insert(Object& obj) = 0;
-  virtual void insertAll(Collection& c){
-    Iterator& iter = c.iterator();
+  virtual void insert(T& obj) = 0;
+  virtual void insertAll(Collection<T>& c){
+    Iterator<T>& iter = c.iterator();
     while(iter.hasNext()){
       this->insert(iter.next());
     }
   }
 //Removes
-  virtual void remove(Object& obj) = 0;
-  virtual void removeAll(Collection& c){
-    Iterator& iter = c.iterator();
+  virtual void remove(T& obj) = 0;
+  virtual void removeAll(Collection<T>& c){
+    Iterator<T>& iter = c.iterator();
     while(iter.hasNext()){
       this->remove(iter.next());
     }
   }
 //Contains
-  virtual bool contains(Object& obj) const = 0;
-  virtual bool containsAll(Collection& c) const{
-    Iterator& iter = c.iterator();
+  virtual bool contains(T& obj) const = 0;
+  virtual bool containsAll(Collection<T>& c) const{
+    Iterator<T>& iter = c.iterator();
     while(iter.hasNext()){
       this->contains(iter.next());
     }
