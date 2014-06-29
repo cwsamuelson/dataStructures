@@ -114,7 +114,6 @@ bool testInserts(){
 
 bool testRemoves(){
   list<character&> foo;
-  Iterator<character&>& iter = foo.iterator();
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
   foo.insert(*new character('c'));
@@ -127,7 +126,6 @@ bool testRemoves(){
   }
 
   foo.remove();
-  iter.reset();
   char tester2[] = {'b', 'c', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!(foo.get(i)).equals(tester2[i]))
@@ -135,16 +133,13 @@ bool testRemoves(){
   }
 
   foo.remove(1);
-  iter.reset();
   char tester3[] = {'b', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!(foo.get(i)).equals(tester3[i]))
       return false;
   }
-  return true;
-//TODO:Find a way to implement equals methods in Object subclasses that allows them to take an Object parameter, and not a parameter of the same class type.
+
   foo.remove(*new character('e'));
-  iter.reset();
   char tester4[] = {'b', 'd'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!(foo.get(i)).equals(tester4[i]))
@@ -301,8 +296,13 @@ int main(int argc, char **argv){
   cout << "Testing class list" << endl;
   cout << endl;
 
-  //Uncomment below to confirm inheritance check.
+  //Uncomment any below to confirm inheritance checks.
   //list<int> foo;
+  //list<int>* bar = new list<int>;
+  //list<int>& baz = *new list<int>;
+  //list<Object&> foo;
+  //list<Object&>* bar = new list<Object&>;
+  //list<Object&>& baz = *new list<Object&>;
 
   if(testConstructors()){
     cout << "Constructors check out" << endl;

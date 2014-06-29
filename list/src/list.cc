@@ -91,6 +91,8 @@ T& Jing::list<T>::remove(Jing::index_t idx){
     delete this->first->prev;
     this->first->prev = 0;
   //delete at end
+  } else if(idx >= this->size()){
+    return this->remove(this->size() - 1);
   } else if(idx == this->size() - 1){
   //  update last
     ret = this->last->data;
@@ -312,9 +314,8 @@ bool Jing::list<T>::listNode::add(T& obj, Jing::index_t idx){
 
 template<class T>
 T& Jing::list<T>::listNode::remove(Jing::index_t idx){
-  T& ret = this->data;
   if(idx > 0){
-    ret = this->next->remove(idx - 1);
+    return this->next->remove(idx - 1);
   }else if(idx == 0){
     if(this->prev != 0 && this->next != 0){
       this->prev->next = this->next;
@@ -325,11 +326,11 @@ T& Jing::list<T>::listNode::remove(Jing::index_t idx){
       this->next->prev = 0;
     }
 
-    ret = this->data;
+    T& ret = this->data;
     //be careful.  only if generated with 'new', and may not be thread safe.
     delete this;
+    return ret;
   }
-  return ret;
 }
 
 template<class T>
