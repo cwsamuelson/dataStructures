@@ -5,7 +5,7 @@
 
 namespace Jing{
 
-typedef unsigned int size_t;
+typedef unsigned long size_t;
 
 template<class T>
 class Collection:public Iterable<T>{

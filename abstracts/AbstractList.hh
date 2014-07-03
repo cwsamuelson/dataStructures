@@ -5,7 +5,7 @@
 
 namespace Jing{
 
-typedef unsigned int index_t;
+typedef unsigned long index_t;
 
 template<class T>
 class AbstractList:public Collection<T>{
