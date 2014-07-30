@@ -128,22 +128,31 @@ bool testRemoves(){
   foo.remove();
   char tester2[] = {'b', 'c', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!(foo.get(i)).equals(tester2[i]))
+    if(!(foo.get(i)).equals(tester2[i])){
       return false;
+    }
   }
 
+  for(int i = 0; i < foo.size(); ++i){
+    cout << i << foo.get(i) << endl;
+  }
   foo.remove(1);
   char tester3[] = {'b', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!(foo.get(i)).equals(tester3[i]))
+    if(!(foo.get(i)).equals(tester3[i])){
+      cout << "\tFailed test 2:" << endl;
+      cout << "\tExpected: " << tester3[i] << " at " << i << endl;
+      cout << "\tFound: " << foo.get(i) << " at " << i << endl;
       return false;
+    }
   }
 
   foo.remove(*new character('e'));
   char tester4[] = {'b', 'd'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!(foo.get(i)).equals(tester4[i]))
+    if(!(foo.get(i)).equals(tester4[i])){
       return false;
+    }
   }
   return true;
 }
@@ -291,6 +300,7 @@ bool testStates(){
   return false;
 }
 
+//Use exceptions to pass errors
 int main(int argc, char **argv){
   bool ret = true;
   cout << "Testing class list" << endl;
@@ -368,10 +378,10 @@ int main(int argc, char **argv){
   }
   
   if(testStates()){
-    cout << "States check out" << endl;
+    cout << "State tests check out" << endl;
   } else {
     ret = false;
-    cout << "States DON'T check out" << endl;
+    cout << "State tests DON'T check out" << endl;
   }
   if(ret){
     cout << endl << "Overall list checks out" << endl;

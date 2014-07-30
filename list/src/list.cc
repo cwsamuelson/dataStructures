@@ -1,4 +1,4 @@
-#include<Jing/list>
+//#include<Jing/list>
 
 template<class T>
 Jing::list<T>::list(){
@@ -21,7 +21,7 @@ void Jing::list<T>::insert(T& obj){
   this->insert(obj, this->size());
 }
 
-//OPTIMIZE: Insert from back using negative indexes
+//TODO:Optimize by inserting from back using negative indexes
 template<class T>
 void Jing::list<T>::insert(T& obj, Jing::index_t idx){
   //uninitialized list
@@ -285,21 +285,18 @@ Jing::list<T>::listNode::listNode(T& obj, listNode* prev, listNode* next):
   next(next){ }
 
 template<class T>
-bool Jing::list<T>::listNode::add(T& obj){
-  return this->add(obj, -1);
-}
-
-template<class T>
 bool Jing::list<T>::listNode::add(T& obj, Jing::index_t idx){
   if(idx > 0){
     //idx is too big.  o well!
+    //can't continue, install in place
     if(this->next == 0){
-      this->next = new listNode(obj);
-      this->next->prev = this;
+      this->next = new listNode(obj, this, 0);
       return true;
+    //install somewhere ahead
     } else {
       return this->next->add(obj, idx - 1);
     }
+  //install in place
   } else if(idx == 0){
     if(this->prev != 0){
       this->prev = new listNode(obj, this->prev, this);

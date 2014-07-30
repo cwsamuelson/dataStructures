@@ -5,6 +5,7 @@
 
 namespace Jing{
 
+//unsigned long long?
 typedef unsigned long size_t;
 
 template<class T>

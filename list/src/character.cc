@@ -35,10 +35,6 @@ Jing::Object* Jing::character::clone() const{
 }
 
 std::ostream& Jing::operator<<(std::ostream& os, const Jing::character& let){
-/*  cout << "in operator<<" << endl;
-  cout << let.letter << endl;;
-  cout << "things.  they work." << endl;
-*/
   os << let.letter;
   return os;
 }

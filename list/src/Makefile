@@ -1,7 +1,7 @@
 CC:= g++
 flags:=-Wall -std=c++11
-dflags:=-g
-cflags:=-c -g3
+dflags:=-ggdb3
+cflags:=-c $(dflags)
 
 default:main
 
@@ -12,7 +12,7 @@ character.o:character.cc
 	$(CC) $(cflags) $(flags) character.cc
 
 test.o:list.cc test.cc
-	$(CC) $(cflags) -DDEBUG $(flags) test.cc
+	$(CC) $(cflags) $(flags) test.cc
 
 clean:
 	rm *.o core main

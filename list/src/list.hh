@@ -23,7 +23,6 @@ protected:
     listNode(T& obj);
     listNode(T& obj, listNode* prev, listNode* next);
 
-    bool add(T& obj);
     bool add(T& obj, Jing::index_t n);
     T& remove(Jing::index_t idx);
     T& get(Jing::index_t n) const;
