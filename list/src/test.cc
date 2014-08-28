@@ -113,29 +113,45 @@ bool testInserts(){
 }
 
 bool testRemoves(){
+  bool ret = true;
+/*
+  int siz = 5;
+  character** values = new character*[siz];
+*/
+  character* values[5]{
+    new character('a'),
+    new character('b'),
+    new character('c'),
+    new character('d'),
+    new character('e')
+  };
+
   list<character&> foo;
-  foo.insert(*new character('a'));
-  foo.insert(*new character('b'));
-  foo.insert(*new character('c'));
-  foo.insert(*new character('d'));
-  foo.insert(*new character('e'));
+/*  for(int i = 0; i < siz; ++i){
+    values[i] = new character((char)((int)'a' + i));
+    foo.insert(*values[i]);
+  }
+*/
+  foo.insert(*values[0]);
+  foo.insert(*values[1]);
+  foo.insert(*values[2]);
+  foo.insert(*values[3]);
+  foo.insert(*values[4]);
+
   char tester1[] = {'a', 'b', 'c', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!(foo.get(i)).equals(tester1[i]))
-      return false;
+      ret = false;
   }
 
   foo.remove();
   char tester2[] = {'b', 'c', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!(foo.get(i)).equals(tester2[i])){
-      return false;
+      ret = false;
     }
   }
 
-  for(int i = 0; i < foo.size(); ++i){
-    cout << i << foo.get(i) << endl;
-  }
   foo.remove(1);
   char tester3[] = {'b', 'd', 'e'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
@@ -143,18 +159,23 @@ bool testRemoves(){
       cout << "\tFailed test 2:" << endl;
       cout << "\tExpected: " << tester3[i] << " at " << i << endl;
       cout << "\tFound: " << foo.get(i) << " at " << i << endl;
-      return false;
+      ret = false;
     }
   }
 
-  foo.remove(*new character('e'));
+  character& temp = *new character('e');
+  foo.remove(temp);
   char tester4[] = {'b', 'd'};
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     if(!(foo.get(i)).equals(tester4[i])){
-      return false;
+      ret = false;
     }
   }
-  return true;
+
+  for(unsigned int i = 0; i < 5; ++i){
+    delete values[i];
+  }
+  return ret;
 }
 
 bool testGetsBasic(){
@@ -162,7 +183,7 @@ bool testGetsBasic(){
   //Test some random gets inside the list.
   list<character&> foo;
   char* tester = new char[siz];
-  for(int i = 0; i < siz; ++i){
+  for(unsigned int i = 0; i < siz; ++i){
     tester[i] = (char)(i+97);
     foo.insert(*new character((char)(i+97)));
   }
@@ -261,9 +282,11 @@ bool testContain(){
   if(foo.contains(*new character('a'))){
     cout << "check!" << endl;
   }
+  return false;
 }
 
 bool testAllContain(){
+  return false;
 }
 
 bool testContains(){
@@ -327,7 +350,6 @@ int main(int argc, char **argv){
     ret = false;
     cout << "Inserts DON'T check out" << endl;
   }
-  
   if(testRemoves()){
     cout << "Removes check out" << endl;
   } else {
