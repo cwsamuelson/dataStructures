@@ -278,15 +278,42 @@ bool testAssigns(){
 }
 
 bool testContain(){
+  bool ret = true;
   list<character&> foo;
-  if(foo.contains(*new character('a'))){
-    cout << "check!" << endl;
+  character** vals= new character*[3];
+  vals[0] = new character('a');
+  vals[1] = new character('b');
+  vals[2] = new character('c');
+
+  foo.insert(*vals[0]);
+  foo.insert(*vals[1]);
+  foo.insert(*vals[2]);
+
+  //TODO:test all 3 values to be sure
+  character* test = new character('a');
+  if(!foo.contains(*test)){
+    ret = false;
   }
-  return false;
+
+  //TODO:test some other bad values
+  character* fail = new character('z');
+  if(foo.contains(*fail)){
+    ret = false;
+  }
+
+  delete[] vals;
+  delete test;
+  delete fail;
+
+  return ret;
 }
 
 bool testAllContain(){
-  return false;
+  bool ret = false;
+  list<character&> base;
+  
+  list<character&> foo;
+  return ret;
 }
 
 bool testContains(){
