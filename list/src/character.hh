@@ -11,13 +11,14 @@ protected:
   char letter;
 public:
   character(char c);
+  virtual ~character();
 
   bool equals(Object& obj) const;
   bool equals(character& ch) const;
   bool equals(char ch) const;
   int hash() const;
   int classID() const;
-  Object* clone() const;
+  character* clone() const;
 
   friend std::ostream& operator<<(std::ostream& os, const character& let);
 };

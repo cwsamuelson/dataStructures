@@ -2,6 +2,7 @@
 
 Jing::character::character(char c):letter(c){ }
 
+Jing::character::~character(){  }
 
 bool Jing::character::equals(Jing::Object& obj) const{
   this->equals((character&)obj);
@@ -30,7 +31,7 @@ int Jing::character::classID() const{
   return 99;
 }
 
-Jing::Object* Jing::character::clone() const{
+Jing::character* Jing::character::clone() const{
   return new character(this->letter);
 }
 

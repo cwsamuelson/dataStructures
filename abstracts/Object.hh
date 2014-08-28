@@ -16,6 +16,7 @@ public:
 //  clone
 //memory management may be up to the user.
 //clean up with delete
+//TODO:find better solution than above
   virtual Object* clone() const = 0;
 };
 

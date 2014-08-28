@@ -45,6 +45,7 @@ void Jing::list<T>::insert(T& obj, Jing::index_t idx){
     this->first->add(obj, idx);
   }
   ++this->count;
+
   return;
 }
 
@@ -71,7 +72,7 @@ T& Jing::list<T>::remove(){
 
 template<class T>
 T& Jing::list<T>::remove(Jing::index_t idx){
-  T& ret = this->first->data;
+  T& ret = *this->first->data.clone();
   //uninitialized list
 //don't delete from uninit list yet
 //  probably throwing exception...?

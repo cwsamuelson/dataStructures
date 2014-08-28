@@ -3,6 +3,9 @@
 
 #include<Jing/AbstractList.hh>
 #include<Jing/Misc.hh>
+#include<iostream>
+using std::cout;
+using std::endl;
 
 namespace Jing{
 
