@@ -301,6 +301,9 @@ bool testContain(){
     ret = false;
   }
 
+  delete vals[0];
+  delete vals[1];
+  delete vals[2];
   delete[] vals;
   delete test;
   delete fail;
@@ -309,10 +312,49 @@ bool testContain(){
 }
 
 bool testAllContain(){
-  bool ret = false;
+  bool ret = true;
   list<character&> base;
-  
+  character** vals = new character*[15];
+  for(int i = 0; i < 15; ++i){
+    vals[i] = new character((char)((int)'a' + i));
+    base.insert(*vals[i]);
+  }
+
   list<character&> foo;
+  for(int i = 0; i < 5; ++i){
+    foo.insert(*vals[i]);
+  }
+  
+  if(!base.containsAll(foo)){
+    ret = false;
+    cout << "\tFailed test 1" << endl;
+  }
+
+  list<character&> baz;
+  for(int i = 5; i < 10; ++i){
+    baz.insert(*vals[i]);
+  }
+
+  if(!base.containsAll(baz)){
+    ret = false;
+    cout << "\tFailed test 2" << endl;
+  }
+  
+  list<character&> bar;
+  for(int i = 10; i < 15; ++i){
+    bar.insert(*vals[i]);
+  }
+
+  if(!base.containsAll(bar)){
+    ret = false;
+    cout << "\tFailed test 3" << endl;
+  }
+
+  for(int i = 0; i < 15; ++i){
+    delete vals[i];
+  }
+
+  delete[] vals;
   return ret;
 }
 

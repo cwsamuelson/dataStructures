@@ -361,9 +361,10 @@ Jing::index_t Jing::list<T>::listNode::find(T& obj, Jing::index_t idx){
   if(!this->data.equals(obj)){
     if(this->next != 0){
       return this->next->find(obj, idx + 1);
+    } else {
+      return -1;
     }
-  }
-  else if(this->data.equals(obj))
+  } else if(this->data.equals(obj))
     return idx;
   return -1;
 }
@@ -373,9 +374,10 @@ Jing::index_t Jing::list<T>::listNode::backFind(T& obj, Jing::index_t idx){
   if(!this->data.equals(obj)){
     if(this->prev != 0){
       return this->prev->backFind(obj, idx - 1);
+    } else {
+      return -1;
     }
-  }
-  else if(this->data.equals(obj))
+  } else if(this->data.equals(obj))
     return idx;
   return -1;
 }
