@@ -229,11 +229,6 @@ int Jing::list<T>::hash() const{
 }
 
 template<class T>
-int Jing::list<T>::classID() const{
-  return 1;
-}
-
-template<class T>
 Jing::Object* Jing::list<T>::clone() const{
   Jing::list<T>* temp = new list<T>(*this);
   return temp;

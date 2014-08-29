@@ -27,10 +27,6 @@ int Jing::character::hash() const{
   return ((int)this->letter - (int)'a');
 }
 
-int Jing::character::classID() const{
-  return 99;
-}
-
 Jing::character* Jing::character::clone() const{
   return new character(this->letter);
 }

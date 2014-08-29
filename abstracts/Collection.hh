@@ -46,8 +46,6 @@ public:
 //  [inherited from Object]
 //  hash
 //  virtual int hash() const = 0;
-//  ID
-//  virtual int classID() const = 0;
 //  clone
 //  virtual Object* clone() const = 0;
 //  isempty

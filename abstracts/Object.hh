@@ -11,8 +11,6 @@ public:
 //State
 //  hash
   virtual int hash() const = 0;
-//  ID
-  virtual int classID() const = 0;
 //  clone
 //memory management may be up to the user.
 //clean up with delete
