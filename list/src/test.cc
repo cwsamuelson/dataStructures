@@ -376,8 +376,84 @@ bool testContains(){
   return ret;
 }
 
+bool testFwdReverseget(){
+  bool ret = true;
+  list<character&> foo;
+  character** vals= new character*[3];
+  vals[0] = new character('a');
+  vals[1] = new character('b');
+  vals[2] = new character('c');
+
+  character** test= new character*[3];
+  test[0] = new character('a');
+  test[1] = new character('b');
+  test[2] = new character('c');
+
+  foo.insert(*vals[0]);
+  foo.insert(*vals[1]);
+  foo.insert(*vals[2]);
+
+  for(unsigned int i = 0; i < 3; ++i){
+    if(foo.indexOf(*test[i]) != i){
+      cout << "\tFailed test 1 at index:" << i << endl;
+      ret = false;
+    }
+  }
+
+  delete vals[0];
+  delete vals[1];
+  delete vals[2];
+  delete[] vals;
+  return ret;
+}
+
+bool testRvsReverseGet(){
+  bool ret = true;
+  list<character&> foo;
+  character** vals= new character*[3];
+  vals[0] = new character('a');
+  vals[1] = new character('b');
+  vals[2] = new character('c');
+
+  character** test= new character*[3];
+  test[0] = new character('a');
+  test[1] = new character('b');
+  test[2] = new character('c');
+
+  foo.insert(*vals[0]);
+  foo.insert(*vals[1]);
+  foo.insert(*vals[2]);
+
+  for(unsigned int i = 0; i < 3; ++i){
+    if(foo.lastIndexOf(*test[i]) != i){
+      cout << "\tFailed test 2 at index:" << i << endl;
+      ret = false;
+    }
+  }
+
+  delete vals[0];
+  delete vals[1];
+  delete vals[2];
+  delete[] vals;
+  return ret;
+}
+
 bool testReversegets(){
-  return false;
+  bool ret = true;
+
+  if(testFwdReverseget()){
+  } else {
+    cout << "\tForward Reverse Get DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testRvsReverseGet()){
+  } else {
+    cout << "\tReverse Reverse Get DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  return ret;
 }
 
 bool testEquality(){
@@ -388,8 +464,76 @@ bool testIterator(){
   return false;
 }
 
+bool testHash(){
+  bool ret = false;
+  return ret;
+}
+
+bool testClone(){
+  bool ret = false;
+  return ret;
+}
+
+bool testToArray(){
+  bool ret = false;
+  return ret;
+}
+
+bool testEmpty(){
+  bool ret = false;
+  return ret;
+}
+
+bool testSize(){
+  bool ret = false;
+  return ret;
+}
+
+bool testClear(){
+  bool ret = false;
+  return ret;
+}
+
 bool testStates(){
-  return false;
+  bool ret = true;
+
+  if(testHash()){
+  } else {
+    cout << "\tHash DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testClone()){
+  } else {
+    cout << "\tClone DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testToArray()){
+  } else {
+    cout << "\tTo Array DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testEmpty()){
+  } else {
+    cout << "\tEmpty check DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testSize()){
+  } else {
+    cout << "\tSize check DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  if(testClear()){
+  } else {
+    cout << "\tClear DOESN'T check out" << endl;
+    ret = false;
+  }
+
+  return ret;
 }
 
 //Use exceptions to pass errors
@@ -448,10 +592,10 @@ int main(int argc, char **argv){
   }
   
   if(testReversegets()){
-    cout << "Reversegets check out" << endl;
+    cout << "Reverse gets check out" << endl;
   } else {
     ret = false;
-    cout << "Reversegets DON'T check out" << endl;
+    cout << "Reverse gets DON'T check out" << endl;
   }
   
   if(testEquality()){
@@ -474,10 +618,13 @@ int main(int argc, char **argv){
     ret = false;
     cout << "State tests DON'T check out" << endl;
   }
+
   if(ret){
     cout << endl << "Overall list checks out" << endl;
   } else {
     cout << endl << "Overall list DOESN'T check out" << endl;
   }
+
+  return !ret;
 }
 
