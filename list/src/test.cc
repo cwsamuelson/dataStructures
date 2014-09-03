@@ -457,7 +457,46 @@ bool testReversegets(){
 }
 
 bool testEquality(){
-  return false;
+  bool ret = true;
+  list<character&> foo;
+  character** one = new character*[3];
+  one[0] = new character('a');
+  one[1] = new character('b');
+  one[2] = new character('c');
+
+  foo.insert(*one[0]);
+  foo.insert(*one[1]);
+  foo.insert(*one[2]);
+
+  list<character&> bar;
+  character** two = new character*[3];
+  two[0] = new character('a');
+  two[1] = new character('b');
+  two[2] = new character('c');
+
+  bar.insert(*two[0]);
+  bar.insert(*two[1]);
+  bar.insert(*two[2]);
+
+  if(!foo.equals(bar)){
+    ret = false;
+//    for(int i = 0; i < 3; ++i){
+//      cout << "one:" << *one[i] << endl;
+//      cout << "two:" << *two[i] << endl;
+//    }
+  }
+
+  delete one[0];
+  delete one[1];
+  delete one[2];
+  delete[] one;
+
+  delete two[0];
+  delete two[1];
+  delete two[2];
+  delete[] two;
+
+  return ret;
 }
 
 bool testIterator(){

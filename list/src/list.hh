@@ -99,6 +99,7 @@ public:
 //  [inherited from abstractlist]
   Jing::index_t indexOf(T& obj) const;
   Jing::index_t lastIndexOf(T& obj) const;
+//TODO:equality checks should really only be against, abstract lists..
 //Equality
 //  [inherited from Object]
   bool equals(Object& obj) const;

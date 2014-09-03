@@ -212,8 +212,11 @@ Jing::index_t Jing::list<T>::lastIndexOf(T& obj) const{
   return this->last->backFind(obj, this->size() - 1);
 }
 
+//TODO:can't do a valid check against an object, needs to be abstractList or collection
 template<class T>
 bool Jing::list<T>::equals(Jing::Object& obj) const{
+//  for(int i = 0; i < this->size(); ++i){
+//  }
   return false;
 }
 
