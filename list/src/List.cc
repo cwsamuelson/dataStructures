@@ -263,11 +263,13 @@ unsigned long long Jing::List<T>::hash() const{
   const unsigned long n = 0xe6546b64;
 
   unsigned long long hash = seed;
+  unsigned int nblocks = 0;
 
   for(int j = 0; j < this->size(); ++j){
     key = this->get(j).hash();
     for(unsigned long long i = 0, mask = 0xf; i < 16; ++i, mask << 4){
       unsigned long long k = (key & mask) >> (4 * i);
+      ++nblocks;
 
       k = k * c1;
       k = (k << r1) | (k >> (32 - r1));
@@ -279,6 +281,7 @@ unsigned long long Jing::List<T>::hash() const{
     }
   }
 
+  len = nblocks;
   hash = hash ^ len;
 
   hash = hash ^ (hash >> 16);
