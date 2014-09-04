@@ -7,13 +7,13 @@
 namespace Jing{
 
 template<class T>
-class list:public AbstractList<T>{
+class List:public AbstractList<T>{
 private:
   bool sameType;
 
 protected:
   class listNode{
-    friend class list;
+    friend class List;
   private:
     T& data;
     listNode *prev;
@@ -37,11 +37,11 @@ protected:
   //OPTIMIZE:Make friend to list to point directly to nodes.
   //  friend class list;
     Jing::index_t idx;
-    list<T>& theList;
+    List<T>& theList;
 
   public:
-    listIterator(Jing::list<T>& thisList);
-    listIterator(Jing::list<T>& thisList, Jing::index_t n);
+    listIterator(Jing::List<T>& thisList);
+    listIterator(Jing::List<T>& thisList, Jing::index_t n);
 
     bool hasNext();
     T& next();
@@ -65,8 +65,8 @@ public:
 //TODO:remove iostream pieces and parts
 
 //Constructors
-  list();
-  list(Collection<T>& c);
+  List();
+  List(Collection<T>& c);
 //Inserts
 //  [inherited from abstractlist]
   void insert(T& obj, Jing::index_t idx);
@@ -136,12 +136,12 @@ class listException:public exception{
 
 class listIndexOutOfBounds:public listException{
 private:
-  void initWithList(const Jing::list& theList);
+  void initWithList(const Jing::List& theList);
 public:
   listIndexOutOfBounds(const char * message);
   listIndexOutOfBounds(const Jing::string& message);
-  listIndexOutOfBounds(const list& theList);
-  listIndexOutOfBounds(const list& theList, Jing::index_t index);
+  listIndexOutOfBounds(const List& theList);
+  listIndexOutOfBounds(const List& theList, Jing::index_t index);
   listIndexOutOfBounds(const listNode& node);
 
 //  const string& what() const;
@@ -151,7 +151,7 @@ public:
 
 }
 
-#include"list.cc"
+#include"List.cc"
 
 #endif
 

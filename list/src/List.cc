@@ -1,7 +1,7 @@
-//#include<Jing/list>
+//#include<Jing/List>
 
 template<class T>
-Jing::list<T>::list(){
+Jing::List<T>::List(){
   //This list can only contain objects that inherit from Jing::Object references
   can_copy<T, Jing::Object&>();
   this->sameType = true;
@@ -12,18 +12,18 @@ Jing::list<T>::list(){
 }
 
 template<class T>
-Jing::list<T>::list(Collection<T>& c):list(){
+Jing::List<T>::List(Collection<T>& c):List(){
   this->insertAll(c);
 }
 
 template<class T>
-void Jing::list<T>::insert(T& obj){
+void Jing::List<T>::insert(T& obj){
   this->insert(obj, this->size());
 }
 
 //TODO:Optimize by inserting from back using negative indexes
 template<class T>
-void Jing::list<T>::insert(T& obj, Jing::index_t idx){
+void Jing::List<T>::insert(T& obj, Jing::index_t idx){
   //uninitialized list
   if(this->size() == 0){
   //  update first
@@ -50,12 +50,12 @@ void Jing::list<T>::insert(T& obj, Jing::index_t idx){
 }
 
 template<class T>
-void Jing::list<T>::insertAll(Collection<T>& c){
+void Jing::List<T>::insertAll(Collection<T>& c){
   this->insertAll(c, this->size() - 1);
 }
 
 template<class T>
-void Jing::list<T>::insertAll(Collection<T>& c, Jing::index_t idx){
+void Jing::List<T>::insertAll(Collection<T>& c, Jing::index_t idx){
   Iterator<T>& iter = c.iterator();
   Jing::index_t n = idx;
   while(iter.hasNext()){
@@ -66,12 +66,12 @@ void Jing::list<T>::insertAll(Collection<T>& c, Jing::index_t idx){
 }
 
 template<class T>
-T& Jing::list<T>::remove(){
+T& Jing::List<T>::remove(){
   return this->remove((Jing::index_t)0);
 }
 
 template<class T>
-T& Jing::list<T>::remove(Jing::index_t idx){
+T& Jing::List<T>::remove(Jing::index_t idx){
   T& ret = *this->first->data.clone();
   //uninitialized list
 //don't delete from uninit list yet
@@ -109,7 +109,7 @@ T& Jing::list<T>::remove(Jing::index_t idx){
 }
 
 template<class T>
-void Jing::list<T>::remove(T& obj){
+void Jing::List<T>::remove(T& obj){
   Jing::index_t idx = this->indexOf(obj);
   if(idx != (Jing::index_t)-1){
     this->remove(idx);
@@ -119,7 +119,7 @@ void Jing::list<T>::remove(T& obj){
 }
 
 template<class T>
-void Jing::list<T>::removeAll(Collection<T>& c){
+void Jing::List<T>::removeAll(Collection<T>& c){
   Iterator<T>& iter = c.iterator();
   while(iter.hasNext()){
     this->remove(iter.next());
@@ -127,19 +127,19 @@ void Jing::list<T>::removeAll(Collection<T>& c){
 }
 
 template<class T>
-void Jing::list<T>::removeRange(Jing::index_t fromIndex, Jing::index_t toIndex){
+void Jing::List<T>::removeRange(Jing::index_t fromIndex, Jing::index_t toIndex){
   for(Jing::index_t i = fromIndex; i < toIndex; ++i){
     this->remove(fromIndex);
   }
 }
 
 template<class T>
-T& Jing::list<T>::get() const{
+T& Jing::List<T>::get() const{
   return this->get(0);
 }
 
 template<class T>
-T& Jing::list<T>::get(Jing::index_t idx) const{
+T& Jing::List<T>::get(Jing::index_t idx) const{
   //just return last
   if(idx >= this->size()){
     return this->first->get(this->size() - 1);
@@ -149,8 +149,8 @@ T& Jing::list<T>::get(Jing::index_t idx) const{
 }
 
 template<class T>
-Jing::AbstractList<T>& Jing::list<T>::get(Jing::index_t start, Jing::index_t end) const{
-  list& ret = *new list();
+Jing::AbstractList<T>& Jing::List<T>::get(Jing::index_t start, Jing::index_t end) const{
+  List& ret = *new List();
   for(Jing::index_t i = start; i < end; ++i){
     ret.insert(this->get(i));
   }
@@ -158,7 +158,7 @@ Jing::AbstractList<T>& Jing::list<T>::get(Jing::index_t start, Jing::index_t end
 }
 
 template<class T>
-T& Jing::list<T>::assign(Jing::index_t idx, T& obj){
+T& Jing::List<T>::assign(Jing::index_t idx, T& obj){
   T& ret = this->remove(idx);
   this->insert(obj, idx);
   return ret;
@@ -172,14 +172,14 @@ T& Jing::list<T>::assign(Jing::index_t idx, T& obj){
 }
 
 template<class T>
-void Jing::list<T>::clear(){
+void Jing::List<T>::clear(){
   while(this->size() > 0){
     this->remove();
   }
 }
 
 template<class T>
-bool Jing::list<T>::contains(T& obj) const{
+bool Jing::List<T>::contains(T& obj) const{
   if(this->size() > 0){
     if(this->first->find(obj, 0) > this->size()){
       return false;
@@ -192,7 +192,7 @@ bool Jing::list<T>::contains(T& obj) const{
 }
 
 template<class T>
-bool Jing::list<T>::containsAll(Collection<T>& c) const{
+bool Jing::List<T>::containsAll(Collection<T>& c) const{
   Iterator<T>& iter = c.iterator();
   while(iter.hasNext()){
     if(!this->contains(iter.next())){
@@ -203,25 +203,25 @@ bool Jing::list<T>::containsAll(Collection<T>& c) const{
 }
 
 template<class T>
-Jing::index_t Jing::list<T>::indexOf(T& obj) const{
+Jing::index_t Jing::List<T>::indexOf(T& obj) const{
   return this->first->find(obj, 0);
 }
 
 template<class T>
-Jing::index_t Jing::list<T>::lastIndexOf(T& obj) const{
+Jing::index_t Jing::List<T>::lastIndexOf(T& obj) const{
   return this->last->backFind(obj, this->size() - 1);
 }
 
 //TODO:can't do a valid check against an object, needs to be abstractList or collection
 template<class T>
-bool Jing::list<T>::equals(Jing::Object& obj) const{
+bool Jing::List<T>::equals(Jing::Object& obj) const{
 //  for(int i = 0; i < this->size(); ++i){
 //  }
   return false;
 }
 
 template<class T>
-Jing::Iterator<T>& Jing::list<T>::iterator() const{
+Jing::Iterator<T>& Jing::List<T>::iterator() const{
   this->iter->reset();
   return *(this->iter);
 }
@@ -250,7 +250,7 @@ Jing::Iterator<T>& Jing::list<T>::iterator() const{
   long long:64  bits
 */
 template<class T>
-unsigned long long Jing::list<T>::hash() const{
+unsigned long long Jing::List<T>::hash() const{
   unsigned long len = 1;
   unsigned long long key = 0;
   unsigned long seed = 5871;
@@ -291,28 +291,28 @@ unsigned long long Jing::list<T>::hash() const{
 }
 
 template<class T>
-Jing::Object* Jing::list<T>::clone() const{
-  Jing::list<T>* temp = new list<T>(*this);
+Jing::Object* Jing::List<T>::clone() const{
+  Jing::List<T>* temp = new List<T>(*this);
   return temp;
 }
 
 //create a new array containing all elements in proper order.
 template<class T>
-Jing::Object* Jing::list<T>::toArray() const{
+Jing::Object* Jing::List<T>::toArray() const{
   return 0;
 }
 
 //take argument pointer to create and return an array containing all elements in proper order
 //assumes enough memory was allocated by user
 template<class T>
-void Jing::list<T>::toArray(Jing::Object* arr) const{
+void Jing::List<T>::toArray(Jing::Object* arr) const{
   for(Jing::index_t i = 0; i < this->size(); ++i){
     arr[i] = this->get(i);
   }
 }
 
 template<class T>
-bool Jing::list<T>::isEmpty() const{
+bool Jing::List<T>::isEmpty() const{
   if(this->size() == 0)
     return true;
   else
@@ -320,7 +320,7 @@ bool Jing::list<T>::isEmpty() const{
 }
 
 template<class T>
-Jing::size_t Jing::list<T>::size() const{
+Jing::size_t Jing::List<T>::size() const{
   return this->count;
 }
 
@@ -331,19 +331,19 @@ Jing::size_t Jing::list<T>::size() const{
 
 
 template<class T>
-Jing::list<T>::listNode::listNode(T& obj):
+Jing::List<T>::listNode::listNode(T& obj):
   data(obj),
   prev(0),
   next(0){  }
 
 template<class T>
-Jing::list<T>::listNode::listNode(T& obj, listNode* prev, listNode* next):
+Jing::List<T>::listNode::listNode(T& obj, listNode* prev, listNode* next):
   data(obj),
   prev(prev),
   next(next){ }
 
 template<class T>
-bool Jing::list<T>::listNode::add(T& obj, Jing::index_t idx){
+bool Jing::List<T>::listNode::add(T& obj, Jing::index_t idx){
   if(idx > 0){
     //idx is too big.  o well!
     //can't continue, install in place
@@ -368,7 +368,7 @@ bool Jing::list<T>::listNode::add(T& obj, Jing::index_t idx){
 }
 
 template<class T>
-T& Jing::list<T>::listNode::remove(Jing::index_t idx){
+T& Jing::List<T>::listNode::remove(Jing::index_t idx){
   if(idx > 0){
     return this->next->remove(idx - 1);
   }else if(idx == 0){
@@ -389,7 +389,7 @@ T& Jing::list<T>::listNode::remove(Jing::index_t idx){
 }
 
 template<class T>
-T& Jing::list<T>::listNode::get(Jing::index_t idx) const{
+T& Jing::List<T>::listNode::get(Jing::index_t idx) const{
   if(idx > 0){
     if(this->next != 0){
       return this->next->get(idx - 1);
@@ -402,7 +402,7 @@ T& Jing::list<T>::listNode::get(Jing::index_t idx) const{
 }
 
 template<class T>
-bool Jing::list<T>::listNode::assign(Jing::index_t idx, T& obj){
+bool Jing::List<T>::listNode::assign(Jing::index_t idx, T& obj){
   bool ret = false;
   if(idx > 0){
     ret = this->next->assign(idx - 1, obj);
@@ -414,7 +414,7 @@ bool Jing::list<T>::listNode::assign(Jing::index_t idx, T& obj){
 }
 
 template<class T>
-Jing::index_t Jing::list<T>::listNode::find(T& obj, Jing::index_t idx){
+Jing::index_t Jing::List<T>::listNode::find(T& obj, Jing::index_t idx){
   if(!this->data.equals(obj)){
     if(this->next != 0){
       return this->next->find(obj, idx + 1);
@@ -427,7 +427,7 @@ Jing::index_t Jing::list<T>::listNode::find(T& obj, Jing::index_t idx){
 }
 
 template<class T>
-Jing::index_t Jing::list<T>::listNode::backFind(T& obj, Jing::index_t idx){
+Jing::index_t Jing::List<T>::listNode::backFind(T& obj, Jing::index_t idx){
   if(!this->data.equals(obj)){
     if(this->prev != 0){
       return this->prev->backFind(obj, idx - 1);
@@ -447,15 +447,15 @@ Jing::index_t Jing::list<T>::listNode::backFind(T& obj, Jing::index_t idx){
 
 
 template<class T>
-Jing::list<T>::listIterator::listIterator(Jing::list<T>& thisList):listIterator(thisList, 0){
+Jing::List<T>::listIterator::listIterator(Jing::List<T>& thisList):listIterator(thisList, 0){
 }
 
 template<class T>
-Jing::list<T>::listIterator::listIterator(Jing::list<T>& thisList, Jing::index_t idx):idx(idx), theList(thisList){
+Jing::List<T>::listIterator::listIterator(Jing::List<T>& thisList, Jing::index_t idx):idx(idx), theList(thisList){
 }
 
 template<class T>
-bool Jing::list<T>::listIterator::hasNext(){
+bool Jing::List<T>::listIterator::hasNext(){
   if(this->idx < this->theList.size())
     return true;
   else
@@ -463,17 +463,17 @@ bool Jing::list<T>::listIterator::hasNext(){
 }
 
 template<class T>
-T& Jing::list<T>::listIterator::next(){
+T& Jing::List<T>::listIterator::next(){
   return this->theList.get(this->idx++);
 }
 
 template<class T>
-void Jing::list<T>::listIterator::remove(){
+void Jing::List<T>::listIterator::remove(){
   this->theList.remove(idx);
 }
 
 template<class T>
-void Jing::list<T>::listIterator::reset(){
+void Jing::List<T>::listIterator::reset(){
   this->idx = 0;
 }
 
