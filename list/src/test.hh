@@ -1,6 +1,6 @@
 #include<Jing/list>
 #include<iostream>
-#include"character.hh"
+#include<Jing/character>
 #include<Jing/Misc.hh>
 
 using namespace Jing;

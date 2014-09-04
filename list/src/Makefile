@@ -5,11 +5,8 @@ cflags:=-c $(dflags)
 
 default:main
 
-main:test.o character.o
-	$(CC) character.o test.o -L/usr/local/lib/Jing/ -o main
-
-character.o:character.cc
-	$(CC) $(cflags) $(flags) character.cc
+main:test.o
+	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -o main
 
 test.o:list.cc test.cc
 	$(CC) $(cflags) $(flags) test.cc
