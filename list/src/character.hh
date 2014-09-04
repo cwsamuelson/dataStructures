@@ -16,7 +16,7 @@ public:
   bool equals(Object& obj) const;
   bool equals(character& ch) const;
   bool equals(char ch) const;
-  int hash() const;
+  unsigned long long hash() const;
   character* clone() const;
 
   friend std::ostream& operator<<(std::ostream& os, const character& let);

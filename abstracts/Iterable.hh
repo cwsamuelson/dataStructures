@@ -15,7 +15,7 @@ public:
 //States
 //  [inherited from Object]
 //  hash
-//  virtual int hash() const = 0;
+//  virtual unsigned long long hash() const = 0;
 //  ID
 //  virtual int classID() const = 0;
 //  clone
