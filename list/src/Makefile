@@ -14,6 +14,10 @@ character.o:character.cc
 test.o:list.cc test.cc
 	$(CC) $(cflags) $(flags) test.cc
 
+#flags used for precompiled header must be the same as for compilation
+test.hh.gch:test.hh list.cc
+	$(CC) $(dflags) $(flags) test.hh
+
 clean:
-	rm *.o core main
+	rm *.o core main test.hh.gch
 

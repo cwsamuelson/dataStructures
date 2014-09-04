@@ -1,7 +1,4 @@
-#include<Jing/list>
-#include<iostream>
-#include"character.hh"
-#include<Jing/Misc.hh>
+#include"test.hh"
 
 using std::cout;
 using std::endl;
