@@ -504,12 +504,52 @@ bool testIterator(){
 }
 
 bool testHash(){
-  bool ret = false;
+  bool ret = true;
+  list<character&> foo;
+  character** vals = new character*[4];
+  vals[0] = new character('a');
+  vals[1] = new character('b');
+  vals[2] = new character('c');
+  vals[3] = new character('d');
+
+  foo.insert(*vals[0]);
+  foo.insert(*vals[1]);
+  foo.insert(*vals[2]);
+
+  cout << "hash:" << foo.hash() << endl;
+
+  foo.insert(*vals[3]);
+  
+  cout << "hash:" << foo.hash() << endl;
+
+  delete vals[0];
+  delete vals[1];
+  delete vals[2];
+  delete[] vals;
+
   return ret;
 }
 
 bool testClone(){
   bool ret = false;
+  list<character&> foo;
+  character** vals = new character*[4];
+  vals[0] = new character('a');
+  vals[1] = new character('b');
+  vals[2] = new character('c');
+  vals[3] = new character('d');
+
+  foo.insert(*vals[0]);
+  foo.insert(*vals[1]);
+  foo.insert(*vals[2]);
+  foo.insert(*vals[3]);
+
+  delete vals[0];
+  delete vals[1];
+  delete vals[2];
+  delete vals[3];
+  delete[] vals;
+
   return ret;
 }
 
@@ -577,6 +617,10 @@ bool testStates(){
 
 //Use exceptions to pass errors
 int main(int argc, char **argv){
+  cout << "char:" << sizeof(char) << endl;
+  cout << "long:" << sizeof(unsigned long) << endl;
+  cout << "long long:" << sizeof(unsigned long long) << endl;
+
   bool ret = true;
   cout << "Testing class list" << endl;
   cout << endl;

@@ -226,9 +226,68 @@ Jing::Iterator<T>& Jing::list<T>::iterator() const{
   return *(this->iter);
 }
 
+//Hash based on murmur hash 3 found on wikipedia.
+//  https://en.wikipedia.org/wiki/MurmurHash#Implementations
+//Murmur hash requires 3 parameters.
+//  1. key
+//  2. length
+//  3. seed
+//For this implementation
+//  the key is the stored letter
+//  the length is one
+//  the seed will be constant
+//  need to make the seed to be random, and not constant are described:
+//One reason is that attackers may use the properties of a hash function 
+//  to construct a denial of service attack. They could do this by providing
+//  strings to your hash function that all hash to the same value destroying
+//  the performance of your hash table. But if you use a different seed for
+//  each run of your program, the set of strings the attackers must use changes.
+//This feature is not included for simplicity,
+//  and for the sake of not including std libraries (keeping all code my own)
+/*
+       char:8   bits
+       long:32  bits
+  long long:64  bits
+*/
 template<class T>
-int Jing::list<T>::hash() const{
-  return 0;
+unsigned long long Jing::list<T>::hash() const{
+  unsigned long len = 1;
+  unsigned long long key = 0;
+  unsigned long seed = 5871;
+
+  const unsigned long c1 = 0xcc9e2d51;
+  const unsigned long c2 = 0x1b873593;
+  const unsigned long r1 = 15;
+  const unsigned long r2 = 13;
+  const unsigned long m = 5;
+  const unsigned long n = 0xe6546b64;
+
+  unsigned long long hash = seed;
+
+  for(int j = 0; j < this->size(); ++j){
+    key = this->get(j).hash();
+    for(unsigned long long i = 0, mask = 0xf; i < 16; ++i, mask << 4){
+      unsigned long long k = (key & mask) >> (4 * i);
+
+      k = k * c1;
+      k = (k << r1) | (k >> (32 - r1));
+      k = k * c2;
+
+      hash = hash ^ k;
+      hash = (hash << r2) | (hash >> (32 - r2));
+      hash = hash * m + n;
+    }
+  }
+
+  hash = hash ^ len;
+
+  hash = hash ^ (hash >> 16);
+  hash = hash * 0x85ebca6b;
+  hash = hash ^ (hash >> 13);
+  hash = hash * 0xc2b2ae35;
+  hash = hash ^ (hash >> 16);
+
+  return hash;
 }
 
 template<class T>
