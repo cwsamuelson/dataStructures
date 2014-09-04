@@ -8,7 +8,7 @@ default:main
 main:test.o
 	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -o main
 
-test.o:List.cc test.cc
+test.o:test.hh.gch test.cc
 	$(CC) $(cflags) $(flags) test.cc
 
 #flags used for precompiled header must be the same as for compilation
