@@ -2,6 +2,7 @@
 #define __LIST_H__
 
 #include<Jing/Collection.hh>
+#include<Jing/List>
 #include<Jing/Misc.hh>
 
 namespace Jing{
@@ -26,6 +27,8 @@ protected:
     void remove();
     void reset();
   };
+
+  List<T> que;
 
 public:
 //TODO:clear warnings
