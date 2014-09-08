@@ -1,6 +1,0 @@
-#!/bin/bash
-
-g++ -c stack.cc -Wall
-
-g++ -o main -Wall test.cc stack.o
-
