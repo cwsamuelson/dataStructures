@@ -1,12 +1,11 @@
-#include<Jing/bst.hh>
-#include<iostream>
+#include"test.hh"
 
 using namespace Jing;
 using std::cout;
 using std::endl;
 
 int main(int argc, char** argv){
-  bst<char, int> foo;
+  BST<char, int> foo;
   cout << "add 'a', 1" << endl;
   foo.add('a', 1);
   cout << "add 'b', 2" << endl;

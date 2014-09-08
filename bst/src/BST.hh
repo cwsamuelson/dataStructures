@@ -8,10 +8,10 @@
 namespace Jing{
 
 template<class X, class Y>
-class bst:public AbstractTree<X, Y>{
+class BST:public AbstractTree<X, Y>{
 private:
   class treeNode{
-    friend class bst<X,Y>;
+    friend class BST<X,Y>;
   private:
     X key;
     Y value;
@@ -33,9 +33,9 @@ private:
   class treeIterator:public Iterator<Y>{
   private:
     X key;
-    bst* theTree;
+    BST* theTree;
   public:
-    treeIterator(bst *thisList);
+    treeIterator(BST *thisList);
 
     bool hasNext();
     Y next();
@@ -50,11 +50,11 @@ private:
   void init();
 
 public:
-  bst();
-  bst(AbstractTree<X, Y> *at);
+  BST();
+  BST(AbstractTree<X, Y> *at);
 //add similar with 2 lists?
-//  bst(Collection<X> *cx, Collection<Y> *cy);
-  bst(AbstractList<X> *alx, AbstractList<Y> *aly);
+//  BST(Collection<X> *cx, Collection<Y> *cy);
+  BST(AbstractList<X> *alx, AbstractList<Y> *aly);
 
   bool add(X x, Y y);
   bool addAll(AbstractTree<X, Y> *at);
@@ -81,7 +81,7 @@ public:
 
 }
 
-#include<Jing/bst.cc>
+#include<Jing/BST.cc>
 
 #endif
 

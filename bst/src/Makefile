@@ -1,19 +1,18 @@
 CC:= g++
-flags:=-Wall
-dflags:=-g -DDEBUG
-cflags:=-c
+flags:=-Wall -std=c++11
+dflags:=-ggdb3
+cflags:=-c $(dflags)
 
-default: all
-
-all:main
+default:main
 
 main:test.o
-	$(CC) $(dflags) -o main test.o
+	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -o main
 
-test.o:test.cc bst.hh bst.cc
-	$(CC) $(dflags) $(cflags) $(flags) test.cc
+test.o:test.hh test.cc
+	$(CC) $(cflags) $(flags) test.cc
 
-bst.hh:bst.cc
+test.hh.gch:test.hh BST.cc
+	$(CC) $(dflags) $(flags) test.hh
 
 clean:
 	rm *.o main core

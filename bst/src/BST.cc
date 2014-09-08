@@ -1,32 +1,29 @@
-
-using namespace Jing;
-
 template<class X, class Y>
-void bst<X, Y>::init(){
+void Jing::BST<X, Y>::init(){
   this->root = 0;
   this->count = 0;
   this->iter = 0;
 }
 
 template<class X, class Y>
-bst<X, Y>::bst(){
+Jing::BST<X, Y>::BST(){
   this->init();
 }
 
 template<class X, class Y>
-bst<X, Y>::bst(AbstractTree<X, Y> *at){
+Jing::BST<X, Y>::BST(AbstractTree<X, Y> *at){
   this->init();
   this->add(at);
 }
 
 template<class X, class Y>
-bst<X, Y>::bst(AbstractList<X> *alx, AbstractList<Y> *aly){
+Jing::BST<X, Y>::BST(AbstractList<X> *alx, AbstractList<Y> *aly){
   this->init();
   this->add(alx, aly);
 }
 
 template<class X, class Y>
-bool bst<X, Y>::add(X x, Y y){
+bool Jing::BST<X, Y>::add(X x, Y y){
   if(this->root == 0){
     ++this->count;
     this->root = new treeNode(x, y);
@@ -40,14 +37,14 @@ bool bst<X, Y>::add(X x, Y y){
 }
 
 template<class X, class Y>
-bool bst<X, Y>::addAll(AbstractTree<X, Y> *at){
+bool Jing::BST<X, Y>::addAll(AbstractTree<X, Y> *at){
   Iterator<Y> *it = at->iterator();
 //  while(it->hasNext())
 //    this->add();
 }
 
 template<class X, class Y>
-bool bst<X, Y>::addAll(AbstractList<X> *alx, AbstractList<Y> *aly){
+bool Jing::BST<X, Y>::addAll(AbstractList<X> *alx, AbstractList<Y> *aly){
   Iterator<X> *xiter = alx->iterator();
   Iterator<Y> *yiter = aly->iterator();
 
@@ -57,32 +54,32 @@ bool bst<X, Y>::addAll(AbstractList<X> *alx, AbstractList<Y> *aly){
 }
 
 template<class X, class Y>
-Y bst<X, Y>::remove(X x){
+Y Jing::BST<X, Y>::remove(X x){
   return this->root->remove(x);
 }
 
 template<class X, class Y>
-bool bst<X, Y>::removeAll(AbstractList<X> *al){
+bool Jing::BST<X, Y>::removeAll(AbstractList<X> *al){
   Iterator<X> *it = al->iterator();
   while(it->hasNext())
     this->remove(it->next());
 }
 
 template<class X, class Y>
-bool bst<X, Y>::removeAll(AbstractTree<X, Y> *at){
+bool Jing::BST<X, Y>::removeAll(AbstractTree<X, Y> *at){
 }
 
 template<class X, class Y>
-Y bst<X, Y>::get(X x) const{
+Y Jing::BST<X, Y>::get(X x) const{
   this->root->get(x);
 }
 
 template<class X, class Y>
-X bst<X, Y>::getKey(Y y) const{
+X Jing::BST<X, Y>::getKey(Y y) const{
 }
 
 template<class X, class Y>
-void bst<X, Y>::clear(){
+void Jing::BST<X, Y>::clear(){
   Iterator<Y> *it = this->iterator();
   while(it->hasNext()){
     this->root->remove(it->next());
@@ -90,55 +87,55 @@ void bst<X, Y>::clear(){
 }
 
 template<class X, class Y>
-bool bst<X, Y>::contains(Y y) const{
+bool Jing::BST<X, Y>::contains(Y y) const{
   return this->containsKey(y);
 }
 
 template<class X, class Y>
-bool bst<X, Y>::containsKey(X x) const{
+bool Jing::BST<X, Y>::containsKey(X x) const{
 //  return this->root->get(x);
 }
 
 template<class X, class Y>
-bool bst<X, Y>::containsValue(Y y) const{
+bool Jing::BST<X, Y>::containsValue(Y y) const{
 }
 
 template<class X, class Y>
-bool bst<X, Y>::containsAll(Collection<Y> *cy) const{
+bool Jing::BST<X, Y>::containsAll(Collection<Y> *cy) const{
 }
 
 template<class X, class Y>
-bool bst<X, Y>::isEmpty() const{
+bool Jing::BST<X, Y>::isEmpty() const{
   if(this->size() == 0)
     return true;
   else return false;
 }
 
 template<class X, class Y>
-bool bst<X, Y>::equals(AbstractTree<X, Y> *at) const{
+bool Jing::BST<X, Y>::equals(AbstractTree<X, Y> *at) const{
 }
 
 template<class X, class Y>
-bool bst<X, Y>::equals(Collection<Y> *c) const{
+bool Jing::BST<X, Y>::equals(Collection<Y> *c) const{
 }
 
 template<class X, class Y>
-int bst<X, Y>::hashCode() const{
+int Jing::BST<X, Y>::hashCode() const{
   return 0;
 }
 
 template<class X, class Y>
-void bst<X, Y>::toArray(X *x, Y *y) const{
+void Jing::BST<X, Y>::toArray(X *x, Y *y) const{
 }
 
 template<class X, class Y>
-Iterator<Y> *bst<X, Y>::iterator() const{
+Iterator<Y> *Jing::BST<X, Y>::iterator() const{
   this->iter->reset();
   return this->iter;
 }
 
 template<class X, class Y>
-size_t bst<X, Y>::size() const{
+size_t Jing::BST<X, Y>::size() const{
   return this->count;
 }
 
@@ -149,21 +146,21 @@ size_t bst<X, Y>::size() const{
 
 
 template<class X, class Y>
-void bst<X, Y>::treeNode::init(){
+void Jing::BST<X, Y>::treeNode::init(){
   this->left = 0;
   this->right = 0;
   this->parent = 0;
 }
 
 template<class X, class Y>
-bst<X, Y>::treeNode::treeNode(X x, Y y){
+Jing::BST<X, Y>::treeNode::treeNode(X x, Y y){
   this->init();
   this->key = x;
   this->value = y;
 }
 
 template<class X, class Y>
-bool bst<X, Y>::treeNode::add(X x, Y y){
+bool Jing::BST<X, Y>::treeNode::add(X x, Y y){
   treeNode *temp;
   if(x == this->key){
     return false;
@@ -187,7 +184,7 @@ bool bst<X, Y>::treeNode::add(X x, Y y){
 }
 
 template<class X, class Y>
-Y bst<X, Y>::treeNode::remove(X x){
+Y Jing::BST<X, Y>::treeNode::remove(X x){
   if(x == this->key){
     if(this->left == 0 && this->right == 0){
       Y thing = this->value;
@@ -217,7 +214,7 @@ Y bst<X, Y>::treeNode::remove(X x){
 }
 
 template<class X, class Y>
-Y bst<X, Y>::treeNode::get(X x) const{
+Y Jing::BST<X, Y>::treeNode::get(X x) const{
   if(x == this->key){
     return this->value;
   }
@@ -232,7 +229,7 @@ Y bst<X, Y>::treeNode::get(X x) const{
 }
 
 template<class X, class Y>
-X bst<X, Y>::treeNode::find(Y y) const{
+X Jing::BST<X, Y>::treeNode::find(Y y) const{
 }
 
 
@@ -241,22 +238,22 @@ X bst<X, Y>::treeNode::find(Y y) const{
 /********************************************************/
 
 template<class X, class Y>
-bst<X, Y>::treeIterator::treeIterator(bst *thisList){
+Jing::BST<X, Y>::treeIterator::treeIterator(bst *thisList){
 }
 
 template<class X, class Y>
-bool bst<X, Y>::treeIterator::hasNext(){
+bool Jing::BST<X, Y>::treeIterator::hasNext(){
 }
 
 template<class X, class Y>
-Y bst<X, Y>::treeIterator::next(){
+Y Jing::BST<X, Y>::treeIterator::next(){
 }
 
 template<class X, class Y>
-void bst<X, Y>::treeIterator::remove(){
+void Jing::BST<X, Y>::treeIterator::remove(){
 }
 
 template<class X, class Y>
-void bst<X, Y>::treeIterator::reset(){
+void Jing::BST<X, Y>::treeIterator::reset(){
 }
 
