@@ -1,12 +1,11 @@
-//#include<Jing/list>
-
 //Constructors
 template<class T>
-Jing::Queue<T>::Queue():que(){
+Jing::Queue<T>::Queue(){
 }
 
 template<class T>
-Jing::Queue<T>::Queue(Collection<T>& c):que(c){
+Jing::Queue<T>::Queue(Collection<T>& c){
+  this->que.insertAll(c);
 }
 
 //Inserts
@@ -65,7 +64,8 @@ bool Jing::Queue<T>::equals(Object& obj) const{
 //Iterator
 //  [inherited from Iterable]
 template<class T>
-Iterator<T>& Jing::Queue<T>::iterator() const{
+Jing::Iterator<T>& Jing::Queue<T>::iterator() const{
+  return this->que.iterator();
 }
 
 //States
@@ -81,7 +81,7 @@ unsigned long long Jing::Queue<T>::hash() const{
 //memory management may be up to the user.
 //clean up with delete
 template<class T>
-Object* Jing::Queue<T>::clone() const{
+Jing::Object* Jing::Queue<T>::clone() const{
   return 0;
 }
 
@@ -95,7 +95,7 @@ bool Jing::Queue<T>::isEmpty() const{
 //  size
 //  [inherited from collection]
 template<class T>
-size_t Jing::Queue<T>::size() const{
+Jing::size_t Jing::Queue<T>::size() const{
   return this->que.size();
 }
 

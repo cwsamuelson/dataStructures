@@ -1,5 +1,5 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __QUEUE_H__
+#define __QUEUE_H__
 
 #include<Jing/Collection.hh>
 #include<Jing/List>
@@ -10,35 +10,13 @@ namespace Jing{
 template<class T>
 class Queue:public Collection<T>{
 protected:
-  //Might neeed to make this a template, implies making iterable and iterator templates as well
-  class QueueIterator:public Iterator<T>{
-  private:
-  //OPTIMIZE:Make friend to list to point directly to nodes.
-  //  friend class list;
-    Jing::index_t idx;
-    Queue<T>& theQueue;
-
-  public:
-    QueueIterator(Jing::Queue<T>& thisQueue);
-    QueueIterator(Jing::Queue<T>& thisQueue, Jing::index_t n);
-
-    bool hasNext();
-    T& next();
-    void remove();
-    void reset();
-  };
-
-  List<T> que;
+  Jing::List<T> que;
 
 public:
 //TODO:clear warnings
 //TODO:equals method
-//TODO:hashing
-//TODO:classID dynamic infrastructure
 //TODO:allow iterators to be used as insertion points
 //TODO:Allow for multiple iterators
-//TODO:remove character include
-//TODO:remove iostream pieces and parts
 
 //Constructors
   Queue();

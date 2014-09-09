@@ -8,11 +8,11 @@ using namespace Jing;
 
 //update collection addition as new collections are created
 bool testConstructors(){
-  list<character&> foo;
+  List<character&> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
 
-  list<character&> bar(foo);
+  List<character&> bar(foo);
 
   if(foo.size() != bar.size()){
     return false;
@@ -27,7 +27,7 @@ bool testConstructors(){
 }
 
 bool testEmptyInserts(){
-  list<character&> foo;
+  List<character&> foo;
   Iterator<character&>& iter = foo.iterator();
   while(iter.hasNext()){
     cout << iter.next() << endl;
@@ -40,7 +40,7 @@ bool testEmptyInserts(){
 
 bool testBasicInserts(){
   char tester[] = {'a', 'b', 'c', 'd'};
-  list<character&> foo;
+  List<character&> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('b'));
   foo.insert(*new character('c'));
@@ -54,7 +54,7 @@ bool testBasicInserts(){
 }
 
 bool testArbitraryInserts(){
-  list<character&> foo;
+  List<character&> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('c'));
   foo.insert(*new character('b'), 1);
@@ -123,7 +123,7 @@ bool testRemoves(){
     new character('e')
   };
 
-  list<character&> foo;
+  List<character&> foo;
 /*  for(int i = 0; i < siz; ++i){
     values[i] = new character((char)((int)'a' + i));
     foo.insert(*values[i]);
@@ -178,7 +178,7 @@ bool testRemoves(){
 bool testGetsBasic(){
   Jing::index_t siz = 10;
   //Test some random gets inside the list.
-  list<character&> foo;
+  List<character&> foo;
   char* tester = new char[siz];
   for(unsigned int i = 0; i < siz; ++i){
     tester[i] = (char)(i+97);
@@ -203,7 +203,7 @@ bool testGetsBasic(){
 }
 
 bool testGet(){
-  list<character&> foo;
+  List<character&> foo;
   foo.insert(*new character('a'));
   if(!(foo.get()).equals('a')){
     return false;
@@ -223,7 +223,7 @@ bool testGet(){
 }
 
 bool testGetRange(){
-  list<character&> foo;
+  List<character&> foo;
   char chs[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
   for(int i = 0; i < 9; ++i){
     foo.insert(*new character(chs[i]));
@@ -264,7 +264,7 @@ bool testGets(){
 
 bool testAssigns(){
   //TODO:Probably need more test cases here.
-  list<character&> foo;
+  List<character&> foo;
   foo.insert(*new character('a'));
   //possible memory problem
   delete &foo.assign(0, *new character('b'));
@@ -276,7 +276,7 @@ bool testAssigns(){
 
 bool testContain(){
   bool ret = true;
-  list<character&> foo;
+  List<character&> foo;
   character** vals= new character*[3];
   vals[0] = new character('a');
   vals[1] = new character('b');
@@ -310,14 +310,14 @@ bool testContain(){
 
 bool testAllContain(){
   bool ret = true;
-  list<character&> base;
+  List<character&> base;
   character** vals = new character*[15];
   for(int i = 0; i < 15; ++i){
     vals[i] = new character((char)((int)'a' + i));
     base.insert(*vals[i]);
   }
 
-  list<character&> foo;
+  List<character&> foo;
   for(int i = 0; i < 5; ++i){
     foo.insert(*vals[i]);
   }
@@ -327,7 +327,7 @@ bool testAllContain(){
     cout << "\tFailed test 1" << endl;
   }
 
-  list<character&> baz;
+  List<character&> baz;
   for(int i = 5; i < 10; ++i){
     baz.insert(*vals[i]);
   }
@@ -337,7 +337,7 @@ bool testAllContain(){
     cout << "\tFailed test 2" << endl;
   }
   
-  list<character&> bar;
+  List<character&> bar;
   for(int i = 10; i < 15; ++i){
     bar.insert(*vals[i]);
   }
@@ -375,7 +375,7 @@ bool testContains(){
 
 bool testFwdReverseget(){
   bool ret = true;
-  list<character&> foo;
+  List<character&> foo;
   character** vals= new character*[3];
   vals[0] = new character('a');
   vals[1] = new character('b');
@@ -406,7 +406,7 @@ bool testFwdReverseget(){
 
 bool testRvsReverseGet(){
   bool ret = true;
-  list<character&> foo;
+  List<character&> foo;
   character** vals= new character*[3];
   vals[0] = new character('a');
   vals[1] = new character('b');
@@ -455,7 +455,7 @@ bool testReversegets(){
 
 bool testEquality(){
   bool ret = true;
-  list<character&> foo;
+  List<character&> foo;
   character** one = new character*[3];
   one[0] = new character('a');
   one[1] = new character('b');
@@ -465,7 +465,7 @@ bool testEquality(){
   foo.insert(*one[1]);
   foo.insert(*one[2]);
 
-  list<character&> bar;
+  List<character&> bar;
   character** two = new character*[3];
   two[0] = new character('a');
   two[1] = new character('b');
@@ -502,7 +502,7 @@ bool testIterator(){
 
 bool testHash(){
   bool ret = true;
-  list<character&> foo;
+  List<character&> foo;
   character** vals = new character*[4];
   vals[0] = new character('a');
   vals[1] = new character('b');
@@ -529,7 +529,7 @@ bool testHash(){
 
 bool testClone(){
   bool ret = false;
-  list<character&> foo;
+  List<character&> foo;
   character** vals = new character*[4];
   vals[0] = new character('a');
   vals[1] = new character('b');
