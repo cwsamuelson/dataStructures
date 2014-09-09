@@ -1,5 +1,5 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __STACK_H__
+#define __STACK_H__
 
 #include<Jing/Collection.hh>
 #include<Jing/List>
