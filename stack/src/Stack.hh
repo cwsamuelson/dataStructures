@@ -10,25 +10,7 @@ namespace Jing{
 template<class T>
 class Stack:public Collection<T>{
 protected:
-  //Might neeed to make this a template, implies making iterable and iterator templates as well
-  class StackIterator:public Iterator<T>{
-  private:
-  //OPTIMIZE:Make friend to list to point directly to nodes.
-  //  friend class list;
-    Jing::index_t idx;
-    Stack<T>& theStack;
-
-  public:
-    StackIterator(Jing::Stack<T>& thisStack);
-    StackIterator(Jing::Stack<T>& thisStack, Jing::index_t n);
-
-    bool hasNext();
-    T& next();
-    void remove();
-    void reset();
-  };
-
-  List<T> stk;
+  Jing::List<T> stk;
 
 public:
 //TODO:clear warnings

@@ -65,7 +65,8 @@ bool Jing::Stack<T>::equals(Object& obj) const{
 //Iterator
 //  [inherited from Iterable]
 template<class T>
-Iterator<T>& Jing::Stack<T>::iterator() const{
+Jing::Iterator<T>& Jing::Stack<T>::iterator() const{
+  return this->stk.iterator();
 }
 
 //States
@@ -81,7 +82,7 @@ unsigned long long Jing::Stack<T>::hash() const{
 //memory management may be up to the user.
 //clean up with delete
 template<class T>
-Object* Jing::Stack<T>::clone() const{
+Jing::Object* Jing::Stack<T>::clone() const{
   return 0;
 }
 
@@ -95,7 +96,7 @@ bool Jing::Stack<T>::isEmpty() const{
 //  size
 //  [inherited from collection]
 template<class T>
-size_t Jing::Stack<T>::size() const{
+Jing::size_t Jing::Stack<T>::size() const{
   return this->stk.size();
 }
 

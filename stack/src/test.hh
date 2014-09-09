@@ -5,4 +5,4 @@
 
 using namespace Jing;
 
-template class Queue<character&>;
+template class Stack<character&>;
