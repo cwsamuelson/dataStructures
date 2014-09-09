@@ -3,6 +3,4 @@
 #include<Jing/character>
 #include<Jing/Misc.hh>
 
-using namespace Jing;
-
-template class List<character&>;
+template class Jing::List<Jing::character&>;
