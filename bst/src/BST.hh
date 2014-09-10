@@ -1,9 +1,10 @@
 #ifndef __BST_H__
 #define __BST_H__
 
+#include<Jing/Comparable.hh>
 #include<Jing/AbstractTree.hh>
 #include<Jing/AbstractList.hh>
-#include<Jing/Misc.h>
+#include<Jing/Misc.hh>
 
 namespace Jing{
 
@@ -13,8 +14,8 @@ private:
   class treeNode{
     friend class BST<X,Y>;
   private:
-    X key;
-    Y value;
+    X& key;
+    Y& value;
     treeNode *parent;
     treeNode *left;
     treeNode *right;
@@ -22,23 +23,24 @@ private:
     void init();
 
   public:
-    treeNode(X x, Y y);
+    treeNode(X& x, Y& y);
+    treeNode(X& x, Y& y, treeNode* parent);
 
-    bool add(X x, Y y);
-    Y remove(X x);
-    Y get(X x) const;
-    X find(Y y) const;
+    bool add(X& x, Y& y);
+    Y& remove(X& x);
+    Y& get(X& x) const;
+    X& find(Y& y) const;
   };
 
   class treeIterator:public Iterator<Y>{
   private:
-    X key;
+    X& key;
     BST* theTree;
   public:
     treeIterator(BST *thisList);
 
     bool hasNext();
-    Y next();
+    Y& next();
     void remove();
     void reset();
   };
@@ -50,33 +52,63 @@ private:
   void init();
 
 public:
+//Constructors
   BST();
-  BST(AbstractTree<X, Y> *at);
-//add similar with 2 lists?
-//  BST(Collection<X> *cx, Collection<Y> *cy);
-  BST(AbstractList<X> *alx, AbstractList<Y> *aly);
-
-  bool add(X x, Y y);
-  bool addAll(AbstractTree<X, Y> *at);
-  bool addAll(AbstractList<X> *alx, AbstractList<Y> *aly);
-  Y    remove(X x);
-  bool removeAll(AbstractList<X> *al);
-//uh? maybe?
-  bool removeAll(AbstractTree<X, Y> *at);
-  Y get(X x) const;
-  X getKey(Y y) const;
-  void clear();
-  bool contains(Y y) const;
-  bool containsKey(X x) const;
-  bool containsValue(Y y) const;
-  bool containsAll(Collection<Y> *cy) const;
+  BST(AbstractTree<X, Y>& at);
+  BST(AbstractList<X>& alx, AbstractList<Y>& aly);
+//Inserts
+//  [inherited from collection]
+  void insert(Y& obj);
+  void insertAll(Collection<Y>& c);
+//  [inherited from abstractTree]
+  bool insert(X& x, Y& y);
+  bool insertAll(AbstractTree<X,Y>& at);
+  bool insertAll(AbstractList<X>& alx, AbstractList<Y>& aly);
+//Gets
+  Y& get(X& x) const;
+  X& getKey(Y& y) const;
+//Removes
+//  [inherited from collection]
+//Remove by key
+  void remove(X& obj);
+  void removeAll(Collection<X>& c);
+//  [inherited from abstractTree]
+  X& remove(X& x);
+  Y& removeByKey(X& x);
+  X& removeByData(Y& y);
+  bool removeAll(AbstractList<X>& al);
+  bool removeAllByKey(AbstractList<X>& al);
+  bool removeAllByData(AbstractList<Y>& al);
+//Contains
+  bool containsKey(X& x) const;
+  bool containsValue(Y& y) const;
+  bool containsAll(Collection<Y>& cy) const;
+//  [inherited from colleciton]
+  bool contains(Y& obj) const;
+  bool containsAll(Collection<Y>& c) const;
+//Equality
+//  [inherited from object]
+  bool equals(BST& obj) const;
+//States
+//  hash
+//  [inherited from object]
+  unsigned long long hash() const;
+//  clone
+  Object* clone() const;
+//  empty
   bool isEmpty() const;
-  bool equals(AbstractTree<X, Y> *at) const;
-  bool equals(Collection<Y> *at) const;
-  int  hashCode() const;
-  void toArray(X *x, Y *y) const;
-  Iterator<Y> *iterator() const;
+//  size
   size_t size() const;
+// clear
+  void clear();
+//  iterator
+//  [inherited from iterable]
+  Iterator<Y>& iterator() const;
+
+
+
+
+
 };
 
 }

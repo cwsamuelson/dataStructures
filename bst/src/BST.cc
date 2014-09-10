@@ -1,29 +1,23 @@
 template<class X, class Y>
-void Jing::BST<X, Y>::init(){
+Jing::BST<X, Y>::BST(){
+  can_copy<T, Jing::Comparable&>();
   this->root = 0;
   this->count = 0;
   this->iter = 0;
 }
 
 template<class X, class Y>
-Jing::BST<X, Y>::BST(){
-  this->init();
-}
-
-template<class X, class Y>
-Jing::BST<X, Y>::BST(AbstractTree<X, Y> *at){
-  this->init();
+Jing::BST<X, Y>::BST(AbstractTree<X, Y>& at):BST(){
   this->add(at);
 }
 
 template<class X, class Y>
-Jing::BST<X, Y>::BST(AbstractList<X> *alx, AbstractList<Y> *aly){
-  this->init();
+Jing::BST<X, Y>::BST(AbstractList<X>& alx, AbstractList<Y>& aly):BST(){
   this->add(alx, aly);
 }
 
 template<class X, class Y>
-bool Jing::BST<X, Y>::add(X x, Y y){
+bool Jing::BST<X, Y>::add(X& x, Y& y){
   if(this->root == 0){
     ++this->count;
     this->root = new treeNode(x, y);
@@ -37,14 +31,14 @@ bool Jing::BST<X, Y>::add(X x, Y y){
 }
 
 template<class X, class Y>
-bool Jing::BST<X, Y>::addAll(AbstractTree<X, Y> *at){
+bool Jing::BST<X, Y>::addAll(AbstractTree<X, Y>& at){
   Iterator<Y> *it = at->iterator();
 //  while(it->hasNext())
 //    this->add();
 }
 
 template<class X, class Y>
-bool Jing::BST<X, Y>::addAll(AbstractList<X> *alx, AbstractList<Y> *aly){
+bool Jing::BST<X, Y>::addAll(AbstractList<X>& alx, AbstractList<Y>& aly){
   Iterator<X> *xiter = alx->iterator();
   Iterator<Y> *yiter = aly->iterator();
 
@@ -54,7 +48,7 @@ bool Jing::BST<X, Y>::addAll(AbstractList<X> *alx, AbstractList<Y> *aly){
 }
 
 template<class X, class Y>
-Y Jing::BST<X, Y>::remove(X x){
+Y& Jing::BST<X, Y>::remove(X x){
   return this->root->remove(x);
 }
 
