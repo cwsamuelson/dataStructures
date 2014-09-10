@@ -1,15 +1,19 @@
 #ifndef __COMPARABLE_H__
 #define __COMPARABLE_H__
 
-#include<Jing/Object>
+#include<Jing/Object.hh>
+#include<Jing/Misc.hh>
 
 namespace Jing{
 
-class Comparable:public Object{
+template<class T>
+class Comparable{
 //A subclass of Comparable is only comparable to itself, and between subclasses.
 //Returns a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than the specified object.
 //Specifically Compares this object to another.
-  virtual int compareTo() const = 0;
+  virtual int compareTo(T& obj) const{
+    can_copy<T, Jing::Object&>();
+  }
 };
 
 }
