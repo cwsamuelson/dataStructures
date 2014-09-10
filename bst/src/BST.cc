@@ -1,6 +1,7 @@
 template<class X, class Y>
 Jing::BST<X, Y>::BST(){
-  can_copy<T, Jing::Comparable&>();
+  can_copy<Y, Jing::Comparable&>();
+  can_copy<X, Jing::Object&>();
   this->root = 0;
   this->count = 0;
   this->iter = 0;
