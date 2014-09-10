@@ -1,12 +1,13 @@
 #ifndef __CHARACTER_H__
 #define __CHARACTER_H__
 
+#include<Jing/Comparable.hh>
 #include<Jing/Object.hh>
 #include<ostream>
 
 namespace Jing{
 
-class character:public Object{
+class character:public Object, public Comparable<character&>{
 protected:
   char letter;
 public:
