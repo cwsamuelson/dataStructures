@@ -4,7 +4,6 @@ template<class T>
 Jing::List<T>::List(){
   //This list can only contain objects that inherit from Jing::Object references
   can_copy<T, Jing::Object&>();
-  this->sameType = true;
   this->first = 0;
   this->last = 0;
   this->count = 0;

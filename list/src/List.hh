@@ -8,9 +8,6 @@ namespace Jing{
 
 template<class T>
 class List:public AbstractList<T>{
-private:
-  bool sameType;
-
 protected:
   class listNode{
     friend class List;
