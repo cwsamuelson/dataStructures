@@ -497,7 +497,30 @@ bool testEquality(){
 }
 
 bool testIterator(){
-  return false;
+  bool ret = true;
+  unsigned int numbah= 8;
+  List<character&> foo;
+  character** vals = new character*[numbah];
+  for(int i = 0; i < numbah; ++i){
+    vals[i] = new character((char)(i + (int)'a'));
+    foo.insert(*vals[i]);
+  }
+  Iterator<character&>& iter = foo.iterator();
+
+  int lcv = 0;
+  while(iter.hasNext()){
+    if(!vals[lcv]->equals(iter.next())){
+      ret = false;
+    }
+    ++lcv;
+  }
+
+  for(int i = 0; i < numbah; ++i){
+    delete vals[i];
+  }
+  delete[] vals;
+
+  return ret;
 }
 
 bool testHash(){
