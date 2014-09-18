@@ -70,10 +70,9 @@ public:
 //Removes
 //  [inherited from collection]
 //Remove by key
-  void remove(X& obj);
   void removeAll(Collection<X>& c);
 //  [inherited from abstractTree]
-  X& remove(X& x);
+  Y& remove(X& x);
   Y& removeByKey(X& x);
   X& removeByData(Y& y);
   bool removeAll(AbstractList<X>& al);
@@ -82,7 +81,6 @@ public:
 //Contains
   bool containsKey(X& x) const;
   bool containsValue(Y& y) const;
-  bool containsAll(Collection<Y>& cy) const;
 //  [inherited from colleciton]
   bool contains(Y& obj) const;
   bool containsAll(Collection<Y>& c) const;

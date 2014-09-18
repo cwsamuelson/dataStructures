@@ -13,7 +13,7 @@ public:
   virtual bool insert(X& x, Y& y) = 0;
   virtual bool insertAll(AbstractTree<X,Y>& at) = 0;
   virtual bool insertAll(AbstractList<X>& alx, AbstractList<Y>& aly) = 0;
-  virtual X& remove(X& x) = 0;
+  virtual Y& remove(X& x) = 0;
   virtual Y& removeByKey(X& x) = 0;
   virtual X& removeByData(Y& y) = 0;
   virtual bool removeAll(AbstractList<X>& al) = 0;
