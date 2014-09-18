@@ -449,34 +449,36 @@ Jing::index_t Jing::List<T>::listNode::backFind(T& obj, Jing::index_t idx){
 
 
 template<class T>
-Jing::List<T>::listIterator::listIterator(Jing::List<T>& thisList):listIterator(thisList, 0){
-}
-
-template<class T>
-Jing::List<T>::listIterator::listIterator(Jing::List<T>& thisList, Jing::index_t idx):idx(idx), theList(thisList){
+Jing::List<T>::listIterator::listIterator(Jing::List<T>& thisList):theList(thisList){
+  this->curNode = this->theList.first;
 }
 
 template<class T>
 bool Jing::List<T>::listIterator::hasNext(){
-  if(this->idx < this->theList.size())
+  if(this->curNode !=0 && this->curNode->next != 0)
     return true;
   else
     return false;
+return false;
 }
 
 template<class T>
 T& Jing::List<T>::listIterator::next(){
-  return this->theList.get(this->idx++);
+  if(this->curNode->next != 0){
+    this->curNode = this->curNode->next;
+    return this->curNode->prev->data;
+  } else {
+    return this->curNode->data;
+  }
 }
 
 template<class T>
 void Jing::List<T>::listIterator::remove(){
-  this->theList.remove(idx);
+  this->curNode->remove(0);
 }
 
 template<class T>
 void Jing::List<T>::listIterator::reset(){
-  this->idx = 0;
 }
 
 /**********************

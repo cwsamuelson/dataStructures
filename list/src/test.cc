@@ -501,7 +501,7 @@ bool testIterator(){
   unsigned int numbah= 8;
   List<character&> foo;
   character** vals = new character*[numbah];
-  for(int i = 0; i < numbah; ++i){
+  for(unsigned int i = 0; i < numbah; ++i){
     vals[i] = new character((char)(i + (int)'a'));
     foo.insert(*vals[i]);
   }
@@ -515,7 +515,7 @@ bool testIterator(){
     ++lcv;
   }
 
-  for(int i = 0; i < numbah; ++i){
+  for(unsigned int i = 0; i < numbah; ++i){
     delete vals[i];
   }
   delete[] vals;

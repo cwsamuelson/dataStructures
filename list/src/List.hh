@@ -33,12 +33,11 @@ protected:
   private:
   //OPTIMIZE:Make friend to list to point directly to nodes.
   //  friend class list;
-    Jing::index_t idx;
     List<T>& theList;
+    listNode* curNode;
 
   public:
     listIterator(Jing::List<T>& thisList);
-    listIterator(Jing::List<T>& thisList, Jing::index_t n);
 
     bool hasNext();
     T& next();
