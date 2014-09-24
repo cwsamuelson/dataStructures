@@ -34,5 +34,5 @@ libcharacter.so:dyncharacter.o
 	$(CC) -shared -fPIC -Wl,-soname,libcharacter.so.1 -o libcharacter.so.1.0 dyncharacter.o -lc
 
 clean:
-	rm *.o core main test.hh.gch
+	rm *.o core main libcharacter.a
 

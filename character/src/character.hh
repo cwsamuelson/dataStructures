@@ -19,6 +19,10 @@ public:
   bool equals(char ch) const;
   unsigned long long hash() const;
   character* clone() const;
+//Comparison
+//  [inherited from comparable
+  int compareTo(character& c) const;
+  
 
   friend std::ostream& operator<<(std::ostream& os, const character& let);
 };

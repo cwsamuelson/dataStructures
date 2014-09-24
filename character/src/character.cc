@@ -81,6 +81,10 @@ Jing::character* Jing::character::clone() const{
   return new character(this->letter);
 }
 
+int Jing::character::compareTo(character& c) const{
+  return (int)this->letter - (int)c.letter;
+}
+
 std::ostream& Jing::operator<<(std::ostream& os, const Jing::character& let){
   os << let.letter;
   return os;
