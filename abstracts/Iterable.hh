@@ -21,7 +21,7 @@ public:
 //  clone
 //  virtual Object* clone() const = 0;
 //Iterator
-  virtual Iterator<T>& iterator() const = 0;
+  virtual Iterator<T>* iterator() const = 0;
 };
 
 }

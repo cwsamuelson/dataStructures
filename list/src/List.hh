@@ -96,7 +96,7 @@ public:
   bool equals(Object& obj) const;
 //Iterator
 //  [inherited from Iterable]
-  Iterator<T>& iterator() const;
+  Iterator<T>* iterator() const;
 //States
 //  hash
 //  [inherited from Object]

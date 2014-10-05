@@ -28,7 +28,7 @@ bool testConstructors(){
 
 bool testEmptyInserts(){
   List<character> foo;
-  Iterator<character>& iter = foo.iterator();
+  Iterator<character>& iter = *foo.iterator();
   while(iter.hasNext()){
     cout << iter.next() << endl;
   }
@@ -507,7 +507,7 @@ bool testIterator(){
     vals[i] = new character((char)(i + (int)'a'));
     foo.insert(*vals[i]);
   }
-  Iterator<character>& iter = foo.iterator();
+  Iterator<character>& iter = *foo.iterator();
 
   int lcv = 0;
   while(iter.hasNext()){

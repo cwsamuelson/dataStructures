@@ -55,13 +55,13 @@ void Jing::List<T>::insertAll(Collection<T>& c){
 
 template<class T>
 void Jing::List<T>::insertAll(Collection<T>& c, Jing::index_t idx){
-  Iterator<T>& iter = c.iterator();
+  Iterator<T>* iter = c.iterator();
   Jing::index_t n = idx;
-  while(iter.hasNext()){
-    this->insert(iter.next(), n);
+  while(iter->hasNext()){
+    this->insert(iter->next(), n);
     ++n;
   }
-  return;
+  delete iter;
 }
 
 template<class T>
@@ -119,10 +119,11 @@ void Jing::List<T>::remove(T& obj){
 
 template<class T>
 void Jing::List<T>::removeAll(Collection<T>& c){
-  Iterator<T>& iter = c.iterator();
-  while(iter.hasNext()){
-    this->remove(iter.next());
+  Iterator<T>* iter = c.iterator();
+  while(iter->hasNext()){
+    this->remove(iter->next());
   }
+  delete iter;
 }
 
 template<class T>
@@ -192,13 +193,15 @@ bool Jing::List<T>::contains(T& obj) const{
 
 template<class T>
 bool Jing::List<T>::containsAll(Collection<T>& c) const{
-  Iterator<T>& iter = c.iterator();
-  while(iter.hasNext()){
-    if(!this->contains(iter.next())){
-      return false;
+  bool ret = true;
+  Iterator<T>* iter = c.iterator();
+  while(iter->hasNext()){
+    if(!this->contains(iter->next())){
+      ret = false;
     }
   }
-  return true;
+  delete iter;
+  return ret;
 }
 
 template<class T>
@@ -221,9 +224,9 @@ bool Jing::List<T>::equals(Jing::Object& obj) const{
 }
 
 template<class T>
-Jing::Iterator<T>& Jing::List<T>::iterator() const{
+Jing::Iterator<T>* Jing::List<T>::iterator() const{
   this->iter->reset();
-  return *(this->iter);
+  return (this->iter);
 }
 
 //Hash based on murmur hash 3 found on wikipedia.
@@ -480,6 +483,7 @@ void Jing::List<T>::listIterator::remove(){
 
 template<class T>
 void Jing::List<T>::listIterator::reset(){
+  this->curNode = this->theList.first;
 }
 
 /**********************
