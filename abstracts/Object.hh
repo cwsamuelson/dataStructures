@@ -1,13 +1,22 @@
 #ifndef __OBJECT_H__
 #define __OBJECT_H__
 
+#include<typeinfo>
+
 namespace Jing{
 
 class Object{
 protected:
 public:
 //Equality
-  virtual bool equals(Object& obj) const = 0;
+  bool equals(const Object& obj) const{
+    if(typeid(this) != typeid(obj)){
+      return false;
+    }
+    return this->is_equal(obj);
+  }
+
+  virtual bool is_equal(const Object& obj)const = 0;
 //State
 //  hash
   virtual unsigned long long hash() const = 0;

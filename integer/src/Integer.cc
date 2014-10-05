@@ -1,27 +1,29 @@
 #include"Integer.hh"
 
-Jing::Integer::Integer(int c):value(c){ }
+Jing::Integer::Integer(int c):value(new int(c)){
+//  *(this->value) = c;
+}
 
 Jing::Integer::~Integer(){  }
 
-//needs rtti type check
-bool Jing::Integer::equals(Jing::Object& obj) const{
-  this->equals((Integer&)obj);
-  return false;
+bool Jing::Integer::is_equal(const Jing::Object& obj) const{
+  const Jing::Integer& obj_derived = dynamic_cast<const Jing::Integer&>(obj);
+  if(this->value == obj_derived.value){
+    return true;
+  } else {
+    return false;
+  }
 }
 
-bool Jing::Integer::equals(Jing::Integer& ch) const{
-  if(this->value == ch.value)
-    return true;
-  else
-    return false;
+bool Jing::Integer::equals(Integer& ch) const{
+  return this->is_equal(ch);
 }
 
 bool Jing::Integer::equals(int ch) const{
-  if(this->value == ch)
-    return true;
-  else
-    return false;
+  Jing::Integer* temp = new Jing::Integer(ch);
+  bool ret = this->equals(*temp);
+  delete temp;
+  return ret;
 }
 
 //Hash based on murmur hash 3 found on wikipedia.
@@ -78,7 +80,7 @@ unsigned long long Jing::Integer::hash() const{
 }
 
 Jing::Integer* Jing::Integer::clone() const{
-  return new Integer(this->value);
+  return new Integer(*(this->value));
 }
 
 int Jing::Integer::compareTo(Integer& c) const{
@@ -86,7 +88,7 @@ int Jing::Integer::compareTo(Integer& c) const{
 }
 
 double Jing::Integer::asDouble() const{
-  return (double)this->value;
+  return (double)*(this->value);
 }
 
 int Jing::Integer::asInt() const{
@@ -94,13 +96,14 @@ int Jing::Integer::asInt() const{
 }
 
 char Jing::Integer::asChar() const{
-  return (char)this->value;
+  return (char)*(this->value);
 }
 
 Jing::Number& Jing::Integer::operator=(const Number& rhs){
   //Self assignment?  You sneaky devil.
   if(this != &rhs){
-    this->value = (int)rhs.value;
+    int temp = *((int*)(rhs.value));
+    *(this->value) = temp;
   }
   return *this;
 }
