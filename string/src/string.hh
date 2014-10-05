@@ -4,9 +4,6 @@
 #include<Jing/Misc.hh>
 #include<iostream>
 
-using std::ostream;
-using std::istream;
-
 namespace Jing{
 
 class string:public Object{
@@ -110,7 +107,7 @@ public:
   bool operator!=(const string& rhs) const;
   bool operator!=(const char* rhs) const;
 
-  friend ostream& operator<<(ostream& os, const string& str);
+  friend std::ostream& operator<<(std::ostream& os, const string& str);
   friend string& operator+=(const char* lhs, const string& rhs);
   friend const string operator+(const char* lhs, const string& rhs);
   friend const string operator+(char lhs, const string& rhs);
@@ -118,7 +115,7 @@ public:
 
 };
 
-ostream& operator<<(ostream& os, const string& str);
+std::ostream& operator<<(std::ostream& os, const string& str);
 
 string& operator+=(const char* lhs, const string& rhs);
 
