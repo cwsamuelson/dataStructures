@@ -27,8 +27,8 @@ public:
   double asDouble() const;
   int asInt() const;
   char asChar() const;
+  Number& operator=(const Number& rhs);
   
-
   friend std::ostream& operator<<(std::ostream& os, const Integer& let);
 };
 std::ostream& operator<<(std::ostream& os, const Jing::Integer& let);

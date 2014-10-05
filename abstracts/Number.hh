@@ -14,9 +14,13 @@ class Number:public Object, public Comparable<Number>{
   virtual int asInt() const = 0;
   virtual char asChar() const = 0;
 
+  Number& operator=(const Number& rhs);
+  friend std::ostream& operator<<(std::ostream& os, const Integer& let);
+
 //[inherited from Comparable]
 //  virtual int compareTo(Nmuber& num) const = 0;
 };
+std::ostream& operator<<(std::ostream& os, const Jing::Integer& let);
 
 }
 

@@ -22,7 +22,7 @@ public:
 //Comparison
 //  [inherited from comparable
   int compareTo(character& c) const;
-  
+  character& operator=(const character& rhs);
 
   friend std::ostream& operator<<(std::ostream& os, const character& let);
 };

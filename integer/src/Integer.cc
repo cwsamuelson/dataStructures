@@ -97,6 +97,14 @@ char Jing::Integer::asChar() const{
   return (char)this->value;
 }
 
+Jing::Number& Jing::Integer::operator=(const Number& rhs){
+  //Self assignment?  You sneaky devil.
+  if(this != &rhs){
+    this->value = rhs.value;
+  }
+  return *this;
+}
+
 std::ostream& Jing::operator<<(std::ostream& os, const Jing::Integer& let){
   os << let.value;
   return os;

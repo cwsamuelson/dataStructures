@@ -90,3 +90,11 @@ std::ostream& Jing::operator<<(std::ostream& os, const Jing::character& let){
   return os;
 }
 
+Jing::character& Jing::character::operator=(const character& rhs){
+  //Self assignment?  You sneaky devil.
+  if(this != &rhs){
+    this->letter = rhs.letter;
+  }
+  return *this;
+}
+
