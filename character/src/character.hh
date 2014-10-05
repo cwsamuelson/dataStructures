@@ -7,7 +7,7 @@
 
 namespace Jing{
 
-class character:public Object, public Comparable<character&>{
+class character:public Object, public Comparable<character>{
 protected:
   char letter;
 public:
