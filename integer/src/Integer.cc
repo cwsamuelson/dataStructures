@@ -100,7 +100,7 @@ char Jing::Integer::asChar() const{
 Jing::Number& Jing::Integer::operator=(const Number& rhs){
   //Self assignment?  You sneaky devil.
   if(this != &rhs){
-    this->value = rhs.value;
+    this->value = (int)rhs.value;
   }
   return *this;
 }
