@@ -93,6 +93,7 @@ public:
 //TODO:equality checks should really only be against, abstract lists..
 //Equality
 //  [inherited from Object]
+  bool is_equal(const Object& obj)const;
   bool equals(Object& obj) const;
 //Iterator
 //  [inherited from Iterable]

@@ -216,11 +216,18 @@ Jing::index_t Jing::List<T>::lastIndexOf(T& obj) const{
 
 //TODO:can't do a valid check against an object, needs to be abstractList or collection
 template<class T>
-bool Jing::List<T>::equals(Jing::Object& obj) const{
+bool Jing::List<T>::is_equal(const Jing::Object& obj)const{
   bool ret = false;
-//  for(int i = 0; i < this->size(); ++i){
-//  }
-  return ret;
+  const Jing::AbstractList<T>& obj_derived = dynamic_cast<const Jing::AbstractList<T>&>(obj);
+  if(this->size() != obj_derived.size()){
+    return false;
+  }
+  for(int i = 0; i < this->size(); ++i){
+    if(!this->get(i).equals(obj_derived.get(i))){
+      return false;
+    }
+  }
+  return true;
 }
 
 template<class T>
