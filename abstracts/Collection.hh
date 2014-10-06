@@ -15,25 +15,25 @@ public:
 //Inserts
   virtual void insert(T& obj) = 0;
   virtual void insertAll(Collection<T>& c){
-    Iterator<T>& iter = c.iterator();
-    while(iter.hasNext()){
-      this->insert(iter.next());
+    Iterator<T>* iter = c.iterator();
+    while(iter->hasNext()){
+      this->insert(iter->next());
     }
   }
 //Removes
   virtual void remove(T& obj) = 0;
   virtual void removeAll(Collection<T>& c){
-    Iterator<T>& iter = c.iterator();
-    while(iter.hasNext()){
-      this->remove(iter.next());
+    Iterator<T>* iter = c.iterator();
+    while(iter->hasNext()){
+      this->remove(iter->next());
     }
   }
 //Contains
   virtual bool contains(T& obj) const = 0;
   virtual bool containsAll(Collection<T>& c) const{
-    Iterator<T>& iter = c.iterator();
-    while(iter.hasNext()){
-      this->contains(iter.next());
+    Iterator<T>* iter = c.iterator();
+    while(iter->hasNext()){
+      this->contains(iter->next());
     }
   }
 //Equality
