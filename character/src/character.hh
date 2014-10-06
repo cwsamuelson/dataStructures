@@ -14,6 +14,7 @@ public:
   character(char c);
   virtual ~character();
 
+  bool is_equal(const Object& obj)const;
   bool equals(Object& obj) const;
   bool equals(character& ch) const;
   bool equals(char ch) const;

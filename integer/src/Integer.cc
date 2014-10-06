@@ -16,7 +16,7 @@ bool Jing::Integer::is_equal(const Jing::Object& obj) const{
 }
 
 bool Jing::Integer::equals(Integer& ch) const{
-  return this->is_equal(ch);
+  return this->equals((Jing::Object&)ch);
 }
 
 bool Jing::Integer::equals(int ch) const{

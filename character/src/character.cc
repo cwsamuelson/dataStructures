@@ -4,23 +4,24 @@ Jing::character::character(char c):letter(c){ }
 
 Jing::character::~character(){  }
 
-bool Jing::character::equals(Jing::Object& obj) const{
-  this->equals((character&)obj);
-  return false;
+bool Jing::character::is_equal(const Jing::Object& obj)const{
+  const Jing::character& obj_derived = dynamic_cast<const Jing::character&>(obj);
+  if(this->letter == obj_derived.letter){
+    return true;
+  } else {
+    return false;
+  }
 }
 
 bool Jing::character::equals(Jing::character& ch) const{
-  if(this->letter == ch.letter)
-    return true;
-  else
-    return false;
+  return this->is_equal(ch);
 }
 
 bool Jing::character::equals(char ch) const{
-  if(this->letter == ch)
-    return true;
-  else
-    return false;
+  Jing::character* temp = new Jing::character(ch);
+  bool ret = this->equals(*temp);
+  delete temp;
+  return ret;
 }
 
 //Hash based on murmur hash 3 found on wikipedia.
