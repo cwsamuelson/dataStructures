@@ -10,15 +10,18 @@ namespace Jing{
 template<class X, class Y>
 class AbstractTree:public Collection<Y>{
 public:
-  virtual bool insert(X& x, Y& y) = 0;
-  virtual bool insertAll(AbstractTree<X,Y>& at) = 0;
-  virtual bool insertAll(AbstractList<X>& alx, AbstractList<Y>& aly) = 0;
-  virtual Y& remove(X& x) = 0;
-  virtual Y& removeByKey(X& x) = 0;
-  virtual X& removeByData(Y& y) = 0;
+  virtual void insert(X& x, Y& y) = 0;
+  virtual void insertAll(AbstractTree<X, Y>& at) = 0;
+  virtual void insertAll(AbstractList<X>& alx, AbstractList<Y>& aly) = 0;
+  virtual void remove(X& x) = 0;
+  virtual void removeByKey(X& x) = 0;
+  virtual void removeByData(Y& y) = 0;
   virtual bool removeAll(AbstractList<X>& al) = 0;
   virtual bool removeAllByKey(AbstractList<X>& al) = 0;
   virtual bool removeAllByData(AbstractList<Y>& al) = 0;
+  virtual X& get(Y& y) const = 0;
+  virtual X& getByKey(Y& y) const = 0;
+  virtual Y& getByData(X& x) const = 0;
 //  virtual void toArray(X& x, Y& y) const = 0;
 //  virtual Object* toArray() const = 0;
 };

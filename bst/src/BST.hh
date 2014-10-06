@@ -20,8 +20,6 @@ private:
     treeNode *left;
     treeNode *right;
 
-    void init();
-
   public:
     treeNode(X& x, Y& y);
     treeNode(X& x, Y& y, treeNode* parent);
@@ -31,25 +29,24 @@ private:
     Y& get(X& x) const;
     X& find(Y& y) const;
   };
-
+/*
   class treeIterator:public Iterator<Y>{
   private:
     X& key;
-    BST* theTree;
+    BST<X, Y>* theTree;
   public:
-    treeIterator(BST *thisList);
+    treeIterator(BST<X, Y> *thisList);
 
     bool hasNext();
     Y& next();
     void remove();
     void reset();
   };
+*/
 
   treeNode *root;
   size_t count;
-  treeIterator *iter;
-
-  void init();
+//  treeIterator *iter;
 
 public:
 //Constructors
@@ -61,20 +58,22 @@ public:
   void insert(Y& obj);
   void insertAll(Collection<Y>& c);
 //  [inherited from abstractTree]
-  bool insert(X& x, Y& y);
-  bool insertAll(AbstractTree<X,Y>& at);
-  bool insertAll(AbstractList<X>& alx, AbstractList<Y>& aly);
+  void insert(X& x, Y& y);
+  void insertAll(AbstractTree<X,Y>& at);
+  void insertAll(AbstractList<X>& alx, AbstractList<Y>& aly);
 //Gets
-  Y& get(X& x) const;
-  X& getKey(Y& y) const;
+  X& get(Y& y) const;
+  X& getByKey(Y& y) const;
+  Y& getByData(X& x) const;
 //Removes
 //  [inherited from collection]
 //Remove by key
+  void remove(Y& y);
   void removeAll(Collection<X>& c);
 //  [inherited from abstractTree]
-  Y& remove(X& x);
-  Y& removeByKey(X& x);
-  X& removeByData(Y& y);
+  void remove(X& x);
+  void removeByKey(X& x);
+  void removeByData(Y& y);
   bool removeAll(AbstractList<X>& al);
   bool removeAllByKey(AbstractList<X>& al);
   bool removeAllByData(AbstractList<Y>& al);
@@ -85,8 +84,10 @@ public:
   bool contains(Y& obj) const;
   bool containsAll(Collection<Y>& c) const;
 //Equality
+  bool equals(BST<X, Y>& obj) const;
 //  [inherited from object]
-  bool equals(BST& obj) const;
+  bool is_equal(const Object& obj)const;
+  bool equals(Object& obj) const;
 //States
 //  hash
 //  [inherited from object]
@@ -101,7 +102,7 @@ public:
   void clear();
 //  iterator
 //  [inherited from iterable]
-  Iterator<Y>& iterator() const;
+  Iterator<Y>* iterator() const;
 
 
 
