@@ -4,7 +4,9 @@ Jing::Integer::Integer(int c):value(new int(c)){
 //  *(this->value) = c;
 }
 
-Jing::Integer::~Integer(){  }
+Jing::Integer::~Integer(){
+  delete this->value;
+}
 
 bool Jing::Integer::is_equal(const Jing::Object& obj) const{
   const Jing::Integer& obj_derived = dynamic_cast<const Jing::Integer&>(obj);
@@ -16,7 +18,7 @@ bool Jing::Integer::is_equal(const Jing::Object& obj) const{
 }
 
 bool Jing::Integer::equals(Integer& ch) const{
-  return this->equals((Jing::Object&)ch);
+  return this->equals(ch);
 }
 
 bool Jing::Integer::equals(int ch) const{
