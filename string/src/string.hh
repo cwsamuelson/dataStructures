@@ -1,18 +1,21 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
+#include<Jing/Comparable.hh>
+#include<Jing/Object.hh>
 #include<Jing/Misc.hh>
 #include<iostream>
 
 namespace Jing{
 
-class string:public Object{
+//index_t defined in AbstractList, will need to find a different name.
+typedef unsigned long long index_t;
+
+class string:public Object, public Comparable<string>{
 private:
   static const size_t npos = -1;
   char* data;
   size_t size;
-
-  void init();
 
 public:
   //add regex methods in the future
@@ -26,15 +29,16 @@ public:
   string(const char* s, index_t offset, size_t length);
   string(const int i);
   string(const char c);
-  ~string();
+  virtual ~string();
 
 //Equality
 //  [inherited from Object]
   bool equals(Object& obj) const;
+  bool is_equal(const Object& obj)const;
 //States
 //  [inherited from Object]
 //  hash
-  int hash() const;
+  unsigned long long hash() const;
 //  ID
   int classID() const;
 //  clone

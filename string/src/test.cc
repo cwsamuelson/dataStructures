@@ -9,11 +9,11 @@ int main(int argc, char** argv){
   string foo("test");
   string bar(foo);
 
-  cout << "charat" << endl;
+  cout << "charat1" << endl;
   cout << foo.charAt(1) << endl;
   cout << "<<foo<<" << endl;
   cout << foo << endl;
-  cout << "charat" << endl;
+  cout << "charat1" << endl;
   cout << foo.charAt(1) << endl;
 
   cout << "charat" << endl;
