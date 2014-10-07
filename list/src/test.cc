@@ -28,13 +28,14 @@ bool testConstructors(){
 
 bool testEmptyInserts(){
   List<character> foo;
-  Iterator<character>& iter = *foo.iterator();
-  while(iter.hasNext()){
-    cout << iter.next() << endl;
+  Iterator<character>* iter = foo.iterator();
+  while(iter->hasNext()){
+    cout << iter->next() << endl;
   }
   for(Jing::index_t i = 0; i < foo.size(); ++i){
     cout << foo.get(i) << endl;
   }
+  delete iter;
   return true;
 }
 
@@ -507,11 +508,11 @@ bool testIterator(){
     vals[i] = new character((char)(i + (int)'a'));
     foo.insert(*vals[i]);
   }
-  Iterator<character>& iter = *foo.iterator();
+  Iterator<character>* iter = foo.iterator();
 
   int lcv = 0;
-  while(iter.hasNext()){
-    if(!vals[lcv]->equals(iter.next())){
+  while(iter->hasNext()){
+    if(!vals[lcv]->equals(iter->next())){
       ret = false;
     }
     ++lcv;
@@ -521,6 +522,7 @@ bool testIterator(){
     delete vals[i];
   }
   delete[] vals;
+  delete iter;
 
   return ret;
 }
