@@ -62,14 +62,14 @@ Jing::string::string():data(0),size(0){  }
 
 Jing::string::string(const Jing::string& str):string(){
   str.getChars(&(this->data), 0, str.length());
+  this->size = str.length();
 }
 
-Jing::string::string(const Jing::string& str, size_t length):string(){
-  str.getChars(&(this->data), 0, length);
-}
+Jing::string::string(const Jing::string& str, size_t length):string(str, 0, length){  }
 
 Jing::string::string(const Jing::string& str, Jing::index_t offset, size_t length):string(){
   str.getChars(&(this->data), offset, length);
+  this->size = length;
 }
 
 Jing::string::string(const char* s):string(){
@@ -138,10 +138,6 @@ bool Jing::string::is_equal(const Object& obj) const{
 }
 
 unsigned long long Jing::string::hash() const{
-  return 0;
-}
-
-int Jing::string::classID() const{
   return 0;
 }
 

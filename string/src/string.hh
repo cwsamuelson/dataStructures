@@ -39,8 +39,6 @@ public:
 //  [inherited from Object]
 //  hash
   unsigned long long hash() const;
-//  ID
-  int classID() const;
 //  clone
   Object* clone() const;
 
@@ -57,6 +55,7 @@ public:
   //IgnoreCase
   bool equalsIC(const string& str) const;
   bool equalsIC(const char* s) const;
+
   bool equals(const string& str) const;
   bool equals(const char* s) const;
 //formats a string using a format string and args list..
