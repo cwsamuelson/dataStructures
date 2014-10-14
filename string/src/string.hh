@@ -43,7 +43,7 @@ public:
 //  hash
   unsigned long long hash() const;
 //  clone
-  Object* clone() const;
+  string* clone() const;
 
   char charAt(index_t idx) const;
   //IgnoreCase
@@ -75,7 +75,9 @@ public:
   index_t lastIndexOf(const string& str, index_t start) const;
   bool isEmpty() const;
   size_t length() const;
-  string& replace(char oldChar, char newChar);
+  void replace(char oldChar, char newChar);
+  void replace(string& str);
+  void replace(const char* s);
   string& subString(index_t idx) const;
   string& subString(index_t start, index_t end) const;
 //Returned pointer must be deleted by user.

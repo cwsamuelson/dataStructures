@@ -139,7 +139,7 @@ unsigned long long Jing::string::hash() const{
   return 0;
 }
 
-Jing::Object* Jing::string::clone() const{
+Jing::string* Jing::string::clone() const{
   return 0;
 //  return this;
 }
@@ -283,19 +283,22 @@ size_t Jing::string::length() const{
   return this->size;
 }
 
-Jing::string& Jing::string::replace(char oldChar, char newChar){
-  char* ret = new char[this->length()];
-  for(unsigned int i = 0; i < this->length(); i++){
-    if(this->charAt(i) == oldChar){
-      ret[i] = newChar;
-    } else {
-      ret[i] = this->charAt(i);
-    }
-  }
-  Jing::string* str = new string(ret);
-  delete ret;
-  return *str;
+void Jing::string::replace(char oldChar, char newChar){
+  this->data[this->indexOf(oldChar)] = newChar;
 }
+
+void Jing::string::replace(Jing::string& str){
+  delete[] this->data;
+  this->data = str.toCharArray();
+  this->size = str.length();
+}
+
+void Jing::string::replace(const char* s){
+  string* temp = new string(s);
+  this->replace(*temp);
+  delete temp;
+}
+
 
 Jing::string& Jing::string::subString(Jing::index_t idx) const{
   return this->subString(idx, this->length());
