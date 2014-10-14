@@ -60,16 +60,14 @@ const Jing::string& Jing::string::intToString(int i){
 
 Jing::string::string():data(0),size(0){  }
 
-Jing::string::string(const Jing::string& str):string(){
-  str.getChars(&(this->data), 0, str.length());
-  this->size = str.length();
-}
+Jing::string::string(const Jing::string& str):string(str, str.length()){  }
 
 Jing::string::string(const Jing::string& str, size_t length):string(str, 0, length){  }
 
 Jing::string::string(const Jing::string& str, Jing::index_t offset, size_t length):string(){
-  str.getChars(&(this->data), offset, length);
-  this->size = length;
+  this->data = str.toCharArray(offset, offset + length);
+  if(this->data != 0)
+    this->size = length;
 }
 
 Jing::string::string(const char* s):string(){
@@ -130,7 +128,7 @@ Jing::string::string(const char c):string(){
 
 Jing::string::~string(){
   if(this->data != 0)
-    delete this->data;
+    delete[] this->data;
 }
 
 bool Jing::string::is_equal(const Object& obj) const{
@@ -227,25 +225,8 @@ bool Jing::string::equals(const char* s) const{
   return this->equals(string(s));
 }
 
-void Jing::string::getChars(char** dest) const{
-  this->getChars(dest, 0, this->length());
-}
-
-void Jing::string::getChars(char** dest, size_t length) const{
-  this->getChars(dest, 0, length);
-}
-
-void Jing::string::getChars(char** dest, Jing::index_t start, Jing::index_t end) const{
-  unsigned int size = end - start + 1;
-  char * temp = new char[size + 1];
-  for(unsigned int i = start; i < end; ++i){
-    temp[i] = this->data[i];
-  }
-  *dest = temp;
-}
-
-int Jing::string::hashCode() const{
-  return 0;
+const char* Jing::string::c_str() const{
+  return this->data;
 }
 
 Jing::index_t Jing::string::indexOf(char ch) const{
@@ -328,12 +309,27 @@ Jing::string& Jing::string::subString(Jing::index_t start, Jing::index_t end) co
   //throw exception
 }
 
-//Returned pointer must be deleted by user.
 char* Jing::string::toCharArray() const{
-  char* ret = new char[this->length()];
-  for(unsigned int i = 0; i < this->length(); i++){
-    ret[i] = this->data[i];
+  return this->toCharArray(this->length());
+}
+
+char* Jing::string::toCharArray(size_t length) const{
+  return this->toCharArray(0, length);
+}
+
+char* Jing::string::toCharArray(Jing::index_t srcStart, Jing::index_t srcEnd) const{
+  if(srcEnd > this->length())
+    return 0;
+  if(srcStart > srcEnd)
+    return 0;
+
+  //if len == 0, array of length 1 containing null terminator should be returned
+  unsigned long long len = srcEnd - srcStart;
+  char* ret = new char[len + 1];
+  for(unsigned long long i = 0; i < len; ++i){
+    ret[i] = this->data[i + srcStart];
   }
+  this->data[len] = '\0';
   return ret;
 }
 

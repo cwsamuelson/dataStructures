@@ -15,6 +15,7 @@ class string:public Object, public Comparable<string>{
 private:
   static const size_t npos = -1;
   char* data;
+  //size should not include null terminating character
   size_t size;
 
 public:
@@ -24,9 +25,11 @@ public:
   string(const string& str);
   string(const string& str, size_t length);
   string(const string& str, index_t offset, size_t length);
+
   string(const char* s);
   string(const char* s, size_t length);
   string(const char* s, index_t offset, size_t length);
+
   string(const int i);
   string(const char c);
   virtual ~string();
@@ -60,12 +63,8 @@ public:
   bool equals(const char* s) const;
 //formats a string using a format string and args list..
 //  string& format(
-  //uses uninitialized pointer
-  void getChars(char** dest) const;
-  void getChars(char** dest, size_t length) const;
-  void getChars(char** dest, index_t start, index_t end) const;
+//No gaurantee of data safety
   const char* c_str() const;
-  int hashCode() const;
   index_t indexOf(char ch) const;
   index_t indexOf(char ch, index_t start) const;
   index_t indexOf(const string& str) const;
@@ -79,7 +78,10 @@ public:
   string& replace(char oldChar, char newChar);
   string& subString(index_t idx) const;
   string& subString(index_t start, index_t end) const;
+//Returned pointer must be deleted by user.
   char* toCharArray() const;
+  char* toCharArray(size_t length) const;
+  char* toCharArray(index_t srcStart, index_t srcEnd) const;
   string& toUpper() const;
   string& toLower() const;
   string& trim();
