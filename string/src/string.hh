@@ -80,6 +80,14 @@ public:
   void replace(const char* s);
   string& subString(index_t idx) const;
   string& subString(index_t start, index_t end) const;
+  List<string>* split(char c) const;
+  List<string>* split(character& c) const;
+  List<string>* split(char* c) const;
+  List<string>* split(string& str) const;
+  string& strip(char c) const;
+  string& strip(character& c) const;
+  string& strip(char* c) const;
+  string& strip(string& str) const;
 //Returned pointer must be deleted by user.
   char* toCharArray() const;
   char* toCharArray(size_t length) const;

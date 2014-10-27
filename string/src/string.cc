@@ -167,6 +167,7 @@ int Jing::string::compareTo(const Jing::string& str) const{
   return result;
 }
 
+//TODO:concat should modify this, and return *this
 Jing::string& Jing::string::concat(const Jing::string& str){
 //might be getting extra null characters
   size_t newSize = this->length() + str.length() + 1;
@@ -312,6 +313,38 @@ Jing::string& Jing::string::subString(Jing::index_t start, Jing::index_t end) co
   //throw exception
 }
 
+Jing::List<Jing::string>* Jing::string::split(char c) const{
+  return 0;
+}
+
+Jing::List<Jing::string>* Jing::string::split(character& c) const{
+  return 0;
+}
+
+Jing::List<Jing::string>* Jing::string::split(char* c) const{
+  return 0;
+}
+
+Jing::List<Jing::string>* Jing::string::split(Jing::string& str) const{
+  return 0;
+}
+
+Jing::string& Jing::string::strip(char c) const{
+  return *this;
+}
+
+Jing::string& Jing::string::strip(character& c) const{
+  return *this;
+}
+
+Jing::string& Jing::string::strip(char* c) const{
+  return *this;
+}
+
+Jing::string& Jing::string::strip(Jing::string& str) const{
+  return *this;
+}
+
 char* Jing::string::toCharArray() const{
   return this->toCharArray(this->length());
 }
@@ -422,15 +455,7 @@ bool Jing::string::operator==(const char* rhs) const{
   return this->equals(rhs);
 }
 
-bool Jing::string::operator==(const Jing::string& rhs) const{
-  return this->equals(rhs);
-}
-
 bool Jing::string::operator!=(const char* rhs) const{
-  return !this->equals(rhs);
-}
-
-bool Jing::string::operator!=(const Jing::string& rhs) const{
   return !this->equals(rhs);
 }
 
@@ -458,6 +483,7 @@ const Jing::string operator+(char lhs, const Jing::string& rhs){
 }
 
 bool operator==(const char* lhs, const Jing::string& rhs){
-  return rhs.equals(lhs);
+  return rhs == lhs;
+  //return rhs.equals(lhs);
 }
 
