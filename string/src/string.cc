@@ -404,8 +404,9 @@ Jing::string& Jing::string::operator=(const Jing::string& rhs){
   //Self assignment?  You sneaky devil.
   if(this != &rhs){
     Jing::size_t len = rhs.length();
-    if(this->data != 0)
-      delete this->data;
+    if(this->data != 0){
+      delete[] this->data;
+    }
     this->size = len;
     this->data = new char[len];
     for(size_t i = 0; i < len; ++i){
