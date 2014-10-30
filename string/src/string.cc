@@ -62,12 +62,13 @@ Jing::string::string():data(0),size(0){  }
 
 Jing::string::string(const Jing::string& str):string(str, str.length()){  }
 
-Jing::string::string(const Jing::string& str, size_t length):string(str, 0, length){  }
+Jing::string::string(const Jing::string& str, Jing::size_t length):string(str, 0, length){  }
 
-Jing::string::string(const Jing::string& str, Jing::index_t offset, size_t length):string(){
+Jing::string::string(const Jing::string& str, Jing::index_t offset, Jing::size_t length):string(){
   this->data = str.toCharArray(offset, offset + length);
-  if(this->data != 0)
+  if(this->data != 0){
     this->size = length;
+  }
 }
 
 Jing::string::string(const char* s):string(){
@@ -83,24 +84,10 @@ Jing::string::string(const char* s):string(){
   this->size = idx;
 }
 
-Jing::string::string(const char* s, size_t length):string(){
-  unsigned int idx = 0;
-  while(s[idx] != '\0'){
-    ++idx;
-  }
-  if(idx < length){
-    length = idx;
-  }
-  this->data = new char[length + 1];
-  for(unsigned int i = 0; i < length; ++i){
-    this->data[i] = s[i];
-  }
-  this->data[length] = '\0';
-  this->size = length;
-}
+Jing::string::string(const char* s, Jing::size_t length):string(s, 0, length){  }
 
-Jing::string::string(const char* s, Jing::index_t offset, size_t length):string(){
-  unsigned int idx = 0;
+Jing::string::string(const char* s, Jing::index_t offset, Jing::size_t length):string(){
+  unsigned int idx = offset;
   while(s[idx] != '\0'){
     ++idx;
   }
@@ -112,7 +99,7 @@ Jing::string::string(const char* s, Jing::index_t offset, size_t length):string(
     this->data[i] = s[i];
   }
   this->data[length] = '\0';
-  this->size = idx;
+  this->size = length;
 }
 
 Jing::string::string(const int i){
@@ -144,7 +131,10 @@ Jing::string* Jing::string::clone() const{
 //  return this;
 }
 
-char Jing::string::charAt(Jing::index_t idx) const{
+Jing::Iterator<Jing::string>* Jing::string::iterator() const{
+}
+
+char Jing::string::charAt(Jing::size_t idx) const{
   if(this->data != 0)
     return this->data[idx];
   return 0;
@@ -156,7 +146,9 @@ int Jing::string::compareToIC(const Jing::string& str) const{
 
 int Jing::string::compareTo(const Jing::string& str) const{
   int result = 0;
-  while(this->length() > 0 && str.length() > 0){
+  //not sure why this was a while loop?
+//  while(this->length() > 0 && str.length() > 0){
+  if(this->length() > 0 && str.length() > 0){
     for(unsigned int i = 0; i < this->length() && i < str.length(); ++i){
       result += (char)this->charAt(i) - (char)str.charAt(i);
       if(result != 0){
@@ -166,6 +158,16 @@ int Jing::string::compareTo(const Jing::string& str) const{
   }
   return result;
 }
+
+int Jing::string::compareToIC(const char* str) const{
+  return 0;
+}
+
+int Jing::string::compareTo(const char* str) const{
+  string foo(str);
+  this->compareTo(foo);
+}
+
 
 //TODO:concat should modify this, and return *this
 Jing::string& Jing::string::concat(const Jing::string& str){
@@ -280,7 +282,7 @@ bool Jing::string::isEmpty() const{
   return false;
 }
 
-size_t Jing::string::length() const{
+Jing::size_t Jing::string::length() const{
   return this->size;
 }
 
@@ -329,19 +331,19 @@ Jing::List<Jing::string>* Jing::string::split(Jing::string& str) const{
   return 0;
 }
 
-Jing::string& Jing::string::strip(char c) const{
+Jing::string& Jing::string::strip(char c){
   return *this;
 }
 
-Jing::string& Jing::string::strip(character& c) const{
+Jing::string& Jing::string::strip(character& c){
   return *this;
 }
 
-Jing::string& Jing::string::strip(char* c) const{
+Jing::string& Jing::string::strip(const char* c){
   return *this;
 }
 
-Jing::string& Jing::string::strip(Jing::string& str) const{
+Jing::string& Jing::string::strip(Jing::string& str){
   return *this;
 }
 
@@ -349,7 +351,7 @@ char* Jing::string::toCharArray() const{
   return this->toCharArray(this->length());
 }
 
-char* Jing::string::toCharArray(size_t length) const{
+char* Jing::string::toCharArray(Jing::size_t length) const{
   return this->toCharArray(0, length);
 }
 
@@ -394,15 +396,19 @@ Jing::string& Jing::string::toLower() const{
 Jing::string& Jing::string::trim(){
 }
 
+char Jing::string::operator[](size_t pos){
+  return this->charAt(pos);
+}
+
 Jing::string& Jing::string::operator=(const Jing::string& rhs){
   //Self assignment?  You sneaky devil.
   if(this != &rhs){
-    size_t len = rhs.length();
+    Jing::size_t len = rhs.length();
     if(this->data != 0)
       delete this->data;
     this->size = len;
     this->data = new char[len];
-    for(unsigned int i = 0; i < len; ++i){
+    for(size_t i = 0; i < len; ++i){
       this->data[i] = rhs.charAt(i);
     }
     this->data[len] = '\0';
@@ -451,6 +457,9 @@ const Jing::string Jing::string::operator+(const int rhs){
   return string(*this) += rhs;
 }
 
+//code covered by comparable inheritance
+//leaving until confirmed it works
+/*
 bool Jing::string::operator==(const char* rhs) const{
   return this->equals(rhs);
 }
@@ -458,6 +467,7 @@ bool Jing::string::operator==(const char* rhs) const{
 bool Jing::string::operator!=(const char* rhs) const{
   return !this->equals(rhs);
 }
+*/
 
 //----------------------
 // non-member operators.
@@ -483,7 +493,6 @@ const Jing::string operator+(char lhs, const Jing::string& rhs){
 }
 
 bool operator==(const char* lhs, const Jing::string& rhs){
-  return rhs == lhs;
-  //return rhs.equals(lhs);
+  return rhs.equals(lhs);
 }
 

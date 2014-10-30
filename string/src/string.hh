@@ -1,8 +1,11 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
-#include<Jing/Comparable.hh>
 #include<Jing/Object.hh>
+#include<Jing/Iterable.hh>
+#include<Jing/Comparable.hh>
+#include<Jing/List>
+#include<Jing/character>
 #include<Jing/Misc.hh>
 #include<iostream>
 
@@ -11,7 +14,7 @@ namespace Jing{
 //index_t defined in AbstractList, will need to find a different name.
 typedef unsigned long long index_t;
 
-class string:public Object, public Comparable<string>{
+class string:public Iterable<string>, public Comparable<string>, public Comparable<char*>{
 private:
   static const size_t npos = -1;
   char* data;
@@ -44,11 +47,16 @@ public:
   unsigned long long hash() const;
 //  clone
   string* clone() const;
+//Iterator
+//  [inherited from Iterable]
+  Iterator<string>* iterator() const;
 
-  char charAt(index_t idx) const;
+  char charAt(size_t idx) const;
   //IgnoreCase
   int compareToIC(const string& str) const;
   int compareTo(const string& str) const;
+  int compareToIC(const char* str) const;
+  int compareTo(const char* str) const;
   string& concat(const string& str);
   string& concat(char* s);
   string& concat(int i);
@@ -84,10 +92,10 @@ public:
   List<string>* split(character& c) const;
   List<string>* split(char* c) const;
   List<string>* split(string& str) const;
-  string& strip(char c) const;
-  string& strip(character& c) const;
-  string& strip(char* c) const;
-  string& strip(string& str) const;
+  string& strip(char c);
+  string& strip(character& c);
+  string& strip(const char* c);
+  string& strip(string& str);
 //Returned pointer must be deleted by user.
   char* toCharArray() const;
   char* toCharArray(size_t length) const;
@@ -104,6 +112,8 @@ public:
 
   static const string& intToString(int i);
 
+  char operator[](size_t pos);
+
   string& operator=(const string& rhs);
   string& operator=(const char* rhs);
   string& operator=(const int rhs);
@@ -116,16 +126,21 @@ public:
   const string operator+(const char* rhs) const;
   const string operator+(const int rhs);
 
-  bool operator==(const string& rhs) const;
-  bool operator==(const char* rhs) const;
+//These should all exist from comparable inheritance.
+//  bool operator==(const string& rhs) const;
+//  bool operator==(const char* rhs) const;
 
-  bool operator!=(const string& rhs) const;
-  bool operator!=(const char* rhs) const;
+//  bool operator!=(const string& rhs) const;
+//  bool operator!=(const char* rhs) const;
+
 
   friend std::ostream& operator<<(std::ostream& os, const string& str);
+
   friend string& operator+=(const char* lhs, const string& rhs);
+
   friend const string operator+(const char* lhs, const string& rhs);
   friend const string operator+(char lhs, const string& rhs);
+
   friend bool operator==(const char* lhs, const string& rhs);
 
 };

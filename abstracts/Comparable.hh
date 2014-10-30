@@ -13,7 +13,7 @@ class Comparable{
 //Specifically Compares this object to another.
 public:
   virtual int compareTo(const T& obj) const{
-    can_copy<T, Jing::Object&>();
+    //can_copy<T, Jing::Object&>();
   }
 
   bool operator==(const T& rhs) const{
