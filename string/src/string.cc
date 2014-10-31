@@ -190,11 +190,10 @@ unsigned long long Jing::string::hash() const{
 }
 
 Jing::string* Jing::string::clone() const{
-  return 0;
-//  return this;
+  return new string(this->data);
 }
 
-Jing::Iterator<Jing::string>* Jing::string::iterator() const{
+Jing::Iterator<char>* Jing::string::iterator() const{
 }
 
 char Jing::string::charAt(Jing::size_t idx) const{
@@ -558,5 +557,31 @@ const Jing::string operator+(char lhs, const Jing::string& rhs){
 
 bool operator==(const char* lhs, const Jing::string& rhs){
   return rhs.equals(lhs);
+}
+
+Jing::string::stringIterator::stringIterator(string* str):idx(0),str(str){  }
+
+Jing::string::stringIterator::~stringIterator(){  }
+
+bool Jing::string::stringIterator::hasNext(){
+  return (this->idx < this->str->length());
+}
+
+char& Jing::string::stringIterator::next(){
+  if(this->idx < this->str->length()){
+    ++this->idx;
+  }
+
+  char c = this->str->charAt(this->idx);
+  char& b = c;
+  return b;
+}
+
+void Jing::string::stringIterator::remove(){
+  //I don't wanna  do it.
+}
+
+void Jing::string::stringIterator::reset(){
+  this->idx = 0;
 }
 

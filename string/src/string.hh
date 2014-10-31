@@ -14,12 +14,25 @@ namespace Jing{
 //index_t defined in AbstractList, will need to find a different name.
 typedef unsigned long long index_t;
 
-class string:public Iterable<string>, public Comparable<string>, public Comparable<char*>{
+class string:public Iterable<char>, public Comparable<string>, public Comparable<char*>{
 private:
   static const size_t npos = -1;
   char* data;
   //size should not include null terminating character
   size_t size;
+
+  class stringIterator:public Iterator<char>{
+  private:
+    size_t idx;
+    string* str;
+  public:
+    stringIterator(string*);
+    ~stringIterator();
+    bool hasNext();
+    char& next();
+    void remove();
+    void reset();
+  };
 
 public:
   //add regex methods in the future
@@ -49,7 +62,7 @@ public:
   string* clone() const;
 //Iterator
 //  [inherited from Iterable]
-  Iterator<string>* iterator() const;
+  Iterator<char>* iterator() const;
 
   char charAt(size_t idx) const;
   //IgnoreCase
