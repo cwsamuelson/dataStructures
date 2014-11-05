@@ -8,22 +8,33 @@ using namespace Jing;
 
 //update collection addition as new collections are created
 bool testConstructors(){
+  bool ret = true;
+  unsigned int  num = 2;
   List<character> foo;
-  foo.insert(*new character('a'));
-  foo.insert(*new character('b'));
-
+  character** vals = new character*[num];
+  for(unsigned int i = 0; i < num; ++i){
+    vals[i] = new character((char)(i + (int)'a'));
+    foo.insert(*vals[i]);
+  }
+  
   List<character> bar(foo);
 
   if(foo.size() != bar.size()){
-    return false;
+    ret = false;
   } else {
     for(Jing::index_t i = 0; i < foo.size(); ++i){
-      if(!((foo.get(i)).equals(bar.get(i))))
-        return false;
+      if(!((foo.get(i)).equals(bar.get(i)))){
+        ret = false;
+        break;
+      }
     }
   }
 
-  return true;
+  for(unsigned int i = 0; i < num; ++i){
+    delete vals[i];
+  }
+  delete[] vals;
+  return ret;
 }
 
 bool testEmptyInserts(){
@@ -40,21 +51,37 @@ bool testEmptyInserts(){
 }
 
 bool testBasicInserts(){
-  char tester[] = {'a', 'b', 'c', 'd'};
+  bool ret = true;
+  unsigned int num = 4;
+  char* tester = new char[4];
+  //char tester[] = {'a', 'b', 'c', 'd'};
+  character** vals = new character*[num];
   List<character> foo;
-  foo.insert(*new character('a'));
-  foo.insert(*new character('b'));
-  foo.insert(*new character('c'));
-  foo.insert(*new character('d'));
+  for(unsigned int i = 0; i < num; ++i){
+    tester[i] = (char)(i + (int)'a');
+    vals[i] = new character(tester[i]);
+    foo.insert(*vals[i]);
+  }
 
   for(Jing::index_t i = 0; i < foo.size(); ++i){
-    if(!(foo.get(i)).equals(tester[i]))
-      return false;
+    if(!(foo.get(i)).equals(tester[i])){
+      ret = false;
+      break;
+    }
   }
+
+  for(unsigned int i = 0; i < num; ++i){
+    delete vals[i];
+  }
+  delete[] vals;
+  delete[] tester;
+  
   return true;
 }
 
 bool testArbitraryInserts(){
+  unsigned int num = 3;
+  character** vals = new character*[num];
   List<character> foo;
   foo.insert(*new character('a'));
   foo.insert(*new character('c'));
@@ -652,6 +679,8 @@ int main(int argc, char **argv){
   //list<Object&> foo;
   //list<Object&>* bar = new list<Object&>;
   //list<Object&>& baz = *new list<Object&>;
+
+  //Feature constructor;
 
   if(testConstructors()){
     cout << "Constructors check out" << endl;
