@@ -120,11 +120,11 @@ Jing::string::~string(){
 
 bool Jing::string::is_equal(const Object& obj) const{
   const Jing::string& obj_derived = dynamic_cast<const Jing::string&>(obj);
-  unsigned long long len = obj_derived.length();
+  Jing::index_t len = obj_derived.length();
   if(this->length() != obj_derived.length()){
     return false;
   }
-  for(unsigned long long i = 0; i < len; ++i){
+  for(Jing::index_t i = 0; i < len; ++i){
     if(this->charAt(i) != obj_derived.charAt(i)){
       return false;
     }
@@ -244,10 +244,7 @@ int Jing::string::compareTo(const char* str) const{
 
 //TODO:concat should modify this, and return *this
 Jing::string& Jing::string::concat(const Jing::string& str){
-//might be getting extra null characters
   size_t newSize = this->length() + str.length() + 1;
-  //NEED TO CLEAN UP TEMP
-  //because memory leak :(
   char* temp = new char[newSize];
   for(unsigned int i = 0; i < this->length(); ++i){
     temp[i] = this->charAt(i);
@@ -256,8 +253,10 @@ Jing::string& Jing::string::concat(const Jing::string& str){
     temp[this->length() + i] = str.charAt(i);
   }
   temp[newSize] = '\0';
-
-  return *(new string(temp));
+  delete this->data;
+  this->data = temp;
+  this->size = newSize;
+  return *this;
 }
 
 Jing::string& Jing::string::concat(char* s){
@@ -269,6 +268,19 @@ Jing::string& Jing::string::concat(int i){
 }
 
 bool Jing::string::contains(const Jing::string& str) const{
+  Jing::index_t strIndex = 1;
+  for(Jing::index_t i = 0; i < this->length(); ++i){
+    if(this->charAt(i) != str.charAt(strIndex)){
+      strIndex = 0;
+      continue;
+    } else {
+      ++strIndex;
+    }
+
+    if(strIndex == str.length()){
+      return true;
+    }
+  }
   return false;
 }
 
@@ -431,9 +443,9 @@ char* Jing::string::toCharArray(Jing::index_t srcStart, Jing::index_t srcEnd) co
     return 0;
 
   //if len == 0, array of length 1 containing null terminator should be returned
-  unsigned long long len = srcEnd - srcStart;
+  Jing::index_t len = srcEnd - srcStart;
   char* ret = new char[len + 1];
-  for(unsigned long long i = 0; i < len; ++i){
+  for(Jing::index_t i = 0; i < len; ++i){
     ret[i] = this->data[i + srcStart];
   }
   this->data[len] = '\0';
