@@ -26,7 +26,7 @@ private:
     size_t idx;
     string* str;
   public:
-    stringIterator(string*);
+    stringIterator(string* const & str);
     ~stringIterator();
     bool hasNext();
     char& next();
@@ -62,7 +62,7 @@ public:
   string* clone() const;
 //Iterator
 //  [inherited from Iterable]
-  Iterator<char>* iterator() const;
+  Iterator<char>* iterator();
 
   char charAt(size_t idx) const;
   //IgnoreCase

@@ -193,7 +193,8 @@ Jing::string* Jing::string::clone() const{
   return new string(this->data);
 }
 
-Jing::Iterator<char>* Jing::string::iterator() const{
+Jing::Iterator<char>* Jing::string::iterator(){
+  return new stringIterator(this);
 }
 
 char Jing::string::charAt(Jing::size_t idx) const{
@@ -209,7 +210,6 @@ int Jing::string::compareToIC(const Jing::string& str) const{
 int Jing::string::compareTo(const Jing::string& str) const{
   int result = 0;
   //not sure why this was a while loop?
-//  while(this->length() > 0 && str.length() > 0){
   if(this->length() > 0 && str.length() > 0){
     for(unsigned int i = 0; i < this->length() && i < str.length(); ++i){
       result += (char)this->charAt(i) - (char)str.charAt(i);
@@ -222,7 +222,8 @@ int Jing::string::compareTo(const Jing::string& str) const{
 }
 
 int Jing::string::compareToIC(const char* str) const{
-  return 0;
+  string foo(str);
+  return this->compareToIC(foo);
 }
 
 int Jing::string::compareTo(const char* str) const{
@@ -559,7 +560,7 @@ bool operator==(const char* lhs, const Jing::string& rhs){
   return rhs.equals(lhs);
 }
 
-Jing::string::stringIterator::stringIterator(string* str):idx(0),str(str){  }
+Jing::string::stringIterator::stringIterator(string* const & str):idx(0),str(str){  }
 
 Jing::string::stringIterator::~stringIterator(){  }
 
