@@ -238,7 +238,7 @@ int Jing::string::compareToIC(const char* str) const{
 
 int Jing::string::compareTo(const char* str) const{
   string foo(str);
-  this->compareTo(foo);
+  return this->compareTo(foo);
 }
 
 
@@ -386,14 +386,14 @@ void Jing::string::replace(const char* s){
   delete temp;
 }
 
-Jing::string& Jing::string::subString(Jing::index_t idx) const{
+Jing::string Jing::string::subString(Jing::index_t idx) const{
   return this->subString(idx, this->length());
 }
 
 //Returned reference must be deleted by user.
-Jing::string& Jing::string::subString(Jing::index_t start, Jing::index_t end) const{
+Jing::string Jing::string::subString(Jing::index_t start, Jing::index_t end) const{
   if(start < this->length() && end < this->length()){
-    return *(new string(this->data, start, end - start));
+    return string(this->data, start, end - start);
   }
   //throw exception
 }
@@ -409,7 +409,8 @@ Jing::List<Jing::string>* Jing::string::split(char c) const{
     if(idx2 == (Jing::index_t)-1){
       return ret;
     }
-    ret->insert(this->substring(idx1, idx2 - 1);
+    //Not sure what to do here, memory management becomes ambiguous
+    //ret->insert(this->subString(idx1, idx2 - 1));
     idx1 = idx2 + 1;
     idx2 = idx1;
   }
@@ -594,6 +595,10 @@ const Jing::string operator+(char lhs, const Jing::string& rhs){
 bool operator==(const char* lhs, const Jing::string& rhs){
   return rhs.equals(lhs);
 }
+
+/********************************************************
+ *                String Iterator                       *
+ ********************************************************/
 
 Jing::string::stringIterator::stringIterator(string* const & str):idx(0),str(str){  }
 

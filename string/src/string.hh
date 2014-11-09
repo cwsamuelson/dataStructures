@@ -99,8 +99,8 @@ public:
   void replace(char oldChar, char newChar);
   void replace(string& str);
   void replace(const char* s);
-  string& subString(index_t idx) const;
-  string& subString(index_t start, index_t end) const;
+  string subString(index_t idx) const;
+  string subString(index_t start, index_t end) const;
   List<string>* split(char c) const;
   List<string>* split(character& c) const;
   List<string>* split(char* c) const;
