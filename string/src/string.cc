@@ -268,20 +268,11 @@ Jing::string& Jing::string::concat(int i){
 }
 
 bool Jing::string::contains(const Jing::string& str) const{
-  Jing::index_t strIndex = 1;
-  for(Jing::index_t i = 0; i < this->length(); ++i){
-    if(this->charAt(i) != str.charAt(strIndex)){
-      strIndex = 0;
-      continue;
-    } else {
-      ++strIndex;
-    }
-
-    if(strIndex == str.length()){
-      return true;
-    }
+  if(this->indexOf(str) == (Jing::index_t)-1){
+    return false;
+  } else {
+    return true;
   }
-  return false;
 }
 
 bool Jing::string::endsWith(const Jing::string& suffix) const{
@@ -318,7 +309,7 @@ Jing::index_t Jing::string::indexOf(char ch) const{
 }
 
 Jing::index_t Jing::string::indexOf(char ch, Jing::index_t start) const{
-  for(unsigned int i = start; i < this->length(); i++){
+  for(Jing::index_t i = start; i < this->length(); i++){
     if(this->charAt(i) == ch){
       return i;
     }
@@ -331,8 +322,20 @@ Jing::index_t Jing::string::indexOf(const Jing::string& str) const{
 }
 
 Jing::index_t Jing::string::indexOf(const Jing::string& str, Jing::index_t start) const{
-//  for(int i = 0; i < this->length(); i++){
-//    while(i < this->length && 
+  Jing::index_t strIndex = 1;
+  for(Jing::index_t i = 0; i < this->length(); ++i){
+    if(this->charAt(i) != str.charAt(strIndex)){
+      strIndex = 0;
+      continue;
+    } else {
+      ++strIndex;
+    }
+
+    if(strIndex == str.length()){
+      return i - strIndex;
+    }
+  }
+  return -1;
 }
 
 Jing::index_t Jing::string::lastIndexOf(char ch) const{
@@ -382,7 +385,6 @@ void Jing::string::replace(const char* s){
   this->replace(*temp);
   delete temp;
 }
-
 
 Jing::string& Jing::string::subString(Jing::index_t idx) const{
   return this->subString(idx, this->length());
