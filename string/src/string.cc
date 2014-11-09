@@ -119,7 +119,17 @@ Jing::string::~string(){
 }
 
 bool Jing::string::is_equal(const Object& obj) const{
-  return false;
+  const Jing::string& obj_derived = dynamic_cast<const Jing::string&>(obj);
+  unsigned long long len = obj_derived.length();
+  if(this->length() != obj_derived.length()){
+    return false;
+  }
+  for(unsigned long long i = 0; i < len; ++i){
+    if(this->charAt(i) != obj_derived.charAt(i)){
+      return false;
+    }
+  }
+  return true;
 }
 
 //Hash based on murmur hash 3 found on wikipedia.
@@ -160,10 +170,10 @@ unsigned long long Jing::string::hash() const{
   unsigned long long hash = seed;
   unsigned int nblocks = 0;
 
-  for(int j = 0; j < this->length(); ++j){
+  for(unsigned long long int j = 0; j < this->length(); ++j){
     key = (int)(this->data[j]);
 //    key = this->get(j).hash();
-    for(unsigned long long i = 0, mask = 0xf; i < 16; ++i, mask << 4){
+    for(unsigned long long i = 0, mask = 0xf; i < 16; ++i, mask <<= 4){
       unsigned long long k = (key & mask) >> (4 * i);
       ++nblocks;
 
@@ -281,10 +291,6 @@ bool Jing::string::equalsIC(const Jing::string& str) const{
 
 bool Jing::string::equalsIC(const char* s) const{
   return this->equalsIC(string(s));
-}
-
-bool Jing::string::equals(const Jing::string& str) const{
-  return false;
 }
 
 bool Jing::string::equals(const char* s) const{
