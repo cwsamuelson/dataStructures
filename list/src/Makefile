@@ -6,7 +6,7 @@ cflags:=-c $(dflags)
 default:main
 
 main:test.o
-	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -o main
+	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -lstring -o main
 
 test.o:test.hh.gch test.cc
 	$(CC) $(cflags) $(flags) test.cc

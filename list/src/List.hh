@@ -58,6 +58,7 @@ public:
 //Constructors
   List();
   List(Collection<T>& c);
+  virtual ~List();
 //Inserts
 //  [inherited from abstractlist]
   void insert(T& obj, Jing::index_t idx);
@@ -97,7 +98,7 @@ public:
   bool equals(Object& obj) const;
 //Iterator
 //  [inherited from Iterable]
-  Iterator<T>* iterator() const;
+  Iterator<T>* iterator();
 //States
 //  hash
 //  [inherited from Object]
@@ -106,7 +107,7 @@ public:
 //  [inherited from Object]
 //memory management may be up to the user.
 //clean up with delete
-  Object* clone() const;
+  List<T>* clone() const;
 //  [inherited from abstractlist]
   Object* toArray() const;
   void toArray(Object* arr) const;

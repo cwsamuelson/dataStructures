@@ -11,8 +11,15 @@ Jing::List<T>::List(){
 }
 
 template<class T>
-Jing::List<T>::List(Collection<T>& c):List(){
-  this->insertAll(c);
+Jing::List<T>::List(Collection<T>& coll):List(){
+  this->insertAll(coll);
+}
+
+template<class T>
+Jing::List<T>::~List(){
+  while(this->size() > 0){
+    this->remove(0);
+  }
 }
 
 template<class T>
@@ -71,7 +78,8 @@ T& Jing::List<T>::remove(){
 
 template<class T>
 T& Jing::List<T>::remove(Jing::index_t idx){
-  T& ret = *this->first->data.clone();
+  //memory leak problem
+  //T* ret = this->first->data.clone();
   //uninitialized list
 //don't delete from uninit list yet
 //  probably throwing exception...?
@@ -80,31 +88,44 @@ T& Jing::List<T>::remove(Jing::index_t idx){
     return;
   //delete only remaining
   } else */if(this->size() == 1){
-    ret = this->first->data;
+    T& ret = this->first->data;
+    //*ret = this->first->data;
     delete this->first;
     this->first = this->last = 0;
+    --this->count;
+    return ret;
   //delete at beginning
   } else if(idx == 0){
   //  update first
-    ret = this->first->data;
+    T& ret = this->first->data;
+    //*ret = this->first->data;
     this->first = this->first->next;
     delete this->first->prev;
     this->first->prev = 0;
+    --this->count;
+    return ret;
   //delete at end
   } else if(idx >= this->size()){
+    --this->count;
     return this->remove(this->size() - 1);
   } else if(idx == this->size() - 1){
   //  update last
-    ret = this->last->data;
+    T& ret = this->last->data;
+    //*ret = this->last->data;
     this->last = this->last->prev;
     delete this->last->next;
     this->last->next = 0;
+    --this->count;
+    return ret;
   //delete normally
   } else {
-    ret = this->first->remove(idx);
+    T& ret = this->first->remove(idx);
+    //*ret = this->first->remove(idx);
+    --this->count;
+    return ret;
   }
-  --this->count;
-  return ret;
+  //--this->count;
+  //return ret;
 }
 
 template<class T>
@@ -231,7 +252,7 @@ bool Jing::List<T>::is_equal(const Jing::Object& obj)const{
 }
 
 template<class T>
-Jing::Iterator<T>* Jing::List<T>::iterator() const{
+Jing::Iterator<T>* Jing::List<T>::iterator(){
   this->iter->reset();
   return (this->iter);
 }
@@ -304,7 +325,7 @@ unsigned long long Jing::List<T>::hash() const{
 }
 
 template<class T>
-Jing::Object* Jing::List<T>::clone() const{
+Jing::List<T>* Jing::List<T>::clone() const{
   Jing::List<T>* temp = new List<T>(*this);
   return temp;
 }
