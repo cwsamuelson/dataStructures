@@ -399,7 +399,22 @@ Jing::string& Jing::string::subString(Jing::index_t start, Jing::index_t end) co
 }
 
 Jing::List<Jing::string>* Jing::string::split(char c) const{
-  return 0;
+  Jing::List<Jing::string>* ret = new Jing::List<Jing::string>();
+  Jing::index_t idx1 = 0;
+  Jing::index_t idx2 = 0;
+
+  while(idx2 < this->length()){
+    idx2 = this->indexOf(c);
+    //return maybe a little prematurely to handle failed find
+    if(idx2 == (Jing::index_t)-1){
+      return ret;
+    }
+    ret->insert(this->substring(idx1, idx2 - 1);
+    idx1 = idx2 + 1;
+    idx2 = idx1;
+  }
+  
+  return ret;
 }
 
 Jing::List<Jing::string>* Jing::string::split(character& c) const{
