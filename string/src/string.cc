@@ -121,7 +121,7 @@ Jing::string::~string(){
 bool Jing::string::is_equal(const Object& obj) const{
   const Jing::string& obj_derived = dynamic_cast<const Jing::string&>(obj);
   Jing::index_t len = obj_derived.length();
-  if(this->length() != obj_derived.length()){
+  if(this->length() != len){
     return false;
   }
   for(Jing::index_t i = 0; i < len; ++i){
@@ -265,31 +265,43 @@ Jing::string& Jing::string::concat(char* s){
 }
 
 Jing::string& Jing::string::concat(int i){
+  Jing::string temp(intToString(i));
+  return this->concat(temp);
 }
 
 bool Jing::string::contains(const Jing::string& str) const{
-  if(this->indexOf(str) == (Jing::index_t)-1){
-    return false;
-  } else {
-    return true;
-  }
+  return !(this->indexOf(str) == (Jing::index_t)-1);
 }
 
 bool Jing::string::endsWith(const Jing::string& suffix) const{
-  return false;
+  if(suffix.length() > this->length()){
+    return false;
+  } else {
+    for(unsigned long long i = suffix.length() - 1; i < 0; --i){
+      if(suffix.charAt(i) != this->charAt(i)){
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 bool Jing::string::startsWith(const Jing::string& prefix) const{
-  for(unsigned int i = 0; i < this->length() && i < prefix.length(); i++){
-    if(this->charAt(i) != prefix.charAt(i)){
-      return false;
+  if(prefix.length() > this->length()){
+    return false;
+  } else {
+    for(unsigned long long i = 0; i < prefix.length(); --i){
+      if(prefix.charAt(i) != this->charAt(i)){
+        return false;
+      }
     }
   }
   return true;
 }
 
 bool Jing::string::equalsIC(const Jing::string& str) const{
-  return this->equals(str);
+  return this->toLower().equals(str.toLower());
+  //return this->equals(str);
 }
 
 bool Jing::string::equalsIC(const char* s) const{
@@ -471,25 +483,27 @@ char* Jing::string::toCharArray(Jing::index_t srcStart, Jing::index_t srcEnd) co
 }
 
 //Returned reference must be deleted by user.
-Jing::string& Jing::string::toUpper() const{
-  Jing::string* ret = new string(this->data);
+Jing::string Jing::string::toUpper() const{
+  Jing::string ret(this->data);
+  //Jing::string* ret = new string(this->data);
   for(unsigned int i = 0; i < this->length(); ++i){
-    if(ret->data[i] >= 97 && ret->data[i] <= 122){
-      ret->data[i] -= 32;
+    if(ret.data[i] >= 97 && ret.data[i] <= 122){
+      ret.data[i] -= 32;
     }
   }
-  return *ret;
+  return ret;
 }
 
 //Returned reference must be deleted by user.
-Jing::string& Jing::string::toLower() const{
-  Jing::string* ret = new string(this->data);
+Jing::string Jing::string::toLower() const{
+  Jing::string ret(this->data);
+  //Jing::string* ret = new string(this->data);
   for(unsigned int i = 0; i < this->length(); ++i){
-    if(ret->data[i] >= 65 && ret->data[i] <= 90){
-      ret->data[i] += 32;
+    if(ret.data[i] >= 65 && ret.data[i] <= 90){
+      ret.data[i] += 32;
     }
   }
-  return *ret;
+  return ret;
 }
 
 Jing::string& Jing::string::trim(){

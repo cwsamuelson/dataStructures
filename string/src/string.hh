@@ -113,8 +113,8 @@ public:
   char* toCharArray() const;
   char* toCharArray(size_t length) const;
   char* toCharArray(index_t srcStart, index_t srcEnd) const;
-  string& toUpper() const;
-  string& toLower() const;
+  string toUpper() const;
+  string toLower() const;
   string& trim();
 
   //returned string must be deleted by user.
