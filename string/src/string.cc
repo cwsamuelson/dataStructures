@@ -301,7 +301,6 @@ bool Jing::string::startsWith(const Jing::string& prefix) const{
 
 bool Jing::string::equalsIC(const Jing::string& str) const{
   return this->toLower().equals(str.toLower());
-  //return this->equals(str);
 }
 
 bool Jing::string::equalsIC(const char* s) const{
@@ -321,12 +320,15 @@ Jing::index_t Jing::string::indexOf(char ch) const{
 }
 
 Jing::index_t Jing::string::indexOf(char ch, Jing::index_t start) const{
-  for(Jing::index_t i = start; i < this->length(); i++){
-    if(this->charAt(i) == ch){
-      return i;
-    }
-  }
-  return -1;
+  return this->indexOf(string(ch), start);
+}
+
+Jing::index_t Jing::string::indexOf(char* s) const{
+  return this->indexOf(s, 0);
+}
+
+Jing::index_t Jing::string::indexOf(char* s, index_t start) const{
+  return this->indexOf(string(s));
 }
 
 Jing::index_t Jing::string::indexOf(const Jing::string& str) const{
@@ -334,7 +336,12 @@ Jing::index_t Jing::string::indexOf(const Jing::string& str) const{
 }
 
 Jing::index_t Jing::string::indexOf(const Jing::string& str, Jing::index_t start) const{
-  Jing::index_t strIndex = 1;
+  //sanity
+  if(str.length() == 0){
+    return -1;
+  }
+  Jing::index_t strIndex = 0;
+
   for(Jing::index_t i = 0; i < this->length(); ++i){
     if(this->charAt(i) != str.charAt(strIndex)){
       strIndex = 0;
@@ -355,12 +362,7 @@ Jing::index_t Jing::string::lastIndexOf(char ch) const{
 }
 
 Jing::index_t Jing::string::lastIndexOf(char ch, Jing::index_t start) const{
-  for(unsigned int i = this->length(); i > start; i--){
-    if(this->charAt(i) == ch){
-      return i;
-    }
-  }
-  return -1;
+  return this->lastIndexOf(string(ch), this->length());
 }
 
 Jing::index_t Jing::string::lastIndexOf(const Jing::string& str) const{
@@ -368,11 +370,29 @@ Jing::index_t Jing::string::lastIndexOf(const Jing::string& str) const{
 }
 
 Jing::index_t Jing::string::lastIndexOf(const Jing::string& str, Jing::index_t start) const{
+  //sanity
+  if(str.length() == 0){
+    return -1;
+  }
+  Jing::index_t strIndex = str.length() - 1;
+
+  for(Jing::index_t i = this->length(); i > 0; --i){
+    if(this->charAt(i) != str.charAt(strIndex)){
+      strIndex = str.length() - 1;
+      continue;
+    } else {
+      --strIndex;
+    }
+
+    if(strIndex == 0){
+      return i;
+    }
+  }
   return -1;
 }
 
 bool Jing::string::isEmpty() const{
-  if(this->size == 0){
+  if(this->length() == 0){
     return true;
   }
   return false;
@@ -383,19 +403,45 @@ Jing::size_t Jing::string::length() const{
 }
 
 void Jing::string::replace(char oldChar, char newChar){
-  this->data[this->indexOf(oldChar)] = newChar;
+  Jing::index_t idx = this->indexOf(oldChar);
+  while(idx != (Jing::index_t)-1){
+    this->data[idx] = newChar;
+    idx = this->indexOf(oldChar);
+  }
+}
+
+void Jing::string::replace(const char* oldS, const char* newS){
+  Jing::string old(oldS);
+  Jing::string nwe(newS);
+  this->replace(old, nwe);
+}
+
+void Jing::string::replace(Jing::string& oldStr, Jing::string& newStr){
+  Jing::index_t idx = this->indexOf(oldStr);
+  //TODO:Implement replace for different lengths
+  //need to reallocate memory for different string lengths
+  if(oldStr.length() == newStr.length()){
+    while(idx != (Jing::index_t)-1){
+      for(Jing::index_t i = idx; i < idx + oldStr.length(); ++i){
+        this->data[i] = newStr.charAt(i - idx);
+      }
+      idx = this->indexOf(oldStr);
+    }
+  }
 }
 
 void Jing::string::replace(Jing::string& str){
   delete[] this->data;
-  this->data = str.toCharArray();
+  this->data = new char[str.length()];
+  for(Jing::index_t i = 0; str.length(); ++i){
+    this->data[i] = str.data[i];
+  }
   this->size = str.length();
 }
 
 void Jing::string::replace(const char* s){
-  string* temp = new string(s);
-  this->replace(*temp);
-  delete temp;
+  string temp(s);
+  this->replace(temp);
 }
 
 Jing::string Jing::string::subString(Jing::index_t idx) const{
@@ -498,7 +544,7 @@ Jing::string Jing::string::toUpper() const{
 Jing::string Jing::string::toLower() const{
   Jing::string ret(this->data);
   //Jing::string* ret = new string(this->data);
-  for(unsigned int i = 0; i < this->length(); ++i){
+  for(unsigned long long i = 0; i < this->length(); ++i){
     if(ret.data[i] >= 65 && ret.data[i] <= 90){
       ret.data[i] += 32;
     }

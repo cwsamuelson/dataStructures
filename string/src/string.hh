@@ -88,6 +88,8 @@ public:
   const char* c_str() const;
   index_t indexOf(char ch) const;
   index_t indexOf(char ch, index_t start) const;
+  index_t indexOf(char* ch) const;
+  index_t indexOf(char* ch, index_t start) const;
   index_t indexOf(const string& str) const;
   index_t indexOf(const string& str, index_t start) const;
   index_t lastIndexOf(char ch) const;
@@ -97,6 +99,8 @@ public:
   bool isEmpty() const;
   size_t length() const;
   void replace(char oldChar, char newChar);
+  void replace(const char* oldS, const char* newS);
+  void replace(string& oldStr, string& newStr);
   void replace(string& str);
   void replace(const char* s);
   string subString(index_t idx) const;
