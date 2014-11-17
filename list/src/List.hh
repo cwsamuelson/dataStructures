@@ -51,9 +51,7 @@ protected:
   listIterator *iter;
 
 public:
-//TODO:equals method
 //TODO:allow iterators to be used as insertion points
-//TODO:Allow for multiple iterators
 
 //Constructors
   List();
