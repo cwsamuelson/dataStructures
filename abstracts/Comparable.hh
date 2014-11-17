@@ -1,7 +1,7 @@
 #ifndef __COMPARABLE_H__
 #define __COMPARABLE_H__
 
-#include<Jing/Misc.hh>
+//#include<Jing/Misc.hh>
 
 namespace Jing{
 
