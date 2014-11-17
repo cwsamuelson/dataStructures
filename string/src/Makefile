@@ -12,7 +12,7 @@ dynamic:libstring.so
 dyn:dynamic
 
 main:test.o libstring.a
-	$(CC) test.o -L/usr/local/lib/Jing/ -lstring -lcharacter -o main
+	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -o main -lstring
 
 string.o:string.cc
 	$(CC) $(cflags) $(flags) string.cc

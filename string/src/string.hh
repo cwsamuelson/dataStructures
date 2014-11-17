@@ -1,11 +1,11 @@
 #ifndef __STRING_H__
 #define __STRING_H__
 
-#include<Jing/Object.hh>
 #include<Jing/Iterable.hh>
 #include<Jing/Comparable.hh>
 #include<Jing/List>
 #include<Jing/character>
+#include<Jing/smart_ptr>
 #include<Jing/Misc.hh>
 #include<iostream>
 
@@ -52,7 +52,7 @@ public:
 
 //Equality
 //  [inherited from Object]
-  bool equals(Object& obj) const;
+  bool equals(const Object& obj) const;
   bool is_equal(const Object& obj)const;
 //States
 //  [inherited from Object]
@@ -105,10 +105,10 @@ public:
   void replace(const char* s);
   string subString(index_t idx) const;
   string subString(index_t start, index_t end) const;
-  List<string>* split(char c) const;
-  List<string>* split(character& c) const;
-  List<string>* split(char* c) const;
-  List<string>* split(string& str) const;
+  smart_ptr<List<string>> split(char c) const;
+  smart_ptr<List<string>> split(character& c) const;
+  smart_ptr<List<string>> split(char* c) const;
+  smart_ptr<List<string>> split(string& str) const;
   string& strip(char c);
   string& strip(character& c);
   string& strip(const char* c);

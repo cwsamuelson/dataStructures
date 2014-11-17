@@ -214,7 +214,7 @@ char Jing::string::charAt(Jing::size_t idx) const{
 }
 
 int Jing::string::compareToIC(const Jing::string& str) const{
-  return 0;
+  return this->toLower().compareTo(str.toLower());
 }
 
 int Jing::string::compareTo(const Jing::string& str) const{
@@ -299,6 +299,10 @@ bool Jing::string::startsWith(const Jing::string& prefix) const{
   return true;
 }
 
+bool Jing::string::equals(const Jing::string& str) const{
+  return this->Jing::Object::equals((const Object&) str);
+}
+
 bool Jing::string::equalsIC(const Jing::string& str) const{
   return this->toLower().equals(str.toLower());
 }
@@ -342,7 +346,7 @@ Jing::index_t Jing::string::indexOf(const Jing::string& str, Jing::index_t start
   }
   Jing::index_t strIndex = 0;
 
-  for(Jing::index_t i = 0; i < this->length(); ++i){
+  for(Jing::index_t i = start; i < this->length(); ++i){
     if(this->charAt(i) != str.charAt(strIndex)){
       strIndex = 0;
       continue;
@@ -350,8 +354,8 @@ Jing::index_t Jing::string::indexOf(const Jing::string& str, Jing::index_t start
       ++strIndex;
     }
 
-    if(strIndex == str.length()){
-      return i - strIndex;
+    if(strIndex >= str.length()){
+      return i - strIndex + 1;
     }
   }
   return -1;
@@ -456,14 +460,15 @@ Jing::string Jing::string::subString(Jing::index_t start, Jing::index_t end) con
   //throw exception
 }
 
-Jing::List<Jing::string>* Jing::string::split(char c) const{
-  Jing::List<Jing::string>* ret = new Jing::List<Jing::string>();
+Jing::smart_ptr<Jing::List<Jing::string>> Jing::string::split(char c) const{
+  Jing::smart_ptr<Jing::List<Jing::string>> ret(new Jing::List<Jing::string>());
   Jing::index_t idx1 = 0;
   Jing::index_t idx2 = 0;
 
   while(idx2 < this->length()){
-    idx2 = this->indexOf(c);
+    idx2 = this->indexOf(c, idx2);
     //return maybe a little prematurely to handle failed find
+    //don't accidentally forget final element
     if(idx2 == (Jing::index_t)-1){
       return ret;
     }
@@ -476,15 +481,15 @@ Jing::List<Jing::string>* Jing::string::split(char c) const{
   return ret;
 }
 
-Jing::List<Jing::string>* Jing::string::split(character& c) const{
+Jing::smart_ptr<Jing::List<Jing::string>> Jing::string::split(character& c) const{
   return 0;
 }
 
-Jing::List<Jing::string>* Jing::string::split(char* c) const{
+Jing::smart_ptr<Jing::List<Jing::string>> Jing::string::split(char* c) const{
   return 0;
 }
 
-Jing::List<Jing::string>* Jing::string::split(Jing::string& str) const{
+Jing::smart_ptr<Jing::List<Jing::string>> Jing::string::split(string& str) const{
   return 0;
 }
 
