@@ -104,10 +104,6 @@ public:
 //  [inherited from iterable]
   Iterator<Y>* iterator() const;
 
-
-
-
-
 };
 
 }
