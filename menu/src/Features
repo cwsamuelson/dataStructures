@@ -1,0 +1,7 @@
+Proposed list of features for the GDK (Galaxy Development Kit) menu API.
+
+Cursor key option selection with option jumping via number keys.
+Enter options via numeric input.
+Submenus.
+Menu options execute callbacks.
+
