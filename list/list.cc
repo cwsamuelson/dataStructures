@@ -1,14 +1,14 @@
 #include"list.hh"
 
-list::list():head(0), tail(0), size(0){  }
+gxy::list::list():head(0), tail(0), size(0){  }
 
-list::~list(){
+gxy::list::~list(){
   while(!this->isEmpty()){
     this->popFront();
   }
 }
 
-void list::pushFront(char c){
+void gxy::list::pushFront(char c){
   //Empty list
   if(this->head == 0 && this->tail == 0){
     this->head = this->tail = new node(c);
@@ -19,7 +19,7 @@ void list::pushFront(char c){
   this->size++;
 }
 
-void list::pushBack(char c){
+void gxy::list::pushBack(char c){
   if(this->head == 0 && this->tail == 0){
     this->head = this->tail = new node(c);
   } else {
@@ -29,7 +29,7 @@ void list::pushBack(char c){
   this->size++;
 }
 
-char list::popFront(){
+char gxy::list::popFront(){
   char ret;
   if(this->head == 0){
     ret = 0;
@@ -46,7 +46,7 @@ char list::popFront(){
   return ret;
 }
 
-char list::popBack(){
+char gxy::list::popBack(){
   char ret;
   if(this->tail == 0){
     ret = 0;
@@ -63,27 +63,59 @@ char list::popBack(){
   return ret;
 }
 
-char& list::get(unsigned int idx){
+gxy::iterator gxy::list::insert(gxy::iterator it, const char& val){
+  gxy::node* tmp = new gxy::node(val, it.accessNode()->previous, it.accessNode());
+  it.accessNode()->previous->next = tmp;
+  it.accessNode()->previous = tmp;
+  ++this->size;
+  return iterator(it.accessNode()->previous);
+}
+
+gxy::iterator gxy::list::insert(gxy::iterator it, gxy::size_t n, const char& val){
+  iterator tmp(it.accessNode()->previous);
+  for(unsigned int i = 0; i < n; ++i){
+    this->insert(it, val);
+  }
+  return tmp;
+}
+
+gxy::iterator gxy::list::insert(gxy::iterator it, gxy::iterator first, gxy::iterator last){
+  iterator tmp(it.accessNode()->previous);
+  for(auto itr = first; itr != last; ++itr){
+    this->insert(it, *itr);
+  }
+  return tmp;
+}
+
+char& gxy::list::get(unsigned int idx){
   return this->head->get(idx);
 }
 
-iterator list::begin(){
-  return iterator(this->head);
+const char& gxy::list::get(unsigned int idx) const{
+  return this->get(idx);
 }
 
-iterator list::end(){
-  return iterator(0);
+gxy::iterator gxy::list::begin(){
+  return gxy::iterator(this->head);
 }
 
-unsigned int list::length(){
+gxy::iterator gxy::list::end(){
+  return gxy::iterator(0);
+}
+
+unsigned int gxy::list::length(){
   return this->size;
 }
 
-bool list::isEmpty(){
+unsigned int gxy::list::length() const{
+  return this->length();
+}
+
+bool gxy::list::isEmpty(){
   return this->size == 0;
 }
 
-char& list::operator[](unsigned int idx){
+char& gxy::list::operator[](unsigned int idx){
   return this->get(idx);
 }
 

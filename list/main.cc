@@ -2,7 +2,7 @@
 #include"list.hh"
 
 int main(){
-  list foo;
+  gxy::list foo;
   foo.pushFront(' ');
   foo.pushBack('W');
   foo.pushBack('o');
@@ -22,6 +22,12 @@ int main(){
     std::cout << foo[i];
   }
   std::cout << std::endl;
+
+  auto itr = foo.begin();
+  ++itr;
+  ++itr;
+  ++itr;
+  foo.insert(itr, 'a');
 
   while(!foo.isEmpty()){
     std::cout << foo.popBack();

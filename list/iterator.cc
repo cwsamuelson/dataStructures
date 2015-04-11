@@ -1,15 +1,15 @@
 #include"iterator.hh"
 
-iterator::iterator():ptr(0){
+gxy::iterator::iterator():ptr(0){
 }
 
-iterator::iterator(const iterator& that):ptr(that.ptr){
+gxy::iterator::iterator(const gxy::iterator& that):ptr(that.ptr){
 }
 
-iterator::iterator(node* that):ptr(that){
+gxy::iterator::iterator(node* that):ptr(that){
 }
 
-bool iterator::hasNext(){
+bool gxy::iterator::hasNext(){
   if(ptr == 0){
     return false;
   } else {
@@ -17,7 +17,7 @@ bool iterator::hasNext(){
   }
 }
 
-char iterator::next(){
+char gxy::iterator::next(){
   if(this->ptr != 0){
     if(this->ptr->next != 0){
       this->ptr = this->ptr->next;
@@ -28,45 +28,49 @@ char iterator::next(){
   }
 }
 
-char iterator::remove(){
-  return 'a';    
+char gxy::iterator::remove(){
+  return 'a';
 }
   
-iterator& iterator::operator++(){
+gxy::iterator& gxy::iterator::operator++(){
   if(this->ptr){
     this->ptr = this->ptr->next;
   }
   return *this;
 }
 
-iterator iterator::operator++(int){
-  iterator tmp(*this);
+gxy::iterator gxy::iterator::operator++(int){
+  gxy::iterator tmp(*this);
   ++(*this);
   return tmp;
 }
 
-iterator& iterator::operator--(){
+gxy::iterator& gxy::iterator::operator--(){
  if(this->ptr){
     this->ptr = this->ptr->previous;
   }
   return *this;
 }
 
-iterator iterator::operator--(int){
-  iterator tmp(*this);
+gxy::iterator gxy::iterator::operator--(int){
+  gxy::iterator tmp(*this);
   --(*this);
   return tmp;
 }
 
-char& iterator::operator*(){
+char& gxy::iterator::operator*(){
   return this->ptr->data;
 }
 
-char* iterator::operator->(){
+char* gxy::iterator::operator->(){
   return &(this->ptr->data);
 }
 
-bool operator==(const iterator& lhs, const iterator& rhs){
+bool gxy::operator==(const gxy::iterator& lhs, const gxy::iterator& rhs){
   return lhs.ptr == rhs.ptr;
+}
+
+gxy::node*& gxy::iterator::accessNode(){
+  return this->ptr;
 }
 

@@ -1,12 +1,12 @@
 #include"node.hh"
 
-node::node(const char& c):data(c), previous(0), next(0){
+gxy::node::node(const char& c):data(c), previous(0), next(0){
 }
 
-node::node(const char& c, node* p, node* n):data(c), previous(p), next(n){ 
+gxy::node::node(const char& c, gxy::node* p, gxy::node* n):data(c), previous(p), next(n){ 
 }
 
-char& node::get(unsigned int idx){
+char& gxy::node::get(unsigned int idx){
   char ret;
   if(idx == 0){
     ret = this->data;

@@ -3,12 +3,13 @@
 
 #include"node.hh"
 
+namespace gxy{
+
 //Bidirectional, not random access
 class iterator{
-private:
+public:
   node* ptr;
 
-public:
   iterator();
   iterator(const iterator& that);
   iterator(node* that);
@@ -31,7 +32,13 @@ public:
   friend bool operator==(const iterator& lhs, const iterator& rhs);
   friend bool operator!=(const iterator& lhs, const iterator& rhs){ return !operator==(lhs, rhs); }
 
+  node*& accessNode();
+
 };
+
+bool operator==(const iterator& lhs, const iterator& rhs);
+
+}
 
 #endif
 
