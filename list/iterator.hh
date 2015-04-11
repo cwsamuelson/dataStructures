@@ -21,9 +21,17 @@ public:
   iterator& operator=(const iterator& rhs);
   
   iterator& operator++();
-  iterator& operator++(int);
+  iterator  operator++(int);
   iterator& operator--();
-  iterator& operator--(int);
+  iterator  operator--(int);
+
+  char& operator*();
+  char* operator->();
+
+  friend bool operator==(const iterator& lhs, const iterator& rhs);
+  friend bool operator!=(const iterator& lhs, const iterator& rhs){ return !operator==(lhs, rhs); }
+
 };
 
 #endif
+

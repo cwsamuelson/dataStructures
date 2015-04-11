@@ -1,6 +1,12 @@
 #include"list.hh"
 
-list::list():size(0), head(0), tail(0){  }
+list::list():head(0), tail(0), size(0){  }
+
+list::~list(){
+  while(!this->isEmpty()){
+    this->popFront();
+  }
+}
 
 void list::pushFront(char c){
   //Empty list
@@ -27,6 +33,10 @@ char list::popFront(){
   char ret;
   if(this->head == 0){
     ret = 0;
+  } else if(this->head == this->tail){
+    ret = this->head->data;
+    delete this->head;
+    this->head = this->tail = 0;
   } else {
     ret = this->head->data;
     this->head = this->head->next;
@@ -40,6 +50,10 @@ char list::popBack(){
   char ret;
   if(this->tail == 0){
     ret = 0;
+  } else if(this->head == this->tail){
+    ret = this->head->data;
+    delete this->head;
+    this->head = this->tail = 0;
   } else {
     ret = this->tail->data;
     this->tail = this->tail->previous;

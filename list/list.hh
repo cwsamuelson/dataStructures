@@ -12,7 +12,7 @@ private:
   
 public:
   list();
-  virtual ~list() = default;
+  virtual ~list();
   
   void pushFront(char c);
   void pushBack(char c);

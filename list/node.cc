@@ -1,6 +1,6 @@
 #include"node.hh"
 
-node::node(const char& c):data(c), next(0), previous(0){
+node::node(const char& c):data(c), previous(0), next(0){
 }
 
 node::node(const char& c, node* p, node* n):data(c), previous(p), next(n){ 

@@ -29,7 +29,7 @@ char iterator::next(){
 }
 
 char iterator::remove(){
-    
+  return 'a';    
 }
   
 iterator& iterator::operator++(){
@@ -39,7 +39,7 @@ iterator& iterator::operator++(){
   return *this;
 }
 
-iterator& iterator::operator++(int){
+iterator iterator::operator++(int){
   iterator tmp(*this);
   ++(*this);
   return tmp;
@@ -52,8 +52,21 @@ iterator& iterator::operator--(){
   return *this;
 }
 
-iterator& iterator::operator--(int){
+iterator iterator::operator--(int){
   iterator tmp(*this);
   --(*this);
   return tmp;
 }
+
+char& iterator::operator*(){
+  return this->ptr->data;
+}
+
+char* iterator::operator->(){
+  return &(this->ptr->data);
+}
+
+bool operator==(const iterator& lhs, const iterator& rhs){
+  return lhs.ptr == rhs.ptr;
+}
+
