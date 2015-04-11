@@ -4,8 +4,8 @@
 class node{
 public:
   char data;
-  node* next;
   node* previous;
+  node* next;
   
   node(const char& c);
   node(const char& c, node* p, node* n);

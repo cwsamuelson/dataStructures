@@ -3,16 +3,17 @@
 node::node(const char& c):data(c), next(0), previous(0){
 }
 
-node::node(const char& c, node* p, node* n):data(c), next(n), previous(p){ 
+node::node(const char& c, node* p, node* n):data(c), previous(p), next(n){ 
 }
 
 char& node::get(unsigned int idx){
-  char& ret = this->data;
+  char ret;
   if(idx == 0){
     ret = this->data;
   } else {
     ret = this->next->get(idx - 1);
   }
-  return ret;
+  char& tmp = ret;
+  return tmp;
 }
 

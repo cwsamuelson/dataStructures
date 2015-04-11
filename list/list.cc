@@ -1,13 +1,13 @@
 #include"list.hh"
 
-list::list():size(0){  }
+list::list():size(0), head(0), tail(0){  }
 
 void list::pushFront(char c){
   //Empty list
   if(this->head == 0 && this->tail == 0){
     this->head = this->tail = new node(c);
   } else {
-    this->head->previous = new node(c);
+    this->head->previous = new node(c, 0, this->head);
     this->head = this->head->previous;
   }
   this->size++;
@@ -17,7 +17,7 @@ void list::pushBack(char c){
   if(this->head == 0 && this->tail == 0){
     this->head = this->tail = new node(c);
   } else {
-    this->tail->next = new node(c);
+    this->tail->next = new node(c, this->tail, 0);
     this->tail = this->tail->next;
   }
   this->size++;
