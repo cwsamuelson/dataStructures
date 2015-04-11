@@ -1,6 +1,6 @@
-#include"list.hpp"
+#include"list.hh"
 
-list::list():length(0){  }
+list::list():size(0){  }
 
 void list::pushFront(char c){
   //Empty list
@@ -10,7 +10,7 @@ void list::pushFront(char c){
     this->head->previous = new node(c);
     this->head = this->head->previous;
   }
-  this->length++;
+  this->size++;
 }
 
 void list::pushBack(char c){
@@ -20,7 +20,7 @@ void list::pushBack(char c){
     this->tail->next = new node(c);
     this->tail = this->tail->next;
   }
-  this->length++;
+  this->size++;
 }
 
 char list::popFront(){
@@ -32,7 +32,7 @@ char list::popFront(){
     this->head = this->head->next;
     delete this->head->previous;
   }
-  this->length--;
+  this->size--;
   return ret;
 }
 
@@ -45,11 +45,11 @@ char list::popBack(){
     this->tail = this->tail->previous;
     delete this->tail->next;
   }
-  this->length--;
+  this->size--;
   return ret;
 }
 
-char list::get(unsigned int idx){
+char& list::get(unsigned int idx){
   return this->head->get(idx);
 }
 
@@ -62,11 +62,11 @@ iterator list::end(){
 }
 
 unsigned int list::length(){
-  return this->length;
+  return this->size;
 }
 
 bool list::isEmpty(){
-  return this->length == 0;
+  return this->size == 0;
 }
 
 char& list::operator[](unsigned int idx){

@@ -1,24 +1,24 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
-#include"node.hpp"
-#include"iterator.hpp"
+#include"node.hh"
+#include"iterator.hh"
 
 class list{
 private:
   node* head;
   node* tail;
-  unsigned int length;
+  unsigned int size;
   
 public:
   list();
   virtual ~list() = default;
   
-  iterator pushFront(char c);
-  iterator pushBack(char c);
+  void pushFront(char c);
+  void pushBack(char c);
   char popFront();
   char popBack();
-  char get();
+  char& get(unsigned int idx);
   iterator begin();
   iterator end();
   unsigned int length();

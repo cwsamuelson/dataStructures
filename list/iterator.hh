@@ -1,17 +1,18 @@
 #ifndef __ITERATOR_H__
 #define __ITERATOR_H__
 
-#include"node.hpp"
+#include"node.hh"
 
 //Bidirectional, not random access
 class iterator{
-public:
+private:
   node* ptr;
-  
+
+public:
   iterator();
   iterator(const iterator& that);
   iterator(node* that);
-  virtual ~iterator();
+  virtual ~iterator() = default;
   
   bool hasNext();
   char next();
@@ -19,10 +20,10 @@ public:
   
   iterator& operator=(const iterator& rhs);
   
-  iterator operator++();
-  iterator operator++(int);
-  iterator operator--();
-  iterator operator--(int);
+  iterator& operator++();
+  iterator& operator++(int);
+  iterator& operator--();
+  iterator& operator--(int);
 };
 
 #endif

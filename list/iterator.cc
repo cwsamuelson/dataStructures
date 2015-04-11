@@ -1,4 +1,13 @@
-#include"iterator.hpp"
+#include"iterator.hh"
+
+iterator::iterator():ptr(0){
+}
+
+iterator::iterator(const iterator& that):ptr(that.ptr){
+}
+
+iterator::iterator(node* that):ptr(that){
+}
 
 bool iterator::hasNext(){
   if(ptr == 0){
@@ -24,22 +33,26 @@ char iterator::remove(){
 }
   
 iterator& iterator::operator++(){
-  //increment
+  if(this->ptr){
+    this->ptr = this->ptr->next;
+  }
   return *this;
 }
 
-iterator iterator::operator++(int){
+iterator& iterator::operator++(int){
   iterator tmp(*this);
   ++(*this);
   return tmp;
 }
 
 iterator& iterator::operator--(){
-  //decrement
+ if(this->ptr){
+    this->ptr = this->ptr->previous;
+  }
   return *this;
 }
 
-iterator iterator::operator--(int){
+iterator& iterator::operator--(int){
   iterator tmp(*this);
   --(*this);
   return tmp;

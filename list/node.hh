@@ -7,10 +7,10 @@ public:
   node* next;
   node* previous;
   
-  node(char* c);
-  node(char* c, node* p, node* n);
+  node(const char& c);
+  node(const char& c, node* p, node* n);
   virtual ~node() = default;
-  char get(unsigned int idx);
+  char& get(unsigned int idx);
   
   node& operator=(const node& rhs) = default;
 };
