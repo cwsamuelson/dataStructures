@@ -64,7 +64,7 @@ char gxy::list::popBack(){
 }
 
 gxy::iterator gxy::list::insert(gxy::iterator it, const char& val){
-  gxy::node* tmp = new gxy::node(val, it.accessNode()->previous, it.accessNode());
+  list::node* tmp = new list::node(val, it.accessNode()->previous, it.accessNode());
   it.accessNode()->previous->next = tmp;
   it.accessNode()->previous = tmp;
   ++this->size;
@@ -117,5 +117,75 @@ bool gxy::list::isEmpty(){
 
 char& gxy::list::operator[](unsigned int idx){
   return this->get(idx);
+}
+
+//Iterator implementation
+gxy::iterator::iterator():ptr(0){
+}
+
+gxy::iterator::iterator(const gxy::iterator& that):ptr(that.ptr){
+}
+
+gxy::iterator::iterator(gxy::list::node* that):ptr(that){
+}
+
+gxy::iterator& gxy::iterator::operator++(){
+  if(this->ptr){
+    this->ptr = this->ptr->next;
+  }
+  return *this;
+}
+
+gxy::iterator gxy::iterator::operator++(int){
+  gxy::iterator tmp(*this);
+  ++(*this);
+  return tmp;
+}
+
+gxy::iterator& gxy::iterator::operator--(){
+ if(this->ptr){
+    this->ptr = this->ptr->previous;
+  }
+  return *this;
+}
+
+gxy::iterator gxy::iterator::operator--(int){
+  gxy::iterator tmp(*this);
+  --(*this);
+  return tmp;
+}
+
+char& gxy::iterator::operator*(){
+  return this->ptr->data;
+}
+
+char* gxy::iterator::operator->(){
+  return &(this->ptr->data);
+}
+
+bool gxy::operator==(const gxy::iterator& lhs, const gxy::iterator& rhs){
+  return lhs.ptr == rhs.ptr;
+}
+
+gxy::list::node*& gxy::iterator::accessNode(){
+  return this->ptr;
+}
+
+//node implementation
+gxy::list::node::node(const char& c):data(c), previous(0), next(0){
+}
+
+gxy::list::node::node(const char& c, list::node* p, list::node* n):data(c), previous(p), next(n){ 
+}
+
+char& gxy::list::node::get(unsigned int idx){
+  char ret;
+  if(idx == 0){
+    ret = this->data;
+  } else {
+    ret = this->next->get(idx - 1);
+  }
+  char& tmp = ret;
+  return tmp;
 }
 

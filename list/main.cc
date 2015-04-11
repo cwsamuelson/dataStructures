@@ -1,3 +1,4 @@
+#include<vector>
 #include<iostream>
 #include"list.hh"
 
@@ -28,6 +29,7 @@ int main(){
   ++itr;
   ++itr;
   foo.insert(itr, 'a');
+  foo.insert(itr, 5, 'b');
 
   while(!foo.isEmpty()){
     std::cout << foo.popBack();
