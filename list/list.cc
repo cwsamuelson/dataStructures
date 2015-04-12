@@ -3,9 +3,7 @@
 gxy::list::list():head(0), tail(0), size(0){  }
 
 gxy::list::~list(){
-  while(!this->isEmpty()){
-    this->popFront();
-  }
+  this->clear();
 }
 
 void gxy::list::pushFront(char c){
@@ -101,6 +99,12 @@ gxy::iterator gxy::list::erase(gxy::iterator first, gxy::iterator last){
     tmp = this->erase(it);
   }
   return gxy::iterator(tmp);
+}
+
+void gxy::list::clear(){
+  while(!this->isEmpty()){
+    this->popFront();
+  }
 }
 
 char& gxy::list::get(unsigned int idx){
