@@ -7,11 +7,8 @@ name:= test
 
 default:$(name)
 
-$(name):main.o list.o
-	$(CC) main.o list.o -o $(name)
-
-list.o:list.cc
-	$(CC) $(cflags) $(flags) list.cc
+$(name):main.o
+	$(CC) main.o -o $(name)
 
 main.o:main.cc
 	$(CC) $(cflags) $(flags) main.cc
