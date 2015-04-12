@@ -39,6 +39,8 @@ public:
   iterator insert(iterator it, const char& val);
   iterator insert(iterator it, size_t n, const char& val);
   iterator insert(iterator it, iterator first, iterator last);
+  iterator erase(iterator it);
+  iterator erase(iterator first, iterator last);
   char& get(unsigned int idx);
   const char& get(unsigned int idx) const;
   iterator begin();

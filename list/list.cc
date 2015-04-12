@@ -72,7 +72,7 @@ gxy::iterator gxy::list::insert(gxy::iterator it, const char& val){
 }
 
 gxy::iterator gxy::list::insert(gxy::iterator it, gxy::size_t n, const char& val){
-  iterator tmp(it.accessNode()->previous);
+  gxy::iterator tmp(it.accessNode()->previous);
   for(unsigned int i = 0; i < n; ++i){
     this->insert(it, val);
   }
@@ -80,11 +80,27 @@ gxy::iterator gxy::list::insert(gxy::iterator it, gxy::size_t n, const char& val
 }
 
 gxy::iterator gxy::list::insert(gxy::iterator it, gxy::iterator first, gxy::iterator last){
-  iterator tmp(it.accessNode()->previous);
+  gxy::iterator tmp(it.accessNode()->previous);
   for(auto itr = first; itr != last; ++itr){
     this->insert(it, *itr);
   }
   return tmp;
+}
+
+gxy::iterator gxy::list::erase(gxy::iterator it){
+  gxy::iterator tmp(it.accessNode()->next);
+  it.accessNode()->previous = it.accessNode()->next;
+  it.accessNode()->next = it.accessNode()->previous;
+  delete it.accessNode();
+  return tmp;
+}
+
+gxy::iterator gxy::list::erase(gxy::iterator first, gxy::iterator last){
+  gxy::iterator tmp;
+  for(auto it = first; it != last; ++it){
+    tmp = this->erase(it);
+  }
+  return gxy::iterator(tmp);
 }
 
 char& gxy::list::get(unsigned int idx){
@@ -127,6 +143,11 @@ gxy::iterator::iterator(const gxy::iterator& that):ptr(that.ptr){
 }
 
 gxy::iterator::iterator(gxy::list::node* that):ptr(that){
+}
+
+gxy::iterator& gxy::iterator::operator=(const gxy::iterator& rhs){
+  this->ptr = rhs.ptr;
+  return *this;
 }
 
 gxy::iterator& gxy::iterator::operator++(){
