@@ -66,17 +66,17 @@ typename gxy::list<T>::value_type gxy::list<T>::popBack(){
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::insert(gxy::iterator<T> it, gxy::list<T>::const_reference val){
+typename gxy::list<T>::iterator gxy::list<T>::insert(gxy::list<T>::iterator it, gxy::list<T>::const_reference val){
   list<T>::node* tmp = new list<T>::node(val, it.accessNode()->previous, it.accessNode());
   it.accessNode()->previous->next = tmp;
   it.accessNode()->previous = tmp;
   ++this->size;
-  return iterator<T>(it.accessNode()->previous);
+  return list<T>::iterator(it.accessNode()->previous);
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::insert(gxy::iterator<T> it, gxy::list<T>::size_t n, gxy::list<T>::const_reference val){
-  gxy::iterator<T> tmp(it.accessNode()->previous);
+typename gxy::list<T>::iterator gxy::list<T>::insert(gxy::list<T>::iterator it, gxy::list<T>::size_t n, gxy::list<T>::const_reference val){
+  gxy::list<T>::iterator tmp(it.accessNode()->previous);
   for(unsigned int i = 0; i < n; ++i){
     this->insert(it, val);
   }
@@ -84,8 +84,8 @@ gxy::iterator<T> gxy::list<T>::insert(gxy::iterator<T> it, gxy::list<T>::size_t 
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::insert(gxy::iterator<T> it, gxy::iterator<T> first, gxy::iterator<T> last){
-  gxy::iterator<T> tmp(it.accessNode()->previous);
+typename gxy::list<T>::iterator gxy::list<T>::insert(gxy::list<T>::iterator it, gxy::list<T>::iterator first, gxy::list<T>::iterator last){
+  gxy::list<T>::iterator tmp(it.accessNode()->previous);
   for(auto itr = first; itr != last; ++itr){
     this->insert(it, *itr);
   }
@@ -93,8 +93,8 @@ gxy::iterator<T> gxy::list<T>::insert(gxy::iterator<T> it, gxy::iterator<T> firs
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::erase(gxy::iterator<T> it){
-  gxy::iterator<T> tmp(it.accessNode()->next);
+typename gxy::list<T>::iterator gxy::list<T>::erase(gxy::list<T>::iterator it){
+  gxy::list<T>::iterator tmp(it.accessNode()->next);
   it.accessNode()->previous = it.accessNode()->next;
   it.accessNode()->next = it.accessNode()->previous;
   delete it.accessNode();
@@ -102,12 +102,12 @@ gxy::iterator<T> gxy::list<T>::erase(gxy::iterator<T> it){
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::erase(gxy::iterator<T> first, gxy::iterator<T> last){
-  gxy::iterator<T> tmp;
+typename gxy::list<T>::iterator gxy::list<T>::erase(gxy::list<T>::iterator first, gxy::list<T>::iterator last){
+  gxy::list<T>::iterator tmp;
   for(auto it = first; it != last; ++it){
     tmp = this->erase(it);
   }
-  return gxy::iterator<T>(tmp);
+  return gxy::list<T>::iterator(tmp);
 }
 
 template<class T>
@@ -128,13 +128,23 @@ typename gxy::list<T>::const_reference gxy::list<T>::get(list<T>::size_t idx) co
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::begin(){
-  return gxy::iterator<T>(this->head);
+typename gxy::list<T>::iterator gxy::list<T>::begin(){
+  return gxy::list<T>::iterator(this->head);
 }
 
 template<class T>
-gxy::iterator<T> gxy::list<T>::end(){
-  return gxy::iterator<T>(0);
+const typename gxy::list<T>::iterator gxy::list<T>::begin() const{
+  return this->begin();
+}
+
+template<class T>
+typename gxy::list<T>::iterator gxy::list<T>::end(){
+  return gxy::list<T>::iterator(0);
+}
+
+template<class T>
+const typename gxy::list<T>::iterator gxy::list<T>::end() const{
+  return this->end();
 }
 
 template<class T>
@@ -159,22 +169,22 @@ typename gxy::list<T>::reference gxy::list<T>::operator[](gxy::list<T>::size_t i
 
 //Iterator implementation
 template<class T>
-gxy::iterator<T>::iterator():ptr(0){  }
+gxy::list<T>::iterator::iterator():ptr(0){  }
 
 template<class T>
-gxy::iterator<T>::iterator(const gxy::iterator<T>& that):ptr(that.ptr){  }
+gxy::list<T>::iterator::iterator(const gxy::list<T>::iterator& that):ptr(that.ptr){  }
 
 template<class T>
-gxy::iterator<T>::iterator(typename gxy::list<T>::node* that):ptr(that){  }
+gxy::list<T>::iterator::iterator(typename gxy::list<T>::node* that):ptr(that){  }
 
 template<class T>
-gxy::iterator<T>& gxy::iterator<T>::operator=(const gxy::iterator<T>& rhs){
+typename gxy::list<T>::iterator& gxy::list<T>::iterator::operator=(const gxy::list<T>::iterator& rhs){
   this->ptr = rhs.ptr;
   return *this;
 }
 
 template<class T>
-gxy::iterator<T>& gxy::iterator<T>::operator++(){
+typename gxy::list<T>::iterator& gxy::list<T>::iterator::operator++(){
   if(this->ptr){
     this->ptr = this->ptr->next;
   }
@@ -182,14 +192,14 @@ gxy::iterator<T>& gxy::iterator<T>::operator++(){
 }
 
 template<class T>
-gxy::iterator<T> gxy::iterator<T>::operator++(int){
-  gxy::iterator<T> tmp(*this);
+typename gxy::list<T>::iterator gxy::list<T>::iterator::operator++(int){
+  gxy::list<T>::iterator tmp(*this);
   ++(*this);
   return tmp;
 }
 
 template<class T>
-gxy::iterator<T>& gxy::iterator<T>::operator--(){
+typename gxy::list<T>::iterator& gxy::list<T>::iterator::operator--(){
  if(this->ptr){
     this->ptr = this->ptr->previous;
   }
@@ -197,34 +207,34 @@ gxy::iterator<T>& gxy::iterator<T>::operator--(){
 }
 
 template<class T>
-gxy::iterator<T> gxy::iterator<T>::operator--(int){
-  gxy::iterator<T> tmp(*this);
+typename gxy::list<T>::iterator gxy::list<T>::iterator::operator--(int){
+  gxy::list<T>::iterator tmp(*this);
   --(*this);
   return tmp;
 }
 
 template<class T>
-typename gxy::list<T>::reference gxy::iterator<T>::operator*(){
+typename gxy::list<T>::reference gxy::list<T>::iterator::operator*(){
   return this->ptr->data;
 }
 
 template<class T>
-typename gxy::list<T>::pointer gxy::iterator<T>::operator->(){
+typename gxy::list<T>::pointer gxy::list<T>::iterator::operator->(){
   return &(this->ptr->data);
 }
 
 template<class T>
-bool gxy::operator==(const gxy::iterator<T>& lhs, const gxy::iterator<T>& rhs){
+bool gxy::operator==(const typename gxy::list<T>::iterator& lhs, const typename gxy::list<T>::iterator& rhs){
   return lhs.ptr == rhs.ptr;
 }
 
 template<class T>
-bool gxy::operator!=(const gxy::iterator<T>& lhs, const gxy::iterator<T>& rhs){
+bool gxy::operator!=(const typename gxy::list<T>::iterator& lhs, const typename gxy::list<T>::iterator& rhs){
   return !gxy::operator==(lhs, rhs);
 }
 
 template<class T>
-typename gxy::list<T>::node*& gxy::iterator<T>::accessNode(){
+typename gxy::list<T>::node*& gxy::list<T>::iterator::accessNode(){
   return this->ptr;
 }
 

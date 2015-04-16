@@ -32,6 +32,33 @@ public:
     node& operator=(const node& rhs) = default;
   };
 
+  class iterator{
+  public:
+    typename list<T>::node* ptr;
+
+    iterator();
+    iterator(const iterator& that);
+    iterator(typename list<T>::node* that);
+    virtual ~iterator() = default;
+    
+    iterator& operator=(const iterator& rhs);
+    
+    iterator& operator++();
+    iterator  operator++(int);
+    iterator& operator--();
+    iterator  operator--(int);
+
+    typename list<T>::reference operator*();
+    typename list<T>::pointer operator->();
+
+    template<class U>
+    friend bool operator==(const iterator& lhs, const iterator& rhs);
+    template<class U>
+    friend bool operator!=(const iterator& lhs, const iterator& rhs);
+
+    typename list<T>::node*& accessNode();
+  };
+
   node* head;
   node* tail;
   size_t size;
@@ -44,16 +71,18 @@ public:
   void pushBack(value_type c);
   value_type popFront();
   value_type popBack();
-  iterator<value_type> insert(iterator<value_type> it, const_reference val);
-  iterator<value_type> insert(iterator<value_type> it, size_t n, const_reference val);
-  iterator<value_type> insert(iterator<value_type> it, iterator<value_type> first, iterator<value_type> last);
-  iterator<value_type> erase(iterator<value_type> it);
-  iterator<value_type> erase(iterator<value_type> first, iterator<value_type> last);
+  iterator insert(iterator it, const_reference val);
+  iterator insert(iterator it, size_t n, const_reference val);
+  iterator insert(iterator it, iterator first, iterator last);
+  iterator erase(iterator it);
+  iterator erase(iterator first, iterator last);
   void clear();
   reference get(size_t idx);
   const_reference get(size_t idx) const;
-  iterator<value_type> begin();
-  iterator<value_type> end();
+  iterator begin();
+  const iterator begin() const;
+  iterator end();
+  const iterator end() const;
   size_t length();
   size_t length() const;
   bool isEmpty();
@@ -62,38 +91,10 @@ public:
 };
 
 template<class T>
-class iterator{
-public:
-  typename list<T>::node* ptr;
-
-  iterator();
-  iterator(const iterator<T>& that);
-  iterator(typename list<T>::node* that);
-  virtual ~iterator() = default;
-  
-  iterator<T>& operator=(const iterator& rhs);
-  
-  iterator<T>& operator++();
-  iterator<T>  operator++(int);
-  iterator<T>& operator--();
-  iterator<T>  operator--(int);
-
-  typename list<T>::reference operator*();
-  typename list<T>::pointer operator->();
-
-  template<class U>
-  friend bool operator==(const iterator<U>& lhs, const iterator<U>& rhs);
-  template<class U>
-  friend bool operator!=(const iterator<U>& lhs, const iterator<U>& rhs);
-
-  typename list<T>::node*& accessNode();
-};
+bool operator==(const typename list<T>::iterator& lhs, const typename list<T>::iterator& rhs);
 
 template<class T>
-bool operator==(const iterator<T>& lhs, const iterator<T>& rhs);
-
-template<class T>
-bool operator!=(const iterator<T>& lhs, const iterator<T>& rhs);
+bool operator!=(const typename list<T>::iterator& lhs, const typename list<T>::iterator& rhs);
 
 }
 
