@@ -1,8 +1,43 @@
 template<class T>
-gxy::vector<T>::vector():arr(new T[16]), size(0), capacity(16){  }
+void gxy::vector<T>::increaseCapacity(){
+  this->increaseSize(1.5 * this->size_);
+}
 
 template<class T>
-gxy::vector<T>::vector(const vector<value_type>& other){
+void gxy::vector<T>::increaseCapacity(size_t sz){
+  T* tmp = new T[sz];
+  for(unsigned int i = 0; i < this->size_; ++i){
+    tmp[i] = this->arr[i];
+  }
+
+  T* dl = this->arr;
+  this->arr = tmp;
+  this->capacity_ = sz;
+  delete[] dl;
+}
+
+template<class T>
+void decreaseCapacity(){
+  this->decreaseCapacity(this->size_);
+}
+
+template<class T>
+void decreaseCapacity(size_t sz){
+}
+
+template<class T>
+gxy::vector<T>::vector():
+  vector((size_t)16){  }
+
+template<class T>
+vector(size_t sz):
+  arr(new T[sz]),
+  size_(0),
+  capacity(sz){  }
+
+template<class T>
+gxy::vector<T>::vector(const vector<value_type>& other):
+  vector(){
   this->insert(this->begin(), other.begin(), other.end());
 }
 
@@ -13,19 +48,15 @@ gxy::vector<T>::~vector(){
 
 template<class T>
 void gxy::vector<T>::pushBack(value_type vt){
-  if(this->size < this->capacity){
-    this->arr[this->size++] = vt;
-  } else {
-    T* tmp = new T[this->capacity + 16];
-    //copy everything to the new array.
-    delete this->arr;
-    this->arr = tmp;
+  if(this->size_ >= this->capacity_){
+    this->increaseCapacity();
   }
+  this->arr[this->size_++] = vt;
 }
 
 template<class T>
 gxy::vector<T>::value_type gxy::vector<T>::popBack(){
-  return this->arr[this->size--];
+  return this->arr[--this->size];
 }
 
 template<class T>
@@ -87,31 +118,35 @@ gxy::vector<T>::size_t gxy::vector<T>::length() const{
 }
 
 template<class T>
+size_t size(){
+  return this->length();
+}
+
+template<class T>
+size_t size() const{
+  return this->length();
+}
+
+template<class T>
 gxy::vector<T>::size_t gxy::vector<T>::capacity(){
-  return this->capacity;
+  return this->capacity_;
 }
 
 template<class T>
 gxy::vector<T>::size_t gxy::vector<T>::capacity() const{
-  return this->capacity;
+  return this->capacity_;
 }
 
 template<class T>
 void gxy::vector<T>::reserve(size_t n){
-  if(n > this->capacity){
-    T* tmp = new T[n];
-    //Copy shit over
-    delete this->arr;
-    this->arr = tmp;
+  if(n > this->sizeMax){
+    this->increaseCapacity(n);
   }
 }
 
 template<class T>
 void gxy::vector<T>::shrink(){
-  T* tmp = new T[this->size];
-  //copy shit over
-  delete this->arr;
-  this->arr = tmp;
+  this->decreaseCapacity();
 }
 
 template<class T>
@@ -125,8 +160,11 @@ gxy::vector<T>::reference gxy::vector<T>::operator[](size_t idx){
 }
 
 //iterator implementation
+iterator(const gxy::vector<T>&, const iterator<T>& that);
 template<class T>
 gxy::iterator():idx(0){  }
+
+gxy::iterator(const gxy::vector<T>&):idx(0){  }
 
 template<class T>
 gxy::iterator(const iterator<T>& that):idx(that.idx){  }

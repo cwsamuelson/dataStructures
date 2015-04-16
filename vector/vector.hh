@@ -1,12 +1,22 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
+namespace gxy{
+
+template<class T>
+class iterator;
+
 template<class T>
 class vector{
 private:
   T* arr;
-  size_t size;
-  size_t capacity;
+  size_t size_;
+  size_t capacity_;
+
+  void increaseCapacity();
+  void increaseCapacity(size_t sz);
+  void decreaseCapacity();
+  void decreaseCapacity(size_t sz);
 
 public:
   typedef T value_type;
@@ -17,6 +27,7 @@ public:
   typedef unsigned long long size_t;
 
   vector();
+  vector(size_t sz);
   vector(const vector<value_type>& other);
   virtual ~vector();
 
@@ -34,6 +45,8 @@ public:
   iterator<value_type> end();
   size_t length();
   size_t length() const;
+  size_t size();
+  size_t size() const;
   size_t capacity();
   size_t capacity() const;
   void reserve(size_t n);
@@ -49,9 +62,9 @@ class iterator{
 public:
   typename list<T>::size_t idx;
 
-  iterator();
-  iterator(const iterator<T>& that);
-  iterator(typename list<T>::node* that);
+  iterator(const gxy::vector<T>&);
+  iterator(const gxy::vector<T>&, const iterator<T>& that);
+  iterator(gxy::vector<T>::size_t sz);
   virtual ~iterator() = default;
   
   iterator<T>& operator=(const iterator& rhs);
@@ -71,6 +84,8 @@ public:
 };
 
 #include"vector.cc"
+
+}
 
 #endif
 

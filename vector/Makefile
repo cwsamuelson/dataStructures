@@ -1,20 +1,18 @@
 CC:= g++
-flags:=-Wall -std=c++11
+flags:=-Wall -Wextra -pedantic -std=c++11
 dflags:=-ggdb3
 cflags:=-c $(dflags)
 
-default:main
+name:=test
 
-main:test.o
-	$(CC) test.o -L/usr/local/lib/Jing/ -lcharacter -o main
+default:$(name)
 
-test.o:test.hh.gch test.cc
-	$(CC) $(cflags) $(flags) test.cc
+$(name):$(name).o
+	$(CC) $(name).o -o $(name)
 
-#flags used for precompiled header must be the same as for compilation
-test.hh.gch:test.hh List.cc
-	$(CC) $(dflags) $(flags) test.hh
+$(name).o:$(name).cc
+	$(CC) $(cflags) $(flags) $(name).cc
 
 clean:
-	rm *.o core main test.hh.gch
+	rm *.o core $(name)
 
