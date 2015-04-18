@@ -3,7 +3,7 @@ flags:=-Wall -Wextra -pedantic -std=c++11
 dflags:=-ggdb3
 cflags:=-c $(dflags)
 
-name:=test
+name:=main
 
 default:$(name)
 

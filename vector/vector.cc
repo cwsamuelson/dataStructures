@@ -1,221 +1,109 @@
-template<class T>
-void gxy::vector<T>::increaseCapacity(){
-  this->increaseSize(1.5 * this->size_);
-}
+vector::vector():
+  vector(16){  }
 
-template<class T>
-void gxy::vector<T>::increaseCapacity(size_t sz){
-  T* tmp = new T[sz];
-  for(unsigned int i = 0; i < this->size_; ++i){
-    tmp[i] = this->arr[i];
-  }
-
-  T* dl = this->arr;
-  this->arr = tmp;
-  this->capacity_ = sz;
-  delete[] dl;
-}
-
-template<class T>
-void decreaseCapacity(){
-  this->decreaseCapacity(this->size_);
-}
-
-template<class T>
-void decreaseCapacity(size_t sz){
-}
-
-template<class T>
-gxy::vector<T>::vector():
-  vector((size_t)16){  }
-
-template<class T>
-vector(size_t sz):
-  arr(new T[sz]),
+vector::vector(size_t size):
+  arr_(new value_type[size]),
   size_(0),
-  capacity(sz){  }
-
-template<class T>
-gxy::vector<T>::vector(const vector<value_type>& other):
-  vector(){
-  this->insert(this->begin(), other.begin(), other.end());
+  capacity_(size){
 }
 
-template<class T>
-gxy::vector<T>::~vector(){
-  delete this->arr;
-}
-
-template<class T>
-void gxy::vector<T>::pushBack(value_type vt){
-  if(this->size_ >= this->capacity_){
-    this->increaseCapacity();
-  }
-  this->arr[this->size_++] = vt;
-}
-
-template<class T>
-gxy::vector<T>::value_type gxy::vector<T>::popBack(){
-  return this->arr[--this->size];
-}
-
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::insert(iterator<value_type> it, const_reference val){
-}
-
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::insert(iterator<value_type> it, size_t n, const_reference val){
-}
-
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::insert(iterator<value_type> it, iterator<value_type> first, iterator<value_type> last){
-}
-
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::erase(iterator<value_type> it){
-}
-
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::erase(iterator<value_type> first, iterator<value_type> last){
-}
-
-template<class T>
-void gxy::vector<T>::clear(){
-  this->size = 0;
-}
-
-template<class T>
-gxy::vector<T>::reference gxy::vector<T>::get(size_t idx){
-  if(idx >= this->size){
-    return this->arr[this->size - 1];
-  } else {
-    return this->arr[idx];
+vector::vector(iterator& first, iterator& last):vector(){
+  for(auto it = first; it != last; ++it){
+    pushBack(*it);
   }
 }
 
-template<class T>
-gxy::vector<T>::const_reference gxy::vector<T>::get(size_t idx) const{
+vector::~vector(){
+  delete[] arr_;
+}
+
+void vector::pushBack(value_type data){
+  if(size_ == capacity_){
+    increaseCapacity();
+  }
+  arr_[size_++] = data;
+}
+
+vector::value_type vector::popBack(){
+  return arr_[--size_];
+}
+
+void vector::clear(){
+  size_ = 0;
+}
+
+vector::reference vector::get(size_t idx){
+  return arr_[idx];
+}
+
+vector::const_reference vector::get(size_t idx) const{
   return this->get(idx);
 }
 
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::begin(){
+vector::iterator vector::begin(){
+  return vector::iterator(arr_);
 }
 
-template<class T>
-gxy::vector<T>::iterator<value_type> gxy::vector<T>::end(){
-  return gxy::iterator<T>(0);
+vector::iterator vector::end(){
+  return vector::iterator(arr_, size_);
 }
 
-template<class T>
-gxy::vector<T>::size_t gxy::vector<T>::length(){
-  return this->size;
+vector::size_t vector::length(){
+  return size_;
 }
 
-template<class T>
-gxy::vector<T>::size_t gxy::vector<T>::length() const{
-  return this->size;
+vector::size_t vector::length() const{
+  return length();
 }
 
-template<class T>
-size_t size(){
-  return this->length();
+vector::size_t vector::size(){
+  return length();
 }
 
-template<class T>
-size_t size() const{
-  return this->length();
+vector::size_t vector::size() const{
+  return size();
 }
 
-template<class T>
-gxy::vector<T>::size_t gxy::vector<T>::capacity(){
-  return this->capacity_;
+vector::size_t vector::capacity(){
+  return capacity_;
 }
 
-template<class T>
-gxy::vector<T>::size_t gxy::vector<T>::capacity() const{
-  return this->capacity_;
+vector::size_t vector::capacity() const{
+  return capacity();
 }
 
-template<class T>
-void gxy::vector<T>::reserve(size_t n){
-  if(n > this->sizeMax){
-    this->increaseCapacity(n);
+void vector::reserve(size_t size){
+  if(size > capacity_){
+    changeCapacity(size);
   }
 }
 
-template<class T>
-void gxy::vector<T>::shrink(){
-  this->decreaseCapacity();
+void vector::shrinkToFit(){
+  changeCapacity(size_);
 }
 
-template<class T>
-bool gxy::vector<T>::isEmpty(){
-  return this->size == 0;
+bool vector::isEmpty(){
+  return size_ == 0;
 }
 
-template<class T>
-gxy::vector<T>::reference gxy::vector<T>::operator[](size_t idx){
-  return this->get(idx);
+vector::reference vector::operator[](size_t idx){
+  return get(idx);
 }
 
-//iterator implementation
-iterator(const gxy::vector<T>&, const iterator<T>& that);
-template<class T>
-gxy::iterator():idx(0){  }
-
-gxy::iterator(const gxy::vector<T>&):idx(0){  }
-
-template<class T>
-gxy::iterator(const iterator<T>& that):idx(that.idx){  }
-
-template<class T>
-gxy::iterator(gxy::vector<T>::size_t sz):idx(sz){  }
-
-template<class T>
-gxy::iterator<T>& gxy::iterator<T>::operator=(const gxy::iterator<T>& rhs){
-  this->idx = rhs.idx;
+void vector::changeCapacity(size_t size){
+  if(size < size_){
+    changeCapacity(size_);
+  }
+  pointer arr = new value_type[size];
+  for(size_t i = 0; i < size_; ++i){
+    arr[i] = arr_[i];
+  }
+  pointer hold = arr_;
+  arr_ = arr;
+  delete[] hold;
 }
 
-template<class T>
-gxy::iterator<T>& gxy::iterator<T>::operator++(){
-  ++this->idx;
-  return *this;
-}
-
-template<class T>
-gxy::iterator<T>  gxy::iterator<T>::operator++(int){
-  gxy::iterator<T> tmp(*this);
-  ++(*this);
-  return tmp;
-}
-
-template<class T>
-gxy::iterator<T>& gxy::iterator<T>::operator--(){
-  --this->idx;
-  return *this;
-}
-
-template<class T>
-gxy::iterator<T>  gxy::iterator<T>::operator--(int){
-  gxy::iterator<T> tmp(*this);
-  --this->idx;
-  return *this;
-}
-
-template<class T>
-typename list<T>::reference gxy::iterator<T>::operator*(){
-}
-
-template<class T>
-typename list<T>::pointer gxy::iterator<T>::operator->(){
-}
-
-template<class U>
-bool gxy::iterator<U>::operator==(const gxy::iterator<U>& lhs, const gxy::iterator<U>& rhs){
-}
-
-template<class U>
-bool gxy::iterator<U>::operator!=(const gxy::iterator<U>& lhs, const gxy::iterator<U>& rhs){
+void vector::increaseCapacity(){
+  changeCapacity(1.5 * size_);
 }
 

@@ -1,91 +1,53 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __GALAXY_VECTOR_H__
+#define __GALAXY_VECTOR_H__
 
-namespace gxy{
+#include"vector_iterator.hh"
 
-template<class T>
-class iterator;
-
-template<class T>
 class vector{
-private:
-  T* arr;
-  size_t size_;
-  size_t capacity_;
+public:
+  typedef char              value_type;
+  typedef value_type&       reference;
+  typedef const value_type& const_reference;
+  typedef value_type*       pointer;
+  typedef const value_type* const_pointer;
+  typedef vector_iterator   iterator;
+  typedef unsigned long     size_t;
 
+private:
+  pointer arr_;
+  size_t  size_;
+  size_t  capacity_;
+
+  void changeCapacity(size_t size);
   void increaseCapacity();
-  void increaseCapacity(size_t sz);
-  void decreaseCapacity();
-  void decreaseCapacity(size_t sz);
 
 public:
-  typedef T value_type;
-  typedef value_type& reference;
-  typedef const value_type& const_reference;
-  typedef value_type* pointer;
-  typedef const value_type* const_pointer;
-  typedef unsigned long long size_t;
-
   vector();
-  vector(size_t sz);
-  vector(const vector<value_type>& other);
+  vector(size_t size);
+  vector(iterator& first, iterator& last);
   virtual ~vector();
 
-  void pushBack(value_type c);
-  value_type popBack();
-  iterator<value_type> insert(iterator<value_type> it, const_reference val);
-  iterator<value_type> insert(iterator<value_type> it, size_t n, const_reference val);
-  iterator<value_type> insert(iterator<value_type> it, iterator<value_type> first, iterator<value_type> last);
-  iterator<value_type> erase(iterator<value_type> it);
-  iterator<value_type> erase(iterator<value_type> first, iterator<value_type> last);
-  void clear();
-  reference get(size_t idx);
+  void 	          pushBack(value_type data);
+  value_type      popBack();
+  void            clear();
+  reference       get(size_t idx);
   const_reference get(size_t idx) const;
-  iterator<value_type> begin();
-  iterator<value_type> end();
-  size_t length();
-  size_t length() const;
-  size_t size();
-  size_t size() const;
-  size_t capacity();
-  size_t capacity() const;
-  void reserve(size_t n);
-  void shrink();
-  bool isEmpty();
+  iterator        begin();
+  iterator        end();
+  size_t          length();
+  size_t          length() const;
+  size_t          size();
+  size_t          size() const;
+  size_t          capacity();
+  size_t          capacity() const;
+  void	          reserve(size_t sz);
+  void            shrinkToFit();
+  bool            isEmpty();
 
-  reference operator[](size_t idx);
-
-};
-
-template<class T>
-class iterator{
-public:
-  typename list<T>::size_t idx;
-
-  iterator(const gxy::vector<T>&);
-  iterator(const gxy::vector<T>&, const iterator<T>& that);
-  iterator(gxy::vector<T>::size_t sz);
-  virtual ~iterator() = default;
-  
-  iterator<T>& operator=(const iterator& rhs);
-  
-  iterator<T>& operator++();
-  iterator<T>  operator++(int);
-  iterator<T>& operator--();
-  iterator<T>  operator--(int);
-
-  typename vector<T>::reference operator*();
-  typename vector<T>::pointer operator->();
-
-  template<class U>
-  friend bool operator==(const iterator<U>& lhs, const iterator<U>& rhs);
-  template<class U>
-  friend bool operator!=(const iterator<U>& lhs, const iterator<U>& rhs);
+  reference       operator[](size_t idx);
 };
 
 #include"vector.cc"
-
-}
 
 #endif
 
