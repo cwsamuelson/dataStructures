@@ -2,7 +2,7 @@
 #include"vector.hh"
 
 int main(int argc, char** argv){
-  vector foo;
+  vector<char> foo;
   foo.pushBack('a');
   foo.pushBack('b');
   foo.pushBack('c');

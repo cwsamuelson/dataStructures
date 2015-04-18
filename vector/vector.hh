@@ -3,15 +3,16 @@
 
 #include"vector_iterator.hh"
 
+template<class T>
 class vector{
 public:
-  typedef char              value_type;
-  typedef value_type&       reference;
-  typedef const value_type& const_reference;
-  typedef value_type*       pointer;
-  typedef const value_type* const_pointer;
-  typedef vector_iterator   iterator;
-  typedef unsigned long     size_t;
+  typedef char               value_type;
+  typedef value_type&        reference;
+  typedef const value_type&  const_reference;
+  typedef value_type*        pointer;
+  typedef const value_type*  const_pointer;
+  typedef vector_iterator<T> iterator;
+  typedef unsigned long      size_t;
 
 private:
   pointer arr_;

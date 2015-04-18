@@ -1,96 +1,118 @@
-vector::vector():
+template<class T>
+vector<T>::vector():
   vector(16){  }
 
-vector::vector(size_t size):
+template<class T>
+vector<T>::vector(size_t size):
   arr_(new value_type[size]),
   size_(0),
   capacity_(size){
 }
 
-vector::vector(iterator& first, iterator& last):vector(){
+template<class T>
+vector<T>::vector(iterator& first, iterator& last):vector(){
   for(auto it = first; it != last; ++it){
     pushBack(*it);
   }
 }
 
-vector::~vector(){
+template<class T>
+vector<T>::~vector(){
   delete[] arr_;
 }
 
-void vector::pushBack(value_type data){
+template<class T>
+void vector<T>::pushBack(value_type data){
   if(size_ == capacity_){
     increaseCapacity();
   }
   arr_[size_++] = data;
 }
 
-vector::value_type vector::popBack(){
+template<class T>
+typename vector<T>::value_type vector<T>::popBack(){
   return arr_[--size_];
 }
 
-void vector::clear(){
+template<class T>
+void vector<T>::clear(){
   size_ = 0;
 }
 
-vector::reference vector::get(size_t idx){
+template<class T>
+typename vector<T>::reference vector<T>::get(size_t idx){
   return arr_[idx];
 }
 
-vector::const_reference vector::get(size_t idx) const{
+template<class T>
+typename vector<T>::const_reference vector<T>::get(size_t idx) const{
   return this->get(idx);
 }
 
-vector::iterator vector::begin(){
+template<class T>
+typename vector<T>::iterator vector<T>::begin(){
   return vector::iterator(arr_);
 }
 
-vector::iterator vector::end(){
+template<class T>
+typename vector<T>::iterator vector<T>::end(){
   return vector::iterator(arr_, size_);
 }
 
-vector::size_t vector::length(){
+template<class T>
+typename vector<T>::size_t vector<T>::length(){
   return size_;
 }
 
-vector::size_t vector::length() const{
+template<class T>
+typename vector<T>::size_t vector<T>::length() const{
   return length();
 }
 
-vector::size_t vector::size(){
+template<class T>
+typename vector<T>::size_t vector<T>::size(){
   return length();
 }
 
-vector::size_t vector::size() const{
+template<class T>
+typename vector<T>::size_t vector<T>::size() const{
   return size();
 }
 
-vector::size_t vector::capacity(){
+template<class T>
+typename vector<T>::size_t vector<T>::capacity(){
   return capacity_;
 }
 
-vector::size_t vector::capacity() const{
+template<class T>
+typename vector<T>::size_t vector<T>::capacity() const{
   return capacity();
 }
 
-void vector::reserve(size_t size){
+template<class T>
+void vector<T>::reserve(size_t size){
   if(size > capacity_){
     changeCapacity(size);
   }
 }
 
-void vector::shrinkToFit(){
+template<class T>
+void vector<T>::shrinkToFit(){
   changeCapacity(size_);
 }
 
-bool vector::isEmpty(){
+template<class T>
+bool vector<T>::isEmpty(){
   return size_ == 0;
 }
 
-vector::reference vector::operator[](size_t idx){
+template<class T>
+typename vector<T>::reference vector<T>::operator[](size_t idx){
   return get(idx);
 }
 
-void vector::changeCapacity(size_t size){
+template<class T>
+void vector<T>::changeCapacity(size_t size){
   if(size < size_){
     changeCapacity(size_);
   }
@@ -103,7 +125,8 @@ void vector::changeCapacity(size_t size){
   delete[] hold;
 }
 
-void vector::increaseCapacity(){
+template<class T>
+void vector<T>::increaseCapacity(){
   changeCapacity(1.5 * size_);
 }
 

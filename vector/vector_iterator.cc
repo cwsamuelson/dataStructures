@@ -1,55 +1,67 @@
-vector_iterator::vector_iterator(const vector_iterator& other):
+template<class T>
+vector_iterator<T>::vector_iterator(const vector_iterator& other):
   idx_(other.idx_),
   data_(other.data_){  }
 
-vector_iterator::vector_iterator(vector_iterator::pointer ptr):
+template<class T>
+vector_iterator<T>::vector_iterator(vector_iterator::pointer ptr):
   vector_iterator(ptr, 0){  }
 
-vector_iterator::vector_iterator(vector_iterator::pointer ptr, size_t idx):
+template<class T>
+vector_iterator<T>::vector_iterator(vector_iterator::pointer ptr, size_t idx):
   idx_(idx),
   data_(ptr){  }
 
-vector_iterator& vector_iterator::operator=(const vector_iterator& rhs){
+template<class T>
+vector_iterator<T>& vector_iterator<T>::operator=(const vector_iterator<T>& rhs){
   data_ = rhs.data_;
   idx_ = rhs.idx_;
   return *this;
 }
 
-vector_iterator& vector_iterator::operator++(){
+template<class T>
+vector_iterator<T>& vector_iterator<T>::operator++(){
   ++idx_;
   return *this;
 }
 
-vector_iterator vector_iterator::operator++(int){
+template<class T>
+vector_iterator<T> vector_iterator<T>::operator++(int){
   vector_iterator tmp(*this);
   ++(*this);
   return tmp;
 }
 
-vector_iterator& vector_iterator::operator--(){
+template<class T>
+vector_iterator<T>& vector_iterator<T>::operator--(){
   --idx_;
   return *this;
 }
 
-vector_iterator vector_iterator::operator--(int){
+template<class T>
+vector_iterator<T> vector_iterator<T>::operator--(int){
   vector_iterator tmp(*this);
   --(*this);
   return tmp;
 }
 
-vector_iterator::reference vector_iterator::operator*(){
+template<class T>
+typename vector_iterator<T>::reference vector_iterator<T>::operator*(){
   return data_[idx_];
 }
 
-vector_iterator::pointer vector_iterator::operator->(){
+template<class T>
+typename vector_iterator<T>::pointer vector_iterator<T>::operator->(){
   return data_ + idx_;
 }
 
-bool operator==(const vector_iterator& lhs, const vector_iterator& rhs){
+template<class T>
+bool operator==(const vector_iterator<T>& lhs, const vector_iterator<T>& rhs){
   return (lhs.data_ == rhs.data_ && lhs.idx_ == rhs.idx_);
 }
 
-bool operator!=(const vector_iterator& lhs, const vector_iterator& rhs){
+template<class T>
+bool operator!=(const vector_iterator<T>& lhs, const vector_iterator<T>& rhs){
   return !(lhs == rhs);
 }
 
