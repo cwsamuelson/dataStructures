@@ -44,6 +44,8 @@ public:
   void            clear();
   reference       get(size_t idx);
   const_reference get(size_t idx) const;
+  reference       front();
+  reference       back();
   iterator        begin();
   iterator        end();
   size_t          length();

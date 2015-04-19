@@ -123,6 +123,16 @@ typename vector<T>::const_reference vector<T>::get(size_t idx) const{
 }
 
 template<class T>
+typename vector<T>::reference vector<T>::front(){
+  return get(0);
+}
+
+template<class T>
+typename vector<T>::reference vector<T>::back(){
+  return get(size_ - 1);
+}
+
+template<class T>
 typename vector<T>::iterator vector<T>::begin(){
   return vector::iterator(arr_);
 }
