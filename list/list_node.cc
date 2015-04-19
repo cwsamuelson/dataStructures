@@ -15,7 +15,7 @@ typename list_node<T>::reference list_node<T>::get(size_t idx){
   if(idx == 0){
     return data;
   } else {
-    return get(idx - 1);
+    return right->get(idx - 1);
   }
 }
 
