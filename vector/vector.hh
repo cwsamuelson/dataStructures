@@ -1,6 +1,8 @@
 #ifndef __GALAXY_VECTOR_H__
 #define __GALAXY_VECTOR_H__
 
+namespace galaxy{
+
 template<class T>
 class vector_iterator;
 
@@ -58,6 +60,8 @@ public:
 };
 
 #include"vector.cc"
+
+}//galaxy namespace
 
 #endif
 

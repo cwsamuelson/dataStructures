@@ -104,6 +104,7 @@ typename vector<T>::iterator vector<T>::erase(iterator first, iterator last){
   while(!buffer.isEmpty()){
     pushBack(buffer.popBack());
   }
+  return first;
 }
 
 template<class T>
