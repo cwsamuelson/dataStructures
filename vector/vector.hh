@@ -1,7 +1,8 @@
 #ifndef __GALAXY_VECTOR_H__
 #define __GALAXY_VECTOR_H__
 
-#include"vector_iterator.hh"
+template<class T>
+class vector_iterator;
 
 template<class T>
 class vector{

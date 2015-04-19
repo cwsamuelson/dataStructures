@@ -1,3 +1,5 @@
+#include"vector_iterator.hh"
+
 template<class T>
 vector<T>::vector():
   vector(16){  }
