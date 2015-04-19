@@ -54,7 +54,7 @@ typename list<T>::value_type list<T>::popBack(){
 
 template<class T>
 typename list<T>::iterator list<T>::insert(iterator it, const_reference data){
-  node* val = new node(val, it.accessNode()->left, it.accessNode()->right);
+  node* val = new node(data, it.accessNode()->left, it.accessNode()->right);
   if(val->left){
     val->left->right = val;
   }
