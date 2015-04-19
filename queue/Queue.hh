@@ -5,12 +5,12 @@
 #include<Jing/List>
 #include<Jing/Misc.hh>
 
-namespace Jing{
+namespace galaxy{
 
 template<class T>
 class Queue:public Collection<T>{
 protected:
-  Jing::List<T> que;
+  list<T> que;
 
 public:
 //TODO:clear warnings
@@ -63,9 +63,9 @@ public:
   void clear();
 };
 
-}
-
 #include"Queue.cc"
+
+}
 
 #endif
 
