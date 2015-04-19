@@ -19,8 +19,11 @@ private:
   size_t  size_;
   size_t  capacity_;
 
+  //changeCapacity changes to capacity of size
   void changeCapacity(size_t size);
   void increaseCapacity();
+  //increaseCapacity increases by an amount size
+  void increaseCapacity(size_t size);
 
 public:
   vector();
@@ -30,6 +33,11 @@ public:
 
   void 	          pushBack(value_type data);
   value_type      popBack();
+  iterator        insert(iterator it, const_reference data);
+  iterator        insert(iterator it, size_t n, const_reference data);
+  iterator        insert(iterator it, iterator first, iterator last);
+  iterator        erase(iterator it);
+  iterator        erase(iterator first, iterator last);
   void            clear();
   reference       get(size_t idx);
   const_reference get(size_t idx) const;

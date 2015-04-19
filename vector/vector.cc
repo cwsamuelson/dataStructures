@@ -35,6 +35,76 @@ typename vector<T>::value_type vector<T>::popBack(){
 }
 
 template<class T>
+typename vector<T>::iterator vector<T>::insert(iterator it, const_reference data){
+  vector<T> buffer;
+  while(size_ > it.idx_){
+    buffer.pushBack(popBack());
+  }
+  pushBack(data);
+  while(!buffer.isEmpty()){
+    pushBack(buffer.popBack());
+  }
+  return it;
+}
+
+template<class T>
+typename vector<T>::iterator vector<T>::insert(iterator it, size_t n, const_reference data){
+  vector<T> buffer;
+  while(size_ > it.idx_){
+    buffer.pushBack(popBack());
+  }
+  for(unsigned int i = 0; i < n; ++i){
+    pushBack(data);
+  }
+  while(!buffer.isEmpty()){
+    pushBack(buffer.popBack());
+  }
+  return it;
+}
+
+template<class T>
+typename vector<T>::iterator vector<T>::insert(iterator it, iterator first, iterator last){
+  vector<T> buffer;
+  while(size_ > it.idx_){
+    buffer.pushBack(popBack());
+  }
+  for(auto itr = first; itr != last; ++itr){
+    pushBack(*itr);
+  }
+  while(!buffer.isEmpty()){
+    pushBack(buffer.popBack());
+  }
+  return it;
+}
+
+template<class T>
+typename vector<T>::iterator vector<T>::erase(iterator it){
+  vector<T> buffer;
+  while(size_ > it.idx_){
+    buffer.pushBack(popBack());
+  }
+  popBack();
+  while(!buffer.isEmpty()){
+    pushBack(buffer.popBack());
+  }
+  return it;
+}
+
+template<class T>
+typename vector<T>::iterator vector<T>::erase(iterator first, iterator last){
+  vector<T> buffer;
+  while(size_ > first.idx){
+    buffer.pushBack(popBack());
+  }
+  for(auto it = first; first != last; ++it){
+    buffer.popBack();
+  }
+  while(!buffer.isEmpty()){
+    pushBack(buffer.popBack());
+  }
+}
+
+template<class T>
 void vector<T>::clear(){
   size_ = 0;
 }
@@ -128,5 +198,10 @@ void vector<T>::changeCapacity(size_t size){
 template<class T>
 void vector<T>::increaseCapacity(){
   changeCapacity(1.5 * size_);
+}
+
+template<class T>
+void vector<T>::increaseCapacity(size_t size){
+  changeCapacity(size_ + size);
 }
 

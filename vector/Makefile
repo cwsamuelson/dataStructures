@@ -10,7 +10,7 @@ default:$(name)
 $(name):$(name).o
 	$(CC) $(name).o -o $(name)
 
-$(name).o:$(name).cc
+$(name).o:$(name).cc vector.cc vector_iterator.cc
 	$(CC) $(cflags) $(flags) $(name).cc
 
 clean:

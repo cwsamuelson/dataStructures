@@ -2,6 +2,9 @@
 #define __GALAXY_VECTOR_ITERATOR_H__
 
 template<class T>
+class vector;
+
+template<class T>
 class vector_iterator{
 public:
   typedef T                 value_type;
@@ -30,6 +33,8 @@ public:
 
   reference operator*();
   pointer operator->();
+
+  friend vector<T>;
 
   template<class U>
   friend bool operator==(const vector_iterator<U>& lhs, const vector_iterator<U>& rhs);
