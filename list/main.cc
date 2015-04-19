@@ -23,12 +23,12 @@ int main(){
     std::cout << foo[i];
   }
   std::cout << std::endl;
-  while(!foo.isEmpty()){
+/*  while(!foo.isEmpty()){
     std::cout << foo.back();
     foo.popBack();
   }
   std::cout << std::endl;
-
+*/
   auto itr = foo.begin();
   ++itr;
   ++itr;

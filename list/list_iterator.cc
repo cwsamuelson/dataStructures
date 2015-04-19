@@ -20,8 +20,8 @@ list_iterator<T>& list_iterator<T>::operator=(const list_iterator& rhs){
 
 template<class T>
 list_iterator<T>& list_iterator<T>::operator++(){
-  if(this->ptr != 0){
-    this->ptr = this->ptr->right;
+  if(ptr != 0){
+    ptr = ptr->right;
   }
   return *this;
 }
@@ -35,8 +35,8 @@ list_iterator<T>  list_iterator<T>::operator++(int){
 
 template<class T>
 list_iterator<T>& list_iterator<T>::operator--(){
-  if(this->ptr != 0){
-    this->ptr = this->ptr->left;
+  if(ptr != 0){
+    ptr = ptr->left;
   }
   return *this;
 }
