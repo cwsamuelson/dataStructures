@@ -68,3 +68,7 @@ bool operator!=(const list_iterator<T>& lhs, const list_iterator<T>& rhs){
   return !(lhs == rhs);
 }
 
+template<class T>
+typename list_iterator<T>::node*& list_iterator<T>::accessNode(){
+  return ptr;
+}

@@ -35,8 +35,8 @@ public:
   void pushBack(value_type c);
   value_type popFront();
   value_type popBack();
-  iterator insert(iterator it, const_reference val);
-  iterator insert(iterator it, size_t n, const_reference val);
+  iterator insert(iterator it, const_reference data);
+  iterator insert(iterator it, size_t n, const_reference data);
   iterator insert(iterator it, iterator first, iterator last);
   iterator erase(iterator it);
   iterator erase(iterator first, iterator last);

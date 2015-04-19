@@ -38,6 +38,8 @@ public:
   friend bool operator==(const list_iterator<U>& lhs, const list_iterator<U>& rhs);
   template<class U>
   friend bool operator!=(const list_iterator<U>& lhs, const list_iterator<U>& rhs);
+
+  node*& accessNode();
 };
 
 template<class T>

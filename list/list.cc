@@ -53,26 +53,48 @@ typename list<T>::value_type list<T>::popBack(){
 }
 
 template<class T>
-typename list<T>::iterator list<T>::insert(iterator it, const_reference val){
+typename list<T>::iterator list<T>::insert(iterator it, const_reference data){
+  node* val = new node(val, it.accessNode()->left, it.accessNode()->right);
+  if(val->left){
+    val->left->right = val;
+  }
+  if(val->right){
+    val->right->left = val;
+  }
+  return iterator(val);
 }
 
 template<class T>
-typename list<T>::iterator list<T>::insert(iterator it, size_t n, const_reference val){
+typename list<T>::iterator list<T>::insert(iterator it, size_t n, const_reference data){
+  for(unsigned int i = 0; i < n; ++i){
+    insert(it, data);
+  }
   return it;
 }
 
 template<class T>
 typename list<T>::iterator list<T>::insert(iterator it, iterator first, iterator last){
+  for(auto itr = first; first != last; ++itr){
+    insert(it, *itr);
+  }
   return it;
 }
 
 template<class T>
 typename list<T>::iterator list<T>::erase(iterator it){
-  return it;
+  iterator ret(it.accessNode()->right);
+  it.accessNode()->left = it.accessNode()->right;
+  it.accessNode()->right = it.accessNode()->left;
+  delete it.accessNode();
+  return ret;
 }
 
 template<class T>
 typename list<T>::iterator list<T>::erase(iterator first, iterator last){
+  for(auto it = first; it != last; ++it){
+    erase(it);
+  }
+  //return value should be changed.
   return first;
 }
 
