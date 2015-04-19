@@ -3,7 +3,7 @@
 #include"list.hh"
 
 int main(){
-  gxy::list<char> foo;
+  galaxy::list<char> foo;
   foo.pushFront(' ');
   foo.pushBack('W');
   foo.pushBack('o');

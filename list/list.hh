@@ -1,70 +1,34 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef __GALAXY_LIST_H__
+#define __GALAXY_LIST_H__
 
-namespace gxy{
+namespace galaxy{
 
 template<class T>
-class iterator;
+class list_iterator;
+
+template<class T>
+class list_node;
 
 template<class T>
 class list{
 public:
-  typedef T value_type;
-  typedef value_type& reference;
+  typedef T                 value_type;
+  typedef value_type&       reference;
   typedef const value_type& const_reference;
-  typedef value_type* pointer;
+  typedef value_type*       pointer;
   typedef const value_type* const_pointer;
-  typedef unsigned long long size_t;
+  typedef list_iterator<T>  iterator;
+  typedef list_node<T>      node;
+  typedef unsigned long     size_t;
 
-//private:
-public:
-  class node{
-  public:
-    value_type data;
-    node* previous;
-    node* next;
-    
-    node(const_reference c);
-    node(const_reference c, node* p, node* n);
-    virtual ~node() = default;
-    reference get(size_t idx);
-    
-    node& operator=(const node& rhs) = default;
-  };
-
-  class iterator{
-  public:
-    typename list<T>::node* ptr;
-
-    iterator();
-    iterator(const iterator& that);
-    iterator(typename list<T>::node* that);
-    virtual ~iterator() = default;
-    
-    iterator& operator=(const iterator& rhs);
-    
-    iterator& operator++();
-    iterator  operator++(int);
-    iterator& operator--();
-    iterator  operator--(int);
-
-    typename list<T>::reference operator*();
-    typename list<T>::pointer operator->();
-
-    template<class U>
-    friend bool operator==(const iterator& lhs, const iterator& rhs);
-    template<class U>
-    friend bool operator!=(const iterator& lhs, const iterator& rhs);
-
-    typename list<T>::node*& accessNode();
-  };
-
+private:
   node* head;
   node* tail;
   size_t size;
   
 public:
   list();
+  list(iterator first, iterator last);
   virtual ~list();
   
   void pushFront(value_type c);
@@ -90,15 +54,9 @@ public:
   reference operator[](size_t idx);
 };
 
-template<class T>
-bool operator==(const typename list<T>::iterator& lhs, const typename list<T>::iterator& rhs);
-
-template<class T>
-bool operator!=(const typename list<T>::iterator& lhs, const typename list<T>::iterator& rhs);
+#include"list.cc"
 
 }
-
-#include"list.cc"
 
 #endif
 
