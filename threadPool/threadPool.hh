@@ -11,6 +11,7 @@ class threadPool:public std::queue<std::function<void()>>{
 private:
   std::vector<std::thread> pool;
   std::mutex mtxSelf;
+  bool isWorking;
 
   void threadFn();
 
