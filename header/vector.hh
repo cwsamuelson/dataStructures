@@ -126,10 +126,10 @@ public:
         return mCapacity;
     }
     iterator begin(){
-        return iterator((pointer)mData);
+        return Iterator(0);
     }
     iterator end(){
-        return iterator((pointer)(mData + (mSize * datasize)));
+        return Iterator(mSize);
     }
     iterator Iterator(unsigned int idx){
         return iterator(pointer(mData + (idx * datasize)));
