@@ -3,3 +3,5 @@
 *main
 lib*.a
 *.gch
+binary/*
+depend/*
