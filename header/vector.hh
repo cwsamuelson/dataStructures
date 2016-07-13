@@ -1,9 +1,9 @@
 #ifndef __VECTOR_HH__
 #define __VECTOR_HH__
 
-#include<normal_iterator.hh>
+#include<cmath>
 
-#include<iostream>
+#include<normal_iterator.hh>
 
 template<class T>
 class vector{
@@ -19,6 +19,7 @@ private:
   unsigned char* mData;
   //polymorphic data sizes? O.o
   const unsigned int datasize = sizeof(value_type);
+  const float goldenRatio = 1.4;
 
 public:
   vector():
@@ -95,21 +96,7 @@ public:
   void push_back(const value_type& data){
     //reallocate
     if(mSize + 1 > mCapacity){
-      mCapacity = mSize * 1.4;
-      unsigned char* bfr = new unsigned char[(mCapacity * datasize)];
-      for(unsigned int i = 0; i < (mSize * datasize); ++i){
-        bfr[i] = mData[i];
-      }
-      delete[] mData;
-      mData = bfr;
-    }
-    (T&)(*(mData + (mSize * datasize))) = data;
-    ++mSize;
-  }
-  void push_back(value_type&& data){
-    //reallocate
-    if(mSize + 1 > mCapacity){
-      mCapacity = mSize * 1.4;
+      mCapacity = std::ceil(mCapacity * goldenRatio);
       unsigned char* bfr = new unsigned char[(mCapacity * datasize)];
       for(unsigned int i = 0; i < (mSize * datasize); ++i){
         bfr[i] = mData[i];

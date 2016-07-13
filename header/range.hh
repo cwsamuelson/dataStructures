@@ -11,6 +11,8 @@ class range_iterator{
 public:
   typedef CONTAINER container;
   typedef typename container::value_type value_type;
+  typedef typename container::value_type& reference;
+  typedef typename container::value_type* pointer;
   typedef const value_type const_value;
   typedef typename container::iterator iterator;
 
@@ -41,11 +43,11 @@ public:
     return !(mIterator == other);
   }
 
-  value_type& operator*() const{
-    return *mIterator;
+  value_type operator*() const{
+    return mRange->mModifier(*mIterator);
   }
-  value_type* operator->() const{
-    return mIterator;
+  pointer operator->() const{
+    return mIterator.operator->();
   }
   
   range_iterator& operator++(){

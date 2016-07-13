@@ -21,12 +21,12 @@ public:
     mCurrent(iter.mCurrent){
   }
 
-	bool operator==(const normal_iterator& iter) const{
-		return mCurrent == iter.mCurrent;
-	}
-	bool operator!=(const normal_iterator& iter) const{
-		return !((*this) == iter);
-	}
+  bool operator==(const normal_iterator& iter) const{
+    return mCurrent == iter.mCurrent;
+  }
+  bool operator!=(const normal_iterator& iter) const{
+    return !((*this) == iter);
+  }
 
   reference operator*() const{
     return *mCurrent;

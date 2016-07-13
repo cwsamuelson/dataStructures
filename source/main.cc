@@ -248,24 +248,25 @@ bool testRange(){
   bool ret = true;
 
   vector<int> vec;
-  vec.push_back(1);
   vec.push_back(2);
   vec.push_back(3);
-  range<decltype(vec)> rng(vec);
+  vec.push_back(4);
+  vec.push_back(5);
+  vec.push_back(6);
+  range<decltype(vec)> rng(vec, [](const int& x){ return x % 2 == 0; },
+                                [](const int& x){ return x + 1; });
 
   vector<int> vec0;
-  vec.push_back(1);
-  vec.push_back(2);
-  vec.push_back(3);
+  vec0.push_back(2);
+  vec0.push_back(4);
+  vec0.push_back(6);
   
   auto it = rng.begin();
   auto jt = vec0.begin();
   for(;it != rng.end(); ++it, ++jt){
-    ret &= (*it == *jt);
-    std::cout << *it << std::endl;
-    std::cout << *jt << std::endl;
-    std::cout << std::endl;
+    ret &= (*it == (*jt + 1));
   }
+
   return ret;
 }
   
