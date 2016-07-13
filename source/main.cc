@@ -191,13 +191,24 @@ string testString(){
 bool testVector(){
   vector<int> vec;
   int x = 3;
+  bool ret = true;
+
   vec.push_back(1);
   vec.push_back(2);
   vec.push_back(x);
   vec.pop_back();
   vec.pop_back();
+  vec.push_back(x++);
+  vec.push_back(x);
+  vec.push_back(5);
+
   auto it = vec.begin();
-  return ((vec[0] == 1) && (*it == 1));
+  for(unsigned int i = 0; i < vec.size(); ++i, ++it){
+    ret &= (*it == vec[i]);
+  }
+  auto jt = vec.begin();
+
+  return ((vec[0] == 1) && (*jt == 1) && ret);
 }
 
 bool testUnit(){

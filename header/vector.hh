@@ -3,13 +3,15 @@
 
 #include<normal_iterator.hh>
 
+#include<iostream>
+
 template<class T>
 class vector{
 public:
   typedef T value_type;
   typedef value_type* pointer;
   typedef value_type& reference;
-  typedef normal_iterator<value_type, vector > iterator;
+  typedef normal_iterator<value_type, vector> iterator;
 
 private:
   unsigned long mSize;
@@ -21,18 +23,18 @@ private:
 public:
   vector():
     mSize(0),
-    mCapacity(1),
-    mData(new unsigned char[(mCapacity * datasize)]){
+    mCapacity(1){
+    mData = new unsigned char[(mCapacity * datasize)];
   }
   vector(unsigned int capacity):
     mSize(0),
-    mCapacity(capacity),
-    mData(new unsigned char[(mCapacity * datasize)]){
+    mCapacity(capacity){
+    mData = new unsigned char[(mCapacity * datasize)];
   }
   vector(const vector& other):
     mSize(other.mSize),
-    mCapacity(mSize + 5),
-    mData(new unsigned char[(mCapacity * datasize)]){
+    mCapacity(mSize + 5){
+    mData = new unsigned char[(mCapacity * datasize)];
     for(unsigned long i = 0; i < (mSize * datasize); ++i){
       mData[i] = other.mData[i];
     }
@@ -47,8 +49,8 @@ public:
   }
   vector(value_type* other, unsigned int size):
     mSize(size),
-    mCapacity(mSize + 5),
-    mData(new unsigned char[(mCapacity * datasize)]){
+    mCapacity(mSize + 5){
+    mData = new unsigned char[(mCapacity * datasize)];
     for(unsigned int i = 0; i < (mSize * datasize); ++i){
       mData[i] = other[i];
     }
