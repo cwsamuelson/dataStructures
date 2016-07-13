@@ -234,16 +234,28 @@ bool testUnit(){
 }
 
 bool testRange(){
+  bool ret = true;
+
   vector<int> vec;
   vec.push_back(1);
   vec.push_back(2);
   vec.push_back(3);
   range<decltype(vec)> rng(vec);
+
+  vector<int> vec0;
+  vec.push_back(1);
+  vec.push_back(2);
+  vec.push_back(3);
   
-  for(auto x:rng){
-    std::cout << x << std::endl;
+  auto it = rng.begin();
+  auto jt = vec0.begin();
+  for(;it != rng.end(); ++it, ++jt){
+    ret &= (*it == *jt);
+    std::cout << *it << std::endl;
+    std::cout << *jt << std::endl;
+    std::cout << std::endl;
   }
-  return true;
+  return ret;
 }
   
 int main(){
@@ -264,7 +276,7 @@ int main(){
   isWin &= (testString() == "test");
   
   for(auto fn:vec){
-      isWin &= fn();
+    isWin &= fn();
   }
   
   if(isWin){

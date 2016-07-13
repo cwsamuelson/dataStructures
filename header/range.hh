@@ -31,8 +31,14 @@ public:
   bool operator==(const range_iterator& other) const{
     return (mRange == other.mRange) && (mIterator == other.mIterator);
   }
+  bool operator==(const iterator& other) const{
+    return mIterator == other;
+  }
   bool operator!=(const range_iterator& other) const{
     return !((*this) == other);
+  }
+  bool operator!=(const iterator& other) const{
+    return !(mIterator == other);
   }
 
   value_type& operator*() const{
