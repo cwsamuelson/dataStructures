@@ -3,8 +3,8 @@ include Makefile.cfg
 SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
 OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
 DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
-DIRS:=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)\
-			$(DEBUGDIR) $(RELEASEDIR)
+DIRS=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)\
+		 $(DEBUGDIR) $(RELEASEDIR)
 BINLOC=
 
 .PHONY:clean default release debug $(DEPENDS) Makefile Makefile.cfg DEFAULT RELEASE DEBUG
@@ -17,7 +17,7 @@ all:DEBUG RELEASE
 .SECONDEXPANSION:
 DEFAULT DEBUG RELEASE: FLAGS += $($@FLAGS)
 DEFAULT DEBUG RELEASE: BINLOC += $($@DIR)/$(name)
-DEFAULT DEBUG RELEASE:$(DIRS) $$(BINLOC)
+DEFAULT DEBUG RELEASE:$$(BINLOC)
 
 # link everything together
 %/$(name):$(OBJECTS)
@@ -45,7 +45,7 @@ $(DIRS):
 #   fmt -1: list words one per line
 #   sed:    strip leading spaces
 #   sed:    add trailing colons
-$(OBJECTDIR)/%.o:
+$(OBJECTDIR)/%.o:|$(DIRS)
 	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $@
 	$(CC) -MM $(FLAGS) $(SOURCEDIR)/$*.cc > $(DEPENDDIR)/$*.d
 	@mv -f $(DEPENDDIR)/$*.d $(DEPENDDIR)/$*.d.tmp
