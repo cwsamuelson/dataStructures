@@ -1,23 +1,26 @@
 include Makefile.cfg
 
-SOURCES:=$(shell find $(SOURCEDIR) -name '*.cc')
-OBJECTS:=$(subst $(SOURCEDIR),$(OBJECTDIR), $(subst .cc,.o, $(SOURCES)))
-DEPENDS:=$(subst $(SOURCEDIR),$(DEPENDDIR), $(subst .cc,.d, $(SOURCES)))
-DIRS=$(SOURCEDIR) $(HEADERDIR) $(OBJECTDIR) $(DEPENDDIR) $(BINARYDIR)\
-		 $(DEBUGDIR) $(RELEASEDIR)
-BINLOC=
+.PHONY:clean $(DEPENDS) Makefile Makefile.cfg $(builds)
 
-.PHONY:clean default release debug $(DEPENDS) Makefile Makefile.cfg DEFAULT RELEASE DEBUG
+ifndef BINLOC
 
-default:DEFAULT
-debug:DEBUG
-release:RELEASE
-all:DEBUG RELEASE
+.DEFAULT_GOAL:=default
 
 .SECONDEXPANSION:
-DEFAULT DEBUG RELEASE: FLAGS += $($@FLAGS)
-DEFAULT DEBUG RELEASE: BINLOC += $($@DIR)/$(name)
-DEFAULT DEBUG RELEASE:$$(BINLOC)
+$(builds): export BINLOC = $($@dir)/$(name)
+$(builds): export FLAGS  = $($@flags)
+$(builds): export DIRS   = $($@dir)
+$(builds):
+	@$(MAKE)
+
+else
+
+.DEFAULT_GOAL:=$(BINLOC)
+
+SOURCES:=$(shell find $(sourcedir) -name '*.cc')
+OBJECTS:=$(subst $(sourcedir),$(objectdir), $(subst .cc,.o, $(SOURCES)))
+DEPENDS:=$(subst $(sourcedir),$(dependdir), $(subst .cc,.d, $(SOURCES)))
+DIRS := $(sourcedir) $(headerdir) $(objectdir) $(dependdir) $(binarydir) $(DIRS)
 
 # link everything together
 %/$(name):$(OBJECTS)
@@ -45,17 +48,19 @@ $(DIRS):
 #   fmt -1: list words one per line
 #   sed:    strip leading spaces
 #   sed:    add trailing colons
-$(OBJECTDIR)/%.o:|$(DIRS)
-	$(CC) -c $(SOURCEDIR)/$*.cc $(FLAGS) -o $@
-	$(CC) -MM $(FLAGS) $(SOURCEDIR)/$*.cc > $(DEPENDDIR)/$*.d
-	@mv -f $(DEPENDDIR)/$*.d $(DEPENDDIR)/$*.d.tmp
-	@sed -e 's|.*:|$(OBJECTDIR)/$*.o:|' < $(DEPENDDIR)/$*.d.tmp > $(DEPENDDIR)/$*.d
-	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPENDDIR)/$*.d.tmp | fmt -1 | \
-	  sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPENDDIR)/$*.d
-	@$(RM) -f $(DEPENDDIR)/$*.d.tmp
+$(objectdir)/%.o:|$(DIRS)
+	$(CC) -c $(sourcedir)/$*.cc $(FLAGS) -o $@
+	$(CC) -MM $(FLAGS) $(sourcedir)/$*.cc > $(dependdir)/$*.d
+	@mv -f $(dependdir)/$*.d $(dependdir)/$*.d.tmp
+	@sed -e 's|.*:|$(objectdir)/$*.o:|' < $(dependdir)/$*.d.tmp > $(dependdir)/$*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $(dependdir)/$*.d.tmp | fmt -1 | \
+	  sed -e 's/^ *//' -e 's/$$/:/' >> $(dependdir)/$*.d
+	@$(RM) -f $(dependdir)/$*.d.tmp
+
+endif
 
 clean:
-	@$(RM) -rf $(OBJECTDIR) *.exe* $(DEPENDDIR) $(BINARYDIR)
+	-@$(RM) -rf $(objectdir) *.exe* $(dependdir) $(binarydir)
 
 #file partially written based on information from:
 #http://scottmcpeak.com/autodepend/autodepend.html
