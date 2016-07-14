@@ -51,7 +51,7 @@ bool testTuple(){
 }
 
 bool testPool(){
-  bool ret;
+  bool ret = true;
   memoryPool<int> test(10);
   
   ret = true;
