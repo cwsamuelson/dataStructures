@@ -94,10 +94,14 @@ public:
   }
   
   void push_back(const value_type& data){
-    //reallocate
+    // reallocate
     if(mSize + 1 > mCapacity){
+      unsigned char* bfr;
+
       mCapacity = std::ceil(mCapacity * goldenRatio);
-      unsigned char* bfr = new unsigned char[(mCapacity * datasize)];
+      bfr = new unsigned char[(mCapacity * datasize)];
+
+      // copy data to new buffer
       for(unsigned int i = 0; i < (mSize * datasize); ++i){
         bfr[i] = mData[i];
       }
@@ -109,6 +113,7 @@ public:
   }
   void pop_back(){
     --mSize;
+    ((value_type*)(mData + (mSize * datasize)))->~value_type();
   }
   unsigned int size() const{
     return mSize;

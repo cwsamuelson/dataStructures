@@ -186,6 +186,29 @@ string testString(){
   return "test";
 }
 
+class wrapper{
+private:
+  bool* ref;
+
+public:
+  wrapper(const wrapper& w):
+    wrapper(w.ref){
+  }
+  wrapper(bool* val):
+    ref(val){
+    *ref = false;
+  }
+  ~wrapper(){
+    (*ref) = true;
+  }
+
+  wrapper& operator=(const wrapper& w){
+    ref = w.ref;
+    return *this;
+  }
+  
+};
+
 bool testVector(){
   vector<int> vec;
   int x = 3;
@@ -206,7 +229,15 @@ bool testVector(){
   }
   auto jt = vec.begin();
 
-  return ((vec[0] == 1) && (*jt == 1) && ret);
+  // dtor test
+  bool b;
+  wrapper w(&b);
+  vector<wrapper> v;
+
+  v.push_back(w);
+  v.pop_back();
+
+  return ((vec[0] == 1) && (*jt == 1) && ret) && b;
 }
 
 bool testUnit(){
