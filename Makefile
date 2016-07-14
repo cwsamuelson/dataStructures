@@ -23,6 +23,8 @@ OBJECTS:=$(subst $(sourcedir),$(objdir), $(subst .cc,.o, $(SOURCES)))
 DEPENDS:=$(subst $(sourcedir),$(dependdir), $(subst .cc,.d, $(SOURCES)))
 DIRS := $(sourcedir) $(headerdir) $(objectdir) $(objdir) $(dependdir) $(binarydir) $(DIRS)
 
+.SECONDARY:$(OBJECTS)
+
 # link everything together
 %/$(name):$(OBJECTS)
 	$(CC) $+ $(FLAGS) -o $@
