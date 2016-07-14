@@ -54,8 +54,6 @@ bool testPool(){
   bool ret = true;
   memoryPool<int> test(10);
   
-  ret = true;
-  
   int* foo = test.allocate(2);
   int* bar = test.allocate(1);
   int* baz = test.allocate(2);

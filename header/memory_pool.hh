@@ -40,10 +40,10 @@ public:
   virtual ~memoryPool(){ delete[] mStorageStart; }
   
   type* allocate(size_t amt){
-    type* ret;
+    type* ret = nullptr;
     //If the request is larger than that available, return null;
     if(amt == 0 || (amt > (mSize - mInUse)) ){
-      ret = 0;
+      ret = nullptr;
     }else{
       //Determine where free memory exists to return;
       //If there's no memory in use, return beginning;
