@@ -7,9 +7,10 @@ ifndef BINLOC
 .DEFAULT_GOAL:=default
 
 .SECONDEXPANSION:
-$(builds): export BINLOC = $($@dir)/$(name)
+$(builds): export BINLOC = $(binarydir)/$($@dir)/$(name)
 $(builds): export FLAGS  = $($@flags)
-$(builds): export DIRS   = $($@dir)
+$(builds): export objdir +=$(objectdir)/$($@dir)
+$(builds): export DIRS   = $(binarydir)/$($@dir)
 $(builds):
 	@$(MAKE)
 
@@ -18,9 +19,9 @@ else
 .DEFAULT_GOAL:=$(BINLOC)
 
 SOURCES:=$(shell find $(sourcedir) -name '*.cc')
-OBJECTS:=$(subst $(sourcedir),$(objectdir), $(subst .cc,.o, $(SOURCES)))
+OBJECTS:=$(subst $(sourcedir),$(objdir), $(subst .cc,.o, $(SOURCES)))
 DEPENDS:=$(subst $(sourcedir),$(dependdir), $(subst .cc,.d, $(SOURCES)))
-DIRS := $(sourcedir) $(headerdir) $(objectdir) $(dependdir) $(binarydir) $(DIRS)
+DIRS := $(sourcedir) $(headerdir) $(objectdir) $(objdir) $(dependdir) $(binarydir) $(DIRS)
 
 # link everything together
 %/$(name):$(OBJECTS)
@@ -33,14 +34,6 @@ $(DIRS):
 	@echo Making directory: $@
 	@mkdir $@
 
-#dummy:
-#	@for VAR in $(DIRS); do \
-#		if [ ! -d $$VAR ]; then \
-#			echo "Making directory: $$VAR"; \
-#			mkdir $$VAR; \
-#		fi \
-#	done
-
 # more complicated dependency computation, so all prereqs listed
 # will also become command-less, prereq-less targets
 #   sed:    strip the target (everything before colon)
@@ -48,11 +41,11 @@ $(DIRS):
 #   fmt -1: list words one per line
 #   sed:    strip leading spaces
 #   sed:    add trailing colons
-$(objectdir)/%.o:|$(DIRS)
+$(objdir)/%.o:|$(DIRS)
 	$(CC) -c $(sourcedir)/$*.cc $(FLAGS) -o $@
 	$(CC) -MM $(FLAGS) $(sourcedir)/$*.cc > $(dependdir)/$*.d
 	@mv -f $(dependdir)/$*.d $(dependdir)/$*.d.tmp
-	@sed -e 's|.*:|$(objectdir)/$*.o:|' < $(dependdir)/$*.d.tmp > $(dependdir)/$*.d
+	@sed -e 's|.*:|$(objdir)/$*.o:|' < $(dependdir)/$*.d.tmp > $(dependdir)/$*.d
 	@sed -e 's/.*://' -e 's/\\$$//' < $(dependdir)/$*.d.tmp | fmt -1 | \
 	  sed -e 's/^ *//' -e 's/$$/:/' >> $(dependdir)/$*.d
 	@$(RM) -f $(dependdir)/$*.d.tmp
