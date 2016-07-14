@@ -231,13 +231,16 @@ bool testVector(){
 
   // dtor test
   bool b;
+  bool bb;
   wrapper w(&b);
   vector<wrapper> v;
 
   v.push_back(w);
   v.pop_back();
+  v.emplace_back(&bb);
+  v.pop_back();
 
-  return ((vec[0] == 1) && (*jt == 1) && ret) && b;
+  return ((vec[0] == 1) && (*jt == 1) && ret) && b && bb;
 }
 
 bool testUnit(){

@@ -57,6 +57,9 @@ public:
     }
   }
   virtual ~vector(){
+    while(mSize > 0){
+      pop_back();
+    }
     delete[] mData;
   }
   
@@ -109,6 +112,24 @@ public:
       mData = bfr;
     }
     (value_type&)(*(mData + (mSize * datasize))) = data;
+    ++mSize;
+  }
+  template<class ...Args>
+  void emplace_back(Args... args){
+    if(mSize + 1 > mCapacity){
+      unsigned char* bfr;
+
+      mCapacity = std::ceil(mCapacity * goldenRatio);
+      bfr = new unsigned char[(mCapacity * datasize)];
+
+      // copy data to new buffer
+      for(unsigned int i = 0; i < (mSize * datasize); ++i){
+        bfr[i] = mData[i];
+      }
+      delete[] mData;
+      mData = bfr;
+    }
+    new((value_type*)(mData + (mSize * datasize))) value_type(args...);
     ++mSize;
   }
   void pop_back(){

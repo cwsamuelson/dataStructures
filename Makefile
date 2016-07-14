@@ -6,7 +6,6 @@ ifndef BINLOC
 
 .DEFAULT_GOAL:=default
 
-.SECONDEXPANSION:
 $(builds): export BINLOC = $(binarydir)/$($@dir)/$(name)
 $(builds): export FLAGS  = $($@flags)
 $(builds): export objdir +=$(objectdir)/$($@dir)
@@ -55,7 +54,7 @@ $(objdir)/%.o:|$(DIRS)
 endif
 
 clean:
-	-@$(RM) -rf $(objectdir) *.exe* $(dependdir) $(binarydir)
+	-@$(RM) -rf $(objectdir) *.exe* $(dependdir) $(binarydir) $(name)
 
 #file partially written based on information from:
 #http://scottmcpeak.com/autodepend/autodepend.html
