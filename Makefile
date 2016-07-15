@@ -1,14 +1,13 @@
 include Makefile.cfg
 
-.PHONY:clean $(DEPENDS) Makefile Makefile.cfg $(builds)
-
 ifndef BINLOC
 
 .DEFAULT_GOAL:=default
 
 $(builds): export BINLOC = $(binarydir)/$($@dir)/$(name)
 $(builds): export FLAGS  = $($@flags)
-$(builds): export objdir +=$(objectdir)/$($@dir)
+$(builds): export objdir = $(objectdir)/$($@dir)
+$(builds): export depdir = $(dependdir)/$($@dir)
 $(builds): export DIRS   = $(binarydir)/$($@dir)
 $(builds):
 	@$(MAKE)
@@ -19,8 +18,8 @@ else
 
 SOURCES:=$(shell find $(sourcedir) -name '*.cc')
 OBJECTS:=$(subst $(sourcedir),$(objdir), $(subst .cc,.o, $(SOURCES)))
-DEPENDS:=$(subst $(sourcedir),$(dependdir), $(subst .cc,.d, $(SOURCES)))
-DIRS := $(sourcedir) $(headerdir) $(objectdir) $(objdir) $(dependdir) $(binarydir) $(DIRS)
+DEPENDS:=$(subst $(sourcedir),$(depdir), $(subst .cc,.d, $(SOURCES)))
+DIRS := $(sourcedir) $(headerdir) $(objectdir) $(objdir) $(dependdir) $(depdir) $(binarydir) $(DIRS)
 
 .SECONDARY:$(OBJECTS)
 
@@ -44,12 +43,12 @@ $(DIRS):
 #   sed:    add trailing colons
 $(objdir)/%.o:|$(DIRS)
 	$(CC) -c $(sourcedir)/$*.cc $(FLAGS) -o $@
-	$(CC) -MM $(FLAGS) $(sourcedir)/$*.cc > $(dependdir)/$*.d
-	@mv -f $(dependdir)/$*.d $(dependdir)/$*.d.tmp
-	@sed -e 's|.*:|$(objdir)/$*.o:|' < $(dependdir)/$*.d.tmp > $(dependdir)/$*.d
-	@sed -e 's/.*://' -e 's/\\$$//' < $(dependdir)/$*.d.tmp | fmt -1 | \
-	  sed -e 's/^ *//' -e 's/$$/:/' >> $(dependdir)/$*.d
-	@$(RM) -f $(dependdir)/$*.d.tmp
+	$(CC) -MM $(FLAGS) $(sourcedir)/$*.cc > $(depdir)/$*.d
+	@mv -f $(depdir)/$*.d $(depdir)/$*.d.tmp
+	@sed -e 's|.*:|$(objdir)/$*.o:|' < $(depdir)/$*.d.tmp > $(depdir)/$*.d
+	@sed -e 's/.*://' -e 's/\\$$//' < $(depdir)/$*.d.tmp | fmt -1 | \
+	  sed -e 's/^ *//' -e 's/$$/:/' >> $(depdir)/$*.d
+	@$(RM) -f $(depdir)/$*.d.tmp
 
 endif
 
@@ -58,4 +57,6 @@ clean:
 
 #file partially written based on information from:
 #http://scottmcpeak.com/autodepend/autodepend.html
+
+.PHONY:clean $(DEPENDS) Makefile Makefile.cfg $(builds)
 
