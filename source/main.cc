@@ -285,8 +285,8 @@ bool testRange(){
   vec.push_back(4);
   vec.push_back(5);
   vec.push_back(6);
-  range<decltype(vec)> rng(vec, [](const int& x){ return x % 2 == 0; },
-                                [](const int& x){ return x + 1; });
+  range<decltype(vec)> rng(vec, [](decltype(vec)::const_reference x){ return x % 2 == 0; },
+                                [](decltype(vec)::const_reference x){ return x + 1; });
 
   vector<int> vec0;
   vec0.push_back(2);
@@ -298,6 +298,11 @@ bool testRange(){
   for(;it != rng.end(); ++it, ++jt){
     ret &= (*it == (*jt + 1));
   }
+  // the above loop is simalar to doing the below
+/*  auto filter = [](int x){ return x % 2 == 0; };
+  for_each(std::find(vec.begin(),  vec.end(),  filter),
+           std::find(vec.rbegin(), vec.rend(), filter),
+           [](int x){ return x + 1; });*/
 
   return ret;
 }

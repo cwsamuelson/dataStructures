@@ -11,6 +11,8 @@ public:
   typedef T value_type;
   typedef value_type* pointer;
   typedef value_type& reference;
+  typedef const reference const_reference;
+  typedef const pointer const_pointer;
   typedef normal_iterator<value_type, vector> iterator;
 
 private:
