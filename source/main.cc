@@ -3,6 +3,9 @@
 #include<sstream>
 #include<vector>
 
+#define CATCH_CONFIG_MAIN
+#include<catch/catch.hpp>
+
 #include<function.hh>
 #include<array.hh>
 #include<tuple.hh>
@@ -285,8 +288,14 @@ bool testRange(){
   vec.push_back(4);
   vec.push_back(5);
   vec.push_back(6);
-  range<decltype(vec)> rng(vec, [](decltype(vec)::const_reference x){ return x % 2 == 0; },
-                                [](decltype(vec)::const_reference x){ return x + 1; });
+  range<decltype(vec)> rng(vec,
+    [](decltype(vec)::const_reference x){
+      return x % 2 == 0;
+    },
+    [](decltype(vec)::const_reference x){
+      return x + 1;
+    }
+  );
 
   vector<int> vec0;
   vec0.push_back(2);
@@ -298,42 +307,80 @@ bool testRange(){
   for(;it != rng.end(); ++it, ++jt){
     ret &= (*it == (*jt + 1));
   }
-  // the above loop is simalar to doing the below
-/*  auto filter = [](int x){ return x % 2 == 0; };
-  for_each(std::find(vec.begin(),  vec.end(),  filter),
-           std::find(vec.rbegin(), vec.rend(), filter),
-           [](int x){ return x + 1; });*/
-
   return ret;
 }
-  
-int main(){
-  bool isWin = true;
-  std::vector<std::function<bool(void)> > vec;
-  
-  vec.push_back(testFunction);
-  vec.push_back(testArray);
-  vec.push_back(testTuple);
-  vec.push_back(testPool);
-  vec.push_back(testUnique);
-  vec.push_back(testShared);
-  vec.push_back(testStruct);
-  vec.push_back(testVector);
-  vec.push_back(testUnit);
-  vec.push_back(testRange);
-  
-  isWin &= (testString() == "test");
-  
-  for(auto fn:vec){
-    isWin &= fn();
-  }
-  
-  if(isWin){
-      std::cout << "success" << std::endl;
-  } else {
-      std::cout << "failure" << std::endl;
+
+TEST_CASE("A range iterator can act as a standard iterator", "[range]"){
+  std::vector<int> source{2, 3, 4, 5, 6 };
+  range<decltype(source)> rng(source);
+
+  REQUIRE(*rng.begin() == source[0]);
+  REQUIRE(*++rng.begin() == source[1]);
+  REQUIRE(*--rng.end() == source[source.size() - 1]);
+
+  SECTION("Ranges can participate in range-based for loops"){
+    int idx = 0;
+
+    for(auto it:rng){
+      REQUIRE(it == source[idx++]);
+    }
   }
 
-  return 0;
+  SECTION("Range iterators can be equality compared"){
+    range<decltype(source)> test(source);
+
+    REQUIRE(rng.begin() == test.begin());
+    REQUIRE(rng.end() == test.end());
+  }
+
+  SECTION("Range iterators can be equality compared with standard iterators"){
+    REQUIRE(rng.begin() == source.begin());
+    REQUIRE(rng.end() == source.end());
+  }
+}
+
+TEST_CASE("Ranges can filter values from a container", "[range]"){
+  std::vector<int> source(10);
+  std::vector<int> result(source.size() / 2);
+  range<decltype(source)> rng(source,
+    [](decltype(source)::value_type x)->bool{
+      return x % 2 == 0;
+    }
+  );
+
+  std::generate(source.begin(), source.end(),
+    []()->int{
+      static int i = 0;
+      return i++;
+    }
+  );
+  std::generate(result.begin(), result.end(),
+    []()->int{
+      static int i = -2;
+
+      i += 2;
+      return i;
+    }
+  );
+
+  int count = 0;
+  for(auto it:rng){
+    REQUIRE(it == result[count++]);
+  }
+
+  REQUIRE(count == result.size());
+}
+
+TEST_CASE("Tests pass", "[tests]"){
+  REQUIRE(testFunction() == true);
+  REQUIRE(testArray() == true);
+  REQUIRE(testTuple() == true);
+  REQUIRE(testPool() == true);
+  REQUIRE(testUnique() == true);
+  REQUIRE(testShared() == true);
+  REQUIRE(testStruct() == true);
+  REQUIRE(testVector() == true);
+  REQUIRE(testUnit() == true);
+  REQUIRE(testRange() == true);
 }
 
