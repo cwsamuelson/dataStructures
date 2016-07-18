@@ -246,6 +246,49 @@ bool testVector(){
   return ((vec[0] == 1) && (*jt == 1) && ret) && b && bb;
 }
 
+TEST_CASE("Vectors can be resized", "[vector]"){
+  vector<int> v(5);
+
+  REQUIRE(v.capacity() >= 5);
+
+  int i = 1;
+  v.push_back(i++);
+  v.push_back(i++);
+  v.push_back(i++);
+  v.push_back(i++);
+  v.push_back(i++);
+
+  REQUIRE(v.size() == 5);
+
+  SECTION("Resizing bigger changes size and capacity"){
+    v.resize(10);
+
+    REQUIRE(v.size() == 10);
+    REQUIRE(v.capacity() >= 10);
+  }
+
+  SECTION("Resizing smaller changes size but not capacity"){
+    v.resize(0);
+
+    REQUIRE(v.size() == 0);
+    REQUIRE(v.capacity() >= 5);
+  }
+
+  SECTION("Reserving bigger changes capacity but not size"){
+    v.reserve(10);
+
+    REQUIRE(v.size() == 5);
+    REQUIRE(v.capacity() >= 10);
+  }
+
+  SECTION("Reserving smaller does not change size or capacity"){
+    v.reserve(0);
+
+    REQUIRE(v.size() == 5);
+    REQUIRE(v.capacity() >= 5);
+  }
+}
+
 TEST_CASE("Units participate in arithmetic", "[unit]"){
   typedef unit<1, 0, 0, 0, 0, 0> test_t;
 

@@ -14,14 +14,29 @@ public:
   typedef const reference const_reference;
   typedef const pointer const_pointer;
   typedef normal_iterator<value_type, vector> iterator;
+  typedef unsigned long size_type;
 
 private:
-  unsigned long mSize;
-  unsigned long mCapacity;
+  size_type mSize;
+  size_type mCapacity;
   unsigned char* mData;
   //polymorphic data sizes? O.o
   const unsigned int datasize = sizeof(value_type);
   const float goldenRatio = 1.4;
+
+  void reallocateTo(size_type size){
+    unsigned char* bfr;
+
+    mCapacity = size;
+    bfr = new unsigned char[(mCapacity * datasize)];
+
+    // copy data to new buffer
+    for(size_type i = 0; i < (mSize * datasize); ++i){
+      bfr[i] = mData[i];
+    }
+    delete[] mData;
+    mData = bfr;
+  }
 
 public:
   vector():
@@ -29,7 +44,7 @@ public:
     mCapacity(1){
     mData = new unsigned char[(mCapacity * datasize)];
   }
-  vector(unsigned int capacity):
+  vector(size_type capacity):
     mSize(0),
     mCapacity(capacity){
     mData = new unsigned char[(mCapacity * datasize)];
@@ -38,7 +53,7 @@ public:
     mSize(other.mSize),
     mCapacity(mSize + 5){
     mData = new unsigned char[(mCapacity * datasize)];
-    for(unsigned long i = 0; i < (mSize * datasize); ++i){
+    for(size_type i = 0; i < (mSize * datasize); ++i){
       mData[i] = other.mData[i];
     }
   }
@@ -50,11 +65,11 @@ public:
     other.mCapacity = 0;
     other.mData = nullptr;
   }
-  vector(value_type* other, unsigned int size):
+  vector(value_type* other, size_type size):
     mSize(size),
     mCapacity(mSize + 5){
     mData = new unsigned char[(mCapacity * datasize)];
-    for(unsigned int i = 0; i < (mSize * datasize); ++i){
+    for(size_type i = 0; i < (mSize * datasize); ++i){
       mData[i] = other[i];
     }
   }
@@ -74,7 +89,7 @@ public:
     }
 
     mSize = other.mSize;
-    for(unsigned int i = 0; i < (mSize * datasize); ++i){
+    for(size_type i = 0; i < (mSize * datasize); ++i){
       mData[i] = other.mData[i];
     }
 
@@ -91,27 +106,16 @@ public:
     
     return *this;
   }
-  value_type& operator[](unsigned int idx){
+  value_type& operator[](size_type idx){
     return (value_type&)(*(mData + (idx * datasize)));
   }
-  const reference operator[](unsigned int idx) const{
+  const reference operator[](size_type idx) const{
     return (value_type&)(*(mData + (idx * datasize)));
   }
   
   void push_back(const value_type& data){
-    // reallocate
     if(mSize + 1 > mCapacity){
-      unsigned char* bfr;
-
-      mCapacity = std::ceil(mCapacity * goldenRatio);
-      bfr = new unsigned char[(mCapacity * datasize)];
-
-      // copy data to new buffer
-      for(unsigned int i = 0; i < (mSize * datasize); ++i){
-        bfr[i] = mData[i];
-      }
-      delete[] mData;
-      mData = bfr;
+      reallocateTo(mCapacity * goldenRatio);
     }
     (value_type&)(*(mData + (mSize * datasize))) = data;
     ++mSize;
@@ -125,7 +129,7 @@ public:
       bfr = new unsigned char[(mCapacity * datasize)];
 
       // copy data to new buffer
-      for(unsigned int i = 0; i < (mSize * datasize); ++i){
+      for(size_type i = 0; i < (mSize * datasize); ++i){
         bfr[i] = mData[i];
       }
       delete[] mData;
@@ -138,11 +142,24 @@ public:
     --mSize;
     ((value_type*)(mData + (mSize * datasize)))->~value_type();
   }
-  unsigned int size() const{
+  size_type size() const{
     return mSize;
   }
-  unsigned int capacity() const{
+  size_type capacity() const{
     return mCapacity;
+  }
+  void resize(size_type count, value_type value = value_type()){
+    while(mSize < count){
+      push_back(value);
+    }
+    while(mSize > count){
+      pop_back();
+    }
+  }
+  void reserve(size_type cap){
+    if(mCapacity < cap){
+      reallocateTo(cap);
+    }
   }
   iterator begin(){
     return Iterator(0);
@@ -150,7 +167,7 @@ public:
   iterator end(){
     return Iterator(mSize);
   }
-  iterator Iterator(unsigned int idx){
+  iterator Iterator(size_type idx){
     return iterator(pointer(mData + (idx * datasize)));
   }
 };
