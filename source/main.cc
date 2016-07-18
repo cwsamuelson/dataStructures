@@ -371,6 +371,39 @@ TEST_CASE("Ranges can filter values from a container", "[range]"){
   REQUIRE(count == result.size());
 }
 
+TEST_CASE("Ranges can modify the values from a container before returning them"){
+  int mod = 1;
+  std::vector<int> source(10);
+  std::vector<int> result(source.size());
+  range<decltype(source)> rng(source,
+    [](decltype(source)::value_type){
+      return true;
+    },
+    [=](decltype(source)::value_type x){
+      return x + mod;
+    }
+  );
+
+  std::generate(source.begin(), source.end(),
+    []()->int{
+      static int i = 0;
+      return i++;
+    }
+  );
+  std::generate(result.begin(), result.end(),
+    [=]()->int{
+      static int i = mod;
+      return i++;
+    }
+  );
+
+  auto it = rng.begin();
+  auto jt = result.begin();
+  for(;it != rng.end(); ++it, ++jt){
+    REQUIRE(*it == *jt);
+  }
+}
+
 TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testFunction() == true);
   REQUIRE(testArray() == true);
