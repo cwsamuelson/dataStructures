@@ -49,7 +49,7 @@ public:
   }
   
   range_iterator& operator++(){
-    while(!mRange->mFilter(*++mIterator)){
+    while((!mRange->mFilter(*++mIterator)) && (mRange->end() != mIterator)){
       ;
     }
     return *this;
@@ -61,7 +61,7 @@ public:
   }
   
   range_iterator& operator--(){
-    while(!mRange->mFilter(*--mIterator)){
+    while(!mRange->mFilter(*--mIterator) && (mRange->begin() != mIterator)){
       ;
     }
     return *this;
@@ -108,19 +108,15 @@ public:
     range(cont.begin(), cont.end(), filFN, modFN){
   }
   
-  iterator begin(){
+  iterator begin() const{
     contIter iter(mBegin);
     while(!mFilter(*iter)){
       ++iter;
     }
     return iterator(this, iter);
   }
-  iterator end(){
-    contIter iter(mEnd);
-    while(!mFilter(*iter)){
-      --iter;
-    }
-    return iterator(this, iter);
+  iterator end() const{
+    return iterator(this, mEnd);
   }
 };
 
