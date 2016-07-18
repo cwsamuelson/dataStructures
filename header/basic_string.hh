@@ -10,9 +10,9 @@ class basic_string{
 public:
   typedef T value_type;
   typedef value_type* pointer;
-	typedef const value_type* const_pointer;
+  typedef const value_type* const_pointer;
   typedef value_type& reference;
-	typedef const reference const_reference;
+  typedef const reference const_reference;
   typedef normal_iterator<value_type, basic_string> iterator;
 
 private:
@@ -38,7 +38,7 @@ public:
     }
   }
   virtual ~basic_string(){
-    delete mString;
+    delete[] mString;
   }
   
   basic_string& operator=(const basic_string& other){
@@ -61,6 +61,7 @@ public:
     
     return *this;
   }
+
   bool operator==(const basic_string& other){
     if(mSize != other.mSize){
       return false;
@@ -76,6 +77,7 @@ public:
   bool operator==(const_pointer other){
     return *this == basic_string(other);
   }
+
   reference operator[](unsigned int idx){
     return mString[idx];
   }
@@ -84,6 +86,9 @@ public:
   }
   unsigned int size() const{
     return mSize;
+  }
+  bool empty() const{
+    return mSize == 0;
   }
 
   iterator begin(){
