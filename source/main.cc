@@ -246,6 +246,25 @@ bool testVector(){
   return ((vec[0] == 1) && (*jt == 1) && ret) && b && bb;
 }
 
+TEST_CASE("Vectors will run constructors/destructors when appropriate", "[vector]"){
+  bool dtor;
+  vector<wrapper> v;
+
+  v.emplace_back(&dtor);
+
+  REQUIRE(dtor == false);
+
+  v.pop_back();
+
+  REQUIRE(dtor == true);
+
+  wrapper w(&dtor);
+  v.push_back(w);
+  v.pop_back();
+  
+  REQUIRE(dtor == true);
+}
+
 TEST_CASE("Vectors can be resized", "[vector]"){
   vector<int> v(5);
 
