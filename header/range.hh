@@ -29,7 +29,7 @@ public:
   }
 
   bool operator==(const range_iterator& other) const{
-    return (mRange == other.mRange) && (mIterator == other.mIterator);
+    return mIterator == other.mIterator;
   }
   bool operator==(const iterator& other) const{
     return mIterator == other;
