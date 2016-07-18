@@ -246,37 +246,57 @@ bool testVector(){
   return ((vec[0] == 1) && (*jt == 1) && ret) && b && bb;
 }
 
-bool testUnit(){
-  int X = 1;
-  int Y = 2;
-  int Z = 3;
-  unit<1, 0, 0, 0, 0, 0> x;
-  unit<1, 0, 0, 0, 0, 0> y;
-  unit<2, 0, 0, 0, 0, 0> z;
-  voltage V = 3;
-  current I = 5;
-  resistance R = 4;
-  resistance r;
-  std::stringstream ss1;
-  std::stringstream ss2;
-  std::stringstream ss3;
-  std::string s1;
-  std::string s2;
-  
-  V = I * R;
-  ss1 << V;
-  ss2 << (I * R);
-  ss1 >> s1;
-  ss2 >> s2;
-  ss3 << R;
-  ss3 >> r;
-  
-  x = X;
-  y = Y;
-  z = Z;
-  
-  return (((x + y).getValue() == X + Y) && (s1 == s2) && (r == R)) &&
-          (((x * y) + z).getValue() == ((X * Y) + Z)) && (V == (I * R));
+TEST_CASE("Units participate in arithmetic", "[unit]"){
+  typedef unit<1, 0, 0, 0, 0, 0> test_t;
+
+  SECTION("Units of same type can be added and subtracted"){
+    int valX = 1;
+    int valY = 2;
+
+    test_t x = valX;
+    test_t y = valY;
+
+    test_t z = x + y;
+
+    REQUIRE(x == valX);
+    REQUIRE(y == valY);
+    REQUIRE(z == valX + valY);
+  }
+
+  SECTION("Units multiplication/division result in new unit types"){
+    voltage V = 3;
+    current I = 5;
+    resistance R = 4;
+
+    V = I * R;
+
+    REQUIRE(V.getValue() == I.getValue() * R.getValue());
+
+    test_t X = 2;
+    test_t Y = 3;
+    unit<2, 0, 0, 0, 0, 0> Z;
+
+    Z = X * Y;
+
+    REQUIRE(Z.getValue() == 6);
+  }
+
+  SECTION("Units of same type can be value compared"){
+    test_t X = 1;
+    test_t Y = 1;
+
+    REQUIRE(X == Y);
+  }
+
+  SECTION("Units can use compount operators"){
+    test_t X = 0;
+    X += 3;
+
+    REQUIRE(X == 3);
+
+    X -=1;
+    REQUIRE(X == 2);
+  }
 }
 
 TEST_CASE("A range iterator can act as a standard iterator", "[range]"){
@@ -382,7 +402,5 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testShared() == true);
   REQUIRE(testStruct() == true);
   REQUIRE(testVector() == true);
-  REQUIRE(testUnit() == true);
-  REQUIRE(testRange() == true);
 }
 

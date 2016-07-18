@@ -34,7 +34,7 @@ public:
         return mValue == other.mValue;
     }
     bool operator==(DBL other) const{
-        return mValue = other;
+        return mValue == other;
     }
     unit operator+(const unit& other) const{
         return mValue + other.mValue;
