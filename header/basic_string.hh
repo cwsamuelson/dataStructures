@@ -21,18 +21,26 @@ private:
   static const value_type terminal;
 
 public:
-  basic_string(const basic_string& other){
+  basic_string(const basic_string& other):
+    mSize(0),
+    mString(nullptr){
     *this = other;
   }
-  basic_string(basic_string&& other){
+  basic_string(basic_string&& other):
+    mSize(0),
+    mString(nullptr){
     *this = std::forward<basic_string>(other);
+  }
+  basic_string():
+    mSize(0),
+    mString(nullptr){
   }
   basic_string(const_pointer str):
     mSize(0){
     while(str[mSize] != terminal){
       ++mSize;
     }
-    mString = new char[mSize];
+    mString = new value_type[mSize];
     for(unsigned int i = 0; i < mSize; ++i){
       mString[i] = str[i];
     }
@@ -42,10 +50,13 @@ public:
   }
   
   basic_string& operator=(const basic_string& other){
+    if(mString){
+      delete[] mString;
+    }
+
     mSize = other.mSize;
     
-    delete[] mString;
-    mString = new char[mSize];
+    mString = new value_type[mSize];
     
     for(unsigned int i = 0; i < mSize; ++i){
       mString[i] = other.mString[i];
@@ -62,7 +73,7 @@ public:
     return *this;
   }
 
-  bool operator==(const basic_string& other){
+  bool operator==(const basic_string& other) const{
     if(mSize != other.mSize){
       return false;
     }
@@ -74,7 +85,7 @@ public:
     }
     return ret;
   }
-  bool operator==(const_pointer other){
+  bool operator==(const_pointer other) const{
     return *this == basic_string(other);
   }
 
@@ -98,7 +109,7 @@ public:
     return Iterator(mSize);
   }
   iterator Iterator(unsigned long idx){
-    return iterator(mString);
+    return iterator(mString + idx);
   }
 };
 
