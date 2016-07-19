@@ -145,46 +145,6 @@ bool testShared(){
   return change;
 }
 
-typedef struct{
-  int x;
-  int y;
-} X;
-
-typedef struct{
-  int z;
-  char c;
-  char d;
-} Y;
-
-typedef struct{
-  int e;
-  union{
-    int f;
-    char g[4];
-  };
-} Z;
-
-bool testStruct(){
-  X x;
-  
-  x.x = 1;
-  x.y = (35) + (36 << 8);
-  
-  void* ptr = &x;
-  
-  if((*((Y*)ptr)).z != x.x){
-    return false;
-  } else if((int)(*((Z*)ptr)).g[2] != 0){
-    return false;
-  } else if((*((Y*)ptr)).d != (*((Z*)ptr)).g[1]){
-    return false;
-  } else if((*((Y*)ptr)).c != (*((Z*)ptr)).g[0]){
-    return false;
-  } else {
-    return true;
-  }
-}
-
 TEST_CASE("Strings can be accessed like an array", "[string]"){
   const char* cstr = "length 8";
   string str(cstr);
@@ -466,6 +426,5 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testPool() == true);
   REQUIRE(testUnique() == true);
   REQUIRE(testShared() == true);
-  REQUIRE(testStruct() == true);
 }
 
