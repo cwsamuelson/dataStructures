@@ -117,26 +117,6 @@ bool testUnique(){
   return (*ptr1) == 2 && ptr4->value() == x && change;;
 }
 
-bool testShared(){
-  bool change = true;
-  int x = 1;
-  int y = 2;
-  bool flag;
-  shared_ptr<foo> ptr3(new foo(x, flag));
-  shared_ptr<foo> ptr4(new foo(y, flag));
-
-  ptr4 = ptr3;
-  change &= (ptr4->value() == x);
-  /* ptr4 just gave up it's access to flag.  flag should be true now */
-  change &= flag;
-  ptr4 = ptr4;
-  change &= (ptr4->value() == x);
-  ptr3 = ptr3;
-  change &= (ptr3->value() == x);
-
-  return change;
-}
-
 TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]"){
   int* iPtr0 = new int(3);
   shared_ptr<int> sPtr0;
@@ -145,7 +125,6 @@ TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_p
 
   REQUIRE(sPtr0 == iPtr0);
   REQUIRE(*sPtr0 == *iPtr0);
-
 
   SECTION("Dereferenced shared_ptrs can be assigned"){
     *sPtr0 = 4;
@@ -435,6 +414,5 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testTuple() == true);
   REQUIRE(testPool() == true);
   REQUIRE(testUnique() == true);
-  REQUIRE(testShared() == true);
 }
 
