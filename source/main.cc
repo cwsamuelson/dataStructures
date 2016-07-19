@@ -122,17 +122,9 @@ bool testShared(){
   int x = 1;
   int y = 2;
   bool flag;
-  sharedPtr<int> ptr1(new int);
-  sharedPtr<int> ptr2(new int);
-  sharedPtr<foo> ptr3(new foo(x, flag));
-  sharedPtr<foo> ptr4(new foo(y, flag));
-  sharedPtr<int> ptr5(ptr1);
+  shared_ptr<foo> ptr3(new foo(x, flag));
+  shared_ptr<foo> ptr4(new foo(y, flag));
 
-  *ptr1 = 1;
-  *ptr2 = 2;
-
-  ptr1 = ptr2;
-  change &= ((*ptr1) == 2);
   ptr4 = ptr3;
   change &= (ptr4->value() == x);
   /* ptr4 just gave up it's access to flag.  flag should be true now */
@@ -143,6 +135,24 @@ bool testShared(){
   change &= (ptr3->value() == x);
 
   return change;
+}
+
+TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]"){
+  int* iPtr0 = new int(3);
+  shared_ptr<int> sPtr0;
+
+  sPtr0 = iPtr0;
+
+  REQUIRE(sPtr0 == iPtr0);
+  REQUIRE(*sPtr0 == *iPtr0);
+
+
+  SECTION("Dereferenced shared_ptrs can be assigned"){
+    *sPtr0 = 4;
+
+    REQUIRE(*sPtr0 == 4);
+    REQUIRE(*iPtr0 == 4);
+  }
 }
 
 TEST_CASE("Strings can be accessed like an array", "[string]"){
