@@ -212,57 +212,22 @@ public:
   
 };
 
-bool testVector(){
-  vector<int> vec;
-  int x = 3;
-  bool ret = true;
-
-  vec.push_back(1);
-  vec.push_back(2);
-  vec.push_back(x);
-  vec.pop_back();
-  vec.pop_back();
-  vec.push_back(x++);
-  vec.push_back(x);
-  vec.push_back(5);
-
-  auto it = vec.begin();
-  for(unsigned int i = 0; i < vec.size(); ++i, ++it){
-    ret &= (*it == vec[i]);
-  }
-  auto jt = vec.begin();
-
-  // dtor test
-  bool b;
-  bool bb;
-  wrapper w(&b);
-  vector<wrapper> v;
-
-  v.push_back(w);
-  v.pop_back();
-  v.emplace_back(&bb);
-  v.pop_back();
-
-  return ((vec[0] == 1) && (*jt == 1) && ret) && b && bb;
-}
-
 TEST_CASE("Vectors will run constructors/destructors when appropriate", "[vector]"){
-  bool dtor;
+  bool test;
   vector<wrapper> v;
 
-  v.emplace_back(&dtor);
+  SECTION("Constructor is run on emplace_back call"){
+    v.emplace_back(&test);
 
-  REQUIRE(dtor == false);
+    REQUIRE(test == false);
+  }
 
-  v.pop_back();
+  SECTION("Destructor is run on pop_back"){
+    v.emplace_back(&test);
+    v.pop_back();
 
-  REQUIRE(dtor == true);
-
-  wrapper w(&dtor);
-  v.push_back(w);
-  v.pop_back();
-  
-  REQUIRE(dtor == true);
+    REQUIRE(test == true);
+  }
 }
 
 TEST_CASE("Vectors can be resized", "[vector]"){
@@ -463,6 +428,5 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testUnique() == true);
   REQUIRE(testShared() == true);
   REQUIRE(testStruct() == true);
-  REQUIRE(testVector() == true);
 }
 
