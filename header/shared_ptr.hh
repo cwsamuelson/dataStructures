@@ -2,50 +2,98 @@
 #define __SHARED_PTR_HH__
 
 template<class T>
-class sharedPtr{
+class shared_ptr{
+public:
+  typedef T value_type;
+  typedef value_type* pointer;
+  typedef unsigned long count_t;
+
 private:
-    T* data;
-    unsigned long* count;
+  pointer mData;
+  count_t* mCount;
 
 public:
-    sharedPtr(T* ptr):
-        data(ptr),
-        count(new unsigned long(1)){
+  shared_ptr():
+    mData(nullptr),
+    mCount(nullptr){
+  }
+  shared_ptr(pointer ptr):
+    mData(ptr){
+    if(mData != nullptr){
+      mCount = new count_t(1);
+    } else {
+      mCount = nullptr;
     }
-    sharedPtr(const sharedPtr& other):
-        data(other.data),
-        count(other.count){
-        ++(*count);
+  }
+  shared_ptr(const shared_ptr& other):
+    mData(other.mData),
+    mCount(other.mCount){
+    ++(*mCount);
+  }
+  virtual ~shared_ptr(){
+    if((mCount != nullptr) && (--(*mCount) == 0)){
+      delete mData;
+      delete mCount;
     }
-    virtual ~sharedPtr(){
-        if(--(*count) == 0){
-            delete data;
-            delete count;
-        }
+  }
+
+  shared_ptr& operator=(pointer other){
+    if(mData != other){
+      if((mCount != nullptr) && (--(*mCount) == 0)){
+        delete mData;
+        delete mCount;
+      }
+      mData = other;
+      mCount = new count_t(1);
     }
-    
-    sharedPtr& operator=(sharedPtr& other){
-        if(data != other.data){
-            if(--(*count) == 0){
-                delete data;
-                delete count;
-            }
-            data = other.data;
-            count = other.count;
-            ++(*count);
-        }
-        return *this;
+    return *this;
+  }
+  shared_ptr& operator=(shared_ptr& other){
+    if(mData != other.mData){
+      if(--(*mCount) == 0){
+        delete mData;
+        delete mCount;
+      }
+      mData = other.mData;
+      mCount = other.mCount;
+      ++(*mCount);
     }
-    
-    T& operator*(){
-        return *data;
-    }
-    
-    T* operator->(){
-        return data;
-    }
+    return *this;
+  }
+  shared_ptr& operator=(shared_ptr&& other){
+    mData = other.mData;
+    mCount = other.mCount;
+
+    other.mData = nullptr;
+    other.mCount = nullptr;
+  }
+
+  bool operator==(pointer other) const{
+    return mData == other;
+  }
+  bool operator==(shared_ptr& other) const{
+    return (mData == other.mData) && (mCount == other.mCount);
+  }
+  
+  value_type& operator*(){
+    return *mData;
+  }
+  
+  pointer operator->(){
+    return mData;
+  }
 };
 
+template<class T, class ... Args>
+shared_ptr<T> make_shared(Args ...args){
+  T* temp = new T(args...);
+
+  if(temp == nullptr){
+    //throw exception
+  }
+
+  return shared_ptr<T>(temp);
+}
 
 #endif
 
