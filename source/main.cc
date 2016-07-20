@@ -95,10 +95,10 @@ bool testUnique(){
   int y = 2;
   bool flag1;
   bool flag2;
-  uniquePtr<int> ptr1(new int);
-  uniquePtr<int> ptr2(new int);
-  uniquePtr<foo> ptr3(new foo(x, flag1));
-  uniquePtr<foo> ptr4(new foo(y, flag2));
+  unique_ptr<int> ptr1(new int);
+  unique_ptr<int> ptr2(new int);
+  unique_ptr<foo> ptr3(new foo(x, flag1));
+  unique_ptr<foo> ptr4(new foo(y, flag2));
   
   *ptr1 = 1;
   *ptr2 = 2;
@@ -117,6 +117,13 @@ bool testUnique(){
   return (*ptr1) == 2 && ptr4->value() == x && change;;
 }
 
+TEST_CASE("Unique_ptrs have a mostly similar interface to regular pointers", "[unique_ptr]"){
+  int* iPtr0 = new int(3);
+  unique_ptr<int> uPtr0;
+
+  
+}
+
 TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]"){
   int* iPtr0 = new int(3);
   shared_ptr<int> sPtr0;
@@ -131,6 +138,21 @@ TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_p
 
     REQUIRE(*sPtr0 == 4);
     REQUIRE(*iPtr0 == 4);
+  }
+
+  SECTION("There can be multiple valid instances of a shared_ptr"){
+    shared_ptr<int> sPtr1 = sPtr0;
+
+    REQUIRE(sPtr0 == sPtr1);
+    REQUIRE(*sPtr0 == *sPtr1);
+  }
+
+  SECTION("Copies of a shared pointer are not invalidated when others go out of scope"){
+    {
+      shared_ptr<int> sPtr1 = sPtr0;
+    }
+
+    REQUIRE(*sPtr0 == 3);
   }
 }
 
@@ -413,6 +435,5 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testArray() == true);
   REQUIRE(testTuple() == true);
   REQUIRE(testPool() == true);
-  REQUIRE(testUnique() == true);
 }
 
