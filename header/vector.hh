@@ -73,6 +73,12 @@ public:
       mData[i] = other[i];
     }
   }
+  template<class inputIter>
+  vector(inputIter first, inputIter last){
+    for(;first != last; ++first){
+      push_back(*first);
+    }
+  }
   virtual ~vector(){
     while(mSize > 0){
       pop_back();
@@ -148,6 +154,7 @@ public:
     --mSize;
     ((value_type*)(mData + (mSize * datasize)))->~value_type();
   }
+
   bool empty() const{
     return mSize == 0;
   }
