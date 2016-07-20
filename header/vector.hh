@@ -112,6 +112,12 @@ public:
   const reference operator[](size_type idx) const{
     return (value_type&)(*(mData + (idx * datasize)));
   }
+  value_type& front(){
+    return (*this)[0];
+  }
+  value_type& back(){
+    return (*this)[mSize - 1];
+  }
   
   void push_back(const value_type& data){
     if(mSize + 1 > mCapacity){
@@ -141,6 +147,9 @@ public:
   void pop_back(){
     --mSize;
     ((value_type*)(mData + (mSize * datasize)))->~value_type();
+  }
+  bool empty() const{
+    return mSize == 0;
   }
   size_type size() const{
     return mSize;
