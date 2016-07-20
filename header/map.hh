@@ -18,21 +18,27 @@ public:
   typedef VALUE map_type;
   typedef unsigned long size_type;
   typedef COMPARE compare;
+  typedef tuple<key_type, map_type> storage_type;
 
 private:
-  vector<tuple<key_type, map_type> > mData;
+  vector<storage_type> mData;
   compare comparator;
+
+  void normalize(){
+    std::sort(mData.begin(), mData.end(),
+      [=](const storage_type& x, const storage_type& y)->bool{
+        return comparator(get<0>(x), get<0>(y));
+      }
+    );
+  }
 
 public:
   map(){
   }
   template<class inputIter>
-  map(inputIter first, inputIter last){
-    for(;first != last; ++first){
-      mData.push_back(*first);
-    }
-
-    std::sort(mData.begin(), mData.end());
+  map(inputIter first, inputIter last):
+    mData(first, last){
+    normalize();
   }
   map(const map& other){
   }
@@ -59,17 +65,34 @@ public:
       idx = (max - min) / 2;
     }
   }
-  map_type& operator[](key_type key){
+  map_type& operator[](const key_type& key){
     try{
       return at(key);
     } catch (keyNotFoundException& ex){
       mData.push_back(make_tuple(key_type(), map_type()));
-      std::sort(mData.begin(), mData.end());
+      normalize();
+
+      return at(key);
+    }
+  }
+  const map_type& operator[](const key_type& key) const{
+    try{
+      return at(key);
+    } catch (keyNotFoundException& ex){
+      mData.push_back(make_tuple(key_type(), map_type()));
+      normalize();
 
       return at(key);
     }
   }
 
+  template<class inputIter>
+  void insert(inputIter first, inputIter last){
+    for(;first != last; ++first){
+      mData.push_back(*first);
+    }
+    normalize();
+  }
   bool empty() const{
     return mData.empty();
   }
