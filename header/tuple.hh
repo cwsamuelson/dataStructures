@@ -59,6 +59,9 @@ public:
   static auto& get(tuple_impl<N, T, Args...>& tup){
     return get_impl<M - 1, N + 1, Args...>::get(static_cast<tuple_impl<N + 1, Args...>& >(tup));
   }
+  static const auto& get(const tuple_impl<N, T, Args...>& tup){
+    return get_impl<M - 1, N + 1, Args...>::get(static_cast<const tuple_impl<N + 1, Args...>& >(tup));
+  }
 };
 
 template<unsigned int N, class T, class ... Args>
@@ -67,11 +70,18 @@ public:
   static auto& get(tuple_impl<N, T, Args...>& tup){
     return tup.data;
   }
-};
+  static const auto& get(const tuple_impl<N, T, Args...>& tup){
+    return tup.data;
+  }};
 
 template<unsigned int M, class ... Args>
 auto& get(tuple<Args...>& tup){
   return get_impl<M, 0, Args...>::get(static_cast<tuple_impl<0, Args...>& >(tup));
+}
+
+template<unsigned int M, class ... Args>
+const auto& get(const tuple<Args...>& tup){
+  return get_impl<M, 0, Args...>::get(static_cast<const tuple_impl<0, Args...>& >(tup));
 }
 
 template<class X, class Y>
