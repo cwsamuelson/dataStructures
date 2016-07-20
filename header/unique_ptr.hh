@@ -62,7 +62,7 @@ template<class T, class ... Args>
 unique_ptr<T> make_unique(Args ...args){
   T* temp = new T(args...);
 
-  return shared_ptr<T>(temp);
+  return unique_ptr<T>(temp);
 }
 
 #endif
