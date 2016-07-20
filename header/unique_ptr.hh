@@ -2,40 +2,68 @@
 #define __UNIQUE_PTR_HH__
 
 template<class T>
-class uniquePtr{
+class unique_ptr{
+public:
+  typedef T value_type;
+  typedef value_type* pointer;
+
 private:
-    T* data;
+  pointer mData;
 
 public:
-    uniquePtr(T* ptr):
-        data(ptr){
+  unique_ptr():
+    mData(nullptr){
+  }
+  unique_ptr(pointer ptr):
+    mData(ptr){
+  }
+  unique_ptr(unique_ptr& other):
+    mData(other.mData){
+    other.mData = nullptr;
+  }
+  virtual ~unique_ptr(){
+    if(mData){
+      delete mData;
     }
-    uniquePtr(uniquePtr& other):
-        data(other.data){
-        other.data = nullptr;
+  }
+
+  unique_ptr& operator=(pointer other){
+    delete mData;
+    mData = other;
+
+    return *this;
+  }
+  unique_ptr& operator=(unique_ptr& other){
+    if(mData != other.mData){
+      delete mData;
+      mData = other.mData;
+      other.mData = nullptr;
     }
-    virtual ~uniquePtr(){
-        delete data;
-    }
-    
-    uniquePtr& operator=(uniquePtr& other){
-        if(data != other.data){
-            delete data;
-            data = other.data;
-            other.data = nullptr;
-        }
-        return *this;
-    }
-    
-    T& operator*(){
-        return *data;
-    }
-    
-    T* operator->(){
-        return data;
-    }
+    return *this;
+  }
+
+  bool operator==(pointer other) const{
+    return (mData == other);
+  }
+  bool operator==(const unique_ptr& other) const{
+    return (mData == other.mData);
+  }
+  
+  value_type& operator*(){
+    return *mData;
+  }
+  
+  pointer operator->(){
+    return mData;
+  }
 };
 
+template<class T, class ... Args>
+unique_ptr<T> make_unique(Args ...args){
+  T* temp = new T(args...);
+
+  return shared_ptr<T>(temp);
+}
 
 #endif
 

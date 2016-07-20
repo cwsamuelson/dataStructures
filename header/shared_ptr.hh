@@ -71,7 +71,7 @@ public:
   bool operator==(pointer other) const{
     return mData == other;
   }
-  bool operator==(shared_ptr& other) const{
+  bool operator==(const shared_ptr& other) const{
     return (mData == other.mData) && (mCount == other.mCount);
   }
   
@@ -87,10 +87,6 @@ public:
 template<class T, class ... Args>
 shared_ptr<T> make_shared(Args ...args){
   T* temp = new T(args...);
-
-  if(temp == nullptr){
-    //throw exception
-  }
 
   return shared_ptr<T>(temp);
 }
