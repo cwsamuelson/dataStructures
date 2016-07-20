@@ -16,6 +16,7 @@
 #include<vector.hh>
 #include<unit.hh>
 #include<range.hh>
+#include<map.hh>
 
 bool testFunction(){
   function<int(int)> fn;
@@ -39,6 +40,7 @@ bool testTuple(){
   tuple<int> t1;
   tuple<int, int> t2;
   tuple<char, int, char> t3;
+  tuple<int, int> t4(1, 2);
   
   get<0>(t1) = 1;
   
@@ -50,7 +52,8 @@ bool testTuple(){
   get<2>(t3) = 'b';
   
   return get<0>(t1) == 1 && get<0>(t2) == 2 && get<1>(t2) == 3 &&
-       get<0>(t3) == 'a' && get<1>(t3) == 4 && get<2>(t3) == 'b';
+       get<0>(t3) == 'a' && get<1>(t3) == 4 && get<2>(t3) == 'b' &&
+       get<0>(t4) == 1 && get<1>(t4) == 2;
 }
 
 bool testPool(){
@@ -121,7 +124,10 @@ TEST_CASE("Unique_ptrs have a mostly similar interface to regular pointers", "[u
   int* iPtr0 = new int(3);
   unique_ptr<int> uPtr0;
 
-  
+  uPtr0 = iPtr0;
+
+  REQUIRE(uPtr0 == iPtr0);
+  REQUIRE(*uPtr0 == *iPtr0);
 }
 
 TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]"){
@@ -435,5 +441,13 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testArray() == true);
   REQUIRE(testTuple() == true);
   REQUIRE(testPool() == true);
+}
+
+TEST_CASE("", "[map]"){
+  map<int, int> mp;
+
+  REQUIRE(mp.empty());
+  REQUIRE(mp.size() == 0);
+  mp[0] = 1;
 }
 
