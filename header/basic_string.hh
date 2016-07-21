@@ -13,6 +13,7 @@ public:
   typedef const value_type* const_pointer;
   typedef value_type& reference;
   typedef const reference const_reference;
+  typedef unsigned long size_type;
   typedef normal_iterator<value_type, basic_string> iterator;
 
 private:
@@ -40,7 +41,8 @@ public:
     while(str[mSize] != terminal){
       ++mSize;
     }
-    mString = new value_type[mSize];
+    mString = new value_type[mSize + 1];
+    mString[mSize] = terminal;
     for(unsigned int i = 0; i < mSize; ++i){
       mString[i] = str[i];
     }
@@ -56,8 +58,9 @@ public:
 
     mSize = other.mSize;
     
-    mString = new value_type[mSize];
-    
+    mString = new value_type[mSize + 1];
+    mString[mSize] = terminal;
+
     for(unsigned int i = 0; i < mSize; ++i){
       mString[i] = other.mString[i];
     }
@@ -89,17 +92,70 @@ public:
     return *this == basic_string(other);
   }
 
+  basic_string operator+(const_reference vt) const{
+    basic_string ret;
+
+    ret.mSize = mSize + 1;
+    ret.mString = new value_type[ret.mSize + 1];
+    ret.mString[ret.mSize] = terminal;
+
+    for(unsigned int i = 0; i < mSize; ++i){
+      ret.mString[i] = mString[i];
+    }
+    ret.mString[mSize] = vt;
+
+    return ret;
+  }
+  basic_string operator+(const_pointer ptr){
+    size_type extra = 0;
+    basic_string ret;
+
+    while(ptr[extra] != terminal){
+      ++extra;
+    }
+
+    ret.mSize = mSize + extra;
+    ret.mString = new value_type[ret.mSize + 1];
+    ret.mString[ret.mSize] = terminal;
+
+    for(unsigned int i = 0; i < mSize; ++i){
+      ret.mString[i] = mString[i];
+    }
+    for(unsigned int i = 0; i < extra; ++i){
+      ret.mString[i + mSize] = ptr[i];
+    }
+
+    return ret;
+  }
+  template<class U>
+  basic_string operator+(U u){
+    return (*this) + value_type(u);
+  }
+  basic_string& operator+=(const_reference ref){
+    return ((*this) = (*this) + ref);
+  }
+  basic_string& operator+=(const_pointer ptr){
+    return ((*this) = (*this) + ptr);
+  }
+  template<class U>
+  basic_string& operator+=(U u){
+    return ((*this) = (*this) + u);
+  }
+
   reference operator[](unsigned int idx){
     return mString[idx];
   }
   const_reference operator[](unsigned int idx) const{
     return mString[idx];
   }
-  unsigned int size() const{
+  size_type size() const{
     return mSize;
   }
   bool empty() const{
     return mSize == 0;
+  }
+  const char* data() const{
+    return mString;
   }
 
   iterator begin(){
