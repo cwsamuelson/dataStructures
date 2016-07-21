@@ -9,6 +9,10 @@
 #include<tuple.hh>
 
 class keyNotFoundException : public std::exception{
+public:
+  virtual const char* what() const noexcept{
+    return "Requested key not found!";
+  }
 };
 
 template<class KEY, class VALUE, class COMPARE = std::less<KEY> >
@@ -41,49 +45,53 @@ public:
     normalize();
   }
   map(const map& other){
+    mData = other.mData;
+    comparator = other.comparator;
   }
   map(map&& other){
+    mData = std::forward<decltype(mData)>(other.mData);
+    comparator = other.comparator;
+  }
+  virtual ~map(){
   }
 
   map_type& at(key_type key){
+    if(mData.empty()){
+      throw keyNotFoundException();
+    }
+
     unsigned int idx;
     unsigned int min = 0;
-    unsigned int max = mData.size();
+    unsigned int max = mData.size() - 1;
 
-    idx = (max - min) / 2;
+    idx = (max + min) / 2.0;
 
     while(get<0>(mData[idx]) != key){
-      if(min == max){
+      if(min == max || idx >= mData.size()){
         throw keyNotFoundException();
       }
       if(comparator(key, get<0>(mData[idx]))){
-        max = idx;
+        max = idx - 1;
       } else {
-        min = idx;
+        min = idx + 1;
       }
 
-      idx = (max - min) / 2;
+      idx = (max + min) / 2.0;
     }
+    return get<1>(mData[idx]);
   }
   map_type& operator[](const key_type& key){
     try{
       return at(key);
     } catch (keyNotFoundException& ex){
-      mData.push_back(make_tuple(key_type(), map_type()));
+      mData.push_back(make_tuple(key, map_type()));
       normalize();
 
       return at(key);
     }
   }
   const map_type& operator[](const key_type& key) const{
-    try{
-      return at(key);
-    } catch (keyNotFoundException& ex){
-      mData.push_back(make_tuple(key_type(), map_type()));
-      normalize();
-
-      return at(key);
-    }
+    return (*this)[key];
   }
 
   template<class inputIter>

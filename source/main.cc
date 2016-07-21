@@ -443,11 +443,16 @@ TEST_CASE("Tests pass", "[tests]"){
   REQUIRE(testPool() == true);
 }
 
-TEST_CASE("", "[map]"){
+TEST_CASE("Maps are associative containers", "[map]"){
   map<int, int> mp;
 
   REQUIRE(mp.empty());
-  REQUIRE(mp.size() == 0);
+
+  mp[0] = 0;
   mp[0] = 1;
+  mp[1] = 2;
+
+	REQUIRE(mp[0] == 1);
+	REQUIRE(mp[1] == 2);
 }
 

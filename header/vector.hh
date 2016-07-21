@@ -2,8 +2,25 @@
 #define __VECTOR_HH__
 
 #include<cmath>
+#include<exception>
+#include<string>
 
 #include<normal_iterator.hh>
+
+class indexOutOfBoundsException : public std::exception{
+private:
+  std::string msg;
+
+public:
+  indexOutOfBoundsException(unsigned long long idx){
+    msg = "Index ";
+    msg += idx;
+    msg += " out of bounds!";
+  }
+  virtual const char* what() const noexcept{
+    return msg.data();
+  }
+};
 
 template<class T>
 class vector{
@@ -113,10 +130,13 @@ public:
     return *this;
   }
   value_type& operator[](size_type idx){
+    if(idx >= mSize){
+      throw indexOutOfBoundsException(idx);
+    }
     return (value_type&)(*(mData + (idx * datasize)));
   }
   const reference operator[](size_type idx) const{
-    return (value_type&)(*(mData + (idx * datasize)));
+    return (*this)[idx];
   }
   value_type& front(){
     return (*this)[0];
@@ -127,9 +147,9 @@ public:
   
   void push_back(const value_type& data){
     if(mSize + 1 > mCapacity){
-      reallocateTo(mCapacity * goldenRatio);
+      reallocateTo(std::ceil(mCapacity * goldenRatio));
     }
-    (value_type&)(*(mData + (mSize * datasize))) = data;
+    (*((value_type*)(mData + (mSize * datasize)))) = data;
     ++mSize;
   }
   template<class ...Args>
