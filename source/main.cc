@@ -444,18 +444,19 @@ TEST_CASE("Tests pass", "[tests]"){
 }
 
 TEST_CASE("Maps are associative containers", "[map]"){
-  const int iters = 10;
+  const int nIters = 10;
   map<int, int> mp;
 
   REQUIRE(mp.empty());
 
-  for(int i = 0; i < iters; ++i){
+  for(int i = 0; i < nIters; ++i){
     mp[i] = i + 1;
-    REQUIRE(mp[i] == i + 1);
   }
 
-  for(int i = 0; i < iters; ++i){
-    REQUIRE(mp[i] == i + 1);
+  SECTION(""){
+    for(int i = 0; i < nIters; ++i){
+      REQUIRE(mp[i] == i + 1);
+    }
   }
 }
 

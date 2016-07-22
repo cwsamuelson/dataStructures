@@ -97,9 +97,7 @@ public:
     }
   }
   virtual ~vector(){
-    while(mSize > 0){
-      pop_back();
-    }
+    clear();
     delete[] mData;
   }
   
@@ -175,6 +173,11 @@ public:
     ((value_type*)(mData + (mSize * datasize)))->~value_type();
   }
 
+  void clear(){
+    while(mSize > 0){
+      pop_back();
+    }
+  }
   bool empty() const{
     return mSize == 0;
   }
@@ -197,6 +200,7 @@ public:
       reallocateTo(cap);
     }
   }
+
   iterator begin(){
     return Iterator(0);
   }

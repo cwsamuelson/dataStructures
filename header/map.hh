@@ -54,8 +54,6 @@ public:
     mData = std::forward<decltype(mData)>(other.mData);
     comparator = other.comparator;
   }
-  virtual ~map(){
-  }
 
   map_type& at(key_type key){
     if(mData.empty()){
@@ -122,6 +120,9 @@ public:
     return end();
   }
 
+  void clear(){
+    mData.clear();
+  }
   bool empty() const{
     return mData.empty();
   }
