@@ -200,8 +200,14 @@ public:
   iterator begin(){
     return Iterator(0);
   }
+  const iterator cbegin() const{
+    return begin();
+  }
   iterator end(){
     return Iterator(mSize);
+  }
+  const iterator cend() const{
+    return end();
   }
   iterator Iterator(size_type idx){
     return iterator(pointer(mData + (idx * datasize)));

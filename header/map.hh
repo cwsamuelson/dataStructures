@@ -5,6 +5,7 @@
 #include<exception>
 #include<functional>
 
+#include<normal_iterator.hh>
 #include<vector.hh>
 #include<tuple.hh>
 
@@ -23,6 +24,7 @@ public:
   typedef unsigned long size_type;
   typedef COMPARE compare;
   typedef tuple<key_type, map_type> storage_type;
+  typedef normal_iterator<storage_type, map> iterator;
 
 private:
   vector<storage_type> mData;
@@ -101,6 +103,25 @@ public:
     }
     normalize();
   }
+  template<class ...Args>
+  iterator emplace(Args ...args){
+    mData.emplace_back(args...);
+    normalize();
+  }
+
+  iterator begin(){
+    return mData.begin();
+  }
+  const iterator cbegin() const{
+    return begin();
+  }
+  iterator end(){
+    return mData.end();
+  }
+  const iterator cend() const{
+    return end();
+  }
+
   bool empty() const{
     return mData.empty();
   }
