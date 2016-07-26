@@ -116,7 +116,7 @@ operator>>(ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CAN
 
 typedef unit<0, 0, 1, 0, 0, 0>   mass;
 typedef unit<1, -1, 0, 0, 0, 0>  speed;
-typedef unit<1, 0, 0, 0, 0, 0>   distance;
+typedef unit<1, 0, 0, 0, 0, 0>   length;
 typedef unit<0, 1, 0, 0, 0, 0>   thyme;//time, renamed to avoid collision
 typedef unit<1, -2, 0, 0, 0, 0>  acceleration;
 typedef unit<1, -2, 1, 0, 0, 0>  force;//newton
