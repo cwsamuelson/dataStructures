@@ -1,9 +1,11 @@
-#ifndef __SORT_HH__
-#define __SORT_HH__
+#ifndef __ALGORITHM_HH__
+#define __ALGORITHM_HH__
+
+#include<vector.hh>
 
 template<class T>
 struct less{
-  bool operator<(const T& lhs, const T& rhs){
+  bool operator()(const T& lhs, const T& rhs){
     return lhs < rhs;
   }
 };
@@ -14,30 +16,48 @@ unsigned long distance(iter first, iter last){
   while(first++ != last){
     ++ret;
   }
+
+  return ret;
 }
 
 template<class iter>
-void swap(iter x, iter y){
-  auto z = x;
+void myswap(iter x, iter y){
+  auto z = *x;
   *x = *y;
-  *y = *z;
+  *y = z;
 }
 
 template<class iter, class compare>
 void merge(iter first, iter mid, iter last, compare comp){
+  vector<typename iter::value_type> vec;
   auto middle = mid;
+  auto start = first;
+  auto stop = last;
 
   while(first != middle && mid != last){
     if(comp(*mid, *first)){
-      swap(first, mid);
+      vec.push_back(*mid);
       ++mid;
+    } else {
+      vec.push_back(*first);
+      ++first;
     }
-    ++first;
+  }
+  while(first != middle){
+    vec.push_back(*(first++));
+  }
+  while(mid != last){
+    vec.push_back(*(mid++));
+  }
+
+  auto begin = vec.begin();
+  for(;start != stop; ++start, ++begin){
+    *start = *begin;
   }
 }
 
-template<class iter, class compare>
-void sort(iter first, iter last, compare comp = less<iter::value_type>){
+template<class iter, class compare = less<typename iter::value_type> >
+void sort(iter first, iter last, compare comp = less<typename iter::value_type>()){
   auto length = distance(first, last);
 
   if(length < 2){
@@ -48,7 +68,7 @@ void sort(iter first, iter last, compare comp = less<iter::value_type>){
   sort(first, mid, comp);
   sort(mid, last, comp);
 
-  merge(first, mid, last);
+  merge(first, mid, last, comp);
 }
 
 #endif
