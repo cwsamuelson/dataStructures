@@ -290,6 +290,25 @@ TEST_CASE("Vectors can be resized", "[vector]"){
   }
 }
 
+TEST_CASE("Vectors can be iterated across using standard mechanisms", "[vector]"){
+  vector<int> vec;
+
+  vec.push_back(1);
+  vec.push_back(2);
+  vec.push_back(3);
+  vec.push_back(4);
+
+  SECTION("Vectors can participate in range-based for loops"){
+    int i = 0;
+
+    for(auto it:vec){
+      REQUIRE(it == vec[i]);
+      ++i;
+    }
+    REQUIRE(i == vec.size());
+  }
+}
+
 TEST_CASE("Units participate in arithmetic", "[unit]"){
   typedef unit<1, 0, 0, 0, 0, 0> test_t;
 
@@ -463,6 +482,7 @@ TEST_CASE("Maps are associative containers", "[map]"){
 
 TEST_CASE("Sort algorithm", "[algorithm]"){
   vector<int> vec;
+
   vec.push_back(3);
   vec.push_back(2);
   vec.push_back(4);
@@ -470,16 +490,8 @@ TEST_CASE("Sort algorithm", "[algorithm]"){
   vec.push_back(6);
   vec.push_back(5);
 
-  for(unsigned int i = 0; i < vec.size(); ++i){
-    std::cout << vec[i] << std::endl;
-  }
-	std::cout << std::endl;
-
   sort(vec.begin(), vec.end());
 
-  for(unsigned int i = 0; i < vec.size(); ++i){
-    std::cout << vec[i] << std::endl;
-  }
   for(unsigned int i = 1; i < vec.size(); ++i){
     REQUIRE(vec[i] > vec[i - 1]);
   }
