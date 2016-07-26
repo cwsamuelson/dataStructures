@@ -17,6 +17,7 @@
 #include<unit.hh>
 #include<range.hh>
 #include<map.hh>
+#include<algorithm.hh>
 
 bool testFunction(){
   function<int(int)> fn;
@@ -457,6 +458,30 @@ TEST_CASE("Maps are associative containers", "[map]"){
     for(int i = 0; i < nIters; ++i){
       REQUIRE(mp[i] == i + 1);
     }
+  }
+}
+
+TEST_CASE("Sort algorithm", "[algorithm]"){
+  vector<int> vec;
+  vec.push_back(3);
+  vec.push_back(2);
+  vec.push_back(4);
+  vec.push_back(1);
+  vec.push_back(6);
+  vec.push_back(5);
+
+  for(unsigned int i = 0; i < vec.size(); ++i){
+    std::cout << vec[i] << std::endl;
+  }
+	std::cout << std::endl;
+
+  sort(vec.begin(), vec.end());
+
+  for(unsigned int i = 0; i < vec.size(); ++i){
+    std::cout << vec[i] << std::endl;
+  }
+  for(unsigned int i = 1; i < vec.size(); ++i){
+    REQUIRE(vec[i] > vec[i - 1]);
   }
 }
 
