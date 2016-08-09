@@ -19,6 +19,7 @@
 #include<range.hh>
 #include<map.hh>
 #include<algorithm.hh>
+#include<date_time.hh>
 
 bool testFunction(){
   function<int(int)> fn;
@@ -498,6 +499,17 @@ TEST_CASE("Sort algorithm", "[algorithm]"){
 
   for(unsigned int i = 1; i < vec.size(); ++i){
     REQUIRE(vec[i] >= vec[i - 1]);
+  }
+}
+
+TEST_CASE("Each time unit type can convert itself to another based on its "
+          "conversion factor", "[time]"){
+
+  SECTION(""){
+    minute m(1);
+    second s(m);
+
+    REQUIRE(s == 60);
   }
 }
 
