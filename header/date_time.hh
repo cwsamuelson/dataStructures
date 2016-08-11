@@ -119,6 +119,11 @@ public:
   bool operator>(const time_unit<UI>& tu) const{
     return mValue > tu.mValue;
   }
+
+  unsigned long long getValue(){
+    return mValue / factor;
+  }
+
   template<unsigned int UI>
   friend std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu);
 };
@@ -190,7 +195,7 @@ std::ostream& operator<<(std::ostream& os, const date& d){
     dayt.mDay -= dayt.mMonths[mont++];
   }
 
-  os << dayt << " " << dayt.monthNames[mont] << " " << dayt.mYear;
+  os << dayt.mDay.getValue() << " " << dayt.monthNames[mont] << " " << dayt.mYear;
   
   return os; 
 }
