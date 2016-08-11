@@ -505,11 +505,24 @@ TEST_CASE("Sort algorithm", "[algorithm]"){
 TEST_CASE("Each time unit type can convert itself to another based on its "
           "conversion factor", "[time]"){
 
-  SECTION(""){
+  SECTION("Time units convert nicely, and report expected amounts."){
     minute m(1);
     second s(m);
 
     REQUIRE(s == 60);
+    REQUIRE(m == 1);
+  }
+
+  SECTION("Units can interact with ostreams."){
+    minute m(1);
+    std::stringstream ss;
+    std::string str;
+
+    ss << m;
+    ss >> str;
+    REQUIRE(str == "1");
+    ss >> str;
+    REQUIRE(str == "minutes");
   }
 }
 

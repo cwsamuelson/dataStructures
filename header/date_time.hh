@@ -2,6 +2,7 @@
 #define __DATE_TIME_HH__
 
 #include<iostream>
+#include<string>
 
 template<unsigned int FACTOR>
 class time_unit{
@@ -129,7 +130,27 @@ time_unit<UI> operator*(double val, const time_unit<UI>& tu){
 
 template<unsigned int UI>
 std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu){
-  os << tu.mValue;
+  std::string str;
+
+  if(UI == 1){
+    str = "seconds";
+  } else if(UI == 60){
+    str = "minutes";
+  } else if(UI == 3600){
+    str = "hours";
+  } else if(UI == 86400){
+    str = "days";
+  } else if(UI == 604800){
+    str = "weeks";
+  } else if(UI == 2592000){
+    str = "months";
+  } else if(UI == 31536000){
+    str = "years";
+  } else {
+    str = "units";
+  }
+
+  os << (tu.mValue / UI) << " " << str;
 
   return os;
 }
