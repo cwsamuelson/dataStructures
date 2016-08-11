@@ -142,7 +142,7 @@ public:
   time_unit operator++(int){
     time_unit tu(*this);
 
-    tu += 1;
+    (*this) += 1;
 
     return tu;
   }
@@ -154,9 +154,9 @@ public:
   time_unit operator--(int){
     time_unit tu(*this);
 
-    tu -= 1;
+    (*this) -= 1;
 
-    return *this;
+    return tu;
   }
 
   long long getValue(){

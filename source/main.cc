@@ -502,8 +502,7 @@ TEST_CASE("Sort algorithm", "[algorithm]"){
   }
 }
 
-TEST_CASE("Each time unit type can convert itself to another based on its "
-          "conversion factor", "[time]"){
+TEST_CASE("Regular operations can be performed on time units", "[time]"){
 
   SECTION("Time units convert nicely, and report expected amounts."){
     minute m(1);
@@ -525,7 +524,7 @@ TEST_CASE("Each time unit type can convert itself to another based on its "
     REQUIRE(str == "minutes");
   }
 
-  SECTION("A date can be printed in a human readable format to an ostream."){
+  SECTION("A date is printed in a human readable format to an ostream."){
     date dayt(11, 8, 2016);
     std::stringstream ss;
     std::string str;
@@ -537,6 +536,27 @@ TEST_CASE("Each time unit type can convert itself to another based on its "
     REQUIRE(str == "August");
     ss >> str;
     REQUIRE(str == "2016");
+  }
+
+  SECTION("Mathematical operations can be performed on time units."){
+    minute m(59);
+
+    m += 1;
+
+    hour h(m);
+
+    REQUIRE(h == 1);
+
+    m -= 5;
+
+    REQUIRE(m == 55);
+
+    REQUIRE(++h == 2);
+    REQUIRE(m++ == 55);
+    REQUIRE(m == 56);
+    REQUIRE(--h == 1);
+    REQUIRE(m-- == 56);
+    REQUIRE(m == 55);
   }
 }
 
