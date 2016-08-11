@@ -524,5 +524,19 @@ TEST_CASE("Each time unit type can convert itself to another based on its "
     ss >> str;
     REQUIRE(str == "minutes");
   }
+
+  SECTION("A date can be printed in a human readable format to an ostream."){
+    date dayt(11, 8, 2016);
+    std::stringstream ss;
+    std::string str;
+
+    ss << dayt;
+    ss >> str;
+    REQUIRE(str == "11");
+    ss >> str;
+    REQUIRE(str == "August");
+    ss >> str;
+    REQUIRE(str == "2016");
+  }
 }
 

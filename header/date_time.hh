@@ -9,7 +9,7 @@ class time_unit{
 private:
   const unsigned int factor = FACTOR;
   //mValue stores the number of seconds
-  unsigned long long mValue;
+  long long mValue;
   template<unsigned int UI>
   friend class time_unit;
 
@@ -112,6 +112,13 @@ public:
   bool operator<(const time_unit<UI>& tu) const{
     return mValue < tu.mValue;
   }
+  bool operator<=(double val) const{
+    return (*this) < val || (*this) == val;
+  }
+  template<unsigned int UI>
+  bool operator<=(const time_unit<UI>& tu) const{
+    return (*this) < tu || (*this) == tu;
+  }
   bool operator>(double val) const{
     return mValue > (factor * val);
   }
@@ -119,8 +126,40 @@ public:
   bool operator>(const time_unit<UI>& tu) const{
     return mValue > tu.mValue;
   }
+  bool operator>=(double val) const{
+    return (*this) > val || (*this) == val;
+  }
+  template<unsigned int UI>
+  bool operator>=(const time_unit<UI>& tu) const{
+    return (*this) > tu || (*this) == tu;
+  }
 
-  unsigned long long getValue(){
+  time_unit& operator++(){
+    (*this) += 1;
+
+    return *this;
+  }
+  time_unit operator++(int){
+    time_unit tu(*this);
+
+    tu += 1;
+
+    return tu;
+  }
+  time_unit& operator--(){
+    (*this) -= 1;
+
+    return *this;
+  }
+  time_unit operator--(int){
+    time_unit tu(*this);
+
+    tu -= 1;
+
+    return *this;
+  }
+
+  long long getValue(){
     return mValue / factor;
   }
 
@@ -172,32 +211,72 @@ class date{
 private:
   day mDay;
   year mYear;
-  const int mMonths[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+  const unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
   const std::string monthNames[12] = { "January", "February", "March", "April",
-                                     "May", "June", "July", "August",
-                                     "September", "October", "November",
-                                     "December" };
+                                       "May", "June", "July", "August",
+                                       "September", "October", "November",
+                                       "December" };
 
 public:
   date(day d, unsigned int mont, year y):
-    mDay(d + (mMonths[mont - 1] * day())),
+    mDay(d),
     mYear(y){
+
+    for(unsigned int i = 0; i < mont - 1; ++i){
+      mDay += mMonths[i];
+    }
   }
 
-  friend std::ostream& operator<<(std::ostream& os, const date& d);
+  template<unsigned int UI>
+  date operator+(const time_unit<UI>& tu){
+    date d(*this);
+
+    d += tu;
+
+    return d;
+  }
+  template<unsigned int UI>
+  date operator-(const time_unit<UI>& tu){
+    date d(*this);
+
+    d -= tu;
+
+    return d;
+  }
+  template<unsigned int UI>
+  date& operator+=(const time_unit<UI>& tu){
+    mDay += tu;
+    if(mDay >= 365){
+      ++mYear;
+      mDay -= 365;
+    }
+
+    return *this;
+  }
+  template<unsigned int UI>
+  date& operator-=(const time_unit<UI>& tu){
+    mDay -= tu;
+    if(mDay <= 0){
+      --mYear;
+      mDay += 365;
+    }
+
+    return *this;
+  }
+
+  friend std::ostream& operator<<(std::ostream& os, date d);
 };
 
-std::ostream& operator<<(std::ostream& os, const date& d){
+std::ostream& operator<<(std::ostream& os, date dayt){
   unsigned int mont = 0;
-  date dayt(d);
 
-  while(dayt.mDay > dayt.mMonths[mont]){
+  while(dayt.mDay.getValue() > dayt.mMonths[mont]){
     dayt.mDay -= dayt.mMonths[mont++];
   }
 
-  os << dayt.mDay.getValue() << " " << dayt.monthNames[mont] << " " << dayt.mYear;
-  
-  return os; 
+  os << dayt.mDay.getValue() << " " << dayt.monthNames[mont] << " " << dayt.mYear.getValue();
+
+  return os;
 }
 
 class date_time{
@@ -220,6 +299,20 @@ public:
     date_time ret(*this);
 
     return ret;
+  }
+
+  template<unsigned int UI>
+  date_time& operator+=(time_unit<UI> tu){
+    while(tu.getValue() * UI > 86400){
+      day one(1);
+      mDate += one;
+      tu -= one;
+    }
+
+    //whatever's left will be hour/min/sec, dump it into the time
+    mTime += tu;
+
+    return *this;
   }
 };
 
