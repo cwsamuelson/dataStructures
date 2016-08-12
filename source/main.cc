@@ -139,8 +139,10 @@ TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_p
 
   sPtr0 = iPtr0;
 
-  REQUIRE(sPtr0 == iPtr0);
-  REQUIRE(*sPtr0 == *iPtr0);
+  SECTION("Initial equality checks."){
+    REQUIRE(sPtr0 == iPtr0);
+    REQUIRE(*sPtr0 == *iPtr0);
+  }
 
   SECTION("Dereferenced shared_ptrs can be assigned"){
     *sPtr0 = 4;
@@ -252,16 +254,19 @@ TEST_CASE("Vectors will run constructors/destructors when appropriate", "[vector
 TEST_CASE("Vectors can be resized", "[vector]"){
   vector<int> v(5);
 
-  REQUIRE(v.capacity() >= 5);
+  SECTION("Vector capacity can be initialized"){
+    REQUIRE(v.capacity() >= 5);
+  }
 
-  int i = 1;
-  v.push_back(i++);
-  v.push_back(i++);
-  v.push_back(i++);
-  v.push_back(i++);
-  v.push_back(i++);
+  for(int i = 0; i < 5; ++i){
+    v.push_back(i);
+  }
 
-  REQUIRE(v.size() == 5);
+  SECTION("Vector size increases with additions"){
+    REQUIRE(v.size() == 5);
+    v.push_back(10);
+    REQUIRE(v.size() == 6);
+  }
 
   SECTION("Resizing bigger changes size and capacity"){
     v.resize(10);
@@ -368,9 +373,11 @@ TEST_CASE("A range iterator can act as a standard iterator", "[range]"){
   std::vector<int> source{2, 3, 4, 5, 6 };
   range<decltype(source)> rng(source);
 
-  REQUIRE(*rng.begin() == source[0]);
-  REQUIRE(*++rng.begin() == source[1]);
-  REQUIRE(*--rng.end() == source[source.size() - 1]);
+  SECTION("Initial basic range iterators reference source."){
+    REQUIRE(*rng.begin() == source[0]);
+    REQUIRE(*++rng.begin() == source[1]);
+    REQUIRE(*--rng.end() == source[source.size() - 1]);
+  }
 
   SECTION("Ranges can participate in range-based for loops"){
     int idx = 0;
@@ -469,7 +476,9 @@ TEST_CASE("Maps are associative containers", "[map]"){
   const int nIters = 10;
   map<int, int> mp;
 
-  REQUIRE(mp.empty());
+  SECTION("Maps initialize empty"){
+    REQUIRE(mp.empty());
+  }
 
   for(int i = 0; i < nIters; ++i){
     mp[i] = i + 1;
