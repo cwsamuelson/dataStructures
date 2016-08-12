@@ -23,10 +23,12 @@
 
 bool testFunction(){
   function<int(int)> fn;
+  function<int(int, int)> nf;
   
   fn = [](int x){ return 1+x; };
+  nf = [](int x, int y){ return x + y; };
   
-  return fn(3) == 4;
+  return fn(3) == 4 && nf(1, 2) == 3;
 }
 
 bool testArray(){
