@@ -21,16 +21,6 @@
 #include<algorithm.hh>
 #include<date_time.hh>
 
-bool testArray(){
-  array<char[3] > arr;
-  
-  arr[0] = 'a';
-  arr[1] = 'b';
-  arr[2] = 'c';
-  
-  return arr[0] == 'a' && arr[1] == 'b' && arr[2] == 'c';
-}
-
 bool testTuple(){
   tuple<int> t1;
   tuple<int, int> t2;
@@ -609,6 +599,20 @@ TEST_CASE("Function objects are used as normal functions.", "[function]"){
     REQUIRE(fn(3) == 4);
     REQUIRE(nf(1, 2) == 3);
     REQUIRE(tst() == 5);
+  }
+}
+
+TEST_CASE("", "[array]"){
+  array<char[3]> arr;
+  
+  arr[0] = 'a';
+  arr[1] = 'b';
+  arr[2] = 'c';
+  
+  SECTION("Array basics."){
+    REQUIRE(arr[0] == 'a');
+    REQUIRE(arr[1] == 'b');
+    REQUIRE(arr[2] == 'c');
   }
 }
 
