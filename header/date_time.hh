@@ -282,7 +282,7 @@ std::ostream& operator<<(std::ostream& os, date dayt){
 class date_time{
 private:
   date mDate;
-  hour mTime;
+  second mTime;
 
 public:
   date_time(hour h, minute m, second s, date d = date(0, 0, 0)):
@@ -309,12 +309,36 @@ public:
       tu -= one;
     }
 
-    //whatever's left will be hour/min/sec, dump it into the time
+    //whatever's left will be hour/min/sec
+    //dump it into the time
     mTime += tu;
 
     return *this;
   }
+  friend std::ostream& operator<<(std::ostream& os, date_time dt);
 };
+
+std::ostream& operator<<(std::ostream& os, date_time dt){
+  unsigned int h = 0;
+  unsigned int m = 0;
+  unsigned int s = 0;
+
+  os << dt.mDate << " ";
+
+  while(dt.mTime > 3600){
+    ++h;
+    dt.mTime -= 3600;
+  }
+  while(dt.mTime > 60){
+    ++m;
+    dt.mTime -= 60;
+  }
+  s = dt.mTime.getValue();
+
+  os << h << ":" << m << ":" << s;
+
+  return os;
+}
 
 #endif
 
