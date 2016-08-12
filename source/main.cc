@@ -21,16 +21,6 @@
 #include<algorithm.hh>
 #include<date_time.hh>
 
-bool testFunction(){
-  function<int(int)> fn;
-  function<int(int, int)> nf;
-  
-  fn = [](int x){ return 1+x; };
-  nf = [](int x, int y){ return x + y; };
-  
-  return fn(3) == 4 && nf(1, 2) == 3;
-}
-
 bool testArray(){
   array<char[3] > arr;
   
@@ -468,7 +458,6 @@ TEST_CASE("Ranges can modify the values from a container before returning them")
 }
 
 TEST_CASE("Tests pass", "[tests]"){
-  REQUIRE(testFunction() == true);
   REQUIRE(testArray() == true);
   REQUIRE(testTuple() == true);
   REQUIRE(testPool() == true);
@@ -600,6 +589,26 @@ TEST_CASE("Regular operations can be performed on time units", "[time]"){
     ss2 << second(10);
     ss2 >> tu;
     REQUIRE(tu == 2);
+  }
+}
+
+int testfn(){
+  return 5;
+}
+
+TEST_CASE("Function objects are used as normal functions.", "[function]"){
+  function<int(int)> fn;
+  function<int(int, int)> nf;
+  function<int()> tst;
+  
+  fn = [](int x){ return 1+x; };
+  nf = [](int x, int y){ return x + y; };
+  tst = testfn;
+  
+  SECTION(""){
+    REQUIRE(fn(3) == 4);
+    REQUIRE(nf(1, 2) == 3);
+    REQUIRE(tst() == 5);
   }
 }
 
