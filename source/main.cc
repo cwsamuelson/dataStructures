@@ -559,7 +559,7 @@ TEST_CASE("Regular operations can be performed on time units", "[time]"){
     REQUIRE(m == 55);
   }
 
-  SECTION(""){
+  SECTION("Date time interacts with streams."){
     date_time dt(date(11, 8, 2016), 15, 41, 14);
     std::stringstream ss;
     std::string str;
@@ -574,6 +574,21 @@ TEST_CASE("Regular operations can be performed on time units", "[time]"){
 
     ss >> str;
     REQUIRE(str == "15:41:14");
+  }
+
+  SECTION("Units convert when using streams."){
+    std::string str("5 seconds");
+    time_unit<5> tu;
+    std::stringstream ss(str);
+
+    ss >> tu;
+    REQUIRE(tu == 1);
+
+    std::stringstream ss2;
+
+    ss2 << second(10);
+    ss2 >> tu;
+    REQUIRE(tu == 2);
   }
 }
 

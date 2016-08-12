@@ -2,6 +2,7 @@
 #define __DATE_TIME_HH__
 
 #include<iostream>
+#include<sstream>
 #include<string>
 
 template<unsigned int FACTOR>
@@ -159,13 +160,23 @@ public:
     return tu;
   }
 
-  long long getValue(){
+  long long getValue() const{
     return mValue / factor;
   }
 
   template<unsigned int UI>
   friend std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu);
+  template<unsigned int UI>
+  friend std::istream& operator>>(std::istream& is, time_unit<UI>& tu);
 };
+
+typedef time_unit<1> second;
+typedef time_unit<60> minute;
+typedef time_unit<3600> hour;
+typedef time_unit<86400> day;
+typedef time_unit<604800> week;
+typedef time_unit<2592000> month;//30 days
+typedef time_unit<31536000> year;
 
 template<unsigned int UI>
 time_unit<UI> operator*(double val, const time_unit<UI>& tu){
@@ -191,7 +202,7 @@ std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu){
   } else if(UI == 31536000){
     str = "years";
   } else {
-    str = "units";
+    str = "units(" + std::to_string(UI) + ")";
   }
 
   os << (tu.mValue / UI) << " " << str;
@@ -199,13 +210,32 @@ std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu){
   return os;
 }
 
-typedef time_unit<1> second;
-typedef time_unit<60> minute;
-typedef time_unit<3600> hour;
-typedef time_unit<86400> day;
-typedef time_unit<604800> week;
-typedef time_unit<2592000> month;//30 days
-typedef time_unit<31536000> year;
+template<unsigned int UI>
+std::istream& operator>>(std::istream& is, time_unit<UI>& tu){
+  long long val;
+  std::string str;
+
+  is >> val;
+  is >> str;
+
+  if(str == "seconds"){
+    tu = second(val);
+  } else if(str == "minutes"){
+    tu = minute(val);
+  } else if(str == "hours"){
+    tu = hour(val);
+  } else if(str == "days"){
+    tu = day(val);
+  } else if(str == "weeks"){
+    tu = week(val);
+  } else if(str == "months"){
+    tu = month(val);
+  } else if(str == "years"){
+    tu = year(val);
+  }
+
+  return is;
+}
 
 class date{
 private:
