@@ -6,25 +6,27 @@
 template<class T>
 class memoryPool{
 public:
-    typedef T type;
+  typedef T value_type;
+  typedef value_type* pointer;
+  typedef value_type& reference;
 
 private:
   class slot{
   public:
-    type* start;
-    type* end;
+  pointer start;
+  pointer end;
    
-    slot(type* first, type* second):
-      start(first),
-      end(second){
-    }
-    
-    bool operator<(const slot& rhs){
-      return start < rhs.start;
-    }
+  slot(pointer first, pointer second):
+    start(first),
+    end(second){
+  }
+  
+  bool operator<(const slot& rhs){
+    return start < rhs.start;
+  }
   };
  
-  type* mStorageStart;
+  pointer mStorageStart;
   void* mStorageEnd;
   unsigned int mSize;
   unsigned int mInUse;
@@ -32,19 +34,19 @@ private:
  
 public:
   memoryPool(size_t size):
-    mStorageStart(new type[size]),
+    mStorageStart(new value_type[size]),
     mStorageEnd(mStorageStart + size - 1),
     mSize(size),
     mInUse(0){
   }
   virtual ~memoryPool(){ delete[] mStorageStart; }
   
-  type* allocate(size_t amt){
-    type* ret = nullptr;
+  pointer allocate(size_t amt){
+    pointer ret = nullptr;
     //If the request is larger than that available, return null;
     if(amt == 0 || (amt > (mSize - mInUse)) ){
       ret = nullptr;
-    }else{
+    } else {
       //Determine where free memory exists to return;
       //If there's no memory in use, return beginning;
       if(mSlots.size() == 0){
@@ -63,7 +65,8 @@ public:
             break;
           }
         }
-        //If we get to the end of the list and there's no free space found, check the tail end;
+        //If we get to the end of the list and there's no free space found,
+        //  check the tail end;
         if((size_t)((mStorageStart + mSize) - first->end) >= amt){
           mSlots.emplace_back(first->end, first->end + amt);
           ret = first->end;
@@ -76,7 +79,7 @@ public:
     return ret;
   }
   
-  void deallocate(type* ptr){
+  void deallocate(pointer ptr){
     for(auto it = mSlots.begin(); it != mSlots.end(); ++it){
       if(it->start == ptr){
         mSlots.erase(it);
