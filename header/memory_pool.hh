@@ -3,6 +3,9 @@
 
 #include<list>
 
+//TODO: investigate whether stored data should be value_type or unsigned char
+//        using value_type may(probably does) call constructors, which is not 
+//        desired in this case.  placement new is most likely scenario
 template<class T>
 class memoryPool{
 public:
@@ -75,7 +78,7 @@ public:
       //Only re-sort when new things have been added;
       mSlots.sort();
     }
-    
+
     return ret;
   }
   
