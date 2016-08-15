@@ -76,6 +76,58 @@ public:
 
     return (*this);
   }
+  equation operator*(const equation& rhs){
+    std::vector<double> vec(mCoeff.size() + rhs.mCoeff.size() - 1);
+    for(unsigned int i = 0; i < mCoeff.size(); ++i){
+      for(unsigned int j = 0; j < rhs.mCoeff.size(); ++j){
+        vec[i + j] += mCoeff[i] * rhs.mCoeff[i];
+      }
+    }
+
+    return equation(vec.begin(), vec.end());
+  }
+  equation& operator*=(const equation& rhs){
+    (*this) = (*this) * rhs;
+    return (*this);
+  }
+  equation operator*(double d){
+    equation eq(*this);
+
+    eq *= d;
+
+    return eq;
+  }
+  equation& operator*=(double d){
+    for(double& it : mCoeff){
+      it *= d;
+    }
+
+    return (*this);
+  }
+  equation operator/(const equation& rhs){
+    std::vector<double> vec(mCoeff.size() + rhs.mCoeff.size() - 1);
+    for(unsigned int i = 0; i < mCoeff.size(); ++i){
+      for(unsigned int j = 0; j < rhs.mCoeff.size(); ++j){
+        vec[i - j] -= mCoeff[i] / rhs.mCoeff[i];
+      }
+    }
+
+    return equation(vec.begin(), vec.end());
+  }
+  equation operator/(double d){
+    equation eq(*this);
+
+    eq /= d;
+
+    return eq;
+  }
+  equation& operator/=(double d){
+    for(double& it : mCoeff){
+      it /= d;
+    }
+
+    return (*this);
+  }
 
   double operator()(const double X){
     double val = 0.0;
