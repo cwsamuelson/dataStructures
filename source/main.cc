@@ -20,6 +20,7 @@
 #include<map.hh>
 #include<algorithm.hh>
 #include<date_time.hh>
+#include<equation.hh>
 
 bool testTuple(){
   tuple<int> t1;
@@ -448,7 +449,6 @@ TEST_CASE("Ranges can modify the values from a container before returning them")
 }
 
 TEST_CASE("Tests pass", "[tests]"){
-  REQUIRE(testArray() == true);
   REQUIRE(testTuple() == true);
   REQUIRE(testPool() == true);
 }
@@ -614,5 +614,15 @@ TEST_CASE("", "[array]"){
     REQUIRE(arr[1] == 'b');
     REQUIRE(arr[2] == 'c');
   }
+}
+
+TEST_CASE("Equation", "[equ]"){
+  std::vector<double> vec { 1, 1, 1 };
+  std::vector<double> vec2 { 2, 2, 2 };
+  equation eq(vec.begin(), vec.end());
+  equation eq2(vec2.begin(), vec2.end());
+
+  REQUIRE(eq(2) == 7);
+  REQUIRE((eq + eq2)(2) == 21);
 }
 
