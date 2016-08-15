@@ -595,14 +595,14 @@ TEST_CASE("Function objects are used as normal functions.", "[function]"){
   nf = [](int x, int y){ return x + y; };
   tst = testfn;
   
-  SECTION(""){
+  SECTION("Calling functions produce expected results."){
     REQUIRE(fn(3) == 4);
     REQUIRE(nf(1, 2) == 3);
     REQUIRE(tst() == 5);
   }
 }
 
-TEST_CASE("", "[array]"){
+TEST_CASE("Arrays can be used as builtin arrays.", "[array]"){
   array<char[3]> arr;
   
   arr[0] = 'a';
@@ -622,7 +622,11 @@ TEST_CASE("Equation", "[equ]"){
   equation eq(vec.begin(), vec.end());
   equation eq2(vec2.begin(), vec2.end());
 
-  REQUIRE(eq(2) == 7);
-  REQUIRE((eq + eq2)(2) == 21);
+  SECTION("Basic equation arithmetic"){
+    REQUIRE(eq(2) == 7);
+    REQUIRE((eq + eq2)(2) == 21);
+    REQUIRE((eq2 - eq)(2) == 7);
+    REQUIRE((eq - eq2)(2) == -7);
+  }
 }
 

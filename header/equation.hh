@@ -10,14 +10,18 @@ private:
   std::vector<double> mCoeff;
 
   template<class operation>
-  std::vector<double> merge(const std::vector<double>& small, const std::vector<double>& large, operation op = operation()){
+  std::vector<double> merge(const std::vector<double>& small, const std::vector<double>& large, bool swapOperands = false, operation op = operation()){
     std::vector<double> vec;
     int i = 0;
 
     vec = large;
 
     for(auto it:small){
-      vec[i] = op(vec[i], it);
+      if(swapOperands){
+        vec[i] = op(vec[i], it);
+      } else {
+        vec[i] = op(it, vec[i]);
+      }
       ++i;
     }
 
@@ -65,7 +69,7 @@ public:
   }
   equation& operator-=(const equation& rhs){
     if(mCoeff.size() > rhs.mCoeff.size()){
-      mCoeff = merge<std::minus<double> >(rhs.mCoeff, mCoeff);
+      mCoeff = merge<std::minus<double> >(rhs.mCoeff, mCoeff, true);
     } else {
       mCoeff = merge<std::minus<double> >(mCoeff, rhs.mCoeff);
     }
