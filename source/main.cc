@@ -614,6 +614,13 @@ TEST_CASE("Arrays can be used as builtin arrays.", "[array]"){
     REQUIRE(arr[1] == 'b');
     REQUIRE(arr[2] == 'c');
   }
+
+  SECTION("Array range-based for."){
+    unsigned int i = 0;
+    for(auto it:arr){
+      REQUIRE(it == arr[i++]);
+    }
+  }
 }
 
 TEST_CASE("Arrays can be 'spliced'.", "[array]"){

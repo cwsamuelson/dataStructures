@@ -4,6 +4,8 @@
 #include<functional>
 #include<vector>
 
+#include<normal_iterator.hh>
+
 //see mask_array and indirect array for indexing ideas
 //  one allows data[data > 5] = -1 kinda syntax,
 //  the other data[data2] = -2 syntax
@@ -51,17 +53,19 @@ struct splice_helper<T[N]>{
 template<class T, unsigned int N>
 class array<T[N]>{
 public:
+  typedef T value_type;
   typedef unsigned int index_t;
   const index_t mSize = N;
   static const unsigned int ptrdiff = sizeof(T);
-  typedef splice_index<T> splicer;
-  typedef splice_helper<T[N]> helper;
+  typedef splice_index<value_type> splicer;
+  typedef splice_helper<value_type[N]> helper;
+  typedef normal_iterator<value_type, array> iterator;
 
 private:
   char mArr[N * ptrdiff];
 
 public:
-  T& operator[](index_t idx){
+  value_type& operator[](index_t idx){
     return mArr[idx * ptrdiff];
   }
   index_t size(){
@@ -83,6 +87,16 @@ public:
   }
   splicer operator<(index_t idx){
     return splicer(std::less<T>(), idx);
+  }
+
+  iterator begin(){
+    return Iterator(0);
+  }
+  iterator end(){
+    return Iterator(mSize);
+  }
+  iterator Iterator(index_t idx){
+    return iterator(mArr + (idx * ptrdiff));
   }
 };
 
