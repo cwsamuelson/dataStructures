@@ -114,6 +114,10 @@ TEST_CASE("Unique_ptrs have a mostly similar interface to regular pointers", "[u
 
   REQUIRE(uPtr0 == iPtr0);
   REQUIRE(*uPtr0 == *iPtr0);
+
+  unique_ptr<int> uPtr1(uPtr0);
+  REQUIRE(uPtr0 == nullptr);
+  REQUIRE(uPtr1 == iPtr0);
 }
 
 TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]"){
@@ -125,6 +129,11 @@ TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_p
   SECTION("Initial equality checks."){
     REQUIRE(sPtr0 == iPtr0);
     REQUIRE(*sPtr0 == *iPtr0);
+
+    *iPtr0 = 5;
+    REQUIRE(*sPtr0 == 5);
+    *sPtr0 = 4;
+    REQUIRE(*iPtr0 == 4);
   }
 
   SECTION("Dereferenced shared_ptrs can be assigned"){
@@ -136,9 +145,12 @@ TEST_CASE("Shared_ptrs have a similar interface to regular pointers", "[shared_p
 
   SECTION("There can be multiple valid instances of a shared_ptr"){
     shared_ptr<int> sPtr1 = sPtr0;
+    shared_ptr<int> sPtr2(sPtr0);
 
     REQUIRE(sPtr0 == sPtr1);
     REQUIRE(*sPtr0 == *sPtr1);
+    REQUIRE(sPtr0 == sPtr2);
+    REQUIRE(*sPtr0 == *sPtr2);
   }
 
   SECTION("Copies of a shared pointer are not invalidated when others go out of scope"){
