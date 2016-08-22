@@ -616,6 +616,20 @@ TEST_CASE("Arrays can be used as builtin arrays.", "[array]"){
   }
 }
 
+TEST_CASE("Arrays can be 'spliced'.", "[array]"){
+  array<char[5]> arr;
+
+  for(unsigned int i = 0; i < 5; ++i){
+    arr[i] = char(i + 'a');
+  }
+
+  arr[arr > 3] = 'z';
+
+  SECTION("Basic splice one index."){
+    REQUIRE(arr[4] == 'z');
+  }
+}
+
 TEST_CASE("Equations can be used in basic arithmetic", "[equ]"){
   std::vector<double> vec { 1, 1, 1 };
   std::vector<double> vec2 { 2, 2, 2 };
