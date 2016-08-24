@@ -705,5 +705,11 @@ TEST_CASE("Equation", "[equ]"){
     REQUIRE((eq3 + eq)(2) == 22);
     REQUIRE((eq3 - eq)(2) == 8);
   }
+
+  SECTION("Derivative"){
+    equation eq3 = derive(eq2);
+
+    REQUIRE(eq3(2) == 10);
+  }
 }
 

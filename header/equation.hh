@@ -138,7 +138,23 @@ public:
 
     return val;
   }
+
+  friend equation derive(const equation& eq, unsigned int order);
 };
+
+equation derive(const equation& eq, unsigned int order = 1){
+  if(order == 0){
+    return eq;
+  }
+
+  equation ret;
+
+  for(unsigned int i = 1; i < eq.mCoeff.size(); ++i){
+    ret.mCoeff.push_back(eq.mCoeff[i] * i);
+  }
+
+  return ret;
+}
 
 #endif
 
