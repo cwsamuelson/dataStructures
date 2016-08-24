@@ -711,5 +711,9 @@ TEST_CASE("Equation", "[equ]"){
 
     REQUIRE(eq3(2) == 10);
   }
+
+  SECTION("Integral"){
+    REQUIRE(integrate(eq2, 3, 1) == (29.0 + (1.0 / 3.0)));
+  }
 }
 

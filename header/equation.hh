@@ -141,7 +141,7 @@ public:
 
   friend equation derive(const equation& eq, unsigned int order);
   friend equation antiderive(const equation& eq);
-  friend equation integrate(const equation& eq, double upperBound, double lowerBound);
+  friend double integrate(const equation& eq, double upperBound, double lowerBound);
 };
 
 equation derive(const equation& eq, unsigned int order = 1){
@@ -162,15 +162,15 @@ equation antiderive(const equation& eq){
   equation ret;
   ret.mCoeff.push_back(0);
 
-  for(unsigned int i = 0; i <= eq.mCoeff.size(); ++=){
+  for(unsigned int i = 0; i <= eq.mCoeff.size(); ++i){
     ret.mCoeff.push_back(eq.mCoeff[i] / (i + 1));
   }
 
   return ret;
 }
 
-equation integrate(const equation& eq, double upperBound, double lowerBound){
-  equation anti(antiderivative(eq));
+double integrate(const equation& eq, double upperBound, double lowerBound){
+  equation anti(antiderive(eq));
 
   return anti(upperBound) - anti(lowerBound);
 }
