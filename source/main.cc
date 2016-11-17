@@ -21,6 +21,7 @@
 #include<algorithm.hh>
 #include<date_time.hh>
 #include<equation.hh>
+#include<menu.hh>
 
 bool testTuple(){
   tuple<int> t1;
@@ -715,5 +716,13 @@ TEST_CASE("Equation", "[equ]"){
   SECTION("Integral"){
     REQUIRE(integrate(eq2, 3, 1) == (29.0 + (1.0 / 3.0)));
   }
+}
+
+TEST_CASE( "", "[menu]" ){
+  menu m;
+  menu m2;
+
+  m.addOption( "electric", m2 );
+  m.addOption( "boogaloo", m2 );
 }
 
