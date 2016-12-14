@@ -114,23 +114,31 @@ operator>>(ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CAN
     return is;
 }
 
-typedef unit<0, 0, 1, 0, 0, 0>   mass;
-typedef unit<1, -1, 0, 0, 0, 0>  speed;
-typedef unit<1, 0, 0, 0, 0, 0>   length;
-typedef unit<0, 1, 0, 0, 0, 0>   thyme;//time, renamed to avoid collision
-typedef unit<1, -2, 0, 0, 0, 0>  acceleration;
-typedef unit<1, -2, 1, 0, 0, 0>  force;//newton
-typedef unit<1, -1, 1, 0, 0, 0>  momentum;
-typedef unit<0, 1, 0, 1, 0, 0>   charge;//coulomb
-typedef unit<-2, 4, -1, 2, 0, 0> capacitance;//farad
-typedef unit<2, -3, 1, -1, 0, 0> voltage;
-typedef unit<2, -3, 1, -2, 0, 0> resistance;//ohms
-typedef unit<0, 0, 0, 1, 0, 0>   current;//amps
-typedef unit<2, -3, 1, 0, 0, 0>  power;//watts
-typedef unit<2, -2, 1, 0, 0, 0>  energy;//joules
-typedef unit<2, -2, 1, -2, 0, 0> inductance;//henrys
-typedef unit<0, -2, 1, 1, 0, 0>  magField;//tesla
-typedef unit<1, -3, 1, -1, 0, 0> elecField;
+/* 'thyme' should be renamed back to 'time' when a namespace is established, as
+ * name collision would be disambiguated using <namespace>::time vs (say) std::time
+ */
+typedef unit< 1,  0,  0,  0, 0, 0> length;
+typedef unit< 0,  1,  0,  0, 0, 0> thyme;//time, renamed to avoid collision
+typedef unit< 0,  0,  1,  0, 0, 0> mass;
+typedef unit< 0,  0,  0,  1, 0, 0> current;//amps
+typedef unit< 0,  0,  0,  0, 1, 0> temperature;//kelvin
+typedef unit< 0,  0,  0,  0, 0, 1> light;//candela
+
+typedef unit< 1, -1,  0,  0, 0, 0> speed;
+typedef unit< 1, -2,  0,  0, 0, 0> acceleration;
+typedef unit< 1, -2,  1,  0, 0, 0> force;//newton
+typedef unit< 1, -1,  1,  0, 0, 0> momentum;
+typedef unit< 2, -2,  1,  0, 0, 0> energy;//joules
+typedef unit< 2, -3,  1,  0, 0, 0> power;//watts
+
+typedef unit< 2, -3,  1, -1, 0, 0> voltage;
+typedef unit< 2, -3,  1, -2, 0, 0> resistance;//ohms
+typedef unit<-2,  4, -1,  2, 0, 0> capacitance;//farad
+typedef unit< 2, -2,  1, -2, 0, 0> inductance;//henrys
+typedef unit< 0,  1,  0,  1, 0, 0> charge;//coulomb
+
+typedef unit< 0, -2,  1,  1, 0, 0> magField;//tesla
+typedef unit< 1, -3,  1, -1, 0, 0> elecField;
 
 #endif
 
