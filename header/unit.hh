@@ -4,82 +4,85 @@
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, typename DBL = double>
 class unit{
 private:
-    DBL mValue;
+  DBL mValue;
 
 public:
-    unit():
-        mValue(0.0){
-    }
-    unit(DBL val):
-        mValue(val){
-    }
-    unit(const unit& other):
-        unit(other.mValue){
-    }
-    unit(unit&& other):
-        unit(other.mValue){
-    }
-    
-    unit& operator=(const unit& other){
-        mValue = other.mValue;
-        return *this;
-    }
-    unit& operator=(DBL value){
-        mValue = value;
-        return *this;
-    }
+  unit():
+    mValue(0.0){
+  }
+  unit(DBL val):
+    mValue(val){
+  }
+  unit(const unit& other):
+    unit(other.mValue){
+  }
+  unit(unit&& other):
+    unit(other.mValue){
+  }
 
-    bool operator==(const unit& other) const{
-        //TODO: allow slight error(epsilon)
-        return mValue == other.mValue;
-    }
-    bool operator==(DBL other) const{
-        return mValue == other;
-    }
-    unit operator+(const unit& other) const{
-        return mValue + other.mValue;
-    }
-    unit operator-(const unit& other) const{
-        return mValue - other.mValue;
-    }
-    
-    unit& operator+=(const unit& other){
-        this->mValue = mValue + other.mValue;
-        return *this;
-    }
-    unit& operator-=(const unit& other){
-        this->mValue = mValue - other.mValue;
-        return *this;
-    }
+  unit& operator=(const unit& other){
+    mValue = other.mValue;
+    return *this;
+  }
+  unit& operator=(DBL value){
+    mValue = value;
+    return *this;
+  }
 
-    double& getValue(){ return mValue; }
-    double getValue() const{ return mValue; }
+  bool operator==(const unit& other) const{
+    //TODO: allow slight error(epsilon)
+    return mValue == other.mValue;
+  }
+  bool operator==(DBL other) const{
+    return mValue == other;
+  }
+  unit operator+(const unit& other) const{
+    return mValue + other.mValue;
+  }
+  unit operator-(const unit& other) const{
+    return mValue - other.mValue;
+  }
 
-    template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
-             int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2>
-    friend
-    unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2,
-         AMPERE1 + AMPERE2, KELVIN1 + KELVIN2, CANDELA1 + CANDELA2>
-    operator*(const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1>& lhs,
-              const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2>& rhs);
+  unit& operator+=(const unit& other){
+    this->mValue = mValue + other.mValue;
+    return *this;
+  }
+  unit& operator-=(const unit& other){
+    this->mValue = mValue - other.mValue;
+    return *this;
+  }
+  /* *= and /= are not included because the * and / operations return a new type,
+   * and therefore cannot be assigned to either operand
+   */
 
-    template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
-             int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2>
-    friend
-    unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2,
-         AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2>
-    operator/(const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1>& lhs,
-              const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2>& rhs);
+  double& getValue(){ return mValue; }
+  double getValue() const{ return mValue; }
 
-    template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM>
-    friend
-    OSTREAM&
-    operator<<(OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val);
-    
-    template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM>
-    friend
-    ISTREAM&
-    operator>>(ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val);
+  template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
+       int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2>
+  friend
+  unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2,
+       AMPERE1 + AMPERE2, KELVIN1 + KELVIN2, CANDELA1 + CANDELA2>
+  operator*(const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1>& lhs,
+            const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2>& rhs);
+
+  template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
+           int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2>
+  friend
+  unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2,
+       AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2>
+  operator/(const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1>& lhs,
+            const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2>& rhs);
+
+  template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM>
+  friend
+  OSTREAM&
+  operator<<(OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val);
+  
+  template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM>
+  friend
+  ISTREAM&
+  operator>>(ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val);
 };
 
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
@@ -88,7 +91,7 @@ unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2,
      AMPERE1 + AMPERE2, KELVIN1 + KELVIN2, CANDELA1 + CANDELA2>
 operator*(const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1>& lhs,
           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2>& rhs){
-    return lhs.mValue * rhs.mValue;
+  return lhs.mValue * rhs.mValue;
 }
 
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
@@ -97,21 +100,21 @@ unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2,
      AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2>
 operator/(const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1>& lhs,
           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2>& rhs){
-    return lhs.mValue / rhs.mValue;
+  return lhs.mValue / rhs.mValue;
 }
 
 template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM>
 OSTREAM&
 operator<<(OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val){
-    os << val.mValue;
-    return os;
+  os << val.mValue;
+  return os;
 }
 
 template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM>
 ISTREAM&
 operator>>(ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val){
-    is >> val.mValue;
-    return is;
+  is >> val.mValue;
+  return is;
 }
 
 /* 'thyme' should be renamed back to 'time' when a namespace is established, as
