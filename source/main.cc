@@ -719,10 +719,18 @@ TEST_CASE("Equation", "[equ]"){
 }
 
 TEST_CASE( "", "[menu]" ){
-  menu m;
-  menu m2;
+  menu<int> m;
+  menu<int> m0;
 
-  m.addOption( "electric", m2 );
-  m.addOption( "boogaloo", m2 );
+  m.addOption( 1, "electric", m0 );
+  m.addOption( 2, "boogaloo", m0 );
+
+  decltype( m ) current = m;
+
+  //TODO: pass in a string stream instead, and confirm contents
+  current.print( std::cout );
+
+  current = current.select( 1 );
+  m.select( 2 );
 }
 
