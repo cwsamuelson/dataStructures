@@ -1,24 +1,36 @@
 #ifndef __MENU_HH__
 #define __MENU_HH__
 
-#include<vector>
 #include<map>
 #include<string>
 #include<functional>
 #include<tuple>
+#include<memory>
 
 typedef std::function<void()> optionCallback;
 
-template<typename selector>
+template<typename SELECTOR>
 class menu{
+public:
+  typedef std::shared_ptr<menu> menuPtr;
+
 private:
-  std::map<selector, std::tuple<std::string, menu, optionCallback> > mOptions;
+  std::map<SELECTOR, std::tuple<std::string, menuPtr, optionCallback> > mOptions;
 
 public:
-  void addOption( const selector& selection, const std::string& optText, const menu& nextMenu, optionCallback callback = optionCallback( [](){} ) ){
+  menu() = default;
+  menu( const menu& other ):
+    mOptions( other.mOptions ){
+  }
+  menu( const menu* other ):
+    mOptions( other->mOptions ){
+  }
+//TODO: add ctor for menu&&
+
+  void addOption( const SELECTOR& selection, const std::string& optText, menuPtr nextMenu, optionCallback callback = optionCallback( [](){} ) ){
     mOptions[selection] = std::make_tuple( optText, nextMenu, callback );
   }
-  menu& select( const selector& selection ){
+  menuPtr select( const SELECTOR& selection ){
     auto it = mOptions.at( selection );
 
     // call the callback

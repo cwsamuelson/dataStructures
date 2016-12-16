@@ -3,6 +3,7 @@
 #include<sstream>
 #include<vector>
 #include<random>
+#include<memory>
 
 #define CATCH_CONFIG_MAIN
 #include<catch/catch.hpp>
@@ -718,19 +719,24 @@ TEST_CASE("Equation", "[equ]"){
   }
 }
 
-TEST_CASE( "", "[menu]" ){
-  menu<int> m;
-  menu<int> m0;
+TEST_CASE( "aaa", "[menu]" ){
+  SECTION( "bbb" ){
+    menu<int> m;
+    menu<int> m0;
 
-  m.addOption( 1, "electric", m0 );
-  m.addOption( 2, "boogaloo", m0 );
+    m.addOption( 0, "electric", std::make_shared<menu<int> >( &m0 ) );
+    m.addOption( 1, "boogaloo", std::make_shared<menu<int> >( &m0 ) );
+    m0.addOption( 0, "foo", std::make_shared<menu<int> >( &m ) );
+    m0.addOption( 1, "baz", std::make_shared<menu<int> >( &m ) );
+    m0.addOption( 1, "bar", std::make_shared<menu<int> >( &m ) );
 
-  decltype( m ) current = m;
+    std::shared_ptr<menu<int> > current( &m );
 
-  //TODO: pass in a string stream instead, and confirm contents
-  current.print( std::cout );
-
-  current = current.select( 1 );
-  m.select( 2 );
+    //TODO: pass in a string stream instead, and confirm contents
+    for( unsigned int i = 0; i < 2; ++i ){
+      current->print( std::cout );
+      current = current->select( i );
+    }
+  }
 }
 
