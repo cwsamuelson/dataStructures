@@ -727,9 +727,9 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
 
   pm->addOption( 0, "electric", pm0, [&](){ ss << "beep" << std::endl; } );
   pm->addOption( 1, "boogaloo", pm0, [&](){ ss << "boop" << std::endl; } );
-  pm0->addOption( 0, "foo", pm, [&](){ ss << "beep" << std::endl; } );
-  pm0->addOption( 1, "baz", pm, [&](){ ss << "boop" << std::endl; } );
-  pm0->addOption( 1, "bar", pm, [&](){ ss << "baap" << std::endl; } );
+  pm0->addOption( 0, "foo", pm, [&](){ ss << "buup" << std::endl; } );
+  pm0->addOption( 1, "baz", pm, [&](){ ss << "biip" << std::endl; } );
+  pm0->addOption( 1, "bar", pm, [&](){ ss << "byyp" << std::endl; } );
 
   SECTION( "Prints menus when requested." ){
     //TODO: pass in a string stream instead, and confirm contents
@@ -770,7 +770,7 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
 
     ss >> str;
 
-    REQUIRE( str == "baap" );
+    REQUIRE( str == "byyp" );
   }
 }
 
