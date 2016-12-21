@@ -721,16 +721,16 @@ TEST_CASE("Equation", "[equ]"){
 
 TEST_CASE( "aaa", "[menu]" ){
   SECTION( "bbb" ){
-    menu<int> m;
-    menu<int> m0;
+    auto pm = std::make_shared<menu<int>>();
+    auto pm0 = std::make_shared<menu<int>>();
 
-    m.addOption( 0, "electric", std::make_shared<menu<int> >( &m0 ) );
-    m.addOption( 1, "boogaloo", std::make_shared<menu<int> >( &m0 ) );
-    m0.addOption( 0, "foo", std::make_shared<menu<int> >( &m ) );
-    m0.addOption( 1, "baz", std::make_shared<menu<int> >( &m ) );
-    m0.addOption( 1, "bar", std::make_shared<menu<int> >( &m ) );
+    pm->addOption( 0, "electric", pm0 );
+    pm->addOption( 1, "boogaloo", pm0 );
+    pm0->addOption( 0, "foo", pm );
+    pm0->addOption( 1, "baz", pm );
+    pm0->addOption( 1, "bar", pm );
 
-    std::shared_ptr<menu<int> > current( &m );
+    std::shared_ptr<menu<int> > current( pm );
 
     //TODO: pass in a string stream instead, and confirm contents
     for( unsigned int i = 0; i < 2; ++i ){
