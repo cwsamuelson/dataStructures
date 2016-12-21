@@ -720,23 +720,60 @@ TEST_CASE("Equation", "[equ]"){
 }
 
 TEST_CASE( "aaa", "[menu]" ){
+  std::stringstream ss;
+  auto pm = std::make_shared<menu<int>>();
+  auto pm0 = std::make_shared<menu<int>>();
+
+  pm->addOption( 0, "electric", pm0, [&](){ ss << "beep" << std::endl; } );
+  pm->addOption( 1, "boogaloo", pm0, [&](){ ss << "beep" << std::endl; } );
+  pm0->addOption( 0, "foo", pm, [&](){ ss << "beep" << std::endl; } );
+  pm0->addOption( 1, "baz", pm, [&](){ ss << "boop" << std::endl; } );
+  pm0->addOption( 1, "bar", pm, [&](){ ss << "baap" << std::endl; } );
+
+  std::shared_ptr<menu<int> > current( pm );
+
   SECTION( "bbb" ){
-    auto pm = std::make_shared<menu<int>>();
-    auto pm0 = std::make_shared<menu<int>>();
-
-    pm->addOption( 0, "electric", pm0 );
-    pm->addOption( 1, "boogaloo", pm0 );
-    pm0->addOption( 0, "foo", pm );
-    pm0->addOption( 1, "baz", pm );
-    pm0->addOption( 1, "bar", pm );
-
-    std::shared_ptr<menu<int> > current( pm );
-
     //TODO: pass in a string stream instead, and confirm contents
     for( unsigned int i = 0; i < 2; ++i ){
-      current->print( std::cout );
+
+      current->print( ss );
       current = current->select( i );
+
     }
+    int i;
+    std::string str;
+
+    ss >> i;
+    ss >> str;
+
+    REQUIRE( i == 0 );
+    REQUIRE( str == "electric" );
+
+    ss >> i;
+    ss >> str;
+
+    REQUIRE( i == 1 );
+    REQUIRE( str == "boogaloo" );
+
+    ss >> str;
+
+    REQUIRE( str == "beep" );
+
+    ss >> i;
+    ss >> str;
+
+    REQUIRE( i == 0 );
+    REQUIRE( str == "foo" );
+
+    ss >> i;
+    ss >> str;
+
+    REQUIRE( i == 1 );
+    REQUIRE( str == "bar" );
+
+    ss >> str;
+
+    REQUIRE( str == "baap" );
   }
 }
 
