@@ -719,26 +719,23 @@ TEST_CASE( "Equation", "[equ]" ){
   }
 }
 
-TEST_CASE( "aaa", "[menu]" ){
+TEST_CASE( "Menu allows option selection and provides callbacks on selection.", "[menu]" ){
   std::stringstream ss;
   auto pm = std::make_shared<menu<int>>();
   auto pm0 = std::make_shared<menu<int>>();
+  std::shared_ptr<menu<int> > current( pm );
 
   pm->addOption( 0, "electric", pm0, [&](){ ss << "beep" << std::endl; } );
-  pm->addOption( 1, "boogaloo", pm0, [&](){ ss << "beep" << std::endl; } );
+  pm->addOption( 1, "boogaloo", pm0, [&](){ ss << "boop" << std::endl; } );
   pm0->addOption( 0, "foo", pm, [&](){ ss << "beep" << std::endl; } );
   pm0->addOption( 1, "baz", pm, [&](){ ss << "boop" << std::endl; } );
   pm0->addOption( 1, "bar", pm, [&](){ ss << "baap" << std::endl; } );
 
-  std::shared_ptr<menu<int> > current( pm );
-
-  SECTION( "bbb" ){
+  SECTION( "Prints menus when requested." ){
     //TODO: pass in a string stream instead, and confirm contents
     for( unsigned int i = 0; i < 2; ++i ){
-
       current->print( ss );
       current = current->select( i );
-
     }
     int i;
     std::string str;
