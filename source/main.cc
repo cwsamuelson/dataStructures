@@ -365,7 +365,7 @@ TEST_CASE( "Ranges can filter values from a container", "[range]" ){
   REQUIRE( count == result.size() );
 }
 
-TEST_CASE( "Ranges can modify the values from a container before returning them" ){
+TEST_CASE( "Ranges can modify the values from a container before returning them", "[range]" ){
   int mod = 1;
   std::vector<int> source( 10 );
   std::vector<int> result( source.size() );
@@ -398,7 +398,7 @@ TEST_CASE( "Ranges can modify the values from a container before returning them"
   }
 }
 
-TEST_CASE( "Unique pointers behave mostly as regular pointers", "[unique]" ){
+TEST_CASE( "Unique pointers behave mostly as regular pointers", "[unique_ptr]" ){
   int x = 1;
   int y = 2;
   bool flag1;
