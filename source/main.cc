@@ -24,26 +24,6 @@
 #include<equation.hh>
 #include<menu.hh>
 
-bool testTuple(){
-  tuple<int> t1;
-  tuple<int, int> t2;
-  tuple<char, int, char> t3;
-  tuple<int, int> t4( 1, 2 );
-  
-  get<0>( t1 ) = 1;
-  
-  get<0>( t2 ) = 2;
-  get<1>( t2 ) = 3;
-  
-  get<0>( t3 ) = 'a';
-  get<1>( t3 ) = 4;
-  get<2>( t3 ) = 'b';
-  
-  return get<0>( t1 ) == 1 && get<0>( t2 ) == 2 && get<1>( t2 ) == 3 &&
-         get<0>( t3 ) == 'a' && get<1>( t3 ) == 4 && get<2>( t3 ) == 'b' &&
-         get<0>( t4 ) == 1 && get<1>( t4 ) == 2;
-}
-
 class foo{
 private:
   int& X;
@@ -63,34 +43,6 @@ public:
     return X;
   }
 };
-
-bool testUnique(){
-  bool change = true;
-  int x = 1;
-  int y = 2;
-  bool flag1;
-  bool flag2;
-  unique_ptr<int> ptr1( new int );
-  unique_ptr<int> ptr2( new int );
-  unique_ptr<foo> ptr3( new foo( x, flag1 ) );
-  unique_ptr<foo> ptr4( new foo( y, flag2 ) );
-  
-  *ptr1 = 1;
-  *ptr2 = 2;
-
-  ptr1 = ptr2;
-  ptr4 = ptr3;
-  
-  /* flag2 should be toggled now, and not flag1 */
-  change &= !flag1;
-  change &= flag2;
-  change &= ( ptr4->value() == x );
-  ptr4 = ptr4;
-  change &= ( ptr4->value() == x );
-  
-  x = 2;
-  return ( *ptr1 ) == 2 && ptr4->value() == x && change;;
-}
 
 TEST_CASE( "Unique_ptrs have a mostly similar interface to regular pointers", "[unique_ptr]" ){
   int* iPtr0 = new int( 3 );
@@ -446,8 +398,57 @@ TEST_CASE( "Ranges can modify the values from a container before returning them"
   }
 }
 
-TEST_CASE( "Tests pass", "[tests]" ){
-  REQUIRE( testTuple() == true );
+TEST_CASE( "Unique pointers behave mostly as regular pointers", "[unique]" ){
+  int x = 1;
+  int y = 2;
+  bool flag1;
+  bool flag2;
+  unique_ptr<int> ptr1( new int );
+  unique_ptr<int> ptr2( new int );
+  unique_ptr<foo> ptr3( new foo( x, flag1 ) );
+  unique_ptr<foo> ptr4( new foo( y, flag2 ) );
+  
+  *ptr1 = 1;
+  *ptr2 = 2;
+
+  ptr1 = ptr2;
+  ptr4 = ptr3;
+  
+  /* flag2 should be toggled now, and not flag1 */
+  REQUIRE( !flag1 );
+  REQUIRE( flag2 );
+  REQUIRE( ptr4->value() == x );
+  ptr4 = ptr4;
+  REQUIRE( ptr4->value() == x );
+  
+  x = 2;
+  REQUIRE( ( *ptr1 ) == 2 );
+  REQUIRE( ptr4->value() == x );
+}
+
+TEST_CASE( "Tuple elements can be set and checked", "[tuple]" ){
+  tuple<int> t1;
+  tuple<int, int> t2;
+  tuple<char, int, char> t3;
+  tuple<int, int> t4( 1, 2 );
+  
+  get<0>( t1 ) = 1;
+  
+  get<0>( t2 ) = 2;
+  get<1>( t2 ) = 3;
+  
+  get<0>( t3 ) = 'a';
+  get<1>( t3 ) = 4;
+  get<2>( t3 ) = 'b';
+  
+  REQUIRE( get<0>( t1 ) == 1 );
+  REQUIRE( get<0>( t2 ) == 2 );
+  REQUIRE( get<1>( t2 ) == 3 );
+  REQUIRE( get<0>( t3 ) == 'a' );
+  REQUIRE( get<1>( t3 ) == 4 );
+  REQUIRE( get<2>( t3 ) == 'b' );
+  REQUIRE( get<0>( t4 ) == 1 );
+  REQUIRE( get<1>( t4 ) == 2 );
 }
 
 TEST_CASE( "Memory pool will allocate resources from its collection.", "[mempool]" ){
