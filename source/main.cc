@@ -44,22 +44,6 @@ bool testTuple(){
          get<0>( t4 ) == 1 && get<1>( t4 ) == 2;
 }
 
-bool testPool(){
-  bool ret = true;
-  memoryPool<int> test( 10 );
-  
-  int* foo = test.allocate( 2 );
-  int* bar = test.allocate( 1 );
-  int* baz = test.allocate( 2 );
-  test.deallocate( bar );
-  bar = test.allocate( 2 );
-  int* quux = test.allocate( 1 );
-
-  ret &= ( ( baz + 2 ) == bar );
-  ret &= ( ( foo + 2 ) == quux );
-  return ret;
-}
-
 class foo{
 private:
   int& X;
@@ -464,7 +448,33 @@ TEST_CASE( "Ranges can modify the values from a container before returning them"
 
 TEST_CASE( "Tests pass", "[tests]" ){
   REQUIRE( testTuple() == true );
-  REQUIRE( testPool() == true );
+}
+
+TEST_CASE( "Memory pool will allocate resources from its collection.", "[mempool]" ){
+  memoryPool<int> test( 10 );
+  REQUIRE( test.in_use_count() == 0 );
+  REQUIRE( test.available_space() == 10 );
+
+  int* foo = test.allocate( 2 );
+  int* bar = test.allocate( 1 );
+  int* baz = test.allocate( 2 );
+  REQUIRE( test.in_use_count() == 5 );
+  REQUIRE( test.available_space() == 5 );
+
+  test.deallocate( bar );
+  REQUIRE( test.in_use_count() == 4 );
+  REQUIRE( test.available_space() == 6 );
+
+  bar = test.allocate( 2 );
+  REQUIRE( test.in_use_count() == 6 );
+  REQUIRE( test.available_space() == 4 );
+
+  int* quux = test.allocate( 1 );
+  REQUIRE( test.in_use_count() == 7 );
+  REQUIRE( test.available_space() == 3 );
+
+  REQUIRE( ( baz + 2 ) == bar );
+  REQUIRE( ( foo + 2 ) == quux );
 }
 
 TEST_CASE( "Maps are associative containers", "[map]" ){
@@ -730,6 +740,14 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   pm0->addOption( 0, "foo", pm, [&](){ ss << "buup" << std::endl; } );
   pm0->addOption( 1, "baz", pm, [&](){ ss << "biip" << std::endl; } );
   pm0->addOption( 1, "bar", pm, [&](){ ss << "byyp" << std::endl; } );
+
+  //ctor compile check
+  menu<int> one;
+  menu<int> two( one );
+  menu<int> three( menu<int>() );
+  one.print( ss );
+  one.print( ss );
+  one.print( ss );
 
   SECTION( "Prints menus when requested." ){
     //TODO: pass in a string stream instead, and confirm contents
