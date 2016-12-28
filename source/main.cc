@@ -647,18 +647,34 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
   }
 }
 
+//TODO: performance testing on array splicing
 TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
-  array<char[5]> arr;
+  array<char[10]> arr;
 
   for( unsigned int i = 0; i < arr.size(); ++i ){
     arr[i] = char( i + 'a' );
   }
 
-  arr[arr > 2] = 'z';
+  arr[arr > 8] = 'z';
+  arr[arr < 2] = 'y';
 
-  SECTION( "Basic splice one index." ){
-    REQUIRE( arr[3] == 'z' );
-    REQUIRE( arr[4] == 'z' );
+  SECTION( "Basic splice indeces." ){
+    for( unsigned int i = 0; i < 2; ++i ){
+      REQUIRE( arr[i] == 'y' );
+    }
+    for( unsigned int i = 9; i < 10; ++i ){
+      REQUIRE( arr[i] == 'z' );
+    }
+
+    arr[arr >= 6] = 'x';
+    arr[arr <= 4] = 'w';
+
+    for( unsigned int i = 0; i < 4; ++i ){
+      REQUIRE( arr[i] == 'w' );
+    }
+    for( unsigned int i = 6; i < 10; ++i ){
+      REQUIRE( arr[i] == 'x' );
+    }
   }
 }
 

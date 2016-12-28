@@ -74,6 +74,7 @@ public:
 
   helper operator[]( const splicer& si ){
     helper h( *this );
+
     for( unsigned int i = 0; i < mSize; ++i ){
       if( si.mOp( i, si.mIdx ) ){
         h.mIdxs.push_back( i );
@@ -86,8 +87,14 @@ public:
   splicer operator>( index_t idx ){
     return splicer( std::greater<T>(), idx );
   }
+  splicer operator>=( index_t idx ){
+    return splicer( std::greater_equal<T>(), idx );
+  }
   splicer operator<( index_t idx ){
     return splicer( std::less<T>(), idx );
+  }
+  splicer operator<=( index_t idx ){
+    return splicer( std::less_equal<T>(), idx );
   }
 
   iterator begin(){
