@@ -101,8 +101,8 @@ public:
   }
 };
 
-template<class T, unsigned int N>
-std::ostream& operator<<( std::ostream& os, const array<T[N]>& arr ){
+template<typename OSTREAM, class T, unsigned int N>
+OSTREAM& operator<<( OSTREAM& os, const array<T[N]>& arr ){
   for( unsigned int i = 0; i < N; ++i ){
     os << arr[i];
   }
