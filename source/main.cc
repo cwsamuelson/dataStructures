@@ -686,9 +686,9 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
 
     arr[ids] = 'z';
 
-    REQUIRE( arr[1] == 'z' );
-    REQUIRE( arr[3] == 'z' );
-    REQUIRE( arr[5] == 'z' );
+    for( auto it : ids ){
+      REQUIRE( arr[it] == 'z' );
+    }
 
     for( unsigned int i = 6; i < 10; ++i ){
       REQUIRE( arr[i] == ( 'a' + i ) );
