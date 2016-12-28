@@ -56,7 +56,7 @@ public:
   typedef T value_type;
   typedef unsigned int index_t;
   const index_t mSize = N;
-  static const unsigned int ptrdiff = sizeof( T );
+  static const unsigned int ptrdiff = sizeof( value_type );
   typedef splice_index<value_type> splicer;
   typedef splice_helper<value_type[N]> helper;
   typedef normal_iterator<value_type, array> iterator;
@@ -65,13 +65,14 @@ private:
   char mArr[N * ptrdiff];
 
 public:
-  value_type& operator[]( index_t idx ){
-    return mArr[idx * ptrdiff];
-  }
   index_t size(){
     return mSize;
   }
 
+  value_type& operator[]( index_t idx ){
+    //return mArr[idx * ptrdiff];
+    return *( (value_type*)( mArr + ( idx * ptrdiff ) ) );
+  }
   helper operator[]( const splicer& si ){
     helper h( *this );
 
@@ -83,18 +84,30 @@ public:
 
     return h;
   }
+  //TODO:genericize to not only take arrays
+  //TODO:provide cbegin/cend to allow this argument to be const
+  template<unsigned int M>
+  helper operator[]( array<unsigned int[M]>& a ){
+    helper h(*this);
+
+    for( auto it = a.begin(); it != a.end(); ++it ){
+      h.mIdxs.push_back( *it );
+    }
+
+    return h;
+  }
 
   splicer operator>( index_t idx ){
-    return splicer( std::greater<T>(), idx );
+    return splicer( std::greater<value_type>(), idx );
   }
   splicer operator>=( index_t idx ){
-    return splicer( std::greater_equal<T>(), idx );
+    return splicer( std::greater_equal<value_type>(), idx );
   }
   splicer operator<( index_t idx ){
-    return splicer( std::less<T>(), idx );
+    return splicer( std::less<value_type>(), idx );
   }
   splicer operator<=( index_t idx ){
-    return splicer( std::less_equal<T>(), idx );
+    return splicer( std::less_equal<value_type>(), idx );
   }
 
   iterator begin(){
@@ -104,7 +117,7 @@ public:
     return Iterator( mSize );
   }
   iterator Iterator( index_t idx ){
-    return iterator( mArr + ( idx * ptrdiff ) );
+    return iterator( ( T* )( mArr + ( idx * ptrdiff ) ) );
   }
 };
 

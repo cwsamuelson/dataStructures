@@ -655,10 +655,10 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
     arr[i] = char( i + 'a' );
   }
 
-  arr[arr > 8] = 'z';
-  arr[arr < 2] = 'y';
-
   SECTION( "Basic splice indeces." ){
+    arr[arr > 8] = 'z';
+    arr[arr < 2] = 'y';
+
     for( unsigned int i = 0; i < 2; ++i ){
       REQUIRE( arr[i] == 'y' );
     }
@@ -674,6 +674,24 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
     }
     for( unsigned int i = 6; i < 10; ++i ){
       REQUIRE( arr[i] == 'x' );
+    }
+  }
+
+  SECTION( "Spliced by another container" ){
+    array<unsigned int[3]> ids;
+
+    ids[0] = 1;
+    ids[1] = 3;
+    ids[2] = 5;
+
+    arr[ids] = 'z';
+
+    REQUIRE( arr[1] == 'z' );
+    REQUIRE( arr[3] == 'z' );
+    REQUIRE( arr[5] == 'z' );
+
+    for( unsigned int i = 6; i < 10; ++i ){
+      REQUIRE( arr[i] == ( 'a' + i ) );
     }
   }
 }
