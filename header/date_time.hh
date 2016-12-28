@@ -1,8 +1,6 @@
 #ifndef __DATE_TIME_HH__
 #define __DATE_TIME_HH__
 
-#include<iostream>
-#include<sstream>
 #include<string>
 
 template<unsigned int FACTOR>
@@ -19,7 +17,7 @@ public:
     mValue(factor * val){
   }
   template<unsigned int UI>
-  time_unit(time_unit<UI> tu):
+  time_unit(const time_unit<UI>& tu):
     mValue(tu.mValue){
   }
 
@@ -164,10 +162,10 @@ public:
     return mValue / factor;
   }
 
-  template<unsigned int UI>
-  friend std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu);
-  template<unsigned int UI>
-  friend std::istream& operator>>(std::istream& is, time_unit<UI>& tu);
+  template<unsigned int UI, typename OSTREAM>
+  friend OSTREAM& operator<<(OSTREAM& os, const time_unit<UI>& tu);
+  template<unsigned int UI, typename ISTREAM>
+  friend ISTREAM& operator>>(ISTREAM& is, time_unit<UI>& tu);
 };
 
 typedef time_unit<1> second;
@@ -183,8 +181,8 @@ time_unit<UI> operator*(double val, const time_unit<UI>& tu){
   return tu * val;
 }
 
-template<unsigned int UI>
-std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu){
+template<unsigned int UI, typename OSTREAM>
+OSTREAM& operator<<(OSTREAM& os, const time_unit<UI>& tu){
   std::string str;
 
   if(UI == 1){
@@ -210,8 +208,8 @@ std::ostream& operator<<(std::ostream& os, const time_unit<UI>& tu){
   return os;
 }
 
-template<unsigned int UI>
-std::istream& operator>>(std::istream& is, time_unit<UI>& tu){
+template<unsigned int UI, typename ISTREAM>
+ISTREAM& operator>>(ISTREAM& is, time_unit<UI>& tu){
   long long val;
   std::string str;
 
@@ -294,10 +292,12 @@ public:
     return *this;
   }
 
-  friend std::ostream& operator<<(std::ostream& os, date d);
+  template<typename OSTREAM>
+  friend OSTREAM& operator<<(OSTREAM& os, date d);
 };
 
-std::ostream& operator<<(std::ostream& os, date dayt){
+template<typename OSTREAM>
+OSTREAM& operator<<(OSTREAM& os, date dayt){
   unsigned int mont = 0;
 
   while(dayt.mDay.getValue() > dayt.mMonths[mont]){
@@ -345,10 +345,13 @@ public:
 
     return *this;
   }
-  friend std::ostream& operator<<(std::ostream& os, date_time dt);
+
+  template<typename OSTREAM>
+  friend OSTREAM& operator<<(OSTREAM& os, date_time dt);
 };
 
-std::ostream& operator<<(std::ostream& os, date_time dt){
+template<typename OSTREAM>
+OSTREAM& operator<<(OSTREAM& os, date_time dt){
   unsigned int h = 0;
   unsigned int m = 0;
   unsigned int s = 0;

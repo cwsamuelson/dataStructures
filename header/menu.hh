@@ -30,9 +30,11 @@ public:
   }
 //TODO: add ctor for menu&&
 
-  void addOption( const SELECTOR& selection, const std::string& optText, menuPtr nextMenu, optionCallback callback = optionCallback( [](){} ) ){
+  void addOption( const SELECTOR& selection, const std::string& optText,
+                  menuPtr nextMenu, optionCallback callback = optionCallback( [](){} ) ){
     mOptions[selection] = std::make_tuple( optText, nextMenu, callback );
   }
+
   menuPtr select( const SELECTOR& selection ){
     auto it = mOptions.at( selection );
 
@@ -42,6 +44,7 @@ public:
     // return next menu
     return std::get<1>( it );
   }
+
   template<typename OSTREAM>
   OSTREAM& print( OSTREAM& os ){
     for( auto it : mOptions ){
