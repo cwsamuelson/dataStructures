@@ -18,14 +18,14 @@ class array;
 
 template<class T>
 struct splice_index{
-  typedef std::function<bool(T,T)> opsig;
+  typedef std::function<bool( T, T )> opsig;
 
   opsig mOp;
   unsigned int mIdx;
 
-  splice_index(opsig op, unsigned int idx):
-    mOp(op),
-    mIdx(idx){
+  splice_index( opsig op, unsigned int idx ):
+    mOp( op ),
+    mIdx( idx ){
   }
 };
 
@@ -37,12 +37,12 @@ struct splice_helper<T[N]>{
   array<T[N]>& mArr;
   std::vector<unsigned int> mIdxs;
 
-  splice_helper(array<T[N]>& arr):
-    mArr(arr){
+  splice_helper( array<T[N]>& arr ):
+    mArr( arr ){
   }
 
-  array<T[N]>& operator=(T t){
-    for(auto it:mIdxs){
+  array<T[N]>& operator=( T t ){
+    for( auto it : mIdxs ){
       mArr[it] = t;
     }
 
@@ -56,7 +56,7 @@ public:
   typedef T value_type;
   typedef unsigned int index_t;
   const index_t mSize = N;
-  static const unsigned int ptrdiff = sizeof(T);
+  static const unsigned int ptrdiff = sizeof( T );
   typedef splice_index<value_type> splicer;
   typedef splice_helper<value_type[N]> helper;
   typedef normal_iterator<value_type, array> iterator;
@@ -65,44 +65,45 @@ private:
   char mArr[N * ptrdiff];
 
 public:
-  value_type& operator[](index_t idx){
+  value_type& operator[]( index_t idx ){
     return mArr[idx * ptrdiff];
   }
   index_t size(){
     return mSize;
   }
 
-  helper operator[](const splicer& si){
-    helper h(*this);
-    for(unsigned int i = 0; i < mSize; ++i){
-      if(si.mOp(i, si.mIdx)){
-        h.mIdxs.push_back(i);
+  helper operator[]( const splicer& si ){
+    helper h( *this );
+    for( unsigned int i = 0; i < mSize; ++i ){
+      if( si.mOp( i, si.mIdx ) ){
+        h.mIdxs.push_back( i );
       }
     }
 
     return h;
   }
-  splicer operator>(index_t idx){
-    return splicer(std::greater<T>(), idx);
+
+  splicer operator>( index_t idx ){
+    return splicer( std::greater<T>(), idx );
   }
-  splicer operator<(index_t idx){
-    return splicer(std::less<T>(), idx);
+  splicer operator<( index_t idx ){
+    return splicer( std::less<T>(), idx );
   }
 
   iterator begin(){
-    return Iterator(0);
+    return Iterator( 0 );
   }
   iterator end(){
-    return Iterator(mSize);
+    return Iterator( mSize );
   }
-  iterator Iterator(index_t idx){
-    return iterator(mArr + (idx * ptrdiff));
+  iterator Iterator( index_t idx ){
+    return iterator( mArr + ( idx * ptrdiff ) );
   }
 };
 
 template<class T, unsigned int N>
-std::ostream& operator<<(std::ostream& os, const array<T[N]>& arr){
-  for(unsigned int i = 0; i < N; ++i){
+std::ostream& operator<<( std::ostream& os, const array<T[N]>& arr ){
+  for( unsigned int i = 0; i < N; ++i ){
     os << arr[i];
   }
 

@@ -615,7 +615,7 @@ TEST_CASE( "Function objects are used as normal functions.", "[function]" ){
   function<int( int, int )> nf;
   function<int()> tst;
   
-  fn = []( int x ){ return 1+x; };
+  fn = []( int x ){ return 1 + x; };
   nf = []( int x, int y ){ return x + y; };
   tst = testfn;
   
@@ -641,7 +641,7 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
 
   SECTION( "Array range-based for." ){
     unsigned int i = 0;
-    for( auto it:arr ){
+    for( auto it : arr ){
       REQUIRE( it == arr[i++] );
     }
   }
@@ -650,13 +650,14 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
 TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
   array<char[5]> arr;
 
-  for( unsigned int i = 0; i < 5; ++i ){
+  for( unsigned int i = 0; i < arr.size(); ++i ){
     arr[i] = char( i + 'a' );
   }
 
-  arr[arr > 3] = 'z';
+  arr[arr > 2] = 'z';
 
   SECTION( "Basic splice one index." ){
+    REQUIRE( arr[3] == 'z' );
     REQUIRE( arr[4] == 'z' );
   }
 }
@@ -692,7 +693,7 @@ TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
     REQUIRE( ( eq5 * eq6 )( 2 ) == 21 );
   }
 
-//TODO:test equation division
+//TODO:test dividing equation by another equation
   SECTION( "Division" ){
     REQUIRE( ( eq2 / 2 )( 2 ) == eq2( 2 ) / 2 );
   }
