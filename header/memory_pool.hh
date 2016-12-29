@@ -3,9 +3,7 @@
 
 #include<list>
 
-//TODO: investigate whether stored data should be value_type or unsigned char
-//        using value_type may( probably does ) call constructors, which is not 
-//        desired in this case.  placement new is most likely scenario
+//TODO: switch from value_type to char
 template<class T>
 class memoryPool{
 public:
@@ -13,6 +11,7 @@ public:
   typedef value_type* pointer;
   typedef value_type& reference;
   typedef unsigned long size_type;
+  static const size_type ptrdiff = sizeof( value_type );
 
 private:
   class slot{
@@ -30,23 +29,26 @@ private:
     }
   };
  
-  pointer mStorageStart;
-  void* mStorageEnd;
   size_type mSize;
   size_type mInUse;
+  size_type mTotalBytes;
+  char* mStorageStart;
+  char* mStorageEnd;
   std::list<slot> mSlots;
  
 public:
-  memoryPool( size_t size ):
-    mStorageStart( new value_type[size] ),
-    mStorageEnd( mStorageStart + size - 1 ),
+  memoryPool( size_type size ):
     mSize( size ),
-    mInUse( 0 ){
+    mInUse( 0 ),
+    mTotalBytes( mSize * ptrdiff ),
+    mStorageStart( new char[mTotalBytes] ),
+    mStorageEnd( mStorageStart + mTotalBytes - ptrdiff ){
   }
   virtual ~memoryPool(){ delete[] mStorageStart; }
 
   pointer allocate( size_type amt ){
     pointer ret = nullptr;
+    size_type allocSize = amt * ptrdiff;
     //If the request is larger than that available, return null;
     if( amt == 0 || ( amt > ( mSize - mInUse ) )  ){
       ret = nullptr;
@@ -54,30 +56,32 @@ public:
       //Determine where free memory exists to return;
       //If there's no memory in use, return beginning;
       if( mSlots.size() == 0 ){
-        mSlots.emplace_back( mStorageStart, mStorageStart + amt );
-        ret = mStorageStart;
-      } else if( mSlots.begin()->start != mStorageStart ){
-        if( ( size_t )( mSlots.begin()->start - mStorageStart ) >= amt ){
-          mSlots.emplace_back( mStorageStart, mStorageStart + amt );
-          ret = mStorageStart;
+        mSlots.emplace_back( ( pointer )mStorageStart, ( pointer )( mStorageStart + allocSize ) );
+        ret = ( value_type* )mStorageStart;
+      } else if( mSlots.begin()->start != ( pointer )mStorageStart ){
+        if( ( size_type )( mSlots.begin()->start - ( pointer )mStorageStart ) >= allocSize ){
+          mSlots.emplace_back( ( pointer )mStorageStart, ( pointer )( mStorageStart + allocSize ) );
+          ret = ( value_type* )mStorageStart;
         }
       } else {
         auto first = mSlots.begin();
         for( auto second = ++mSlots.begin(); second != mSlots.end(); ++second, ++first ){
-          if( ( size_t )( second->start - first->end ) >= amt ){
-            ret = first->end;
+          if( ( size_type )( second->start - first->end ) >= allocSize ){
+            ret = ( value_type* )first->end;
             break;
           }
         }
         //If we get to the end of the list and there's no free space found,
         //  check the tail end;
-        if( ( size_t )( ( mStorageStart + mSize ) - first->end ) >= amt ){
-          mSlots.emplace_back( first->end, first->end + amt );
-          ret = first->end;
+        if( ( size_type )( ( pointer )mStorageEnd - first->end ) >= amt ){
+          mSlots.emplace_back( first->end, first->end + allocSize );
+          ret = ( value_type* )first->end;
         }
       }
       //Only re-sort when new things have been added;
-      mSlots.sort();
+      if( ret ){
+        mSlots.sort();
+      }
     }
 
     if( ret ){
@@ -89,7 +93,7 @@ public:
   void deallocate( pointer ptr ){
     for( auto it = mSlots.begin(); it != mSlots.end(); ++it ){
       if( it->start == ptr ){
-        mInUse -= ( it->end - it->start ) / sizeof( value_type ) + 1;
+        mInUse -= ( it->end - it->start ) / ptrdiff;
         mSlots.erase( it );
         break;
       }
