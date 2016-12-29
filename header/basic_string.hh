@@ -38,10 +38,13 @@ public:
   }
   basic_string(const_pointer str):
     mSize(0){
+
     while(str[mSize] != terminal){
       ++mSize;
     }
+
     mString = new value_type[mSize + 1];
+
     mString[mSize] = terminal;
     for(unsigned int i = 0; i < mSize; ++i){
       mString[i] = str[i];
@@ -169,8 +172,8 @@ public:
   }
 };
 
-template<class T>
-std::ostream& operator<<(std::ostream& os, const basic_string<T>& str){
+template<class T, typename OSTREAM>
+OSTREAM& operator<<(OSTREAM& os, const basic_string<T>& str){
   for(unsigned int i = 0; i < str.size(); ++i){
     os << str[i];
   }
