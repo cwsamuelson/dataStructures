@@ -3,7 +3,6 @@
 
 #include<vector>
 
-//TODO: add placement new/delete
 template<class T>
 class memoryPool{
 public:
@@ -32,7 +31,8 @@ public:
   }
   virtual ~memoryPool(){ delete[] mStorageStart; }
 
-  pointer allocate( size_type amt ){
+  template<typename ...Args>
+  pointer allocate( size_type amt, Args... args ){
     size_type caveSize = 0;
     bool caveFound = false;
     size_type caveOpening = 0;
@@ -50,6 +50,7 @@ public:
 
     if( caveFound ){
       for( size_type i = caveOpening; i < caveOpening + amt; ++i ){
+        new( mStorageStart + ( caveOpening * ptrdiff ) ) value_type(args...);
         mSlots[i] = true;
       }
       mSizes[caveOpening] = amt;
@@ -68,6 +69,7 @@ public:
 
     size_type idx = ( ptr - ( pointer )mStorageStart );
     for( size_type i = idx; i < idx + mSizes[idx]; ++i ){
+      ( ( value_type* )( mStorageStart + ( idx * ptrdiff ) ) )->~value_type();
       mSlots[i] = false;
     }
     mInUse -= mSizes[idx];
