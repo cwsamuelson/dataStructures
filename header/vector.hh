@@ -51,15 +51,14 @@ private:
     for(size_type i = 0; i < (mSize * datasize); ++i){
       bfr[i] = mData[i];
     }
+
     delete[] mData;
     mData = bfr;
   }
 
 public:
   vector():
-    mSize(0),
-    mCapacity(1),
-    mData(new unsigned char[(mCapacity * datasize)]){
+    vector(1){
   }
   vector(size_type capacity):
     mSize(0),
