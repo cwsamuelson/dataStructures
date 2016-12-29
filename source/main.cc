@@ -848,3 +848,6 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   }
 }
 
+TEST_CASE( "", "[accessor]" ){
+}
+
