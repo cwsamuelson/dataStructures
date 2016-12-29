@@ -28,8 +28,8 @@ public:
   typedef T value_type;
   typedef value_type* pointer;
   typedef value_type& reference;
-  typedef const reference const_reference;
-  typedef const pointer const_pointer;
+  typedef const value_type& const_reference;
+  typedef const value_type* const_pointer;
   typedef normal_iterator<value_type, vector> iterator;
   typedef unsigned long size_type;
 
@@ -83,7 +83,7 @@ public:
     other.mCapacity = 0;
     other.mData = nullptr;
   }
-  vector(value_type* other, size_type size):
+  vector(pointer other, size_type size):
     mSize(size),
     mCapacity(mSize + 5),
     mData(new unsigned char[(mCapacity * datasize)]){
@@ -129,29 +129,29 @@ public:
     
     return *this;
   }
-  value_type& operator[](size_type idx){
+  reference operator[](size_type idx){
     if(idx >= mSize){
       throw indexOutOfBoundsException(idx);
     }
-    return (value_type&)(*(mData + (idx * datasize)));
+    return (reference)(*(mData + (idx * datasize)));
   }
-  const reference operator[](size_type idx) const{
+  const_reference operator[](size_type idx) const{
     return (*this)[idx];
   }
-  value_type& front(){
+  reference front(){
     return (*this)[0];
   }
-  value_type& back(){
+  reference back(){
     return (*this)[mSize - 1];
   }
   
   //uses copy constructor to store incoming data;
-  void push_back(const value_type& data){
+  void push_back(const_reference data){
     if(mSize + 1 > mCapacity){
       reallocateTo(std::ceil(mCapacity * goldenRatio));
     }
 
-    new ((value_type*)(mData + (mSize * datasize))) value_type(data);
+    new ((pointer)(mData + (mSize * datasize))) value_type(data);
     ++mSize;
   }
   //forwards arguments to constructor
@@ -162,13 +162,13 @@ public:
     }
 
     //use placement new to call ctor
-    new((value_type*)(mData + (mSize * datasize))) value_type(args...);
+    new((pointer)(mData + (mSize * datasize))) value_type(args...);
     ++mSize;
   }
   void pop_back(){
     --mSize;
     //call dtor
-    ((value_type*)(mData + (mSize * datasize)))->~value_type();
+    ((pointer)(mData + (mSize * datasize)))->~value_type();
   }
 
   void clear(){
