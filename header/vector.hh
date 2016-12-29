@@ -38,7 +38,7 @@ private:
   size_type mCapacity;
   unsigned char* mData;
   //polymorphic data sizes? O.o
-  const unsigned int datasize = sizeof(value_type);
+  static const unsigned int datasize = sizeof(value_type);
   const float goldenRatio = 1.4;
 
   void reallocateTo(size_type size){
@@ -58,18 +58,19 @@ private:
 public:
   vector():
     mSize(0),
-    mCapacity(1){
-    mData = new unsigned char[(mCapacity * datasize)];
+    mCapacity(1),
+    mData(new unsigned char[(mCapacity * datasize)]){
   }
   vector(size_type capacity):
     mSize(0),
-    mCapacity(capacity){
-    mData = new unsigned char[(mCapacity * datasize)];
+    mCapacity(capacity),
+    mData(new unsigned char[(mCapacity * datasize)]){
   }
   vector(const vector& other):
     mSize(other.mSize),
-    mCapacity(mSize + 5){
-    mData = new unsigned char[(mCapacity * datasize)];
+    mCapacity(mSize + 5),
+    mData(new unsigned char[(mCapacity * datasize)]){
+
     for(size_type i = 0; i < (mSize * datasize); ++i){
       mData[i] = other.mData[i];
     }
@@ -78,14 +79,16 @@ public:
     mSize(other.mSize),
     mCapacity(other.mCapacity),
     mData(other.mData){
+
     other.mSize = 0;
     other.mCapacity = 0;
     other.mData = nullptr;
   }
   vector(value_type* other, size_type size):
     mSize(size),
-    mCapacity(mSize + 5){
-    mData = new unsigned char[(mCapacity * datasize)];
+    mCapacity(mSize + 5),
+    mData(new unsigned char[(mCapacity * datasize)]){
+
     for(size_type i = 0; i < (mSize * datasize); ++i){
       mData[i] = other[i];
     }
@@ -143,33 +146,29 @@ public:
     return (*this)[mSize - 1];
   }
   
+  //uses copy constructor to store incoming data;
   void push_back(const value_type& data){
     if(mSize + 1 > mCapacity){
       reallocateTo(std::ceil(mCapacity * goldenRatio));
     }
-    (*((value_type*)(mData + (mSize * datasize)))) = data;
+
+    new ((value_type*)(mData + (mSize * datasize))) value_type(data);
     ++mSize;
   }
+  //forwards arguments to constructor
   template<class ...Args>
   void emplace_back(Args... args){
     if(mSize + 1 > mCapacity){
-      unsigned char* bfr;
-
-      mCapacity = std::ceil(mCapacity * goldenRatio);
-      bfr = new unsigned char[(mCapacity * datasize)];
-
-      // copy data to new buffer
-      for(size_type i = 0; i < (mSize * datasize); ++i){
-        bfr[i] = mData[i];
-      }
-      delete[] mData;
-      mData = bfr;
+      reallocateTo(std::ceil(mCapacity * goldenRatio));
     }
+
+    //use placement new to call ctor
     new((value_type*)(mData + (mSize * datasize))) value_type(args...);
     ++mSize;
   }
   void pop_back(){
     --mSize;
+    //call dtor
     ((value_type*)(mData + (mSize * datasize)))->~value_type();
   }
 

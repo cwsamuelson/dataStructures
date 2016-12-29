@@ -39,8 +39,7 @@ private:
   }
 
 public:
-  map(){
-  }
+  map() = default;
   template<class inputIter>
   map(inputIter first, inputIter last):
     mData(first, last){
