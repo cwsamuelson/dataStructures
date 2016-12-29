@@ -1,13 +1,15 @@
 #ifndef __ACCESSOR_HH__
 #define __ACCESSOR_HH__
 
+#include<functional>
+
 template<typename T>
 class accessor{
 public:
   typedef T value_type;
   typedef value_type& reference;
   typedef const value_type& const_reference;
-  typedef function<void(T)> callback;
+  typedef std::function<void(T)> callback;
 
 private:
   reference mRef;
@@ -24,8 +26,18 @@ public:
   }
 
   reference operator=( const_reference cref ){
-    mRef = cref;
     mcb( cref );
+    mRef = cref;
+    return mRef;
+  }
+  reference operator=( value_type&& other ){
+    mcb( other );
+    mRef = std::forward<value_type>( other );
+    return mRef;
+  }
+
+  bool operator==( const_reference cref ){
+    return mRef == cref;
   }
 };
 
