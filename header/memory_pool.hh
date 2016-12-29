@@ -16,7 +16,6 @@ public:
 private:
   size_type mSize;
   size_type mInUse;
-  size_type mTotalBytes;
   char* mStorageStart;
   char* mStorageEnd;
   std::vector<bool> mSlots;
@@ -26,9 +25,8 @@ public:
   memoryPool( size_type size ):
     mSize( size ),
     mInUse( 0 ),
-    mTotalBytes( mSize * ptrdiff ),
-    mStorageStart( new char[mTotalBytes] ),
-    mStorageEnd( mStorageStart + mTotalBytes - ptrdiff ),
+    mStorageStart( new char[mSize * ptrdiff] ),
+    mStorageEnd( mStorageStart + ( mSize * ptrdiff ) - ptrdiff ),
     mSlots( mSize, false ),
     mSizes( mSize, 0 ){
   }
