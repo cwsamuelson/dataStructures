@@ -55,14 +55,14 @@ class array<T[N]>{
 public:
   typedef T value_type;
   typedef unsigned int index_t;
-  const index_t mSize = N;
+  static const index_t mSize = N;
   static const unsigned int ptrdiff = sizeof( value_type );
   typedef splice_index<value_type> splicer;
   typedef splice_helper<value_type[N]> helper;
   typedef normal_iterator<value_type, array> iterator;
 
 private:
-  char mArr[N * ptrdiff];
+  value_type mArr[mSize];
 
 public:
   index_t size(){
@@ -70,8 +70,7 @@ public:
   }
 
   value_type& operator[]( index_t idx ){
-    //return mArr[idx * ptrdiff];
-    return *( (value_type*)( mArr + ( idx * ptrdiff ) ) );
+    return mArr[idx];
   }
   helper operator[]( const splicer& si ){
     helper h( *this );
@@ -117,7 +116,7 @@ public:
     return Iterator( mSize );
   }
   iterator Iterator( index_t idx ){
-    return iterator( ( T* )( mArr + ( idx * ptrdiff ) ) );
+    return iterator( &mArr[idx] );
   }
 };
 
