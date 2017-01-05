@@ -6,6 +6,7 @@ class shared_ptr{
 public:
   typedef T value_type;
   typedef value_type* pointer;
+  typedef value_type& reference;
   typedef unsigned long count_t;
 
 private:
@@ -29,6 +30,13 @@ public:
     mData(other.mData),
     mCount(other.mCount){
     ++(*mCount);
+  }
+  shared_ptr(shared_ptr&& other):
+    mData(other.mData),
+    mCount(other.mcount){
+
+    other.mData = nullptr;
+    other.mCount = nullptr;
   }
   virtual ~shared_ptr(){
     if((mCount != nullptr) && (--(*mCount) == 0)){
@@ -75,7 +83,7 @@ public:
     return (mData == other.mData) && (mCount == other.mCount);
   }
   
-  value_type& operator*(){
+  reference operator*(){
     return *mData;
   }
   
