@@ -5,6 +5,7 @@ template<class T>
 class unique_ptr{
 public:
   typedef T value_type;
+  typedef value_type& reference;
   typedef value_type* pointer;
 
 private:
@@ -49,7 +50,7 @@ public:
     return (mData == other.mData);
   }
   
-  value_type& operator*(){
+  reference operator*(){
     return *mData;
   }
   
