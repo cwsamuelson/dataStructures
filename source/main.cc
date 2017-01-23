@@ -868,6 +868,7 @@ public:
       [&](value_type t ){
         ( void )t;
         ++j;
+        return true;
       });
   }
 

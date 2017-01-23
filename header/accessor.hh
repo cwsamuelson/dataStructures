@@ -9,7 +9,7 @@ public:
   typedef T value_type;
   typedef value_type& reference;
   typedef const value_type& const_reference;
-  typedef std::function<void(T)> callback;
+  typedef std::function<bool(value_type)> callback;
 
 private:
   reference mRef;
@@ -26,13 +26,15 @@ public:
   }
 
   reference operator=( const_reference cref ){
-    mcb( cref );
-    mRef = cref;
+    if( mcb( cref ) ){
+      mRef = cref;
+    }
     return mRef;
   }
   reference operator=( value_type&& other ){
-    mcb( other );
-    mRef = std::forward<value_type>( other );
+    if( mcb( other ) ){
+      mRef = std::forward<value_type>( other );
+    }
     return mRef;
   }
 
