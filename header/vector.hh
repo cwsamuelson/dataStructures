@@ -102,7 +102,7 @@ public:
     clear();
     delete[] mData;
   }
-  
+
   vector& operator=(const vector& other){
     if(mCapacity < other.mSize){
       delete[] mData;

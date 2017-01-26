@@ -164,6 +164,9 @@ public:
     ref = w.ref;
     return *this;
   }
+  bool operator==( const wrapper& other ){
+    return ref == other.ref;
+  }
 };
 
 TEST_CASE( "Vectors will run constructors/destructors when appropriate", "[vector]" ){
@@ -174,6 +177,7 @@ TEST_CASE( "Vectors will run constructors/destructors when appropriate", "[vecto
     v.emplace_back( &test );
 
     REQUIRE( !test );
+    REQUIRE( v.back() == wrapper( &test ) );
   }
 
   SECTION( "Destructor is run on pop_back" ){
@@ -192,7 +196,11 @@ TEST_CASE( "Vectors can be resized", "[vector]" ){
   }
 
   for( int i = 0; i < 5; ++i ){
+    REQUIRE( v.size() == i );
+
     v.push_back( i );
+
+    REQUIRE( v.back() == i );
   }
 
   SECTION( "Vector size increases with additions" ){

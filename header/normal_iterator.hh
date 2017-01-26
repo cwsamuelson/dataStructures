@@ -12,7 +12,7 @@ public:
   typedef value_type* pointer;
   typedef value_type& reference;
 
-private:
+protected:
   pointer mCurrent;
 
 public:
