@@ -3,6 +3,11 @@
 
 #include<vector.hh>
 
+template<typename OBJ, typename MEMBER_FN, typename ...Args>
+auto invoke( OBJ obj, MEMBEFR_FN memfun, ARGS ...args ){
+  return ( obj.*memfun )( args... );
+}
+
 template<class T>
 struct less{
   bool operator()(const T& lhs, const T& rhs){
