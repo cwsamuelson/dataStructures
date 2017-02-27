@@ -12,7 +12,7 @@ private:
   std::string msg;
 
 public:
-  indexOutOfBoundsException(unsigned long long idx){
+  indexOutOfBoundsException( unsigned long long idx ){
     msg = "Index ";
     msg += idx;
     msg += " out of bounds!";
@@ -37,18 +37,17 @@ private:
   size_type mSize;
   size_type mCapacity;
   unsigned char* mData;
-  //polymorphic data sizes? O.o
-  static const unsigned int datasize = sizeof(value_type);
+  static const unsigned int datasize = sizeof( value_type );
   const float goldenRatio = 1.4;
 
-  void reallocateTo(size_type size){
+  void reallocateTo( size_type size ){
     unsigned char* bfr;
 
     mCapacity = size;
-    bfr = new unsigned char[(mCapacity * datasize)];
+    bfr = new unsigned char[( mCapacity * datasize )];
 
     // copy data to new buffer
-    for(size_type i = 0; i < (mSize * datasize); ++i){
+    for( size_type i = 0; i < ( mSize * datasize ); ++i ){
       bfr[i] = mData[i];
     }
 
@@ -58,44 +57,51 @@ private:
 
 public:
   vector():
-    vector(1){
+    vector( 1 ){
   }
-  vector(size_type capacity):
-    mSize(0),
-    mCapacity(capacity),
-    mData(new unsigned char[(mCapacity * datasize)]){
+  vector( size_type capacity ):
+    mSize( 0 ),
+    mCapacity( capacity ),
+    mData( new unsigned char[( mCapacity * datasize )] ){
   }
-  vector(const vector& other):
-    mSize(other.mSize),
-    mCapacity(mSize + 5),
-    mData(new unsigned char[(mCapacity * datasize)]){
+  vector( const_reference val, size_type count ):
+    vector( count ){
 
-    for(size_type i = 0; i < (mSize * datasize); ++i){
+    while( count-- ){
+      ( *this ).push_back( val );
+    }
+  }
+  vector( const vector& other ):
+    mSize( other.mSize ),
+    mCapacity( mSize + 5 ),
+    mData( new unsigned char[( mCapacity * datasize )] ){
+
+    for( size_type i = 0; i < ( mSize * datasize ); ++i ){
       mData[i] = other.mData[i];
     }
   }
-  vector(vector&& other):
-    mSize(other.mSize),
-    mCapacity(other.mCapacity),
-    mData(other.mData){
+  vector( vector&& other ):
+    mSize( other.mSize ),
+    mCapacity( other.mCapacity ),
+    mData( other.mData ){
 
     other.mSize = 0;
     other.mCapacity = 0;
     other.mData = nullptr;
   }
-  vector(pointer other, size_type size):
-    mSize(size),
-    mCapacity(mSize + 5),
-    mData(new unsigned char[(mCapacity * datasize)]){
+  vector( pointer other, size_type size ):
+    mSize( size ),
+    mCapacity( mSize + 5 ),
+    mData( new unsigned char[( mCapacity * datasize )] ){
 
-    for(size_type i = 0; i < (mSize * datasize); ++i){
+    for( size_type i = 0; i < ( mSize * datasize ); ++i ){
       mData[i] = other[i];
     }
   }
   template<class inputIter>
-  vector(inputIter first, inputIter last){
-    for(;first != last; ++first){
-      push_back(*first);
+  vector( inputIter first, inputIter last ){
+    for( ; first != last; ++first ){
+      push_back( *first );
     }
   }
   virtual ~vector(){
@@ -103,22 +109,22 @@ public:
     delete[] mData;
   }
 
-  vector& operator=(const vector& other){
-    if(mCapacity < other.mSize){
+  vector& operator=( const vector& other ){
+    if( mCapacity < other.mSize ){
       delete[] mData;
       
-      mCapacity = other.mCapacity;
-      mData = new unsigned char[(mCapacity * datasize)];
+      mCapacity = other.mSize;
+      mData = new unsigned char[( mCapacity * datasize )];
     }
 
     mSize = other.mSize;
-    for(size_type i = 0; i < (mSize * datasize); ++i){
+    for( size_type i = 0; i < ( mSize * datasize ); ++i ){
       mData[i] = other.mData[i];
     }
 
     return *this;
   }
-  vector& operator=(vector&& other){
+  vector& operator=( vector&& other ){
     mSize = other.mSize;
     mCapacity = other.mCapacity;
     mData = other.mData;
@@ -129,50 +135,52 @@ public:
     
     return *this;
   }
-  reference operator[](size_type idx){
-    if(idx >= mSize){
-      throw indexOutOfBoundsException(idx);
+  reference operator[]( size_type idx ){
+    if( idx >= mSize ){
+      throw indexOutOfBoundsException( idx );
     }
-    return (reference)(*(mData + (idx * datasize)));
+
+    return ( reference )( *( mData + ( idx * datasize ) ) );
   }
-  const_reference operator[](size_type idx) const{
-    return (*this)[idx];
+  const_reference operator[]( size_type idx ) const{
+    return ( *this )[idx];
   }
   reference front(){
-    return (*this)[0];
+    return ( *this )[0];
   }
   reference back(){
-    return (*this)[mSize - 1];
+    return ( *this )[mSize - 1];
   }
   
   //uses copy constructor to store incoming data;
-  void push_back(const_reference data){
-    if(mSize + 1 > mCapacity){
-      reallocateTo(std::ceil(mCapacity * goldenRatio));
+  void push_back( const_reference data ){
+    if( mSize + 1 > mCapacity ){
+      reallocateTo( std::ceil( mCapacity * goldenRatio ) );
     }
 
-    new ((pointer)(mData + (mSize * datasize))) value_type(data);
+    new ( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( data );
     ++mSize;
   }
   //forwards arguments to constructor
+//TODO: use actual forwarding
   template<class ...Args>
-  void emplace_back(Args... args){
-    if(mSize + 1 > mCapacity){
-      reallocateTo(std::ceil(mCapacity * goldenRatio));
+  void emplace_back( Args... args ){
+    if( mSize + 1 > mCapacity ){
+      reallocateTo( std::ceil( mCapacity * goldenRatio ) );
     }
 
     //use placement new to call ctor
-    new((pointer)(mData + (mSize * datasize))) value_type(args...);
+    new( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( args... );
     ++mSize;
   }
   void pop_back(){
     --mSize;
     //call dtor
-    ((pointer)(mData + (mSize * datasize)))->~value_type();
+    ( ( pointer )( mData + ( mSize * datasize ) ) )->~value_type();
   }
 
   void clear(){
-    while(mSize > 0){
+    while( mSize > 0 ){
       pop_back();
     }
   }
@@ -185,34 +193,34 @@ public:
   size_type capacity() const{
     return mCapacity;
   }
-  void resize(size_type count, value_type value = value_type()){
-    while(mSize < count){
-      push_back(value);
+  void resize( size_type count, value_type value = value_type() ){
+    while( mSize < count ){
+      push_back( value );
     }
-    while(mSize > count){
+    while( mSize > count ){
       pop_back();
     }
   }
-  void reserve(size_type cap){
-    if(mCapacity < cap){
-      reallocateTo(cap);
+  void reserve( size_type cap ){
+    if( mCapacity < cap ){
+      reallocateTo( cap );
     }
   }
 
   iterator begin(){
-    return Iterator(0);
+    return Iterator( 0 );
   }
   const iterator cbegin() const{
     return begin();
   }
   iterator end(){
-    return Iterator(mSize);
+    return Iterator( mSize );
   }
   const iterator cend() const{
     return end();
   }
-  iterator Iterator(size_type idx){
-    return iterator(pointer(mData + (idx * datasize)));
+  iterator Iterator( size_type idx ){
+    return iterator( pointer( mData + ( idx * datasize ) ) );
   }
 };
 
