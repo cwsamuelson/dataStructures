@@ -4,7 +4,7 @@
 #include<vector.hh>
 
 template<typename OBJ, typename MEMBER_FN, typename ...Args>
-auto invoke( OBJ obj, MEMBEFR_FN memfun, ARGS ...args ){
+auto invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
   return ( obj.*memfun )( args... );
 }
 
