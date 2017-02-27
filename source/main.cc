@@ -914,8 +914,10 @@ TEST_CASE( "", "[is_same]"){
   typedef is_same<int, const int> CONST_SAME;
   typedef is_same<int, float> FLOAT;
   typedef is_same<int, bar> BAR;
+  typedef is_same<bar, bar> BAR_BAR;
 
   REQUIRE( SIGNED::value );
+  REQUIRE( BAR_BAR::value );
   REQUIRE( !VOLATILE::value );
   REQUIRE( !CONST_SAME::value );
   REQUIRE( !FLOAT::value );

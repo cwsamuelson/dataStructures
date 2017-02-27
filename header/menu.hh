@@ -7,12 +7,12 @@
 #include<tuple>
 #include<memory>
 
-typedef std::function<void()> optionCallback;
 
 template<typename SELECTOR>
 class menu{
 public:
   typedef std::shared_ptr<menu> menuPtr;
+  typedef std::function<void()> optionCallback;
 
 private:
   std::map<SELECTOR, std::tuple<std::string, menuPtr, optionCallback> > mOptions;
