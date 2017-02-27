@@ -911,13 +911,13 @@ TEST_CASE( "", "[reference_wrapper]"){
 TEST_CASE( "", "[is_same]"){
   typedef is_same<int, signed int> SIGNED;
   typedef is_same<int, volatile int> VOLATILE;
-  //typedef is_same<int, const int> CONST;
+  typedef is_same<int, const int> CONST_SAME;
   typedef is_same<int, float> FLOAT;
   typedef is_same<int, bar> BAR;
 
   REQUIRE( SIGNED::value );
   REQUIRE( !VOLATILE::value );
-  //REQUIRE( !CONST::value );
+  REQUIRE( !CONST_SAME::value );
   REQUIRE( !FLOAT::value );
   REQUIRE( !BAR::value );
 }
