@@ -56,21 +56,44 @@ private:
   }
 
 public:
+  /*!
+   * @brief default ctor, initialize capacity to 1
+   */
   vector():
     vector( 1 ){
   }
+
+  /*!
+   * @brief ctor, initialize with givin capacity
+   *
+   * @param capacity  the value the capacity will be initialized to
+   */
   vector( size_type capacity ):
     mSize( 0 ),
     mCapacity( capacity ),
     mData( new unsigned char[( mCapacity * datasize )] ){
   }
+
+  /*!
+   * @brief ctor, initialize with count copies of val
+   *
+   * @param val data to be copied
+   *
+   * @param count the number of copies of val to be made
+   */
   vector( const_reference val, size_type count ):
     vector( count ){
 
     while( count-- ){
-      ( *this ).push_back( val );
+      push_back( val );
     }
   }
+
+  /*!
+   * @brief copy ctor, copy other
+   *
+   * @param other vector to copy data from
+   */
   vector( const vector& other ):
     mSize( other.mSize ),
     mCapacity( mSize + 5 ),
@@ -80,6 +103,12 @@ public:
       mData[i] = other.mData[i];
     }
   }
+
+  /*!
+   * @brief move ctor, move other to this vector
+   *
+   * @param other vector to be moved here
+   */
   vector( vector&& other ):
     mSize( other.mSize ),
     mCapacity( other.mCapacity ),
@@ -89,6 +118,14 @@ public:
     other.mCapacity = 0;
     other.mData = nullptr;
   }
+
+  /*!
+   * @brief copy array of elements
+   *
+   * @param other  array to copy values from
+   *
+   * @param size  the number of elements in other
+   */
   vector( pointer other, size_type size ):
     mSize( size ),
     mCapacity( mSize + 5 ),
@@ -98,18 +135,36 @@ public:
       mData[i] = other[i];
     }
   }
+
+  /*!
+   * @brief copy ctor, copy elements from an arbitrary container
+   *
+   * @param first  first element to be copied
+   *
+   * @param last  one past the end of the container to be copied from
+   */
   template<class inputIter>
   vector( inputIter first, inputIter last ){
     for( ; first != last; ++first ){
       push_back( *first );
     }
   }
+
+  /*!
+   * @brief dtor
+   *
+   * all data is cleared, destructors ran, and memory freed
+   */
   virtual ~vector(){
     clear();
     delete[] mData;
   }
 
   vector& operator=( const vector& other ){
+    if( mData == other.mData ){
+      return *this;
+    }
+
     if( mCapacity < other.mSize ){
       delete[] mData;
       
