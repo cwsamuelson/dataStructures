@@ -180,11 +180,19 @@ TEST_CASE( "Vectors will run constructors/destructors when appropriate", "[vecto
 
     REQUIRE( !test );
     REQUIRE( v.back() == wrapper( &test ) );
+    REQUIRE( v.size() == 1 );
+    REQUIRE( v.capacity() >= 1 );
   }
 
   SECTION( "Destructor is run on pop_back" ){
     v.emplace_back( &test );
+
+    REQUIRE( v.size() == 1 );
+    REQUIRE( v.capacity() >= 1 );
+
     v.pop_back();
+
+    REQUIRE( v.size() == 0 );
 
     REQUIRE( test );
   }
@@ -195,6 +203,8 @@ TEST_CASE( "Vectors can be resized", "[vector]" ){
 
   SECTION( "Vector capacity can be initialized" ){
     REQUIRE( v.capacity() >= 5 );
+    REQUIRE( v.empty() );
+    REQUIRE( v.size() == 0 );
   }
 
   for( int i = 0; i < 5; ++i ){
@@ -238,6 +248,18 @@ TEST_CASE( "Vectors can be resized", "[vector]" ){
     REQUIRE( v.size() == 5 );
     REQUIRE( v.capacity() >= 5 );
   }
+
+  SECTION( "Capacity increases immediately as size exceeds it" ){
+    while( v.size() < v.capacity() ){
+      v.push_back( 3 );
+    }
+
+    REQUIRE( v.size() == v.capacity() );
+
+    v.push_back( 3 );
+
+    REQUIRE( v.capacity() > v.size() );
+  }
 }
 
 TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]" ){
@@ -251,11 +273,25 @@ TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]
   SECTION( "Vectors can participate in range-based for loops" ){
     int i = 0;
 
-    for( auto it:vec ){
+    for( auto it : vec ){
       REQUIRE( it == vec[i] );
       ++i;
     }
     REQUIRE( i == vec.size() );
+  }
+
+  SECTION( "Vectors can be iterated like arrays" ){
+    for( unsigned int i = 0; i < vec.size(); ++i ){
+      REQUIRE( vec[i] == i + 1 );
+    }
+  }
+
+  SECTION( "Vectors can be iterated by iterators(begin, end)" ){
+    int i = 1;
+
+    for( auto it = vec.begin(); it != vec.end(); ++it ){
+      REQUIRE( *it == i++ );
+    }
   }
 }
 
