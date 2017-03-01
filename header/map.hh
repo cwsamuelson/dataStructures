@@ -4,6 +4,7 @@
 #include<algorithm>
 #include<exception>
 #include<functional>
+#include<utility>
 
 #include<normal_iterator.hh>
 #include<vector.hh>
@@ -31,31 +32,69 @@ private:
   compare comparator;
 
   void normalize(){
-    std::sort(mData.begin(), mData.end(),
-      [=](const storage_type& x, const storage_type& y)->bool{
-        return comparator(get<0>(x), get<0>(y));
+    std::sort( mData.begin(), mData.end(),
+      [&]( const storage_type& x, const storage_type& y )->bool{
+        return comparator( get<0>( x ), get<0>( y ) );
       }
-    );
+     );
   }
 
 public:
+  /*!
+   * @brief default ctor
+   *
+   * No data stored.
+   */
   map() = default;
+
+  /*!
+   * @brief copy ctor
+   *
+   * @tparam inputIter  Input iterator type
+   *
+   * @param first  first element of a range to be copied
+   *
+   * @param last  one past the end of the range of elements to be copied
+   */
   template<class inputIter>
-  map(inputIter first, inputIter last):
-    mData(first, last){
+  map( inputIter first, inputIter last ):
+    mData( first, last ){
     normalize();
   }
-  map(const map& other){
+
+  /*!
+   * @brief copy ctor
+   *
+   * @param other  map to be copied
+   */
+  map( const map& other ){
     mData = other.mData;
     comparator = other.comparator;
   }
-  map(map&& other){
-    mData = std::forward<decltype(mData)>(other.mData);
+
+  /*!
+   * @brief move ctor
+   *
+   * @param other  map to be moved here
+   */
+  map( map&& other ){
+    mData = std::forward<decltype( mData )>( other.mData );
     comparator = other.comparator;
   }
 
-  map_type& at(key_type key){
-    if(mData.empty()){
+
+  /*!
+   * @brief get reference associated with key
+   *
+   * @param key  index key to find associated reference
+   *
+   * @return reference to found data
+   *
+   * Finds data associated with given key.  If no such exists, throws a
+   * keyNotFoundException exception.
+   */
+  map_type& at( key_type key ){
+    if( mData.empty() ){
       throw keyNotFoundException();
     }
 
@@ -63,68 +102,150 @@ public:
     unsigned int min = 0;
     unsigned int max = mData.size() - 1;
 
-    idx = (max + min) / 2.0;
+    idx = ( max + min ) / 2.0;
 
-    while(get<0>(mData[idx]) != key){
-      if(min == max || idx >= mData.size()){
+    while( get<0>( mData[idx] ) != key ){
+      if( min == max || idx >= mData.size() ){
         throw keyNotFoundException();
       }
-      if(comparator(key, get<0>(mData[idx]))){
+      if( comparator( key, get<0>( mData[idx] ) ) ){
         max = idx - 1;
       } else {
         min = idx + 1;
       }
 
-      idx = (max + min) / 2.0;
+      idx = ( max + min ) / 2.0;
     }
-    return get<1>(mData[idx]);
+    return get<1>( mData[idx] );
   }
-  map_type& operator[](const key_type& key){
+
+  /*!
+   * @brief get reference associated with key
+   *
+   * @param key  index key to find associated reference
+   *
+   * @return reference to found data
+   *
+   * Finds data associated with given key.  If no such exists, new data is
+   * created.
+   */
+  map_type& operator[]( const key_type& key ){
     try{
-      return at(key);
-    } catch (keyNotFoundException& ex){
-      mData.push_back(make_tuple(key, map_type()));
+      return at( key );
+    } catch ( keyNotFoundException& ex ){
+      mData.emplace_back( key, map_type() );
       normalize();
 
-      return at(key);
+      return at( key );
     }
   }
-  const map_type& operator[](const key_type& key) const{
-    return (*this)[key];
+
+  /*!
+   * @brief get const reference associated with key
+   *
+   * @param key  index key to find associated reference
+   *
+   * @return reference to found data
+   *
+   * Finds data associated with given key.  If no such exists, new data is
+   * created.
+   */
+  const map_type& operator[]( const key_type& key ) const{
+    return ( *this )[key];
   }
 
+  /*!
+   * @brief Insert copies of new data
+   *
+   * @tparam inputIter  Input iterator type
+   *
+   * @param first  first element of a range to be copied
+   *
+   * @param last  one past the end of the range of elements to be copied
+   */
   template<class inputIter>
-  void insert(inputIter first, inputIter last){
-    for(;first != last; ++first){
-      mData.push_back(*first);
+  void insert( inputIter first, inputIter last ){
+    for( ;first != last; ++first ){
+      mData.push_back( *first );
     }
     normalize();
   }
+
+  /*!
+   * @brief construct new object
+   *
+   * @tparam Args  template parameter pack of types to construct new object
+   *
+   * @param key  key to be associated with data
+   *
+   * @param args  arguments to construct new object
+   *
+   * @return iterator to new value
+   */
   template<class ...Args>
-  iterator emplace(Args ...args){
-    mData.emplace_back(args...);
+  iterator emplace( const key_type& key, Args ...args ){
+    mData.emplace_back( key, map_type( std::forward<Args>( args )... ) );
     normalize();
+    //TODO: return correct iterator
   }
 
+  /*!
+   * @brief
+   *
+   * @return
+   */
   iterator begin(){
     return mData.begin();
   }
+
+  /*!
+   * @brief
+   *
+   * @return
+   */
   const iterator cbegin() const{
     return begin();
   }
+
+  /*!
+   * @brief
+   *
+   * @return
+   */
   iterator end(){
     return mData.end();
   }
+
+  /*!
+   * @brief
+   *
+   * @return
+   */
   const iterator cend() const{
     return end();
   }
 
+  /*!
+   * @brief
+   */
   void clear(){
     mData.clear();
   }
+
+  /*!
+   * @brief
+   *
+   * @return
+   */
   bool empty() const{
     return mData.empty();
   }
+
+  /*!
+   * @brief
+   *
+   * @return
+   */
   size_type size() const{
     return mData.size();
   }
