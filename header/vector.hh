@@ -4,6 +4,7 @@
 #include<cmath>
 #include<exception>
 #include<string>
+#include<utility>
 
 #include<normal_iterator.hh>
 
@@ -77,9 +78,9 @@ public:
   /*!
    * @brief ctor, initialize with count copies of val
    *
-   * @param val data to be copied
+   * @param val    data to be copied
    *
-   * @param count the number of copies of val to be made
+   * @param count  the number of copies of val to be made
    */
   vector( const_reference val, size_type count ):
     vector( count ){
@@ -92,7 +93,7 @@ public:
   /*!
    * @brief copy ctor, copy other
    *
-   * @param other vector to copy data from
+   * @param other  vector to copy data from
    */
   vector( const vector& other ):
     mSize( other.mSize ),
@@ -107,7 +108,7 @@ public:
   /*!
    * @brief move ctor, move other to this vector
    *
-   * @param other vector to be moved here
+   * @param other  vector to be moved here
    */
   vector( vector&& other ):
     mSize( other.mSize ),
@@ -124,7 +125,7 @@ public:
    *
    * @param other  array to copy values from
    *
-   * @param size  the number of elements in other
+   * @param size   the number of elements in other
    */
   vector( pointer other, size_type size ):
     mSize( size ),
@@ -141,7 +142,7 @@ public:
    *
    * @param first  first element to be copied
    *
-   * @param last  one past the end of the container to be copied from
+   * @param last   one past the end of the container to be copied from
    */
   template<class inputIter>
   vector( inputIter first, inputIter last ){
@@ -160,6 +161,11 @@ public:
     delete[] mData;
   }
 
+  /*!
+   * @brief copy assignment, copy data from other
+   *
+   * @param other  vector from which data will be copied
+   */
   vector& operator=( const vector& other ){
     if( mData == other.mData ){
       return *this;
@@ -179,6 +185,12 @@ public:
 
     return *this;
   }
+
+  /*!
+   * @brief move assignment, move data from other
+   *
+   * @param other  vector from which data will be moved
+   */
   vector& operator=( vector&& other ){
     mSize = other.mSize;
     mCapacity = other.mCapacity;
@@ -190,6 +202,12 @@ public:
     
     return *this;
   }
+
+  /*!
+   * @brief indexed getter, get element at index idx
+   *
+   * @param idx  index into vector, from which data will be returned
+   */
   reference operator[]( size_type idx ){
     if( idx >= mSize ){
       throw indexOutOfBoundsException( idx );
@@ -197,16 +215,35 @@ public:
 
     return ( reference )( *( mData + ( idx * datasize ) ) );
   }
+
+  /*!
+   * @brief indexed const getter, get const element at index idx
+   *
+   * @param idx  index into vector, from which const data will be returned
+   */
   const_reference operator[]( size_type idx ) const{
     return ( *this )[idx];
   }
+
+  /*!
+   * @brief first element getter
+   */
   reference front(){
     return ( *this )[0];
   }
+
+  /*!
+   * @brief last element getter
+   */
   reference back(){
     return ( *this )[mSize - 1];
   }
   
+  /*!
+   * @brief add data to the end
+   *
+   * @param data  data to be copied at the end of vector
+   */
   //uses copy constructor to store incoming data;
   void push_back( const_reference data ){
     if( mSize + 1 > mCapacity ){
@@ -216,16 +253,20 @@ public:
     new ( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( data );
     ++mSize;
   }
+  /*!
+   * @brief construct new object at the end of vector
+   *
+   * @param args  arguments to be passed to ctor of new object
+   */
   //forwards arguments to constructor
-//TODO: use actual forwarding
   template<class ...Args>
-  void emplace_back( Args... args ){
+  void emplace_back( Args&&... args ){
     if( mSize + 1 > mCapacity ){
       reallocateTo( std::ceil( mCapacity * goldenRatio ) );
     }
 
     //use placement new to call ctor
-    new( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( args... );
+    new( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( std::forward<Args>( args )... );
     ++mSize;
   }
   void pop_back(){
