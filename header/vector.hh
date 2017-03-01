@@ -354,18 +354,49 @@ public:
     }
   }
 
+  /*!
+   * @brief get iterator to beginning
+   *
+   * @return iterator to the first element of the vector
+   */
   iterator begin(){
     return Iterator( 0 );
   }
+
+  /*!
+   * @brief get const iterator to beginning
+   *
+   * @return const iterator to the first element of the vector
+   */
   const iterator cbegin() const{
     return begin();
   }
+
+  /*!
+   * @brief get iterator to end
+   *
+   * @return iterator to the last element of the vector
+   */
   iterator end(){
     return Iterator( mSize );
   }
+
+  /*!
+   * @brief get const iterator to end
+   *
+   * @return const iterator to the last element of the vector
+   */
   const iterator cend() const{
     return end();
   }
+
+  /*!
+   * @brief get general iterator
+   *
+   * @param idx  index iterator will point to
+   *
+   * @return iterator pointing to element at index idx
+   */
   iterator Iterator( size_type idx ){
     return iterator( pointer( mData + ( idx * datasize ) ) );
   }
