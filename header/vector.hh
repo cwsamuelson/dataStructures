@@ -165,6 +165,8 @@ public:
    * @brief copy assignment, copy data from other
    *
    * @param other  vector from which data will be copied
+   *
+   * @return reference to this vector
    */
   vector& operator=( const vector& other ){
     if( mData == other.mData ){
@@ -190,6 +192,8 @@ public:
    * @brief move assignment, move data from other
    *
    * @param other  vector from which data will be moved
+   *
+   * @return reference to this vector
    */
   vector& operator=( vector&& other ){
     mSize = other.mSize;
@@ -207,6 +211,8 @@ public:
    * @brief indexed getter, get element at index idx
    *
    * @param idx  index into vector, from which data will be returned
+   *
+   * @return reference to data located at index idx
    */
   reference operator[]( size_type idx ){
     if( idx >= mSize ){
@@ -220,6 +226,8 @@ public:
    * @brief indexed const getter, get const element at index idx
    *
    * @param idx  index into vector, from which const data will be returned
+   *
+   * @return const reference to data located at index idx
    */
   const_reference operator[]( size_type idx ) const{
     return ( *this )[idx];
@@ -227,6 +235,8 @@ public:
 
   /*!
    * @brief first element getter
+   *
+   * @return reference to first element
    */
   reference front(){
     return ( *this )[0];
@@ -234,6 +244,8 @@ public:
 
   /*!
    * @brief last element getter
+   *
+   * @return reference to last element
    */
   reference back(){
     return ( *this )[mSize - 1];
@@ -269,26 +281,59 @@ public:
     new( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( std::forward<Args>( args )... );
     ++mSize;
   }
+
+  /*!
+   * @brief removes and destructs element at end of vector
+   */
   void pop_back(){
     --mSize;
     //call dtor
     ( ( pointer )( mData + ( mSize * datasize ) ) )->~value_type();
   }
 
+  /*!
+   * @brief removes and destructs all elements in vector
+   */
   void clear(){
     while( mSize > 0 ){
       pop_back();
     }
   }
+
+  /*!
+   * @brief get whether the vector is empty
+   *
+   * @return vector size equal to zero
+   */
   bool empty() const{
     return mSize == 0;
   }
+
+  /*!
+   * @brief get current vector size
+   *
+   * @return count of currently stored elements
+   */
   size_type size() const{
     return mSize;
   }
+
+  /*!
+   * @brief get current vector capacity
+   *
+   * @return number of elements that can be stored before a resize is necessary
+   */
   size_type capacity() const{
     return mCapacity;
   }
+
+  /*!
+   * @brief request vector to be a certain size
+   *
+   * @param count  new size
+   *
+   * @param value  the value to use in filling additional elements
+   */
   void resize( size_type count, value_type value = value_type() ){
     while( mSize < count ){
       push_back( value );
@@ -297,6 +342,12 @@ public:
       pop_back();
     }
   }
+
+  /*!
+   * @brief request vector capacity be a certain size
+   *
+   * @param cap  new capacity
+   */
   void reserve( size_type cap ){
     if( mCapacity < cap ){
       reallocateTo( cap );
