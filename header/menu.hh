@@ -7,7 +7,6 @@
 #include<tuple>
 #include<memory>
 
-
 template<typename SELECTOR>
 class menu{
 public:
@@ -28,7 +27,6 @@ public:
   menu( menu&& other ):
     mOptions( std::forward<menu>( other.mOptions ) ){
   }
-//TODO: add ctor for menu&&
 
   void addOption( const SELECTOR& selection, const std::string& optText,
                   menuPtr nextMenu, optionCallback callback = optionCallback( [](){} ) ){

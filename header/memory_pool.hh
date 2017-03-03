@@ -10,13 +10,15 @@ public:
   typedef value_type* pointer;
   typedef value_type& reference;
   typedef unsigned long size_type;
+  typedef char storage_type;
+  typedef char* storage_ptr;
   static const size_type ptrdiff = sizeof( value_type );
 
 private:
   size_type mSize;
   size_type mInUse;
-  char* mStorageStart;
-  char* mStorageEnd;
+  storage_ptr mStorageStart;
+  storage_ptr mStorageEnd;
   std::vector<bool> mSlots;
   std::vector<size_type> mSizes;
  
@@ -24,7 +26,7 @@ public:
   memoryPool( size_type size ):
     mSize( size ),
     mInUse( 0 ),
-    mStorageStart( new char[mSize * ptrdiff] ),
+    mStorageStart( new storage_type[mSize * ptrdiff] ),
     mStorageEnd( mStorageStart + ( mSize * ptrdiff ) - ptrdiff ),
     mSlots( mSize, false ),
     mSizes( mSize, 0 ){

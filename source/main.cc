@@ -333,8 +333,12 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   SECTION( "Units of same type can be value compared" ){
     test_t X = 1;
     test_t Y = 1;
+    test_t Z = 3;
 
     REQUIRE( X == Y );
+    REQUIRE( X < Z );
+    REQUIRE( Z > Y );
+    REQUIRE( X < 3 );
   }
 
   SECTION( "Units can use compount operators" ){
@@ -343,7 +347,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
     REQUIRE( X == 3 );
 
-    X -=1;
+    X -= 1;
     REQUIRE( X == 2 );
   }
 }

@@ -33,9 +33,34 @@ public:
     //TODO: allow slight error(epsilon)
     return mValue == other.mValue;
   }
+  bool operator<( const unit& other ) const{
+    return mValue < other.mValue;
+  }
+  bool operator>( const unit& other ) const{
+    return mValue > other.mValue;
+  }
+  bool operator<=( const unit& other ) const{
+    return !( ( *this ) > other );
+  }
+  bool operator>=( const unit& other ) const{
+    return !( ( *this ) < other );
+  }
   bool operator==(DBL other) const{
     return mValue == other;
   }
+  bool operator<( DBL other ) const{
+    return mValue < other;
+  }
+  bool operator>( DBL other ) const{
+    return mValue > other;
+  }
+  bool operator<=( DBL other ) const{
+    return !( ( *this ) > other );
+  }
+  bool operator>=( DBL other ) const{
+    return !( ( *this ) < other );
+  }
+
   unit operator+(const unit& other) const{
     return mValue + other.mValue;
   }
