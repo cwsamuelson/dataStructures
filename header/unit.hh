@@ -76,12 +76,21 @@ public:
     this->mValue = mValue - other.mValue;
     return *this;
   }
-  /* *= and /= are not included because the * and / operations return a new type,
+
+  unit& operator*=( const DBL& val ){
+    mValue *= val;
+    return ( *this );
+  }
+  unit& operator/=( const DBL& val ){
+    mValue /= val;
+    return ( *this );
+  }
+  /* *= and /= only work with doubles because the * and / operations return a new type,
    * and therefore cannot be assigned to either operand
    */
 
-  double& getValue(){ return mValue; }
-  double getValue() const{ return mValue; }
+  DBL& getValue(){ return mValue; }
+  DBL getValue() const{ return mValue; }
 
   template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
        int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2>
@@ -143,32 +152,53 @@ operator>>(ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CAN
 }
 
 /* 'thyme' should be renamed back to 'time' when a namespace is established, as
- * name collision would be disambiguated using <namespace>::time vs (say) std::time
+ * name collision would be disambiguated using <namespace>::time vs (i.e.) std::time
  */
-typedef unit< 1,  0,  0,  0,  0, 0> length;
-typedef unit< 0,  1,  0,  0,  0, 0> thyme;//time, renamed to avoid collision
-typedef unit< 0,  0,  1,  0,  0, 0> mass;
-typedef unit< 0,  0,  0,  1,  0, 0> current;//amps
-typedef unit< 0,  0,  0,  0,  1, 0> temperature;//kelvin
-typedef unit< 0,  0,  0,  0,  0, 1> light;//candela
+//                         m   s   kg  A   K  C
+template<typename T = double>
+using length       = unit< 1,  0,  0,  0,  0, 0, T>;
+template<typename T = double>
+using thyme        = unit< 0,  1,  0,  0,  0, 0, T>;//time, renamed to avoid collision
+template<typename T = double>
+using mass         = unit< 0,  0,  1,  0,  0, 0> mass;
+template<typename T = double>
+using current      = unit< 0,  0,  0,  1,  0, 0> current;//amps
+template<typename T = double>
+using temperature  = unit< 0,  0,  0,  0,  1, 0> temperature;//kelvin
+template<typename T = double>
+using light        = unit< 0,  0,  0,  0,  0, 1> light;//candela
 
-typedef unit< 1, -1,  0,  0,  0, 0> speed;
-typedef unit< 1, -2,  0,  0,  0, 0> acceleration;
-typedef unit< 1, -2,  1,  0,  0, 0> force;//newton
-typedef unit< 1, -1,  1,  0,  0, 0> momentum;
-typedef unit< 2, -2,  1,  0,  0, 0> energy;//joules
-typedef unit< 2, -3,  1,  0,  0, 0> power;//watts
+template<typename T = double>
+using speed        = unit< 1, -1,  0,  0,  0, 0> speed;
+template<typename T = double>
+using acceleration = unit< 1, -2,  0,  0,  0, 0> acceleration;
+template<typename T = double>
+using force        = unit< 1, -2,  1,  0,  0, 0> force;//newton
+template<typename T = double>
+using momentum     = unit< 1, -1,  1,  0,  0, 0> momentum;
+template<typename T = double>
+using energy       = unit< 2, -2,  1,  0,  0, 0> energy;//joules
+template<typename T = double>
+using power        = unit< 2, -3,  1,  0,  0, 0> power;//watts
 
-typedef unit< 2, -3,  1, -1,  0, 0> voltage;
-typedef unit< 2, -3,  1, -2,  0, 0> resistance;//ohms
-typedef unit<-2,  4, -1,  2,  0, 0> capacitance;//farad
-typedef unit< 2, -2,  1, -2,  0, 0> inductance;//henrys
-typedef unit< 0,  1,  0,  1,  0, 0> charge;//coulomb
+template<typename T = double>
+using voltage      = unit< 2, -3,  1, -1,  0, 0> voltage;
+template<typename T = double>
+using resistance   = unit< 2, -3,  1, -2,  0, 0> resistance;//ohms
+template<typename T = double>
+using capacitance  = unit<-2,  4, -1,  2,  0, 0> capacitance;//farad
+template<typename T = double>
+using inductance   = unit< 2, -2,  1, -2,  0, 0> inductance;//henrys
+template<typename T = double>
+using charge       = unit< 0,  1,  0,  1,  0, 0> charge;//coulomb
 
-typedef unit< 0, -2,  1,  1,  0, 0> magField;//tesla
-typedef unit< 1, -3,  1, -1,  0, 0> elecField;
+template<typename T = double>
+using magField     = unit< 0, -2,  1,  1,  0, 0> magField;//tesla
+template<typename T = double>
+using elecField    = unit< 1, -3,  1, -1,  0, 0> elecField;
 
-typedef unit< 2, -2,  1,  0, -1, 0> specificHeat;
+template<typename T = double>
+using specificHeat = unit< 2, -2,  1,  0, -1, 0> specificHeat;
 //OR typedef decltype( energy / temperature ) specificHeat;
 
 #endif
