@@ -12,10 +12,10 @@ public:
   value_type data;
 
   tuple_impl():
-    data(value_type()){
+    data( value_type() ){
   }
-  tuple_impl(value_type vt):
-    data(vt){
+  tuple_impl( value_type vt ):
+    data( vt ){
   }
 };
 
@@ -31,11 +31,11 @@ public:
   value_type data;
 
   tuple_impl():
-    data(value_type()){
+    data( value_type() ){
   }
-  tuple_impl(value_type vt, Args ...args):
-    base(args...),
-    data(vt){
+  tuple_impl( value_type vt, Args ...args ):
+    base( args... ),
+    data( vt ){
   }
 };
 
@@ -48,45 +48,45 @@ public:
   tuple():
     base(){
   }
-  tuple(Args... args):
-    base(args...){
+  tuple( Args... args ):
+    base( args... ){
   }
 };
 
-template<unsigned int M, unsigned int N, class T, class ... Args>
+template<unsigned int M, unsigned int N, class T, class ...Args>
 class get_impl{
 public:
-  static auto& get(tuple_impl<N, T, Args...>& tup){
-    return get_impl<M - 1, N + 1, Args...>::get(static_cast<tuple_impl<N + 1, Args...>& >(tup));
+  static auto& get( tuple_impl<N, T, Args...>& tup ){
+    return get_impl<M - 1, N + 1, Args...>::get( static_cast<tuple_impl<N + 1, Args...>& >( tup ) );
   }
-  static const auto& get(const tuple_impl<N, T, Args...>& tup){
-    return get_impl<M - 1, N + 1, Args...>::get(static_cast<const tuple_impl<N + 1, Args...>& >(tup));
+  static const auto& get( const tuple_impl<N, T, Args...>& tup ){
+    return get_impl<M - 1, N + 1, Args...>::get( static_cast<const tuple_impl<N + 1, Args...>& >( tup ) );
   }
 };
 
-template<unsigned int N, class T, class ... Args>
+template<unsigned int N, class T, class ...Args>
 class get_impl<0, N, T, Args...>{
 public:
-  static auto& get(tuple_impl<N, T, Args...>& tup){
+  static auto& get( tuple_impl<N, T, Args...>& tup ){
     return tup.data;
   }
-  static const auto& get(const tuple_impl<N, T, Args...>& tup){
+  static const auto& get( const tuple_impl<N, T, Args...>& tup ){
     return tup.data;
   }};
 
-template<unsigned int M, class ... Args>
-auto& get(tuple<Args...>& tup){
-  return get_impl<M, 0, Args...>::get(static_cast<tuple_impl<0, Args...>& >(tup));
+template<unsigned int M, class ...Args>
+auto& get( tuple<Args...>& tup ){
+  return get_impl<M, 0, Args...>::get( static_cast<tuple_impl<0, Args...>& >( tup ) );
 }
 
-template<unsigned int M, class ... Args>
-const auto& get(const tuple<Args...>& tup){
-  return get_impl<M, 0, Args...>::get(static_cast<const tuple_impl<0, Args...>& >(tup));
+template<unsigned int M, class ...Args>
+const auto& get( const tuple<Args...>& tup ){
+  return get_impl<M, 0, Args...>::get( static_cast<const tuple_impl<0, Args...>& >( tup ) );
 }
 
-template<class X, class Y>
-tuple<X, Y> make_tuple(X x, Y y){
-  return tuple<X, Y>(x, y);
+template<class ...Args>
+tuple<Args...> make_tuple( Args... args ){
+  return tuple<Args...>( args... );
 }
 
 #endif
