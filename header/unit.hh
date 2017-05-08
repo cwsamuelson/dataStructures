@@ -123,7 +123,7 @@ public:
 
   template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1,
            int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2,
-           typename D_t1, typename D_t2>
+           typename D_t1, typename D_t2, typename F_t1, typename F_t2>
   friend
   unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2,
        AMPERE1 + AMPERE2, KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, D_t1>
@@ -132,54 +132,54 @@ public:
 
   template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1,
            int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2,
-           typename D_t1, typename D_t2>
+           typename D_t1, typename D_t2, typename F_t1, typename F_t2>
   friend
   unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2,
        AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, D_t1>
   operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, D_t1>& lhs,
              const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, D_t2>& rhs );
 
-  template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM>
+  template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM, typename D, typename F>
   friend
   OSTREAM&
-  operator<<( OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val );
+  operator<<( OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0, D, F>& val );
   
-  template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM>
+  template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM, typename D, typename F>
   friend
   ISTREAM&
-  operator>>( ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val );
+  operator>>( ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0, D, F>& val );
 };
 
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, 
          int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2,
-         typename D_t1, typename D_t2>
+         typename D_t1, typename D_t2, typename F_t1, typename F_t2>
 unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2,
-     AMPERE1 + AMPERE2, KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, D_t1>
-operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, D_t1>& lhs,
-           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, D_t2>& rhs ){
-  return lhs.mValue * rhs.mValue;
+     AMPERE1 + AMPERE2, KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, D_t1, F_t1>
+operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, D_t1, F_t1>& lhs,
+           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, D_t2, F_t2>& rhs ){
+  return lhs.getRaw() * rhs.getRaw();
 }
 
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1,
          int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2,
-         typename D_t1, typename D_t2>
+         typename D_t1, typename D_t2, typename F_t1, typename F_t2>
 unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2,
-     AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, D_t1>
-operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, D_t1>& lhs,
-           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, D_t2>& rhs ){
-  return lhs.mValue / rhs.mValue;
+     AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, D_t1, F_t1>
+operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, D_t1, F_t1>& lhs,
+           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, D_t2, F_t2>& rhs ){
+  return lhs.getRaw() / rhs.getRaw();
 }
 
-template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM>
+template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM, typename D, typename F>
 OSTREAM&
-operator<<( OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val ){
+operator<<( OSTREAM& os, const unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0, D, F>& val ){
   os << val.mValue;
   return os;
 }
 
-template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM>
+template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class ISTREAM, typename D, typename F>
 ISTREAM&
-operator>>( ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0>& val ){
+operator>>( ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CANDELA0, D, F>& val ){
   is >> val.mValue;
   return is;
 }
@@ -188,52 +188,52 @@ operator>>( ISTREAM& is, unit<METERS0, SECONDS0, KILOGRAM0, AMPERE0, KELVIN0, CA
  * name collision would be disambiguated using <namespace>::time vs ( i.e. ) std::time
  */
 //                         m   s   kg  A   K  C
-template<typename T = double>
-using length        = unit< 1,  0,  0,  0,  0, 0, T>;
-template<typename T = double>
-using thyme         = unit< 0,  1,  0,  0,  0, 0, T>;//time, renamed to avoid collision
-template<typename T = double>
-using mass          = unit< 0,  0,  1,  0,  0, 0, T>;
-template<typename T = double>
-using current       = unit< 0,  0,  0,  1,  0, 0, T>;//amps
-template<typename T = double>
-using temperature   = unit< 0,  0,  0,  0,  1, 0, T>;//kelvin
-template<typename T = double>
-using light         = unit< 0,  0,  0,  0,  0, 1, T>;//candela
+template<typename T = double, typename F = ratio<1,1> >
+using length        = unit< 1,  0,  0,  0,  0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using thyme         = unit< 0,  1,  0,  0,  0, 0, T, F>;//time, renamed to avoid collision
+template<typename T = double, typename F = ratio<1,1> >
+using mass          = unit< 0,  0,  1,  0,  0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using current       = unit< 0,  0,  0,  1,  0, 0, T, F>;//amps
+template<typename T = double, typename F = ratio<1,1> >
+using temperature   = unit< 0,  0,  0,  0,  1, 0, T, F>;//kelvin
+template<typename T = double, typename F = ratio<1,1> >
+using light         = unit< 0,  0,  0,  0,  0, 1, T, F>;//candela
 
-template<typename T = double>
-using speed         = unit< 1, -1,  0,  0,  0, 0, T>;
-template<typename T = double>
-using acceleration  = unit< 1, -2,  0,  0,  0, 0, T>;
-template<typename T = double>
-using force         = unit< 1, -2,  1,  0,  0, 0, T>;//newton
-template<typename T = double>
-using momentum      = unit< 1, -1,  1,  0,  0, 0, T>;
-template<typename T = double>
-using energy        = unit< 2, -2,  1,  0,  0, 0, T>;//joules
-template<typename T = double>
-using power         = unit< 2, -3,  1,  0,  0, 0, T>;//watts
+template<typename T = double, typename F = ratio<1,1> >
+using speed         = unit< 1, -1,  0,  0,  0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using acceleration  = unit< 1, -2,  0,  0,  0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using force         = unit< 1, -2,  1,  0,  0, 0, T, F>;//newton
+template<typename T = double, typename F = ratio<1,1> >
+using momentum      = unit< 1, -1,  1,  0,  0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using energy        = unit< 2, -2,  1,  0,  0, 0, T, F>;//joules
+template<typename T = double, typename F = ratio<1,1> >
+using power         = unit< 2, -3,  1,  0,  0, 0, T, F>;//watts
 
-template<typename T = double>
-using voltage       = unit< 2, -3,  1, -1,  0, 0, T>;
-template<typename T = double>
-using resistance    = unit< 2, -3,  1, -2,  0, 0, T>;//ohms
-template<typename T = double>
-using capacitance   = unit<-2,  4, -1,  2,  0, 0, T>;//farad
-template<typename T = double>
-using inductance    = unit< 2, -2,  1, -2,  0, 0, T>;//henrys
-template<typename T = double>
-using charge        = unit< 0,  1,  0,  1,  0, 0, T>;//coulomb
-template<typename T = double>
-using coulomb = charge<T>;
+template<typename T = double, typename F = ratio<1,1> >
+using voltage       = unit< 2, -3,  1, -1,  0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using resistance    = unit< 2, -3,  1, -2,  0, 0, T, F>;//ohms
+template<typename T = double, typename F = ratio<1,1> >
+using capacitance   = unit<-2,  4, -1,  2,  0, 0, T, F>;//farad
+template<typename T = double, typename F = ratio<1,1> >
+using inductance    = unit< 2, -2,  1, -2,  0, 0, T, F>;//henrys
+template<typename T = double, typename F = ratio<1,1> >
+using charge        = unit< 0,  1,  0,  1,  0, 0, T, F>;//coulomb
+template<typename T = double, typename F = ratio<1,1> >
+using coulomb = charge<T, F>;
 
-template<typename T = double>
-using magField      = unit< 0, -2,  1,  1,  0, 0, T>;//tesla
-template<typename T = double>
-using elecField     = unit< 1, -3,  1, -1,  0, 0, T>;
+template<typename T = double, typename F = ratio<1,1> >
+using magField      = unit< 0, -2,  1,  1,  0, 0, T, F>;//tesla
+template<typename T = double, typename F = ratio<1,1> >
+using elecField     = unit< 1, -3,  1, -1,  0, 0, T, F>;
 
-template<typename T = double>
-using specificHeat  = unit< 2, -2,  1,  0, -1, 0, T>;
+template<typename T = double, typename F = ratio<1,1> >
+using specificHeat  = unit< 2, -2,  1,  0, -1, 0, T, F>;
 //OR typedef decltype( energy / temperature ) specificHeat;
 
 #endif
