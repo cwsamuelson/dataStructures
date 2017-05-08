@@ -167,7 +167,7 @@ unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2,
      AMPERE1 - AMPERE2, KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, D_t1, F_t1>
 operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, D_t1, F_t1>& lhs,
            const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, D_t2, F_t2>& rhs ){
-  return lhs.getRaw() / rhs.getRaw();
+  return ( lhs.getRaw() / rhs.getRaw() ) / F_t1::value;
 }
 
 template<int METERS0, int SECONDS0, int KILOGRAM0, int AMPERE0, int KELVIN0, int CANDELA0, class OSTREAM, typename D, typename F>

@@ -359,6 +359,30 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     X -= 1.0;
     REQUIRE( X == 2.0 );
   }
+
+  SECTION( "Unit prefixes can be used" ){
+    typedef voltage<double, ratio<1000, 1> > kiloVolt;
+    resistance<> r( 500 );
+    kiloVolt kv( 3 );
+
+    current<> I;
+
+    I = kv / r;
+
+    REQUIRE( I == 6.0 );
+    REQUIRE( kv == 3.0 );
+    REQUIRE( kv.getRaw() == 3000.0 );
+  }
+
+  SECTION( "Compatible storage classes can be used together" ){
+    voltage<int> v1( 3 );
+    voltage<> v2( 3.9 );
+
+    v1 = v2;
+
+    REQUIRE( v1 != v2 );
+    REQUIRE( v1 == 3 );
+  }
 }
 
 TEST_CASE( "A range iterator can act as a standard iterator", "[range]" ){
