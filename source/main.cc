@@ -60,6 +60,9 @@ TEST_CASE( "Unique_ptrs have a mostly similar interface to regular pointers", "[
   unique_ptr<int> uPtr1( uPtr0 );
   REQUIRE( uPtr0 == nullptr );
   REQUIRE( uPtr1 == iPtr0 );
+
+  auto uPtr2 = make_unique<int>( 5 );
+  REQUIRE( *uPtr2 == 5 );
 }
 
 TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]" ){

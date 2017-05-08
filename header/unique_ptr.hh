@@ -19,6 +19,10 @@ public:
     mData( other.mData ){
     other.mData = nullptr;
   }
+  unique_ptr( unique_ptr&& other ):
+    mData( other.mData ){
+    other.mData = nullptr;
+  }
   virtual ~unique_ptr(){
     if( mData ){
       delete mData;
@@ -41,6 +45,16 @@ public:
       mData = other.mData;
       other.mData = nullptr;
     }
+    return *this;
+  }
+  unique_ptr& operator=( unique_ptr&& other ){
+    if( mData != other.mData && mData ){
+      delete mData;
+
+      mData = other.mData;
+      other.mData = nullptr;
+    }
+
     return *this;
   }
 
@@ -71,11 +85,9 @@ public:
   }
 };
 
-template<class T, class ... Args>
-unique_ptr<T> make_unique( Args ...args ){
-  T* temp = new T( args... );
-
-  return temp;
+template<class T, class ...Args>
+unique_ptr<T> make_unique( Args... args ){
+  return new T( args... );
 }
 
 #endif
