@@ -26,6 +26,7 @@
 #include<accessor.hh>
 #include<reference_wrapper.hh>
 #include<is_same.hh>
+#include<ratio.hh>
 
 class foo{
 private:
@@ -970,5 +971,17 @@ TEST_CASE( "", "[is_same]"){
   REQUIRE( !CONST_SAME::value );
   REQUIRE( !FLOAT::value );
   REQUIRE( !BAR::value );
+}
+
+TEST_CASE( "", "[ratio]" ){
+  typedef ratio<1, 2> R;
+  typedef ratio<2, 4> S;
+  R r;
+  S s;
+
+  REQUIRE( r == .5 );
+  REQUIRE( s == .5 );
+  REQUIRE( r == s );
+  REQUIRE( R::value == S::value );
 }
 
