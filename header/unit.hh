@@ -1,12 +1,15 @@
 #ifndef __UNIT_HH__
 #define __UNIT_HH__
 
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, typename DBL = double>
+#include<ratio.hh>
+
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, typename DBL = double, typename FACTOR = ratio<1,1> >
 class unit{
 public:
   typedef DBL value_type;
-  template<typename D_t = value_type>
-  using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, D_t>;
+  typedef FACTOR factor_type;
+  template<typename D_t = value_type, typename F_t = factor_type>
+  using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, D_t, F_t>;
 
 private:
   value_type mValue;
@@ -18,14 +21,14 @@ public:
   unit( value_type val ):
     mValue( val ){
   }
-  template<typename D>
-  unit( const other_type<D>& other ):
-    unit( other.mValue ){
+  template<typename D, typename F>
+  unit( const other_type<D, F>& other ):
+    mValue( ( other.getRaw() ) / factor_type::value ){
   }
 
-  template<typename D>
-  unit& operator=( const other_type<D>& other ){
-    mValue = other.mValue;
+  template<typename D, typename F>
+  unit& operator=( const other_type<D, F>& other ){
+    mValue = other.getRaw() / factor_type::value;
     return *this;
   }
   unit& operator=( value_type value ){
@@ -33,25 +36,25 @@ public:
     return *this;
   }
 
-  template<typename D>
-  bool operator==( const other_type<D>& other ) const{
+  template<typename D, typename F>
+  bool operator==( const other_type<D, F>& other ) const{
     //TODO: allow slight error( epsilon )
-    return mValue == other.mValue;
+    return getRaw() == other.getRaw();
   }
-  template<typename D>
-  bool operator<( const other_type<D>& other ) const{
-    return mValue < other.mValue;
+  template<typename D, typename F>
+  bool operator<( const other_type<D, F>& other ) const{
+    return getRaw() < other.getRaw();
   }
-  template<typename D>
-  bool operator>( const other_type<D>& other ) const{
-    return mValue > other.mValue;
+  template<typename D, typename F>
+  bool operator>( const other_type<D, F>& other ) const{
+    return getRaw() > other.getRaw();
   }
-  template<typename D>
-  bool operator<=( const other_type<D>& other ) const{
+  template<typename D, typename F>
+  bool operator<=( const other_type<D, F>& other ) const{
     return !( ( *this ) > other );
   }
-  template<typename D>
-  bool operator>=( const other_type<D>& other ) const{
+  template<typename D, typename F>
+  bool operator>=( const other_type<D, F>& other ) const{
     return !( ( *this ) < other );
   }
   bool operator==( value_type other ) const{
@@ -70,23 +73,23 @@ public:
     return !( ( *this ) < other );
   }
 
-  template<typename D>
-  unit operator+( const other_type<D>& other ) const{
-    return mValue + other.mValue;
+  template<typename D, typename F>
+  unit operator+( const other_type<D, F>& other ) const{
+    return getRaw() + other.getRaw();
   }
-  template<typename D>
-  unit operator-( const other_type<D>& other ) const{
-    return mValue - other.mValue;
+  template<typename D, typename F>
+  unit operator-( const other_type<D, F>& other ) const{
+    return getRaw() - other.getRaw();
   }
 
-  template<typename D>
-  unit& operator+=( const other_type<D>& other ){
-    mValue = mValue + other.mValue;
+  template<typename D, typename F>
+  unit& operator+=( const other_type<D, F>& other ){
+    mValue = getRaw() + other.getRaw();
     return *this;
   }
-  template<typename D>
-  unit& operator-=( const other_type<D>& other ){
-    mValue = mValue - other.mValue;
+  template<typename D, typename F>
+  unit& operator-=( const other_type<D, F>& other ){
+    mValue = getRaw() - other.getRaw();
     return *this;
   }
 
@@ -113,6 +116,7 @@ public:
 
   value_type& getValue(){ return mValue; }
   value_type getValue() const{ return mValue; }
+  value_type getRaw() const{ return ( mValue * factor_type::value ); }
   operator value_type(){
     return mValue;
   }
