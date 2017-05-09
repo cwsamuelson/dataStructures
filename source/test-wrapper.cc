@@ -1,4 +1,4 @@
-#include<catch/catch.hpp>
+#include<catch.hpp>
 
 #include<reference_wrapper.hh>
 

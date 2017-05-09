@@ -1,6 +1,6 @@
 #include<random>
 
-#include<catch/catch.hpp>
+#include<catch.hpp>
 
 #include<algorithm.hh>
 

@@ -1,6 +1,8 @@
 #ifndef __RANGE_HH__
 #define __RANGE_HH__
 
+#include<functional>
+
 template<class>
 class range;
 
