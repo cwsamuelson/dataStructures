@@ -4,15 +4,15 @@
 
 TEST_CASE( "Menu allows option selection and provides callbacks on selection.", "[menu]" ){
   std::stringstream ss;
-  auto pm = std::make_shared<menu<int>>();
   auto pm0 = std::make_shared<menu<int>>();
-  std::shared_ptr<menu<int> > current( pm );
+  auto pm1 = std::make_shared<menu<int>>();
+  std::shared_ptr<menu<int> > current( pm0 );
 
-  pm->addOption( 0, "electric", pm0, [&](){ ss << "beep" << '\n'; } );
-  pm->addOption( 1, "boogaloo", pm0, [&](){ ss << "boop" << '\n'; } );
-  pm0->addOption( 0, "foo", pm, [&](){ ss << "buup" << '\n'; } );
-  pm0->addOption( 1, "baz", pm, [&](){ ss << "biip" << '\n'; } );
-  pm0->addOption( 1, "bar", pm, [&](){ ss << "byyp" << '\n'; } );
+  pm0->addOption( 0, "electric", pm1, [&](){ ss << "beep" << '\n'; } );
+  pm0->addOption( 1, "boogaloo", pm1, [&](){ ss << "boop" << '\n'; } );
+  pm1->addOption( 0, "foo",      pm0, [&](){ ss << "buup" << '\n'; } );
+  pm1->addOption( 1, "baz",      pm0, [&](){ ss << "biip" << '\n'; } );
+  pm1->addOption( 1, "bar",      pm0, [&](){ ss << "byyp" << '\n'; } );
 
   //ctor compile check
   menu<int> one;
@@ -67,7 +67,7 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
     bool exceptionSanity = false;
 
     try{
-      pm->select( 3 );
+      pm0->select( 3 );
     }catch( std::out_of_range& ){
       exceptionSanity = true;
     }
