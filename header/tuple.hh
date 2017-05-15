@@ -1,10 +1,10 @@
 #ifndef __TUPLE_H__
 #define __TUPLE_H__
 
-template<unsigned int N, class ...Args>
+template<size_t N, class ...Args>
 class tuple_impl;
 
-template<unsigned int N, class T>
+template<size_t N, class T>
 class tuple_impl<N, T>{
 public:
   typedef T value_type;
@@ -19,7 +19,7 @@ public:
   }
 };
 
-template<unsigned int N, class T, class ...Args>
+template<size_t N, class T, class ...Args>
 class tuple_impl<N, T, Args...> : public tuple_impl<N + 1, Args...>{
 public:
   typedef T value_type;
@@ -53,7 +53,7 @@ public:
   }
 };
 
-template<unsigned int M, unsigned int N, class T, class ...Args>
+template<size_t M, size_t N, class T, class ...Args>
 class get_impl{
 public:
   static auto& get( tuple_impl<N, T, Args...>& tup ){
@@ -64,7 +64,7 @@ public:
   }
 };
 
-template<unsigned int N, class T, class ...Args>
+template<size_t N, class T, class ...Args>
 class get_impl<0, N, T, Args...>{
 public:
   static auto& get( tuple_impl<N, T, Args...>& tup ){
@@ -74,12 +74,12 @@ public:
     return tup.data;
   }};
 
-template<unsigned int M, class ...Args>
+template<size_t M, class ...Args>
 auto& get( tuple<Args...>& tup ){
   return get_impl<M, 0, Args...>::get( static_cast<tuple_impl<0, Args...>& >( tup ) );
 }
 
-template<unsigned int M, class ...Args>
+template<size_t M, class ...Args>
 const auto& get( const tuple<Args...>& tup ){
   return get_impl<M, 0, Args...>::get( static_cast<const tuple_impl<0, Args...>& >( tup ) );
 }
@@ -88,6 +88,19 @@ template<class ...Args>
 tuple<Args...> make_tuple( Args... args ){
   return tuple<Args...>( args... );
 }
+
+template<size_t N, typename T>
+class tuple_element;
+
+template<class HEAD, class ...TAIL>
+class tuple_element<0, tuple<HEAD, TAIL...> >{
+public:
+  typedef HEAD type;
+};
+
+template<size_t N, class HEAD, class ...TAIL>
+class tuple_element<N, tuple<HEAD, TAIL...> >: public tuple_element<N - 1, tuple<TAIL...> >{
+};
 
 #endif
 

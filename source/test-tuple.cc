@@ -50,5 +50,15 @@ TEST_CASE( "Tuples can be of varying size and type", "[tuple]" ){
     REQUIRE( get<1>( t2 ) == 1 );
     REQUIRE( get<2>( t2 ) == 6.0 );
   }
+
+  SECTION( "Tuple element types can be extracted using tuple_element class" ){
+    tuple<int, char, bool> t;
+    //compile check
+    tuple_element<1, decltype( t )>::type c = 'c';
+    tuple_element<2, decltype( t )>::type b = true;
+
+    REQUIRE( c == 'c' );
+    REQUIRE( b );
+  }
 }
 
