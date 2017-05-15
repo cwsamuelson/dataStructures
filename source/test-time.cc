@@ -25,7 +25,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "A date is printed in a human readable format to an ostream." ){
-    date dayt( 11, 8, 2016 );
+    date dayt( day( 11 ), 8, year( 2016 ) );
     std::stringstream ss;
     std::string str;
 
@@ -49,9 +49,8 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
     m -= 5;
 
-    REQUIRE( m == 55 );
-
     REQUIRE( ++h == 2 );
+    REQUIRE( m == 55 );
     REQUIRE( m++ == 55 );
     REQUIRE( m == 56 );
     REQUIRE( --h == 1 );
@@ -60,7 +59,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Date time interacts with streams." ){
-    date_time dt( date( 11, 8, 2016 ), 15, 41, 14 );
+    date_time dt( date( day( 11 ), 8, year( 2016 ) ), hour( 15 ), minute( 41 ), second( 14 ) );
     std::stringstream ss;
     std::string str;
 
@@ -78,7 +77,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
   SECTION( "Units convert when using streams." ){
     std::string str( "5 seconds" );
-    time_unit<5> tu;
+    time_type<5> tu;
     std::stringstream ss( str );
 
     ss >> tu;
@@ -91,5 +90,4 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
     REQUIRE( tu == 2 );
   }
 }
-
 

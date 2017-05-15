@@ -34,10 +34,10 @@ constexpr std::common_type_t<T, U> gcd( T t, U u ){
   return t;
 }
 
-template<signed long N, signed long D>
+template<size_t N, size_t D>
 class ratio{
 public:
-  typedef signed long value_type;
+  typedef size_t value_type;
   static const value_type numerator = sign( N ) * sign( D ) * myAbs( N ) / gcd( N, D );
   static const value_type denominator = myAbs( D ) / gcd( N, D );
   static constexpr double value = double( double( numerator ) / double( denominator ) );
@@ -47,13 +47,13 @@ public:
     return value;
   }
 
-  template<unsigned long NUM, unsigned long DEN>
+  template<size_t NUM, size_t DEN>
   constexpr auto operator*( ratio<NUM, DEN> other ){
     typedef decltype( other ) OTHER;
 
     return ratio<numerator * OTHER::numerator, denominator * OTHER::denominator>();
   }
-  template<unsigned long NUM, unsigned long DEN>
+  template<size_t NUM, size_t DEN>
   constexpr auto operator/( ratio<NUM, DEN> other ){
     typedef decltype( other ) OTHER;
 
@@ -61,40 +61,40 @@ public:
   }
 };
 
-template<typename T, signed long N, signed long D>
+template<typename T, size_t N, size_t D>
 T operator*( T t, ratio<N, D> r ){
   return t * double( r );
 }
-template<typename T, signed long N, signed long D>
+template<typename T, size_t N, size_t D>
 T operator*( ratio<N, D> r, T t ){
   return t * double( r );
 }
 
-template<typename T, signed long N, signed long D>
+template<typename T, size_t N, size_t D>
 T operator/( T t, ratio<N, D> r ){
   return t / double( r );
 }
-template<typename T, signed long N, signed long D>
+template<typename T, size_t N, size_t D>
 T operator/( ratio<N, D> r, T t ){
   return t / double( r );
 }
 
-template<signed long N1, signed long D1,
-         signed long N2, signed long D2>
+template<size_t N1, size_t D1,
+         size_t N2, size_t D2>
 constexpr bool operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
   typedef decltype( r1 ) R1;
   typedef decltype( r2 ) R2;
 
   return R1::value == R2::value;
 }
-template<signed long N1, signed long D1,
-         signed long N2, signed long D2>
+template<size_t N1, size_t D1,
+         size_t N2, size_t D2>
 constexpr bool operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
   return ! ( r1 == r2 );
 }
 
 //This declaration prevents a linker error
-template<signed long N, signed long D>
+template<size_t N, size_t D>
 constexpr double ratio<N, D>::value;
 
 #endif

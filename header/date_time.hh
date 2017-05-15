@@ -3,233 +3,97 @@
 
 #include<string>
 
-template<unsigned int FACTOR>
-class time_unit{
-private:
-  const unsigned int factor = FACTOR;
-  //mValue stores the number of seconds
-  long long mValue;
-  template<unsigned int UI>
-  friend class time_unit;
+#include<unit.hh>
 
+typedef unsigned long long under_type;
+
+template<size_t F>
+class time_type : public thyme<under_type, ratio<F, 1> >{
 public:
-  time_unit(double val = 1.0):
-    mValue(factor * val){
-  }
-  template<unsigned int UI>
-  time_unit(const time_unit<UI>& tu):
-    mValue(tu.mValue){
-  }
+  typedef thyme<under_type, ratio<F, 1> > base;
 
-  time_unit& operator=(double val){
-    mValue = factor * val;
-
-    return *this;
+  time_type():
+    base(){
   }
-  template<unsigned int UI>
-  time_unit& operator=(const time_unit<UI>& val){
-    mValue = val.mValue;
-
-    return *this;
+  explicit time_type( under_type ut ):
+    base( ut ){
   }
-
-  time_unit operator+(double val){
-    time_unit ret(*this);
-    ret += val;
-
-    return ret;
+  template<typename D, typename F_t>
+  time_type( const typename base::template other_type<D, F_t>& other ):
+    base( other ){
   }
-  template<unsigned int UI>
-  time_unit operator+(const time_unit<UI>& tu){
-    time_unit ret(*this);
-    ret += tu;
-
-    return ret;
-  }
-  time_unit operator-(double val){
-    time_unit tu(*this);
-    tu -= val;
-
-    return tu;
-  }
-  template<unsigned int UI>
-  time_unit operator-(const time_unit<UI>& tu){
-    time_unit ret(*this);
-    ret -= tu;
-
-    return ret;
-  }
-
-  time_unit& operator+=(double val){
-    mValue += factor * val;
-
-    return *this;
-  }
-  template<unsigned int UI>
-  time_unit& operator+=(const time_unit<UI>& tu){
-    mValue += tu.mValue;
-
-    return *this;
-  }
-  time_unit& operator-=(double val){
-    mValue -= factor * val;
-
-    return *this;
-  }
-  template<unsigned int UI>
-  time_unit& operator-=(const time_unit<UI>& tu){
-    mValue -= tu.mValue;
-
-    return *this;
-  }
-  time_unit operator*(double val) const{
-    time_unit ret(*this);
-
-    ret.mValue *= val;
-
-    return ret;
-  }
-  time_unit operator/(double val) const{
-    time_unit ret(*this);
-
-    ret.mValue /= val;
-
-    return ret;
-  }
-
-  bool operator==(double val) const{
-    return mValue == (factor * val);
-  }
-  template<unsigned int UI>
-  bool operator==(const time_unit<UI>& tu) const{
-    return mValue == tu.mValue;
-  }
-  bool operator<(double val) const{
-    return mValue < (factor * val);
-  }
-  template<unsigned int UI>
-  bool operator<(const time_unit<UI>& tu) const{
-    return mValue < tu.mValue;
-  }
-  bool operator<=(double val) const{
-    return (*this) < val || (*this) == val;
-  }
-  template<unsigned int UI>
-  bool operator<=(const time_unit<UI>& tu) const{
-    return (*this) < tu || (*this) == tu;
-  }
-  bool operator>(double val) const{
-    return mValue > (factor * val);
-  }
-  template<unsigned int UI>
-  bool operator>(const time_unit<UI>& tu) const{
-    return mValue > tu.mValue;
-  }
-  bool operator>=(double val) const{
-    return (*this) > val || (*this) == val;
-  }
-  template<unsigned int UI>
-  bool operator>=(const time_unit<UI>& tu) const{
-    return (*this) > tu || (*this) == tu;
-  }
-
-  time_unit& operator++(){
-    (*this) += 1;
-
-    return *this;
-  }
-  time_unit operator++(int){
-    time_unit tu(*this);
-
-    (*this) += 1;
-
-    return tu;
-  }
-  time_unit& operator--(){
-    (*this) -= 1;
-
-    return *this;
-  }
-  time_unit operator--(int){
-    time_unit tu(*this);
-
-    (*this) -= 1;
-
-    return tu;
-  }
-
-  long long getValue() const{
-    return mValue / factor;
-  }
-
-  template<unsigned int UI, typename OSTREAM>
-  friend OSTREAM& operator<<(OSTREAM& os, const time_unit<UI>& tu);
-  template<unsigned int UI, typename ISTREAM>
-  friend ISTREAM& operator>>(ISTREAM& is, time_unit<UI>& tu);
 };
 
-typedef time_unit<1> second;
-typedef time_unit<60> minute;
-typedef time_unit<3600> hour;
-typedef time_unit<86400> day;
-typedef time_unit<604800> week;
-typedef time_unit<2592000> month;//30 days
-typedef time_unit<31536000> year;
+using second = time_type<1>;
+using minute = time_type<60>;
+using hour   = time_type<3600>;
+using day    = time_type<86400>;
+using week   = time_type<604800>;
+using month  = time_type<2592000>;
+using year   = time_type<31536000>;
 
-template<unsigned int UI>
-time_unit<UI> operator*(double val, const time_unit<UI>& tu){
-  return tu * val;
+template<typename OSTREAM>
+auto& output( OSTREAM& os, under_type t, const std::string& type ){
+  return ( os << t << " " << type );
 }
 
-template<unsigned int UI, typename OSTREAM>
-OSTREAM& operator<<(OSTREAM& os, const time_unit<UI>& tu){
-  std::string str;
-
-  if(UI == 1){
-    str = "seconds";
-  } else if(UI == 60){
-    str = "minutes";
-  } else if(UI == 3600){
-    str = "hours";
-  } else if(UI == 86400){
-    str = "days";
-  } else if(UI == 604800){
-    str = "weeks";
-  } else if(UI == 2592000){
-    str = "months";
-  } else if(UI == 31536000){
-    str = "years";
-  } else {
-    str = "units(" + std::to_string(UI) + ")";
-  }
-
-  os << (tu.mValue / UI) << " " << str;
-
-  return os;
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const second& s ){
+  return output( os, s.getValue(), "seconds" );
 }
 
-template<unsigned int UI, typename ISTREAM>
-ISTREAM& operator>>(ISTREAM& is, time_unit<UI>& tu){
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const minute& s ){
+  return output( os, s.getValue(), "minutes" );
+}
+
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const hour& s ){
+  return output( os, s.getValue(), "hours" );
+}
+
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const day& s ){
+  return output( os, s.getValue(), "days" );
+}
+
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const week& s ){
+  return output( os, s.getValue(), "weeks" );
+}
+
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const month& s ){
+  return output( os, s.getValue(), "months" );
+}
+
+template<typename OSTREAM>
+auto& operator<<( OSTREAM& os, const year& s ){
+  return output( os, s.getValue(), "years" );
+}
+
+template<size_t UI, typename ISTREAM>
+ISTREAM& operator>>( ISTREAM& is, time_type<UI>& tu ){
   long long val;
   std::string str;
 
   is >> val;
   is >> str;
 
-  if(str == "seconds"){
-    tu = second(val);
-  } else if(str == "minutes"){
-    tu = minute(val);
-  } else if(str == "hours"){
-    tu = hour(val);
-  } else if(str == "days"){
-    tu = day(val);
-  } else if(str == "weeks"){
-    tu = week(val);
-  } else if(str == "months"){
-    tu = month(val);
-  } else if(str == "years"){
-    tu = year(val);
+  if( str == "seconds" ){
+    tu = second( val );
+  } else if( str == "minutes" ){
+    tu = minute( val );
+  } else if( str == "hours" ){
+    tu = hour( val );
+  } else if( str == "days" ){
+    tu = day( val );
+  } else if( str == "weeks" ){
+    tu = week( val );
+  } else if( str == "months" ){
+    tu = month( val );
+  } else if( str == "years" ){
+    tu = year( val );
   }
 
   return is;
@@ -239,52 +103,53 @@ class date{
 private:
   day mDay;
   year mYear;
-  const unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-  const std::string monthNames[12] = { "January", "February", "March", "April",
-                                       "May", "June", "July", "August",
-                                       "September", "October", "November",
-                                       "December" };
+  static constexpr unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30,
+                                                31, 31, 30, 31, 30, 31 };
+  static constexpr char monthNames[][12] = { "January", "February", "March",
+                                             "April", "May", "June", "July",
+                                             "August", "September", "October",
+                                             "November", "December" };
 
 public:
-  date(day d, unsigned int mont, year y):
-    mDay(d),
-    mYear(y){
+  date( day d, unsigned int mont, year y ):
+    mDay( d ),
+    mYear( y ){
 
-    for(unsigned int i = 0; i < mont - 1; ++i){
+    for( unsigned int i = 0; i < mont - 1; ++i ){
       mDay += mMonths[i];
     }
   }
 
-  template<unsigned int UI>
-  date operator+(const time_unit<UI>& tu){
-    date d(*this);
+  template<size_t UI>
+  date operator+( const time_type<UI>& tu ){
+    date d( *this );
 
     d += tu;
 
     return d;
   }
-  template<unsigned int UI>
-  date operator-(const time_unit<UI>& tu){
-    date d(*this);
+  template<size_t UI>
+  date operator-( const time_type<UI>& tu ){
+    date d( *this );
 
     d -= tu;
 
     return d;
   }
-  template<unsigned int UI>
-  date& operator+=(const time_unit<UI>& tu){
+  template<size_t UI>
+  date& operator+=( const time_type<UI>& tu ){
     mDay += tu;
-    if(mDay >= 365){
+    if( mDay >= 365ll ){
       ++mYear;
       mDay -= 365;
     }
 
     return *this;
   }
-  template<unsigned int UI>
-  date& operator-=(const time_unit<UI>& tu){
+  template<size_t UI>
+  date& operator-=( const time_type<UI>& tu ){
     mDay -= tu;
-    if(mDay <= 0){
+    if( mDay <= 0ll ){
       --mYear;
       mDay += 365;
     }
@@ -293,85 +158,85 @@ public:
   }
 
   template<typename OSTREAM>
-  friend OSTREAM& operator<<(OSTREAM& os, date d);
+  friend
+  auto& operator<<( OSTREAM& os, date dayt ){
+    unsigned int mont = 0;
+
+    while( dayt.mDay.getValue() > date::mMonths[mont] ){
+      dayt.mDay -= date::mMonths[mont++];
+    }
+
+    return ( os << dayt.mDay.getValue() << " "
+                << date::monthNames[mont] << " "
+                << dayt.mYear.getValue() );
+  }
 };
 
-template<typename OSTREAM>
-OSTREAM& operator<<(OSTREAM& os, date dayt){
-  unsigned int mont = 0;
-
-  while(dayt.mDay.getValue() > dayt.mMonths[mont]){
-    dayt.mDay -= dayt.mMonths[mont++];
-  }
-
-  os << dayt.mDay.getValue() << " " << dayt.monthNames[mont] << " " << dayt.mYear.getValue();
-
-  return os;
-}
+constexpr unsigned int date::mMonths[12];
+constexpr char date::monthNames[][12];
 
 class date_time{
 private:
   date mDate;
-  second mTime;
+  hour mHour;
+  minute mMinute;
+  second mSecond;
 
 public:
-  date_time(hour h, minute m, second s, date d = date(0, 0, 0)):
-    mDate(d),
-    mTime(h + m + s){
+  date_time( const hour& h, const minute& m, const second& s, const date& d = date( day( 0 ), 0, year( 0 ) ) ):
+    mDate( d ),
+    mHour( h ),
+    mMinute( m ),
+    mSecond( s ){
   }
-  date_time(date d, hour h = 0, minute m = 0, second s = 0):
-    mDate(d),
-    mTime(h + m + s){
+  date_time( const date& d, const hour& h = hour( 0 ), const minute& m = minute( 0 ), const second& s = second( 0 ) ):
+    mDate( d ),
+    mHour( h ),
+    mMinute( m ),
+    mSecond( s ){
   }
 
-  template<unsigned int UI>
-  date_time operator+(const time_unit<UI>& tu){
-    date_time ret(*this);
+  template<size_t UI>
+  date_time operator+( const time_type<UI>& tu ){
+    date_time ret( *this );
+
+    ret += tu;
 
     return ret;
   }
 
-  template<unsigned int UI>
-  date_time& operator+=(time_unit<UI> tu){
-    while(tu.getValue() * UI > 86400){
-      day one(1);
+  template<size_t UI>
+  date_time& operator+=( const time_type<UI>& tu ){
+    while( tu.getRaw() > 86400 ){
+      day one( 1 );
       mDate += one;
       tu -= one;
     }
 
     //whatever's left will be hour/min/sec
     //dump it into the time
-    mTime += tu;
+    while( tu.getRaw() > 3600 ){
+      ++mHour;
+      tu -= 3600 / UI;
+    }
+    while( tu.getRaw() > 60 ){
+      ++mMinute;
+      tu -= 60 / UI;
+    }
+    
+    mSecond += tu;
 
     return *this;
   }
 
   template<typename OSTREAM>
-  friend OSTREAM& operator<<(OSTREAM& os, date_time dt);
+  friend
+  auto& operator<<( OSTREAM& os, date_time dt ){
+    os << dt.mDate << " ";
+
+    return ( os << dt.mHour.getValue() << ":" << dt.mMinute.getValue() << ":" << dt.mSecond.getValue() );
+  }
 };
-
-template<typename OSTREAM>
-OSTREAM& operator<<(OSTREAM& os, date_time dt){
-  unsigned int h = 0;
-  unsigned int m = 0;
-  unsigned int s = 0;
-
-  os << dt.mDate << " ";
-
-  while(dt.mTime > 3600){
-    ++h;
-    dt.mTime -= 3600;
-  }
-  while(dt.mTime > 60){
-    ++m;
-    dt.mTime -= 60;
-  }
-  s = dt.mTime.getValue();
-
-  os << h << ":" << m << ":" << s;
-
-  return os;
-}
 
 #endif
 

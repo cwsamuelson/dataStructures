@@ -1,7 +1,7 @@
 #ifndef __TUPLE_H__
 #define __TUPLE_H__
 
-template<unsigned int N, class ... Args>
+template<unsigned int N, class ...Args>
 class tuple_impl;
 
 template<unsigned int N, class T>
@@ -19,7 +19,7 @@ public:
   }
 };
 
-template<unsigned int N, class T, class ... Args>
+template<unsigned int N, class T, class ...Args>
 class tuple_impl<N, T, Args...> : public tuple_impl<N + 1, Args...>{
 public:
   typedef T value_type;
