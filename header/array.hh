@@ -60,6 +60,7 @@ public:
   typedef splice_index<value_type> splicer;
   typedef splice_helper<value_type[N]> helper;
   typedef normal_iterator<value_type, array> iterator;
+  typedef const normal_iterator<value_type, array> const_iterator;
 
 private:
   value_type mArr[mSize];
@@ -84,13 +85,12 @@ public:
     return h;
   }
   //TODO:genericize to not only take arrays
-  //TODO:provide cbegin/cend to allow this argument to be const
   template<unsigned int M>
   helper operator[]( array<unsigned int[M]>& a ){
-    helper h(*this);
+    helper h( *this );
 
-    for( auto it = a.begin(); it != a.end(); ++it ){
-      h.mIdxs.push_back( *it );
+    for( auto it : a ){
+      h.mIdxs.push_back( it );
     }
 
     return h;
@@ -114,6 +114,18 @@ public:
   }
   iterator end(){
     return Iterator( mSize );
+  }
+  const_iterator begin() const{
+    return begin();
+  }
+  const_iterator end() const{
+    return end();
+  }
+  const_iterator cbegin() const{
+    return begin();
+  }
+  const_iterator cend() const{
+    return end();
   }
   iterator Iterator( index_t idx ){
     return iterator( &mArr[idx] );
