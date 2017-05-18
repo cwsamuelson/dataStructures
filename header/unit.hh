@@ -184,9 +184,13 @@ operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
 /* 'thyme' should be renamed back to 'time' when a namespace is established, as
  * name collision would be disambiguated using <namespace>::time vs ( i.e. ) std::time
  */
-//                         m   s   kg  A   K  C
+//                          m   s   kg  A   K  C  T
 template<typename T = double, typename F = ratio<1,1> >
 using length        = unit< 1,  0,  0,  0,  0, 0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using area          = unit< 2,  0,  0,  0,  0, 0, 0, T, F>;
+template<typename T = double, typename F = ratio<1,1> >
+using volume        = unit< 3,  0,  0,  0,  0, 0, 0, T, F>;
 template<typename T = double, typename F = ratio<1,1> >
 using mass          = unit< 0,  0,  1,  0,  0, 0, 0, T, F>;
 template<typename T = double, typename F = ratio<1,1> >
@@ -194,7 +198,7 @@ using current       = unit< 0,  0,  0,  1,  0, 0, 0, T, F>;//amps
 template<typename T = double, typename F = ratio<1,1> >
 using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, T, F>;//kelvin
 template<typename T = double, typename F = ratio<1,1> >
-using light         = unit< 0,  0,  0,  0,  0, 1, 0, T, F>;//candela
+using brightness    = unit< 0,  0,  0,  0,  0, 1, 0, T, F>;//candela
 template<typename T = double, typename F = ratio<1,1> >
 using thyme         = unit< 0,  1,  0,  0,  0, 0, 0, T, F>;//time, renamed to avoid collision
 
@@ -225,9 +229,9 @@ template<typename T = double, typename F = ratio<1,1> >
 using coulomb = charge<T, F>;
 
 template<typename T = double, typename F = ratio<1,1> >
-using magField      = unit< 0, -2,  1,  1,  0, 0, 0, T, F>;//tesla
+using mag_field      = unit< 0, -2,  1,  1,  0, 0, 0, T, F>;//tesla
 template<typename T = double, typename F = ratio<1,1> >
-using elecField     = unit< 1, -3,  1, -1,  0, 0, 0, T, F>;
+using elec_field     = unit< 1, -3,  1, -1,  0, 0, 0, T, F>;
 
 template<typename T = double, typename F = ratio<1,1> >
 using specificHeat  = decltype( energy<T, F>() / temperature<T, F>() );
