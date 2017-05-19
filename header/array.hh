@@ -50,10 +50,18 @@ struct splice_helper<T[N]>{
   }
 };
 
+/*! Simple wrapper around builtin array
+ *
+ * @tparam T  Type of data stored in array
+ *
+ * @tparam N  Number of elements stored in array
+ */
 template<class T, unsigned int N>
 class array<T[N]>{
 public:
   typedef T value_type;
+  typedef value_type& reference;
+  typedef const value_type& const_reference;
   typedef unsigned int index_t;
   static const index_t mSize = N;
   static const unsigned int ptrdiff = sizeof( value_type );
@@ -66,25 +74,82 @@ private:
   value_type mArr[mSize];
 
 public:
-  index_t size(){
+  /*! Get the size of the array
+   *
+   * @return The number of elements
+   *
+   * Returns the number of elements stored in the array.
+   */
+  index_t size() const{
     return mSize;
   }
 
-  value_type& operator[]( index_t idx ){
+  /*! Indexing operator retrieves element at given index
+   *
+   * @param idx  Index at which value will be retrieved
+   */
+  reference operator[]( index_t idx ){
     return mArr[idx];
   }
-  helper operator[]( const splicer& si ){
+
+  /*! Index operator overload for const correctness
+   *
+   * @param idx  Index at which value will be retrieved
+   *
+   * Behaves the same as non-const version, but provides a const reference,
+   * and can be used on const objects.
+   */
+  const_reference operator[]( index_t idx ) const{
+    return mArr[idx];
+  }
+
+  /*! Index operator to allow for array splicing
+   *
+   * @param spl  Splicer object describing which elements to return
+   *
+   * @return Helper to allow assignment to elements described by splicer argument
+   *
+   * Utility operator to allow for more descriptive array modification.
+   * Intended usage:
+   * array<int[6]> arr;
+   * arr[arr > 2] = 42;
+   *
+   * This will assign all elements at indexes 3 - 5 equal to 42.
+   */
+  helper operator[]( const splicer& spl ){
     helper h( *this );
 
     for( unsigned int i = 0; i < mSize; ++i ){
-      if( si.mOp( i, si.mIdx ) ){
+      if( spl.mOp( i, spl.mIdx ) ){
         h.mIdxs.push_back( i );
       }
     }
 
     return h;
   }
-  //TODO:genericize to not only take arrays
+
+  /*! Index operator to allow for array splicing
+   *
+   * @tparam M  Size of array argument
+   *
+   * @param a  Array of elements list indexes to modify
+   *
+   * @return Helper to allow assignment to elements described by splicer argument
+   *
+   * @todo genericize to take other containers as well
+   *
+   * Utility operator to allow for more descriptive array modification.
+   * Intended usage:
+   * array<int[6]> arr1;
+   * array<int[2]> arr2;
+   *
+   * arr2[0] = 3;
+   * arr2[1] = 4;
+   *
+   * arr1[arr2] = 42;
+   *
+   * This will assign elements at indexes 3 and 4 equal to 42.
+   */
   template<unsigned int M>
   helper operator[]( array<unsigned int[M]>& a ){
     helper h( *this );

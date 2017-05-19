@@ -3,22 +3,51 @@
 
 #include<vector.hh>
 
+/*! Invokes member function pointer
+ *
+ * @tparam OBJ  Type of object which member function will act on
+ *
+ * @tparam MEMBER_FN  Type of member function pointer
+ *
+ * @tparam ...Args  Type pack of argument types
+ *
+ * @param obj  Object to run memfun on
+ *
+ * @param memfun  Member function to be run
+ *
+ * @param ...args  Arguments to be sent to function
+ *
+ * @return Whatever type or result comes from memfun
+ *
+ * Invokes a member function pointer of the form:
+ * class foo{
+ * public:
+ *   return_type ( foo::*MemFnPtr ) (  Args ...args  );
+ * };
+ */
 template<typename OBJ, typename MEMBER_FN, typename ...Args>
-auto invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
-  return ( obj.*memfun )( args... );
+auto invoke(  OBJ obj, MEMBER_FN memfun, Args ...args  ){
+  return (  obj.*memfun  )(  args...  );
 }
 
+/*! Less than operator functor
+ *
+ * @tparam T  Type to be compared
+ */
 template<class T>
 struct less{
-  bool operator()(const T& lhs, const T& rhs){
+  /*!
+   */
+  bool operator()( const T& lhs, const T& rhs ){
     return lhs < rhs;
   }
 };
 
 template<class iter>
-unsigned long distance(iter first, iter last){
+unsigned long distance( iter first, iter last ){
   unsigned long ret = 0;
-  while(first++ != last){
+
+  while( first++ != last ){
     ++ret;
   }
 
@@ -26,54 +55,54 @@ unsigned long distance(iter first, iter last){
 }
 
 template<class iter>
-void myswap(iter x, iter y){
+void myswap( iter x, iter y ){
   auto z = *x;
   *x = *y;
   *y = z;
 }
 
 template<class iter, class compare>
-void merge(iter first, iter mid, iter last, compare comp){
+void merge( iter first, iter mid, iter last, compare comp ){
   vector<typename iter::value_type> vec;
   auto middle = mid;
   auto start = first;
   auto stop = last;
 
-  while(first != middle && mid != last){
-    if(comp(*mid, *first)){
-      vec.push_back(*mid);
+  while( first != middle && mid != last ){
+    if( comp( *mid, *first ) ){
+      vec.push_back( *mid );
       ++mid;
     } else {
-      vec.push_back(*first);
+      vec.push_back( *first );
       ++first;
     }
   }
-  while(first != middle){
-    vec.push_back(*(first++));
+  while( first != middle ){
+    vec.push_back( *( first++ ) );
   }
-  while(mid != last){
-    vec.push_back(*(mid++));
+  while( mid != last ){
+    vec.push_back( *( mid++ ) );
   }
 
   auto begin = vec.begin();
-  for(;start != stop; ++start, ++begin){
+  for( ;start != stop; ++start, ++begin ){
     *start = *begin;
   }
 }
 
 template<class iter, class compare = less<typename iter::value_type> >
-void sort(iter first, iter last, compare comp = less<typename iter::value_type>()){
-  auto length = distance(first, last);
+void sort( iter first, iter last, compare comp = compare() ){
+  auto length = distance( first, last );
 
-  if(length < 2){
+  if( length < 2 ){
     return;
   }
 
-  auto mid = first + (length / 2);
-  sort(first, mid, comp);
-  sort(mid, last, comp);
+  auto mid = first + ( length / 2 );
+  sort( first, mid, comp );
+  sort( mid, last, comp );
 
-  merge(first, mid, last, comp);
+  merge( first, mid, last, comp );
 }
 
 #endif
