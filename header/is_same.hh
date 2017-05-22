@@ -14,6 +14,14 @@ public:
     }
 };
 
+/*! Type trait to determine if 2 types are equivalent
+ *
+ * @tparam T  First type
+ *
+ * @tparam U  Second type
+ *
+ * value static member contains result of type equality
+ */
 template<typename T, typename U>
 class is_same{
 public:

@@ -36,19 +36,17 @@ private:
       [&]( const storage_type& x, const storage_type& y )->bool{
         return comparator( get<0>( x ), get<0>( y ) );
       }
-     );
+    );
   }
 
 public:
-  /*!
-   * @brief default ctor
+  /*! Default ctor
    *
    * No data stored.
    */
   map() = default;
 
-  /*!
-   * @brief copy ctor
+  /*! Copy ctor
    *
    * @tparam inputIter  Input iterator type
    *
@@ -62,8 +60,7 @@ public:
     normalize();
   }
 
-  /*!
-   * @brief copy ctor
+  /*! Copy ctor
    *
    * @param other  map to be copied
    */
@@ -72,21 +69,18 @@ public:
     comparator = other.comparator;
   }
 
-  /*!
-   * @brief move ctor
+  /*! Move ctor
    *
-   * @param other  map to be moved here
+   * @param other  map to be moved
    */
   map( map&& other ){
     mData = std::forward<decltype( mData )>( other.mData );
     comparator = other.comparator;
   }
 
-
-  /*!
-   * @brief get reference associated with key
+  /*! Get reference associated with key
    *
-   * @param key  index key to find associated reference
+   * @param key  index to find associated reference
    *
    * @return reference to found data
    *
@@ -119,8 +113,7 @@ public:
     return get<1>( mData[idx] );
   }
 
-  /*!
-   * @brief get reference associated with key
+  /*! Get reference associated with key
    *
    * @param key  index key to find associated reference
    *
@@ -140,8 +133,7 @@ public:
     }
   }
 
-  /*!
-   * @brief get const reference associated with key
+  /*! Get const reference associated with key
    *
    * @param key  index key to find associated reference
    *
@@ -154,8 +146,7 @@ public:
     return ( *this )[key];
   }
 
-  /*!
-   * @brief Insert copies of new data
+  /*! Insert copies of new data
    *
    * @tparam inputIter  Input iterator type
    *
@@ -171,8 +162,7 @@ public:
     normalize();
   }
 
-  /*!
-   * @brief construct new object
+  /*! Construct new object
    *
    * @tparam Args  template parameter pack of types to construct new object
    *
@@ -189,62 +179,55 @@ public:
     //TODO: return correct iterator
   }
 
-  /*!
-   * @brief
+  /*! Get iterator to first element
    *
-   * @return
+   * @return Iterator to beginning of container
    */
   iterator begin(){
     return mData.begin();
   }
 
-  /*!
-   * @brief
+  /*! Get constant iterator to first element
    *
-   * @return
+   * @return Iterator to beginning of container
    */
   const iterator cbegin() const{
     return begin();
   }
 
-  /*!
-   * @brief
+  /*! Get iterator beyond container
    *
-   * @return
+   * @return Iterator past end of container
    */
   iterator end(){
     return mData.end();
   }
 
-  /*!
-   * @brief
+  /*! Get constant iterator beyond container
    *
-   * @return
+   * @return Iterator past end of container
    */
   const iterator cend() const{
     return end();
   }
 
-  /*!
-   * @brief
+  /*! Empty container of all data
    */
   void clear(){
     mData.clear();
   }
 
-  /*!
-   * @brief
+  /*! Check whether the container is empty or not
    *
-   * @return
+   * @return Whether the container is empty
    */
   bool empty() const{
     return mData.empty();
   }
 
-  /*!
-   * @brief
+  /*! Get the number of elements in the container
    *
-   * @return
+   * @return The number of elements in the container
    */
   size_type size() const{
     return mData.size();
