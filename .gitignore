@@ -7,4 +7,5 @@ binary/*
 depend/*
 *.swp
 *.stackdump
+documentation/*
 
