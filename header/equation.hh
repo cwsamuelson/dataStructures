@@ -67,7 +67,7 @@ public:
 
   equation& operator/=( double d );
 
-  double operator()( const double X );
+  double operator()( double X );
 
   friend equation derive( const equation& eq, unsigned int order = 1 );
   friend equation antiderive( const equation& eq );

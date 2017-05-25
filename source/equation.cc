@@ -106,6 +106,14 @@ equation& equation::operator-=( const equation& rhs ){
   return ( *this );
 }
 
+/*! Multiplication operator
+ *
+ * @param rhs  Right hand side of the * operator
+ *
+ * @return Result of multiplication operation
+ *
+ * Multiplies 2 equations together
+ */
 equation equation::operator*( const equation& rhs ){
   storage_type vec( mCoeff.size() + rhs.mCoeff.size() - 1 );
 
@@ -118,11 +126,28 @@ equation equation::operator*( const equation& rhs ){
   return equation( vec.begin(), vec.end() );
 }
 
+/*! Multiply-assignment operator
+ *
+ * @param rhs  Right hand side of the *= operator
+ *
+ * @return References to lhs/the result of the subtraction operation
+ *
+ * Multiplies 2 equations, assigns the result to lhs
+ */
 equation& equation::operator*=( const equation& rhs ){
   ( *this ) = ( *this ) * rhs;
   return ( *this );
 }
 
+/*! Multiplication operator
+ *
+ * @param d  Right hand side of the * operator
+ *
+ * @return Result of multiplication operation
+ *
+ * Multiplies an equation by a number, effectively multiplying each coefficient
+ * by the constant
+ */
 equation equation::operator*( double d ){
   equation eq( *this );
 
@@ -131,6 +156,15 @@ equation equation::operator*( double d ){
   return eq;
 }
 
+/*! Multiply-assignment operator
+ *
+ * @param d  Right hand side of the *= operator
+ *
+ * @return Reference to lhs/the result of the multiplication operation
+ *
+ * Multiplies an equation by a number, effectively multiplying each coefficient
+ * by the constant
+ */
 equation& equation::operator*=( double d ){
   for( double& it : mCoeff ){
     it *= d;
@@ -167,7 +201,7 @@ equation& equation::operator/=( double d ){
   return ( *this );
 }
 
-double equation::operator()( const double X ){
+double equation::operator()( double X ){
   double val = 0.0;
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){

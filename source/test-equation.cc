@@ -2,9 +2,11 @@
 
 #include<equation.hh>
 
+using namespace std;
+
 TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
-  std::vector<double> vec { 1, 1, 1 };
-  std::vector<double> vec2 { 2, 2, 2 };
+  vector<double> vec { 1, 1, 1 };
+  vector<double> vec2 { 2, 2, 2 };
   equation eq( vec.begin(), vec.end() );
   equation eq2( vec2.begin(), vec2.end() );
 
@@ -20,13 +22,13 @@ TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
   SECTION( "Multiplication" ){
     REQUIRE( ( eq * 2 )( 2 ) == 2 * eq( 2 ) );
 
-    std::vector<double> vec3 { 1, 1 };
+    vector<double> vec3 { 1, 1 };
     equation eq3( vec3.begin(), vec3.end() );
     vec3[0] = 2;
     equation eq4( vec3.begin(), vec3.end() );
     REQUIRE( ( eq3 * eq4 )( 2 ) == 12 );
 
-    std::vector<double> vec4 { 1, 1 };
+    vector<double> vec4 { 1, 1 };
     equation eq5( vec4.begin(), vec4.end() );
     vec4.push_back( 1 );
     equation eq6( vec4.begin(), vec4.end() );
@@ -40,8 +42,8 @@ TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
 }
 
 TEST_CASE( "Equation", "[equ]" ){
-  std::vector<double> vec { 1, 1, 1 };
-  std::vector<double> vec2 { 2, 2, 2 };
+  vector<double> vec { 1, 1, 1 };
+  vector<double> vec2 { 2, 2, 2 };
   equation eq( vec.begin(), vec.end() );
   equation eq2( vec2.begin(), vec2.end() );
 
