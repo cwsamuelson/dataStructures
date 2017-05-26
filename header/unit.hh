@@ -131,6 +131,8 @@ public:
    *
    * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
    *
+   * @param other  Value to compare internal state against
+   *
    * @return Result of comparison.
    *
    * Compares this instance with another instance for inequality.
@@ -147,8 +149,9 @@ public:
    *
    * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
    *
-   * @return Result of comparison.
+   * @param other  Value to compare internal state against
    *
+   * @return Result of comparison.
    */
   template<typename D, typename F>
   bool operator<( const other_type<D, F>& other ) const{
@@ -162,69 +165,92 @@ public:
    *
    * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
    *
-   * @return Result of comparison.
+   * @param other  Value to compare internal state against
    *
+   * @return Result of comparison.
    */
   template<typename D, typename F>
   bool operator>( const other_type<D, F>& other ) const{
     return getRaw() > other.getRaw();
   }
 
-  /*!
+  /*! LE comparison operator
    *
    * @tparam D  Storage type for other.  Can be anything that can convert into
    *            value_type.
    *
    * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
    *
-   * @return Result of comparison.
+   * @param other  Value to compare internal state against
    *
+   * @return Result of comparison.
    */
   template<typename D, typename F>
   bool operator<=( const other_type<D, F>& other ) const{
     return !( ( *this ) > other );
   }
 
-  /*!
+  /*! GE comparison operator
    *
    * @tparam D  Storage type for other.  Can be anything that can convert into
    *            value_type.
    *
    * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
    *
-   * @return Result of comparison.
+   * @param other  Value to compare internal state against
    *
+   * @return Result of comparison
    */
   template<typename D, typename F>
   bool operator>=( const other_type<D, F>& other ) const{
     return !( ( *this ) < other );
   }
 
-  /*!
+  /*! Equality comparison operator
+   *
+   * @param other  Value to compare internal state against
+   *
+   * @return Result of comparison
    */
   bool operator==( value_type other ) const{
     return mValue == other;
   }
 
-  /*!
+  /*! LT comparison operator
+   *
+   * @param other  Value to compare internal state against
+   *
+   * @return Result of comparison
    */
   bool operator<( value_type other ) const{
     return mValue < other;
   }
 
-  /*!
+  /*! GT comparison operator
+   *
+   * @param other  Value to compare internal state against
+   *
+   * @return Result of comparison
    */
   bool operator>( value_type other ) const{
     return mValue > other;
   }
 
-  /*!
+  /*! LE comparison operator
+   *
+   * @param other  Value to compare internal state against
+   *
+   * @return Result of comparison
    */
   bool operator<=( value_type other ) const{
     return !( ( *this ) > other );
   }
 
-  /*!
+  /*! GE comparison operator
+   *
+   * @param other  Value to compare internal state against
+   *
+   * @return Result of comparison
    */
   bool operator>=( value_type other ) const{
     return !( ( *this ) < other );
@@ -282,33 +308,42 @@ public:
     return u;
   }
 
-  /*!
+  /*! Addition operator
    *
-   * @tparam D  
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
    *
-   * @tparam F  
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Unit value of same type as lhs, but with value of the addition
    */
   template<typename D, typename F>
   unit operator+( const other_type<D, F>& other ) const{
     return getRaw() + other.getRaw();
   }
 
-  /*!
+  /*! Subtraction operator
    *
-   * @tparam D  
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
    *
-   * @tparam F  
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Unit value of same type as lhs, but with value of the subtraction
    */
   template<typename D, typename F>
   unit operator-( const other_type<D, F>& other ) const{
     return getRaw() - other.getRaw();
   }
 
-  /*!
+  /*! Add-assignment operator
    *
-   * @tparam D  
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
    *
-   * @tparam F  
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Reference to lhs, but with value of the addition
    */
   template<typename D, typename F>
   unit& operator+=( const other_type<D, F>& other ){
@@ -316,11 +351,14 @@ public:
     return *this;
   }
 
-  /*!
+  /*! Subtraction-assignment operator
    *
-   * @tparam D  
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
    *
-   * @tparam F  
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Reference to lhs, but with value of the subtraction
    */
   template<typename D, typename F>
   unit& operator-=( const other_type<D, F>& other ){
@@ -328,14 +366,26 @@ public:
     return *this;
   }
 
-  /*!
+  /*! Add-assignment operator
+   *
+   * @param other  Value to add to stored value
+   *
+   * @return Reference to resulting unit
+   *
+   * Stored value is increased by other, and saved
    */
   unit& operator+=( value_type other ){
     mValue += other;
     return *this;
   }
 
-  /*!
+  /*! Subtract-assignment operator
+   *
+   * @param other  Value to be subtracted from stored value
+   *
+   * @return Reference to resulting unit
+   *
+   * Stored value is reduced by other, and saved
    */
   unit& operator-=( value_type other ){
     mValue -= other;
@@ -346,39 +396,39 @@ public:
    * and therefore cannot be assigned to either operand
    */
 
-  /*!
+  /*! Multiply-assignment operator
+   *
+   * @param val  Value to multiply by
+   *
+   * @return Reference to resulting unit
+   *
+   * Stored value is multiplied by val, and saved
    */
   unit& operator*=( const value_type& val ){
     mValue *= val;
     return ( *this );
   }
 
-  /*!
+  /*! Divide-assignment operator
+   *
+   * @param val  Value to divide by
+   *
+   * @return Resulting unit
+   *
+   * Stored value is divided by val, and saved
    */
   unit& operator/=( const value_type& val ){
     mValue /= val;
     return ( *this );
   }
 
-  /*!
+  /*! Get factored, stored value
    */
   value_type getValue() const{ return mValue; }
 
-  /*!
+  /*! Retrieve actual raw value (factor is taken into account)
    */
   value_type getRaw() const{ return ( mValue * factor_type::value ); }
-
-  template<typename OSTREAM>
-  friend
-  auto& operator<<( OSTREAM& os, const unit& val ){
-    return ( os << val.mValue );
-  }
-  
-  template<typename ISTREAM>
-  friend
-  auto& operator>>( ISTREAM& is, unit& val ){
-    return ( is >> val.mValue );
-  }
 };
 
 /*! Multiplication operator
