@@ -23,6 +23,13 @@ public:
   }
 };
 
+/*! Class that stores items of type T
+ *
+ * @tparam T  Type of items to be stored
+ *
+ * This class stores a dynamic number of items of type T, allocating additional
+ * space as it becomes necessary.
+ */
 template<class T>
 class vector{
 public:
@@ -37,6 +44,8 @@ public:
 private:
   size_type mSize;
   size_type mCapacity;
+  /* data is stored as char array, allowing constructors and destructors to be
+   * manually run */
   unsigned char* mData;
   static const unsigned int datasize = sizeof( value_type );
   const float goldenRatio = 1.4;
@@ -57,28 +66,19 @@ private:
   }
 
 public:
-  /*!
-   * @brief default ctor, initialize capacity to 1
-   */
-  vector():
-    vector( 1 ){
-  }
-
-  /*!
-   * @brief ctor, initialize with givin capacity
+  /*! ctor, initialize with givin capacity
    *
    * @param capacity  the value the capacity will be initialized to
    */
-  vector( size_type capacity ):
+  vector( size_type capacity = 1 ):
     mSize( 0 ),
     mCapacity( capacity ),
     mData( new unsigned char[( mCapacity * datasize )] ){
   }
 
-  /*!
-   * @brief ctor, initialize with count copies of val
+  /*! ctor, initialize with count copies of val
    *
-   * @param val    data to be copied
+   * @param val  data to be copied
    *
    * @param count  the number of copies of val to be made
    */
@@ -90,8 +90,7 @@ public:
     }
   }
 
-  /*!
-   * @brief copy ctor, copy other
+  /*! copy ctor, copy other
    *
    * @param other  vector to copy data from
    */
@@ -105,8 +104,7 @@ public:
     }
   }
 
-  /*!
-   * @brief move ctor, move other to this vector
+  /*! move ctor, move other to this container
    *
    * @param other  vector to be moved here
    */
@@ -120,8 +118,7 @@ public:
     other.mData = nullptr;
   }
 
-  /*!
-   * @brief copy array of elements
+  /*! copy array of elements
    *
    * @param other  array to copy values from
    *
@@ -137,22 +134,22 @@ public:
     }
   }
 
-  /*!
-   * @brief copy ctor, copy elements from an arbitrary container
+  /*! copy ctor, copy elements from an arbitrary container
+   *
+   * @tparam inputIter  Iterator type to be read from
    *
    * @param first  first element to be copied
    *
    * @param last   one past the end of the container to be copied from
    */
-  template<class inputIter>
+  template<typename inputIter>
   vector( inputIter first, inputIter last ){
     for( ; first != last; ++first ){
       push_back( *first );
     }
   }
 
-  /*!
-   * @brief dtor
+  /*! dtor
    *
    * all data is cleared, destructors ran, and memory freed
    */
@@ -161,12 +158,11 @@ public:
     delete[] mData;
   }
 
-  /*!
-   * @brief copy assignment, copy data from other
+  /*! copy assignment, copy data from other
    *
    * @param other  vector from which data will be copied
    *
-   * @return reference to this vector
+   * @return reference to this container
    */
   vector& operator=( const vector& other ){
     if( mData == other.mData ){
@@ -188,12 +184,11 @@ public:
     return *this;
   }
 
-  /*!
-   * @brief move assignment, move data from other
+  /*! move assignment, move data from other
    *
    * @param other  vector from which data will be moved
    *
-   * @return reference to this vector
+   * @return reference to this container
    */
   vector& operator=( vector&& other ){
     mSize = other.mSize;
@@ -207,10 +202,9 @@ public:
     return *this;
   }
 
-  /*!
-   * @brief indexed getter, get element at index idx
+  /*! indexed getter, get element at index idx
    *
-   * @param idx  index into vector, from which data will be returned
+   * @param idx  index into container, from which data will be returned
    *
    * @return reference to data located at index idx
    */
@@ -222,10 +216,9 @@ public:
     return ( reference )( *( mData + ( idx * datasize ) ) );
   }
 
-  /*!
-   * @brief indexed const getter, get const element at index idx
+  /*! indexed const getter, get const element at index idx
    *
-   * @param idx  index into vector, from which const data will be returned
+   * @param idx  index into container, from which const data will be returned
    *
    * @return const reference to data located at index idx
    */
@@ -233,8 +226,7 @@ public:
     return ( *this )[idx];
   }
 
-  /*!
-   * @brief first element getter
+  /*! first element getter
    *
    * @return reference to first element
    */
@@ -242,8 +234,7 @@ public:
     return ( *this )[0];
   }
 
-  /*!
-   * @brief last element getter
+  /*! last element getter
    *
    * @return reference to last element
    */
@@ -251,12 +242,12 @@ public:
     return ( *this )[mSize - 1];
   }
   
-  /*!
-   * @brief add data to the end
+  /*! add data to the end
    *
-   * @param data  data to be copied at the end of vector
+   * @param data  data to be copied at the end of container
+   *
+   * Uses the copy constructor to copy data parameter into container
    */
-  //uses copy constructor to store incoming data;
   void push_back( const_reference data ){
     if( mSize + 1 > mCapacity ){
       reallocateTo( std::ceil( mCapacity * goldenRatio ) );
@@ -265,12 +256,14 @@ public:
     new ( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( data );
     ++mSize;
   }
-  /*!
-   * @brief construct new object at the end of vector
+  /*! construct new object at the end of container
+   *
+   * @tparam ...Args  Parameter pack of types of parameters to forward to constructor 
    *
    * @param args  arguments to be passed to ctor of new object
+   *
+   * Forwards args to value_type constructor.
    */
-  //forwards arguments to constructor
   template<class ...Args>
   void emplace_back( Args&&... args ){
     if( mSize + 1 > mCapacity ){
@@ -282,8 +275,7 @@ public:
     ++mSize;
   }
 
-  /*!
-   * @brief removes and destructs element at end of vector
+  /*! removes and destructs element at end of container
    */
   void pop_back(){
     --mSize;
@@ -291,8 +283,7 @@ public:
     ( ( pointer )( mData + ( mSize * datasize ) ) )->~value_type();
   }
 
-  /*!
-   * @brief removes and destructs all elements in vector
+  /*! removes and destructs all elements in container
    */
   void clear(){
     while( mSize > 0 ){
@@ -300,17 +291,15 @@ public:
     }
   }
 
-  /*!
-   * @brief get whether the vector is empty
+  /*! get whether the container is empty
    *
-   * @return vector size equal to zero
+   * @return container size equal to zero
    */
   bool empty() const{
     return mSize == 0;
   }
 
-  /*!
-   * @brief get current vector size
+  /*! get current container size
    *
    * @return count of currently stored elements
    */
@@ -318,8 +307,7 @@ public:
     return mSize;
   }
 
-  /*!
-   * @brief get current vector capacity
+  /*! get current container capacity
    *
    * @return number of elements that can be stored before a resize is necessary
    */
@@ -327,8 +315,7 @@ public:
     return mCapacity;
   }
 
-  /*!
-   * @brief request vector to be a certain size
+  /*! request container to be a certain size
    *
    * @param count  new size
    *
@@ -343,55 +330,49 @@ public:
     }
   }
 
-  /*!
-   * @brief request vector capacity be a certain size
+  /*! request container capacity be a certain size
    *
    * @param cap  new capacity
    */
   void reserve( size_type cap ){
-    if( mCapacity < cap ){
+    if( ( mCapacity < cap ) && ( cap > 0 ) ){
       reallocateTo( cap );
     }
   }
 
-  /*!
-   * @brief get iterator to beginning
+  /*! get iterator to beginning
    *
-   * @return iterator to the first element of the vector
+   * @return iterator to the first element of the container
    */
   iterator begin(){
     return Iterator( 0 );
   }
 
-  /*!
-   * @brief get const iterator to beginning
+  /*! get const iterator to beginning
    *
-   * @return const iterator to the first element of the vector
+   * @return const iterator to the first element of the container
    */
   const iterator cbegin() const{
     return begin();
   }
 
-  /*!
-   * @brief get iterator to end
+  /*! get iterator to end
    *
-   * @return iterator to the last element of the vector
+   * @return iterator to the last element of the container
    */
   iterator end(){
     return Iterator( mSize );
   }
 
-  /*!
-   * @brief get const iterator to end
+  /*! get const iterator to end
    *
-   * @return const iterator to the last element of the vector
+   * @return const iterator to the last element of the container
    */
   const iterator cend() const{
     return end();
   }
 
-  /*!
-   * @brief get general iterator
+  /*! get general iterator
    *
    * @param idx  index iterator will point to
    *

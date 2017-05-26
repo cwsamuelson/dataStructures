@@ -236,5 +236,10 @@ constexpr bool operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
 template<size_t N, size_t D>
 constexpr double ratio<N, D>::value;
 
+using kilo = ratio<1000, 1>;
+using mega = ratio<1000000, 1>;
+using milli = ratio<1, 1000>;
+using micro = ratio<1, 1000000>;
+
 #endif
 

@@ -3,6 +3,35 @@
 
 #include<ratio.hh>
 
+/*! Unit class that differentiates between different measurements.  i.e. Meters and area
+ *
+ * @tparam METERS  Distance
+ *
+ * @tparam SECONDS  Time
+ *
+ * @tparam KILOGRAM  Mass (not lbs, pounds is a force)
+ *
+ * @tparam AMPERE  Electric current
+ *
+ * @tparam KELVIN  Temperature
+ *
+ * @tparam CANDELA  Brightness
+ *
+ * @tparam TICK  Custom user type.  A common usage may be tick, but can be
+ *               used for anything
+ *
+ * @tparam DBL  Internal storage type.
+ *
+ * @tparam FACTOR  Prefix factor.  Can be 1:1, 2:1, 1000:1, 1:1000 etc.  Allows
+ *                 Semantic storage of kilometers (km) and the like.
+ *
+ * The value of METERS...TICK describe the exponent value for that parameter.
+ * For example, to describe length, METERS will be set to 1, and the rest 0,
+ * but to describe area METERS will be set to 2 (m^2), and the rest 0, and to
+ * describe velocity/speed METERS will be set to 1, and SECONDS to -1 (m/s).
+ * Units can be multiplied by another, and this will result in a new type.  For
+ * instance if speed is multiplied by time, the result will be of type distance.
+ */
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1,1> >
 class unit{
 public:
@@ -15,75 +44,209 @@ private:
   value_type mValue;
 
 public:
-  unit():
-    mValue( 0.0 ){
-  }
-  unit( value_type val ):
+  /*! Ctor sets initial internal value
+   *
+   * @param val  Value to initialize data, defaults to default ctor
+   */
+  unit( value_type val = value_type() ):
     mValue( val ){
   }
+
+  /*! Copy ctor
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @param other  Data to be copied in
+   *
+   * Value will be converted appropriately.  i.e.: if other is in kV, and has
+   * value 1 and this is in V, this will have value 1000.  This conversion is
+   * based on the value in F.
+   */
   template<typename D, typename F>
   unit( const other_type<D, F>& other ):
     mValue( ( other.getRaw() ) / factor_type::value ){
   }
 
+  /*! Copy-assignment operator
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @param other  Data to be copied in
+   *
+   * @return Reference to result/lhs
+   *
+   * Value will be converted appropriately.  i.e.: if other is in kV, and has
+   * value 1 and this is in V, this will have value 1000.  This conversion is
+   * based on the value in F.
+   */
   template<typename D, typename F>
   unit& operator=( const other_type<D, F>& other ){
     mValue = other.getRaw() / factor_type::value;
-    return *this;
-  }
-  unit& operator=( value_type value ){
-    mValue = value;
+
     return *this;
   }
 
+  /*! Copy-assignment operator
+   *
+   * @param value  Other value to be copied
+   *
+   * @return Reference to result/lhs
+   *
+   * Copies value raw as this' new value.
+   */
+  unit& operator=( value_type value ){
+    mValue = value;
+
+    return *this;
+  }
+
+  /*! Equality comparison operator
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Result of comparison.
+   *
+   * Compares this instance with another instance for equality.
+   *
+   * @todo Allow small error in comparison to account for floating point math.
+   */
   template<typename D, typename F>
   bool operator==( const other_type<D, F>& other ) const{
-    //TODO: allow slight error( epsilon )
     return getRaw() == other.getRaw();
   }
+
+  /*! Inequality comparison operator
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Result of comparison.
+   *
+   * Compares this instance with another instance for inequality.
+   */
   template<typename D, typename F>
   bool operator!=( const other_type<D, F>& other ) const{
     return !( *this == other );
   }
+
+  /*!
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Result of comparison.
+   *
+   */
   template<typename D, typename F>
   bool operator<( const other_type<D, F>& other ) const{
     return getRaw() < other.getRaw();
   }
+
+  /*!
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Result of comparison.
+   *
+   */
   template<typename D, typename F>
   bool operator>( const other_type<D, F>& other ) const{
     return getRaw() > other.getRaw();
   }
+
+  /*!
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Result of comparison.
+   *
+   */
   template<typename D, typename F>
   bool operator<=( const other_type<D, F>& other ) const{
     return !( ( *this ) > other );
   }
+
+  /*!
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return Result of comparison.
+   *
+   */
   template<typename D, typename F>
   bool operator>=( const other_type<D, F>& other ) const{
     return !( ( *this ) < other );
   }
-//TODO: remove operators, which have been previously defined to work with unit,
-//        and take value_type as parameter, as value_type can be converted to unit type
+
+  /*!
+   */
   bool operator==( value_type other ) const{
     return mValue == other;
   }
+
+  /*!
+   */
   bool operator<( value_type other ) const{
     return mValue < other;
   }
+
+  /*!
+   */
   bool operator>( value_type other ) const{
     return mValue > other;
   }
+
+  /*!
+   */
   bool operator<=( value_type other ) const{
     return !( ( *this ) > other );
   }
+
+  /*!
+   */
   bool operator>=( value_type other ) const{
     return !( ( *this ) < other );
   }
 
+  /*! Prefix increment operator
+   *
+   * @return Reference to instance operated on, with new value.
+   *
+   * Increments value.
+   */
   unit& operator++(){
     ++mValue;
     return *this;
   }
-//post-fix
+
+  /*! Post-fix increment operator
+   *
+   * @param Unused parameter indicates post-fix
+   *
+   * @return Value before increment
+   */
   unit operator++( int ){
     unit u = *this;
  
@@ -91,11 +254,26 @@ public:
 
     return u;
   }
+
+  /*! Prefix decrement operator
+   *
+   * @return Reference to instance operated on, with new value.
+   *
+   * Deccrements value.
+   */
   unit& operator--(){
     --mValue;
     return *this;
   }
-//post-fix
+
+  /*! Post-fix decrement operator
+   *
+   * @param Unused parameter indicates post-fix
+   *
+   * @return Value before deccrement
+   *
+   * Deccrements value.
+   */
   unit operator--( int ){
     unit u = *this;
 
@@ -104,48 +282,90 @@ public:
     return u;
   }
 
+  /*!
+   *
+   * @tparam D  
+   *
+   * @tparam F  
+   */
   template<typename D, typename F>
   unit operator+( const other_type<D, F>& other ) const{
     return getRaw() + other.getRaw();
   }
+
+  /*!
+   *
+   * @tparam D  
+   *
+   * @tparam F  
+   */
   template<typename D, typename F>
   unit operator-( const other_type<D, F>& other ) const{
     return getRaw() - other.getRaw();
   }
 
+  /*!
+   *
+   * @tparam D  
+   *
+   * @tparam F  
+   */
   template<typename D, typename F>
   unit& operator+=( const other_type<D, F>& other ){
     mValue = getRaw() + other.getRaw();
     return *this;
   }
+
+  /*!
+   *
+   * @tparam D  
+   *
+   * @tparam F  
+   */
   template<typename D, typename F>
   unit& operator-=( const other_type<D, F>& other ){
     mValue = getRaw() - other.getRaw();
     return *this;
   }
 
+  /*!
+   */
   unit& operator+=( value_type other ){
     mValue += other;
     return *this;
   }
+
+  /*!
+   */
   unit& operator-=( value_type other ){
     mValue -= other;
     return *this;
   }
 
-  unit& operator*=( const value_type& val ){
-    mValue *= val;
-    return ( *this );
-  }
-  unit& operator/=( const value_type& val ){
-    mValue /= val;
-    return ( *this );
-  }
   /* *= and /= only work with doubles because the * and / operations return a new type,
    * and therefore cannot be assigned to either operand
    */
 
+  /*!
+   */
+  unit& operator*=( const value_type& val ){
+    mValue *= val;
+    return ( *this );
+  }
+
+  /*!
+   */
+  unit& operator/=( const value_type& val ){
+    mValue /= val;
+    return ( *this );
+  }
+
+  /*!
+   */
   value_type getValue() const{ return mValue; }
+
+  /*!
+   */
   value_type getRaw() const{ return ( mValue * factor_type::value ); }
 
   template<typename OSTREAM>
@@ -161,6 +381,16 @@ public:
   }
 };
 
+/*! Multiplication operator
+ *
+ * @tparam Template parameters reflect those available for the class itself.
+ *         There are 2 sets of parameters, one for the lhs and the other for
+ *         the rhs.
+ *
+ * @return Returns a 3rd type, where each template parameter is the sum of the
+ *         equivalent parameters of the lhs and rhs.
+ *
+ */
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, int TICK1,
          int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2, int TICK2,
          typename D_t1, typename D_t2, typename F_t1, typename F_t2>
@@ -171,6 +401,16 @@ operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
   return lhs.getRaw() * rhs.getRaw();
 }
 
+/*! Division operator
+ *
+ * @tparam Template parameters reflect those available for the class itself.
+ *         There are 2 sets of parameters, one for the lhs and the other for
+ *         the rhs.
+ *
+ * @return Returns a 3rd type, where each template parameter is the difference
+ *         of the equivalent parameters of the lhs and rhs.
+ *
+ */
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, int TICK1,
          int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2, int TICK2,
          typename D_t1, typename D_t2, typename F_t1, typename F_t2>
@@ -181,7 +421,7 @@ operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
   return ( lhs.getRaw() / rhs.getRaw() ) / F_t1::value;
 }
 
-/* 'thyme' should be renamed back to 'time' when a namespace is established, as
+/* TODO:'thyme' should be renamed back to 'time' when a namespace is established, as
  * name collision would be disambiguated using <namespace>::time vs ( i.e. ) std::time
  */
 //                          m   s   kg  A   K  C  T
