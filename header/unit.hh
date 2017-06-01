@@ -32,7 +32,7 @@
  * Units can be multiplied by another, and this will result in a new type.  For
  * instance if speed is multiplied by time, the result will be of type distance.
  */
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int PERCENTAGE, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1,1> >
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit{
 public:
   typedef DBL value_type;
