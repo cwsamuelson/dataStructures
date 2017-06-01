@@ -7,6 +7,13 @@
 
 typedef unsigned long long under_type;
 
+/*! Type that operates like the unit class
+ *
+ * @tparam F  
+ *
+ * Type that operates like the unit class, and can inter-op with it, but
+ * is simultaneously a different type.
+ */
 template<size_t F>
 class time_type : public thyme<under_type, ratio<F, 1> >{
 public:
@@ -32,13 +39,34 @@ using week   = time_type<604800>;
 using month  = time_type<2592000>;
 using year   = time_type<31536000>;
 
+/*! Outputs a data, and it's name to os
+ *
+ * @tparam OSTREAM  Output stream type
+ *
+ * @param os  Output stream object that data will be inserted into
+ *
+ * @param t  
+ *
+ * @param type  Name of units being output to os
+ */
 template<typename OSTREAM>
 auto& output( OSTREAM& os, under_type t, const std::string& type ){
   return ( os << t << " " << type );
 }
 
-/*!
- * @todo make these all constexpr-if; if constexpr( F == ... )...
+/*! Stream insertion operator
+ *
+ * @tparam OSTREAM  Output stream type
+ *
+ * @tparam F  Factor of type's ratio
+ *
+ * @param os  Output stream object that data will be inserted into
+ *
+ * @param tt  
+ *
+ * @todo make these all ifs constexpr-if; if constexpr( F == ... )...
+ *
+ *
  */
 template<typename OSTREAM, size_t F>
 auto& operator<<( OSTREAM& os, const time_type<F>& tt ){
@@ -65,11 +93,20 @@ auto& operator<<( OSTREAM& os, const time_type<F>& tt ){
   return output( os, tt.getValue(), type );
 }
 
-/*!
- * @todo make these all constexpr-if; if constexpr( F == ... )...
+/*! Stream extraction operator
+ *
+ * @tparam ISTREAM  Input stream type
+ *
+ * @tparam F  Factor of type's ratio
+ *
+ * @param is  Input stream object that data will be extracted from
+ *
+ * @todo make these all ifs constexpr-if; if constexpr( F == ... )...
+ *
+ *
  */
-template<size_t UI, typename ISTREAM>
-ISTREAM& operator>>( ISTREAM& is, time_type<UI>& tu ){
+template<size_t F, typename ISTREAM>
+ISTREAM& operator>>( ISTREAM& is, time_type<F>& tu ){
   long long val;
   std::string str;
 
