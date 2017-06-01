@@ -37,41 +37,37 @@ auto& output( OSTREAM& os, under_type t, const std::string& type ){
   return ( os << t << " " << type );
 }
 
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const second& s ){
-  return output( os, s.getValue(), "seconds" );
+/*!
+ * @todo make these all constexpr-if; if constexpr( F == ... )...
+ */
+template<typename OSTREAM, size_t F>
+auto& operator<<( OSTREAM& os, const time_type<F>& tt ){
+  std::string type;
+
+  if ( F == second::factor_type::numerator ){
+    type = "seconds";
+  } else if ( F == minute::factor_type::numerator ){
+    type = "minutes";
+  } else if ( F == hour::factor_type::numerator ){
+    type = "hours";
+  } else if ( F == day::factor_type::numerator ){
+    type = "days";
+  } else if ( F == week::factor_type::numerator ){
+    type = "weeks";
+  } else if ( F == month::factor_type::numerator ){
+    type = "months";
+  } else if ( F == year::factor_type::numerator ){
+    type = "years";
+  } else {
+    type = "time units";
+  }
+
+  return output( os, tt.getValue(), type );
 }
 
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const minute& s ){
-  return output( os, s.getValue(), "minutes" );
-}
-
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const hour& s ){
-  return output( os, s.getValue(), "hours" );
-}
-
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const day& s ){
-  return output( os, s.getValue(), "days" );
-}
-
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const week& s ){
-  return output( os, s.getValue(), "weeks" );
-}
-
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const month& s ){
-  return output( os, s.getValue(), "months" );
-}
-
-template<typename OSTREAM>
-auto& operator<<( OSTREAM& os, const year& s ){
-  return output( os, s.getValue(), "years" );
-}
-
+/*!
+ * @todo make these all constexpr-if; if constexpr( F == ... )...
+ */
 template<size_t UI, typename ISTREAM>
 ISTREAM& operator>>( ISTREAM& is, time_type<UI>& tu ){
   long long val;
