@@ -71,13 +71,6 @@ $(CREATEDIRS):
 	@echo Creating directories
 	-@mkdir -p $(CREATEDIRS)
 
-# more complicated dependency computation, so all prereqs listed
-# will also become command-less, prereq-less targets
-#   sed:    strip the target (everything before colon)
-#   sed:    remove any continuation backslashes
-#   fmt -1: list words one per line
-#   sed:    strip leading spaces
-#   sed:    add trailing colons
 $(objdir)/%.o:|$(DIRS)
 	$(CC) -c -MMD -MP -MF $(depdir)/$*.d $(sourcedir)/$*$(sourceextension) $(FLAGS) -o $@
 

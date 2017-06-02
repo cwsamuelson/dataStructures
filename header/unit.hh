@@ -29,8 +29,9 @@
  * For example, to describe length, METERS will be set to 1, and the rest 0,
  * but to describe area METERS will be set to 2 (m^2), and the rest 0, and to
  * describe velocity/speed METERS will be set to 1, and SECONDS to -1 (m/s).
- * Units can be multiplied by another, and this will result in a new type.  For
- * instance if speed is multiplied by time, the result will be of type distance.
+ * Units can be multiplied by another, and this will result in a new,
+ * appropriate type.  For instance if speed is multiplied by time, the result
+ * will be of type distance.
  */
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit{
@@ -441,13 +442,13 @@ public:
  *         equivalent parameters of the lhs and rhs.
  *
  */
-template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, int PERCENT1, int TICK1,
-         int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2, int PERCENT2, int TICK2,
+template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, int PERCENTAGE1, int TICK1,
+         int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2, int PERCENTAGE2, int TICK2,
          typename D_t1, typename D_t2, typename F_t1, typename F_t2>
 unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2, AMPERE1 + AMPERE2,
-     KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, PERCENT1 + PERCENT2, TICK1 + TICK2, D_t1, F_t1>
-operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, PERCENT1, TICK1, D_t1, F_t1>& lhs,
-           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, PERCENT2, TICK2, D_t2, F_t2>& rhs ){
+     KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2, D_t1, F_t1>
+operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
+           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
   return lhs.getRaw() * rhs.getRaw();
 }
 
@@ -461,13 +462,13 @@ operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
  *         of the equivalent parameters of the lhs and rhs.
  *
  */
-template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, int PERCENT1, int TICK1,
-         int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2, int PERCENT2, int TICK2,
+template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1, int CANDELA1, int PERCENTAGE1, int TICK1,
+         int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2, int CANDELA2, int PERCENTAGE2, int TICK2,
          typename D_t1, typename D_t2, typename F_t1, typename F_t2>
 unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2, AMPERE1 - AMPERE2,
-     KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, PERCENT1 - PERCENT2, TICK1 - TICK2, D_t1, F_t1>
-operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, PERCENT1, TICK1, D_t1, F_t1>& lhs,
-           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, PERCENT2, TICK2, D_t2, F_t2>& rhs ){
+     KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2, D_t1, F_t1>
+operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
+           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2, CANDELA2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
   return ( lhs.getRaw() / rhs.getRaw() ) / F_t1::value;
 }
 

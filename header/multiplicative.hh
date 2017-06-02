@@ -46,8 +46,8 @@ public:
    *
    * Multiplies together lhs and rhs using the *= operator of the derived class.
    */
-  friend lhs_type operator*( lhs_type t, const rhs_type& u ) noexcept{
-    return ( t *= u );
+  friend lhs_type operator*( lhs_type lhs, const rhs_type& rhs ) noexcept{
+    return ( lhs *= rhs );
   }
 
   /*! Division operator
@@ -60,8 +60,8 @@ public:
    *
    * Divides lhs by rhs using the /= operator of the derived class.
    */
-  friend lhs_type operator/( lhs_type t, const rhs_type& u ) noexcept{
-    return ( t /= u );
+  friend lhs_type operator/( lhs_type lhs, const rhs_type& rhs ) noexcept{
+    return ( lhs /= rhs );
   }
 };
 
