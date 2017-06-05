@@ -5,15 +5,15 @@
 TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
   SECTION( "Time units convert nicely, and report expected amounts." ){
-    minute m( 1 );
-    second s( m );
+    gsw::minute m( 1 );
+    gsw::second s( m );
 
     REQUIRE( s == 60 );
     REQUIRE( m == 1 );
   }
 
   SECTION( "Units interact with ostreams." ){
-    minute m( 1 );
+    gsw::minute m( 1 );
     std::stringstream ss;
     std::string str;
 
@@ -25,7 +25,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "A date is printed in a human readable format to an ostream." ){
-    date dayt( day( 11 ), 8, year( 2016 ) );
+    gsw::date dayt( gsw::day( 11 ), 8, gsw::year( 2016 ) );
     std::stringstream ss;
     std::string str;
 
@@ -39,11 +39,11 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Mathematical operations can be performed on time units." ){
-    minute m( 59 );
+    gsw::minute m( 59 );
 
     m += 1;
 
-    hour h( m );
+    gsw::hour h( m );
 
     REQUIRE( h == 1 );
 
@@ -59,7 +59,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Date time interacts with streams." ){
-    date_time dt( date( day( 11 ), 8, year( 2016 ) ), hour( 15 ), minute( 41 ), second( 14 ) );
+    gsw::date_time dt( gsw::date( gsw::day( 11 ), 8, gsw::year( 2016 ) ), gsw::hour( 15 ), gsw::minute( 41 ), gsw::second( 14 ) );
     std::stringstream ss;
     std::string str;
 
@@ -77,7 +77,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
   SECTION( "Units convert when using streams." ){
     std::string str( "5 seconds" );
-    time_type<5> tu;
+    gsw::time_type<5> tu;
     std::stringstream ss( str );
 
     ss >> tu;
@@ -85,7 +85,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
     std::stringstream ss2;
 
-    ss2 << second( 10 );
+    ss2 << gsw::second( 10 );
     ss2 >> tu;
     REQUIRE( tu == 2 );
   }
