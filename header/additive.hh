@@ -1,6 +1,8 @@
 #ifndef __ADDITIVE_HH__
 #define __ADDITIVE_HH__
 
+namespace gsw{
+
 /*! Additive utility class to provide addition and subtraction operators
  *
  * @tparam LHS  Type of the left hand side of the + and - operators
@@ -64,6 +66,8 @@ public:
     return ( lhs -= rhs );
   }
 };
+
+}
 
 #endif
 

@@ -6,6 +6,8 @@
 
 #include<normal_iterator.hh>
 
+namespace gsw{
+
 //see mask_array and indirect array for indexing ideas
 //  one allows data[data > 5] = -1 kinda syntax,
 //  the other data[data2] = -2 syntax
@@ -161,15 +163,38 @@ public:
     return h;
   }
 
+  /*! GT operator for array splicing
+   *
+   * @param idx  Index, greater than which will be included in subsequent
+   *             splicing operations
+   */
   splicer operator>( index_t idx ){
     return splicer( std::greater<value_type>(), idx );
   }
+
+  /*! GE operator for array splicing
+   *
+   * @param idx  Index, greater than and equal to which will be included in
+   *             subsequent splicing operations
+   */
   splicer operator>=( index_t idx ){
     return splicer( std::greater_equal<value_type>(), idx );
   }
+
+  /*! LT operator for array splicing
+   *
+   * @param idx  Index, lesser than which will be included in subsequent
+   *             splicing operations
+   */
   splicer operator<( index_t idx ){
     return splicer( std::less<value_type>(), idx );
   }
+
+  /*! LE operator for array splicing
+   *
+   * @param idx  Index, less than or equal to which will be included in
+   *             subsequent splicing operations
+   */
   splicer operator<=( index_t idx ){
     return splicer( std::less_equal<value_type>(), idx );
   }
@@ -197,13 +222,6 @@ public:
   }
 };
 
-template<typename OSTREAM, class T, unsigned int N>
-OSTREAM& operator<<( OSTREAM& os, const array<T[N]>& arr ){
-  for( unsigned int i = 0; i < N; ++i ){
-    os << arr[i];
-  }
-
-  return os;
 }
 
 #endif

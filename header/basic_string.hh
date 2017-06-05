@@ -5,6 +5,8 @@
 
 #include<normal_iterator.hh>
 
+namespace gsw{
+
 template<class T>
 class basic_string{
 public:
@@ -178,6 +180,8 @@ OSTREAM& operator<<(OSTREAM& os, const basic_string<T>& str){
     os << str[i];
   }
   return os;
+}
+
 }
 
 #endif

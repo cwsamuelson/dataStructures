@@ -3,7 +3,7 @@
 #include<array.hh>
 
 TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
-  array<char[3]> arr;
+  gsw::array<char[3]> arr;
   
   arr[0] = 'a';
   arr[1] = 'b';
@@ -25,7 +25,7 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
 
 //TODO: performance testing on array splicing
 TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
-  array<char[10]> arr;
+  gsw::array<char[10]> arr;
 
   for( unsigned int i = 0; i < arr.size(); ++i ){
     arr[i] = char( i + 'a' );
@@ -54,7 +54,7 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
   }
 
   SECTION( "Spliced by another container" ){
-    array<unsigned int[3]> ids;
+    gsw::array<unsigned int[3]> ids;
 
     ids[0] = 1;
     ids[1] = 3;

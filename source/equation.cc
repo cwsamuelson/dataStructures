@@ -1,6 +1,7 @@
 #include<equation.hh>
 
 using namespace std;
+using namespace gsw;
 
 /*! Copy constructor
  *
@@ -211,7 +212,7 @@ double equation::operator()( double X ){
   return val;
 }
 
-equation derive( const equation& eq, unsigned int order ){
+equation gsw::derive( const equation& eq, unsigned int order ){
   if( order == 0 ){
     return eq;
   }
@@ -225,7 +226,7 @@ equation derive( const equation& eq, unsigned int order ){
   return ret;
 }
 
-equation antiderive( const equation& eq ){
+equation gsw::antiderive( const equation& eq ){
   equation ret;
   ret.mCoeff.push_back( 0 );
 
@@ -236,7 +237,7 @@ equation antiderive( const equation& eq ){
   return ret;
 }
 
-double integrate( const equation& eq, double upperBound, double lowerBound ){
+double gsw::integrate( const equation& eq, double upperBound, double lowerBound ){
   equation anti( antiderive( eq ) );
 
   return anti( upperBound ) - anti( lowerBound );

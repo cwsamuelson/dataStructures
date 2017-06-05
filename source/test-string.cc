@@ -4,7 +4,7 @@
 
 TEST_CASE( "Strings can be accessed like an array", "[string]" ){
   const char* cstr = "length 8";
-  string str( cstr );
+  gsw::string str( cstr );
 
   REQUIRE( str.size() == 8 );
 
@@ -20,7 +20,7 @@ TEST_CASE( "Strings can be accessed like an array", "[string]" ){
 
 TEST_CASE( "Strings can construct and assign with strings and string literals", "[string]" ){
   const char* cstr = "cstring";
-  string str( "test string" );
+  gsw::string str( "test string" );
 
   SECTION( "Strings can be compared with c-strings" ){
     REQUIRE( str == "test string" );
@@ -33,13 +33,13 @@ TEST_CASE( "Strings can construct and assign with strings and string literals", 
   }
 
   SECTION( "Strings can be constructed with c-strings" ){
-    string str2( cstr );
+    gsw::string str2( cstr );
 
     REQUIRE( str2 == cstr );
   }
 
   SECTION( "Strings can be constructed with other strings" ){
-    string str2( str );
+    gsw::string str2( str );
 
     REQUIRE( str == str2 );
   }

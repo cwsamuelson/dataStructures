@@ -7,8 +7,8 @@ using namespace std;
 TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
   vector<double> vec { 1, 1, 1 };
   vector<double> vec2 { 2, 2, 2 };
-  equation eq( vec.begin(), vec.end() );
-  equation eq2( vec2.begin(), vec2.end() );
+  gsw::equation eq( vec.begin(), vec.end() );
+  gsw::equation eq2( vec2.begin(), vec2.end() );
 
   SECTION( "Addition" ){
     REQUIRE( ( eq + eq2 )( 2 ) == 21 );
@@ -23,15 +23,15 @@ TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
     REQUIRE( ( eq * 2 )( 2 ) == 2 * eq( 2 ) );
 
     vector<double> vec3 { 1, 1 };
-    equation eq3( vec3.begin(), vec3.end() );
+    gsw::equation eq3( vec3.begin(), vec3.end() );
     vec3[0] = 2;
-    equation eq4( vec3.begin(), vec3.end() );
+    gsw::equation eq4( vec3.begin(), vec3.end() );
     REQUIRE( ( eq3 * eq4 )( 2 ) == 12 );
 
     vector<double> vec4 { 1, 1 };
-    equation eq5( vec4.begin(), vec4.end() );
+    gsw::equation eq5( vec4.begin(), vec4.end() );
     vec4.push_back( 1 );
-    equation eq6( vec4.begin(), vec4.end() );
+    gsw::equation eq6( vec4.begin(), vec4.end() );
     REQUIRE( ( eq5 * eq6 )( 2 ) == 21 );
   }
 
@@ -44,8 +44,8 @@ TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
 TEST_CASE( "Equation", "[equ]" ){
   vector<double> vec { 1, 1, 1 };
   vector<double> vec2 { 2, 2, 2 };
-  equation eq( vec.begin(), vec.end() );
-  equation eq2( vec2.begin(), vec2.end() );
+  gsw::equation eq( vec.begin(), vec.end() );
+  gsw::equation eq2( vec2.begin(), vec2.end() );
 
   SECTION( "Equations can be evaluated" ){
     REQUIRE( eq( 2 ) == 7 );
@@ -54,7 +54,7 @@ TEST_CASE( "Equation", "[equ]" ){
 
   SECTION( "Equations with different number of terms" ){
     vec.push_back( 1 );
-    equation eq3( vec.begin(), vec.end() );
+    gsw::equation eq3( vec.begin(), vec.end() );
 
     REQUIRE( eq3( 2 ) == 15 );
     REQUIRE( ( eq3 + eq )( 2 ) == 22 );
@@ -62,7 +62,7 @@ TEST_CASE( "Equation", "[equ]" ){
   }
 
   SECTION( "Derivative" ){
-    equation eq3 = derive( eq2 );
+    gsw::equation eq3 = derive( eq2 );
 
     REQUIRE( eq3( 2 ) == 10 );
   }

@@ -3,6 +3,8 @@
 
 #include<functional>
 
+namespace gsw{
+
 /*! Accessor to allow access to internal members
  *
  * @tparam T  Type of reference to be stored
@@ -87,6 +89,8 @@ public:
     return mRef == cref;
   }
 };
+
+}
 
 #endif
 

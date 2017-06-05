@@ -2,8 +2,8 @@
 
 #include<operators.hh>
 
-class foo : public additive<foo, int>,
-                   multiplicative<foo, int>{
+class foo : public gsw::additive<foo, int>,
+                   gsw::multiplicative<foo, int>{
 private:
   int x;
 
@@ -30,8 +30,8 @@ public:
   }
 };
 
-class bar : public additive<bar>,
-                   multiplicative<bar>{
+class bar : public gsw::additive<bar>,
+                   gsw::multiplicative<bar>{
 private:
   int x;
 

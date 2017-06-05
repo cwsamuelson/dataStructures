@@ -3,9 +3,14 @@
 
 #include<basic_string.hh>
 
+namespace gsw{
+
 template<>
 const char basic_string<char>::terminal = '\0';
+
 typedef basic_string<char> string;
+
+}
 
 #endif
 

@@ -5,6 +5,14 @@
 #include<functional>
 #include<cmath>
 
+namespace gsw{
+
+class equation;
+
+equation derive( const equation& eq, unsigned int order = 1 );
+equation antiderive( const equation& eq );
+double integrate( const equation& eq, double upperBound, double lowerBound );
+
 class equation{
 private:
   typedef std::vector<double> storage_type;
@@ -69,10 +77,12 @@ public:
 
   double operator()( double X );
 
-  friend equation derive( const equation& eq, unsigned int order = 1 );
+  friend equation derive( const equation& eq, unsigned int order );
   friend equation antiderive( const equation& eq );
   friend double integrate( const equation& eq, double upperBound, double lowerBound );
 };
+
+}
 
 #endif
 

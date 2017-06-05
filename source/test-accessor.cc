@@ -16,8 +16,8 @@ public:
     j(0){
   }
 
-  accessor<value_type> getInternal(){
-    return accessor<value_type>( i,
+  gsw::accessor<value_type> getInternal(){
+    return gsw::accessor<value_type>( i,
       [&]( value_type t ){
         if( t == 12 ){
           ++j;

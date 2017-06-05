@@ -1,6 +1,8 @@
 #ifndef __MULTIPLICATIVE_HH__
 #define __MULTIPLICATIVE_HH__
 
+namespace gsw{
+
 /*! Multiplicative utility class to provide multiplication and division operators
  *
  * @tparam LHS  Type of the left hand side of the * and / operators
@@ -64,6 +66,8 @@ public:
     return ( lhs /= rhs );
   }
 };
+
+}
 
 #endif
 
