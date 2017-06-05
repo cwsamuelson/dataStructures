@@ -4,7 +4,7 @@
 
 TEST_CASE( "A range iterator can act as a standard iterator", "[range]" ){
   std::vector<int> source{2, 3, 4, 5, 6 };
-  range<decltype( source )> rng( source );
+  gsw::range<decltype( source )> rng( source );
 
   SECTION( "Initial basic range iterators reference source." ){
     REQUIRE( *rng.begin() == source[0] );
@@ -21,7 +21,7 @@ TEST_CASE( "A range iterator can act as a standard iterator", "[range]" ){
   }
 
   SECTION( "Range iterators can be equality compared" ){
-    range<decltype( source )> test( source );
+    gsw::range<decltype( source )> test( source );
 
     REQUIRE( rng.begin() == test.begin() );
     REQUIRE( rng.end() == test.end() );
@@ -36,7 +36,7 @@ TEST_CASE( "A range iterator can act as a standard iterator", "[range]" ){
 TEST_CASE( "Ranges can filter values from a container", "[range]" ){
   std::vector<int> source( 10 );
   std::vector<int> result( source.size() / 2 );
-  range<decltype( source )> rng( source,
+  gsw::range<decltype( source )> rng( source,
     []( decltype( source )::value_type x )->bool{
       return x % 2 == 0;
     }
@@ -69,7 +69,7 @@ TEST_CASE( "Ranges can modify the values from a container before returning them"
   int mod = 1;
   std::vector<int> source( 10 );
   std::vector<int> result( source.size() );
-  range<decltype( source )> rng( source,
+  gsw::range<decltype( source )> rng( source,
     []( decltype( source )::value_type ){
       return true;
     },

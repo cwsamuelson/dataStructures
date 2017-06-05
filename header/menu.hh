@@ -7,6 +7,8 @@
 #include<tuple>
 #include<memory>
 
+namespace gsw{
+
 template<typename SELECTOR>
 class menu{
 public:
@@ -88,6 +90,8 @@ public:
     return os;
   }
 };
+
+}
 
 #endif
 

@@ -3,6 +3,8 @@
 
 #include<functional>
 
+namespace gsw{
+
 template<class>
 class range;
 
@@ -173,6 +175,8 @@ public:
     return iterator( this, mEnd );
   }
 };
+
+}
 
 #endif
 

@@ -1,6 +1,8 @@
 #ifndef __TUPLE_H__
 #define __TUPLE_H__
 
+namespace gsw{
+
 template<size_t N, class ...Args>
 class tuple_impl;
 
@@ -101,6 +103,8 @@ public:
 template<size_t N, class HEAD, class ...TAIL>
 class tuple_element<N, tuple<HEAD, TAIL...> >: public tuple_element<N - 1, tuple<TAIL...> >{
 };
+
+}
 
 #endif
 

@@ -3,8 +3,8 @@
 #include<ratio.hh>
 
 TEST_CASE( "", "[ratio]" ){
-  typedef ratio<1, 2> R;
-  typedef ratio<2, 4> S;
+  typedef gsw::ratio<1, 2> R;
+  typedef gsw::ratio<2, 4> S;
   R r;
   S s;
 

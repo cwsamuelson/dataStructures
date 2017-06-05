@@ -4,9 +4,9 @@
 
 TEST_CASE( "Menu allows option selection and provides callbacks on selection.", "[menu]" ){
   std::stringstream ss;
-  auto pm0 = std::make_shared<menu<int>>();
-  auto pm1 = std::make_shared<menu<int>>();
-  std::shared_ptr<menu<int> > current( pm0 );
+  auto pm0 = std::make_shared<gsw::menu<int>>();
+  auto pm1 = std::make_shared<gsw::menu<int>>();
+  std::shared_ptr<gsw::menu<int> > current( pm0 );
 
   pm0->addOption( 0, "electric", pm1, [&](){ ss << "beep" << '\n'; } );
   pm0->addOption( 1, "boogaloo", pm1, [&](){ ss << "boop" << '\n'; } );
@@ -15,9 +15,9 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   pm1->addOption( 1, "bar",      pm0, [&](){ ss << "byyp" << '\n'; } );
 
   //ctor compile check
-  menu<int> one;
-  menu<int> two( one );
-  menu<int> three( menu<int>() );
+  gsw::menu<int> one;
+  gsw::menu<int> two( one );
+  gsw::menu<int> three( gsw::menu<int>() );
   one.print( ss );
   one.print( ss );
   one.print( ss );

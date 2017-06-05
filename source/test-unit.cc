@@ -67,7 +67,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Unit prefixes can be used" ){
-    typedef voltage<double, ratio<1000, 1> > kiloVolt;
+    typedef voltage<double, gsw::ratio<1000, 1> > kiloVolt;
     resistance<> r( 500 );
     kiloVolt kv( 3 );
 

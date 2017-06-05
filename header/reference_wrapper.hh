@@ -1,6 +1,8 @@
 #ifndef __REFERENCE_WRAPPER_HH__
 #define __REFERENCE_WRAPPER_HH__
 
+namespace gsw{
+
 template<typename T>
 class reference_wrapper{
 public:
@@ -26,6 +28,8 @@ public:
     return mRef;
   }
 };
+
+}
 
 #endif
 

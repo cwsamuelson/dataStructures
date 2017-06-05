@@ -7,9 +7,9 @@ int testfn(){
 }
 
 TEST_CASE( "Function objects are used as normal functions.", "[function]" ){
-  function<int( int )> fn;
-  function<int( int, int )> nf;
-  function<int()> tst;
+  gsw::function<int( int )> fn;
+  gsw::function<int( int, int )> nf;
+  gsw::function<int()> tst;
   
   fn = []( int x ){ return 1 + x; };
   nf = []( int x, int y ){ return x + y; };

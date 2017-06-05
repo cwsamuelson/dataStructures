@@ -3,6 +3,8 @@
 
 #include<numeric>
 
+namespace gsw{
+
 /*! Get the sign of a given number
  *
  * @tparam T  Type of provided argument
@@ -240,6 +242,8 @@ using kilo = ratio<1000, 1>;
 using mega = ratio<1000000, 1>;
 using milli = ratio<1, 1000>;
 using micro = ratio<1, 1000000>;
+
+}
 
 #endif
 

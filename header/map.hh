@@ -10,6 +10,8 @@
 #include<vector.hh>
 #include<tuple.hh>
 
+namespace gsw{
+
 class keyNotFoundException : public std::exception{
 public:
   virtual const char* what() const noexcept{
@@ -233,6 +235,8 @@ public:
     return mData.size();
   }
 };
+
+}
 
 #endif
 

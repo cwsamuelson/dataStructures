@@ -33,7 +33,7 @@
  * appropriate type.  For instance if speed is multiplied by time, the result
  * will be of type distance.
  */
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1, 1> >
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = gsw::ratio<1, 1> >
 class unit{
 public:
   typedef DBL value_type;
@@ -476,59 +476,59 @@ operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
  * name collision would be disambiguated using <namespace>::time vs ( i.e. ) std::time
  */
 //                          m   s   kg  A   K  C  P  T
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using area          = unit< 2,  0,  0,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using volume        = unit< 3,  0,  0,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using current       = unit< 0,  0,  0,  1,  0, 0, 0, 0, T, F>;//amps
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, 0, T, F>;//kelvin
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using brightness    = unit< 0,  0,  0,  0,  0, 1, 0, 0, T, F>;//candela
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using thyme         = unit< 0,  1,  0,  0,  0, 0, 0, 0, T, F>;//time, renamed to avoid collision
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using tick          = unit< 0,  0,  0,  0,  0, 0, 0, 1, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using percent       = unit< 0,  0,  0,  0,  0, 0, 1, 0, T, F>;
 
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using speed         = unit< 1, -1,  0,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using acceleration  = unit< 1, -2,  0,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using force         = unit< 1, -2,  1,  0,  0, 0, 0, 0, T, F>;//newton
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using momentum      = unit< 1, -1,  1,  0,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using energy        = unit< 2, -2,  1,  0,  0, 0, 0, 0, T, F>;//joules
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using power         = unit< 2, -3,  1,  0,  0, 0, 0, 0, T, F>;//watts
 
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, T, F>;
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using resistance    = unit< 2, -3,  1, -2,  0, 0, 0, 0, T, F>;//ohms
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using capacitance   = unit<-2,  4, -1,  2,  0, 0, 0, 0, T, F>;//farad
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using inductance    = unit< 2, -2,  1, -2,  0, 0, 0, 0, T, F>;//henrys
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using charge        = unit< 0,  1,  0,  1,  0, 0, 0, 0, T, F>;//coulomb
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using coulomb = charge<T, F>;
 
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using mag_field     = unit< 0, -2,  1,  1,  0, 0, 0, 0, T, F>;//tesla
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using elec_field    = unit< 1, -3,  1, -1,  0, 0, 0, 0, T, F>;
 
-template<typename T = double, typename F = ratio<1,1> >
+template<typename T = double, typename F = gsw::ratio<1,1> >
 using specificHeat  = decltype( energy<T, F>() / temperature<T, F>() );
 
 #endif

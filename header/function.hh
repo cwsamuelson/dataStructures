@@ -3,6 +3,8 @@
 
 #include<tuple.hh>
 
+namespace gsw{
+
 template<class T>
 class function;
 
@@ -67,6 +69,8 @@ public:
     return *this;
   }
 };
+
+}
 
 #endif
 

@@ -4,7 +4,7 @@
 
 TEST_CASE( "Maps are associative containers", "[map]" ){
   const int nIters = 10;
-  map<int, int> mp;
+  gsw::map<int, int> mp;
 
   SECTION( "Maps initialize empty" ){
     REQUIRE( mp.empty() );
