@@ -5,6 +5,10 @@
 
 class list_iterator;
 
+/*!
+ * @tparam T
+ *
+ */
 template<typename T>
 class list{
 public:
@@ -15,6 +19,10 @@ public:
   using iterator = list_iterator;
 
 private:
+  /*!
+   * @tparam U
+   *
+   */
   template<typename U>
   class node{
   public:
@@ -44,11 +52,20 @@ private:
   node_type* tail;
 
 public:
+  /*!
+   *
+   */
   list():
     head( nullptr ),
     tail( nullptr ){
   }
 
+  /*!
+   * @param pos  
+   *
+   * @param value  
+   *
+   */
   iterator insert( iterator pos, const value_type& value ){
     node_type* next = new node_type( value );
     node_type* current = pos.mCurrent;
@@ -62,6 +79,12 @@ public:
 
     return iterator( next );
   }
+  /*!
+   * @param pos  
+   *
+   * @return
+   *
+   */
   iterator erase( iterator pos ){
     iterator ret = pos.next;
     node_type* one = pos.mCurrent.prev;
@@ -75,17 +98,33 @@ public:
     return ret;
   }
 
+  /*!
+   * @param value  
+   *
+   */
   void push_front( const value_type& value ){
     node* first = head;
 
     head = new node( value );
     head->next = first;
   }
+
+  /*!
+   * @tparam U  
+   *
+   * @param value  
+   *
+   */
   template<typename U>
   void push_front( U&& value ){
     //correct usage of perfect forwarding?
     //std::forward<U>
   }
+
+  /*!
+   * @return
+   *
+   */
   value_type pop_front(){
     value_type ret = front();
     node* rem = head;
@@ -100,6 +139,13 @@ public:
 
     return ret;
   }
+
+  /*!
+   * @tparam ...Args  
+   *
+   * @param 
+   *
+   */
   template<typename ...Args>
   void emplace_front
   void push_back( const value_type& value ){

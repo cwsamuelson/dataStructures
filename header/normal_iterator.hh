@@ -3,7 +3,14 @@
 
 #include<iterator>
 
-// normal in the sense of 'normalized'
+namespace gsw{
+
+/*! Normalized iterator
+ * @tparam TYPE  
+ *
+ * @tparam CONTAINER  
+ *
+ */
 template<class TYPE, class CONTAINER>
 class normal_iterator{
 public:
@@ -16,56 +23,109 @@ protected:
   pointer mCurrent;
 
 public:
-  normal_iterator(pointer ptr):
-    mCurrent(ptr){
-  }
-  normal_iterator(const normal_iterator& iter):
-    mCurrent(iter.mCurrent){
+  /*!
+   * @param ptr  
+   *
+   */
+  normal_iterator( pointer ptr ):
+    mCurrent( ptr ){
   }
 
-  unsigned int operator-(const normal_iterator& other) const{
+  /*!
+   * @param iter  
+   */
+  normal_iterator( const normal_iterator& iter ):
+    mCurrent( iter.mCurrent ){
+  }
+
+  /*!
+   * @param other  
+   */
+  unsigned int operator-( const normal_iterator& other ) const{
     return mCurrent - other.mCurrent;
   }
-  normal_iterator operator+(int mod) const{
-    return normal_iterator(mCurrent + mod);
-  }
-  normal_iterator operator-(int mod) const{
-    return normal_iterator(mCurrent - mod);
+
+  /*!
+   * @param mod  
+   */
+  normal_iterator operator+( int mod ) const{
+    return normal_iterator( mCurrent + mod );
   }
 
-  bool operator==(const normal_iterator& iter) const{
+  /*!
+   * @param mod  
+   */
+  normal_iterator operator-( int mod ) const{
+    return normal_iterator( mCurrent - mod );
+  }
+
+  /*!
+   * @param iter  
+   */
+  bool operator==( const normal_iterator& iter ) const{
     return mCurrent == iter.mCurrent;
   }
-  bool operator!=(const normal_iterator& iter) const{
-    return !((*this) == iter);
+
+  /*!
+   * @param iter  
+   */
+  bool operator!=( const normal_iterator& iter ) const{
+    return !( ( *this ) == iter );
   }
-  bool operator<(const normal_iterator& other) const{
+
+  /*!
+   * @param other  
+   */
+  bool operator<( const normal_iterator& other ) const{
     return mCurrent < other.mCurrent;
   }
 
+  /*!
+   *
+   */
   reference operator*() const{
     return *mCurrent;
   }
+
+  /*!
+   *
+   */
   pointer operator->() const{
     return mCurrent;
   }
   
+  /*!
+   *
+   */
   normal_iterator& operator++(){
     ++mCurrent;
     return *this;
   }
-  normal_iterator  operator++(int){
-    return normal_iterator(mCurrent++);
+
+  /*!
+   *
+   */
+  normal_iterator  operator++( int ){
+    return normal_iterator( mCurrent++ );
   }
   
+  /*!
+   *
+   */
   normal_iterator& operator--(){
     --mCurrent;
     return *this;
   }
-  normal_iterator  operator--(int){
-    return normal_iterator(mCurrent--);
+
+  /*!
+   *
+   */
+  normal_iterator  operator--( int ){
+    return normal_iterator( mCurrent-- );
   }
 };
+
+}
 
 namespace std{
 
