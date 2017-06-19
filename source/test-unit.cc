@@ -2,8 +2,10 @@
 
 #include<unit.hh>
 
+using namespace gsw;
+
 TEST_CASE( "Units participate in arithmetic", "[unit]" ){
-  typedef gsw::unit<1, 0, 0, 0, 0, 0> test_t;
+  typedef unit<1, 0, 0, 0, 0, 0, 0> test_t;
 
   SECTION( "Units of same type can be added and subtracted" ){
     double valX = 1;
@@ -22,9 +24,9 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Units multiplication/division result in new unit types" ){
-    gsw::voltage<> V = 3.0;
-    gsw::current<> I = 5.0;
-    gsw::resistance<> R = 4.0;
+    voltage<> V = 3.0;
+    current<> I = 5.0;
+    resistance<> R = 4.0;
 
     V = I * R;
 
@@ -38,7 +40,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
     test_t X = 2.0;
     test_t Y = 3.0;
-    gsw::unit<2, 0, 0, 0, 0, 0> Z;
+    unit<2, 0, 0, 0, 0, 0, 0> Z;
 
     Z = X * Y;
 
@@ -67,11 +69,11 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Unit prefixes can be used" ){
-    typedef gsw::voltage<double, gsw::ratio<1000, 1> > kiloVolt;
-    gsw::resistance<> r( 500 );
+    typedef voltage<double, ratio<1000, 1> > kiloVolt;
+    resistance<> r( 500 );
     kiloVolt kv( 3 );
 
-    gsw::current<> I;
+    current<> I;
 
     I = kv / r;
 
@@ -81,8 +83,8 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Compatible storage classes can be used together" ){
-    gsw::voltage<int> v1( 3 );
-    gsw::voltage<> v2( 3.9 );
+    voltage<int> v1( 3 );
+    voltage<> v2( 3.9 );
 
     v1 = v2;
 

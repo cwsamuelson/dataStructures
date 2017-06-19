@@ -130,9 +130,9 @@ public:
 namespace std{
 
 template<class TYPE, class CONTAINER>
-struct iterator_traits<normal_iterator<TYPE, CONTAINER> >{
+struct iterator_traits<gsw::normal_iterator<TYPE, CONTAINER> >{
 public:
-  typedef typename normal_iterator<TYPE, CONTAINER>::value_type value_type;
+  typedef typename gsw::normal_iterator<TYPE, CONTAINER>::value_type value_type;
   typedef unsigned int difference_type;
   typedef random_access_iterator_tag iterator_category;
 };

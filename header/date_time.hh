@@ -17,9 +17,9 @@ typedef unsigned long long under_type;
  * is simultaneously a different type.
  */
 template<size_t F>
-class time_type : public thyme<under_type, ratio<F, 1> >{
+class time_type : public time<under_type, ratio<F, 1> >{
 public:
-  typedef thyme<under_type, ratio<F, 1> > base;
+  typedef time<under_type, ratio<F, 1> > base;
 
   time_type():
     base(){

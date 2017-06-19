@@ -4,6 +4,8 @@
 
 #include<algorithm.hh>
 
+using namespace gsw;
+
 TEST_CASE( "Sort algorithm", "[algorithm]" ){
   int count = 1000;
   vector<int> vec;

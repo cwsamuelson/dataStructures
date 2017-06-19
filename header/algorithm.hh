@@ -3,6 +3,8 @@
 
 #include<vector.hh>
 
+namespace gsw{
+
 /*! Invokes member function pointer
  *
  * @tparam OBJ  Type of object which member function will act on
@@ -103,6 +105,8 @@ void sort( iter first, iter last, compare comp = compare() ){
   sort( mid, last, comp );
 
   merge( first, mid, last, comp );
+}
+
 }
 
 #endif

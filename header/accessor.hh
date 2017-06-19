@@ -76,18 +76,6 @@ public:
     }
     return mRef;
   }
-
-  /*! Equality check operator
-   *
-   * @param cref  Value for stored reference to be compared against
-   *
-   * @return Whether cref is equal to mRef 
-   *
-   * Allows for convenient comparison against stored reference. 
-   */
-  bool operator==( const_reference cref ){
-    return mRef == cref;
-  }
 };
 
 }

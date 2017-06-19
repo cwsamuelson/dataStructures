@@ -2,6 +2,8 @@
 
 #include<vector.hh>
 
+using namespace gsw;
+
 class wrapper{
 private:
   bool* ref;

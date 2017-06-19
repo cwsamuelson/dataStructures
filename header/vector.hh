@@ -8,6 +8,8 @@
 
 #include<normal_iterator.hh>
 
+namespace gsw{
+
 class indexOutOfBoundsException : public std::exception{
 private:
   std::string msg;
@@ -382,6 +384,8 @@ public:
     return iterator( pointer( mData + ( idx * datasize ) ) );
   }
 };
+
+}
 
 #endif
 
