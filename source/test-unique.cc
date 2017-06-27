@@ -1,6 +1,10 @@
+#include<utility>
+
 #include<catch.hpp>
 
 #include<unique_ptr.hh>
+
+using namespace gsw;
 
 class foo{
 private:
@@ -31,7 +35,7 @@ TEST_CASE( "Unique_ptrs have a mostly similar interface to regular pointers", "[
   REQUIRE( uPtr0 == iPtr0 );
   REQUIRE( *uPtr0 == *iPtr0 );
 
-  unique_ptr<int> uPtr1( uPtr0 );
+  unique_ptr<int> uPtr1( std::move( uPtr0 ) );
   REQUIRE( uPtr0 == nullptr );
   REQUIRE( uPtr1 == iPtr0 );
 
@@ -52,14 +56,14 @@ TEST_CASE( "Unique pointers behave mostly as regular pointers", "[unique_ptr]" )
   *ptr1 = 1;
   *ptr2 = 2;
 
-  ptr1 = ptr2;
-  ptr4 = ptr3;
+  ptr1 = std::move( ptr2 );
+  ptr4 = std::move( ptr3 );
   
   /* flag2 should be toggled now, and not flag1 */
   REQUIRE( !flag1 );
   REQUIRE( flag2 );
   REQUIRE( ptr4->value() == x );
-  ptr4 = ptr4;
+  ptr4 = std::move( ptr4 );
   REQUIRE( ptr4->value() == x );
   
   x = 2;

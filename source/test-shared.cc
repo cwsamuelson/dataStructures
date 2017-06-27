@@ -2,6 +2,8 @@
 
 #include<shared_ptr.hh>
 
+using namespace gsw;
+
 TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]" ){
   int* iPtr0 = new int( 3 );
   shared_ptr<int> sPtr0;

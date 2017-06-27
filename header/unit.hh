@@ -482,9 +482,9 @@ operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
 
 //                          m   s  kg   A   K  C  D  P  T
 template<typename T = double, typename F = ratio<1,1> >
-using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, 0, T, F>;
+using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, 0, T, F>;//meters
 template<typename T = double, typename F = ratio<1,1> >
-using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, 0, T, F>;
+using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, 0, T, F>;//kg
 template<typename T = double, typename F = ratio<1,1> >
 using current       = unit< 0,  0,  0,  1,  0, 0, 0, 0, 0, T, F>;//amps
 template<typename T = double, typename F = ratio<1,1> >
@@ -492,15 +492,15 @@ using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, 0, 0, T, F>;//kelvin
 template<typename T = double, typename F = ratio<1,1> >
 using l_intensity   = unit< 0,  0,  0,  0,  0, 1, 0, 0, 0, T, F>;//luminous intensity
 template<typename T = double, typename F = ratio<1,1> >
-using time          = unit< 0,  1,  0,  0,  0, 0, 0, 0, 0, T, F>;
+using time          = unit< 0,  1,  0,  0,  0, 0, 0, 0, 0, T, F>;//seconds
 template<typename T = double, typename F = ratio<1,1> >
 using tick          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 1, T, F>;
 template<typename T = double, typename F = ratio<1,1> >
 using percent       = unit< 0,  0,  0,  0,  0, 0, 0, 1, 0, T, F>;
 template<typename T = double, typename F = ratio<1,1> >
-using frequency     = unit< 0, -1,  0,  0,  0, 0, 0, 0, 0, T, F>;
+using frequency     = unit< 0, -1,  0,  0,  0, 0, 0, 0, 0, T, F>;//hz
 template<typename T = double, typename F = ratio<1,1> >
-using angle         = unit< 0,  0,  0,  0,  0, 0, 1, 0, 0, T, F>;
+using angle         = unit< 0,  0,  0,  0,  0, 0, 1, 0, 0, T, F>;//degrees
 template<typename T = double, typename F = ratio<1,1> >
 using solid_angle   = unit< 0,  0,  0,  0,  0, 0, 2, 0, 0, T, F>;
 
@@ -526,12 +526,12 @@ using force         = decltype( mass<T, F>() * acceleration<T, F>() );//newtons
 template<typename T = double, typename F = ratio<1,1> >
 using momentum      = decltype( mass<T, F>() * speed<T, F>() );
 template<typename T = double, typename F = ratio<1,1> >
-using energy        = unit< 2, -2,  1,  0,  0, 0, 0, 0, 0, T, F>;//joules
+using energy        = decltype( force<T, F>() * length<T, F>() );//joules
 template<typename T = double, typename F = ratio<1,1> >
 using power         = decltype( energy<T, F>() / time<T, F>() );//watts
 
 template<typename T = double, typename F = ratio<1,1> >
-using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, 0, T, F>;
+using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, 0, T, F>;//volts
 template<typename T = double, typename F = ratio<1,1> >
 using resistance    = unit< 2, -3,  1, -2,  0, 0, 0, 0, 0, T, F>;//ohms
 template<typename T = double, typename F = ratio<1,1> >
@@ -540,8 +540,6 @@ template<typename T = double, typename F = ratio<1,1> >
 using inductance    = unit< 2, -2,  1, -2,  0, 0, 0, 0, 0, T, F>;//henrys
 template<typename T = double, typename F = ratio<1,1> >
 using charge        = unit< 0,  1,  0,  1,  0, 0, 0, 0, 0, T, F>;//coulomb
-template<typename T = double, typename F = ratio<1,1> >
-using coulomb       = charge<T, F>;
 
 template<typename T = double, typename F = ratio<1,1> >
 using mag_field     = unit< 0, -2,  1,  1,  0, 0, 0, 0, 0, T, F>;//tesla
