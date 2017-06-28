@@ -205,12 +205,6 @@ public:
   iterator end(){
     return Iterator( mSize );
   }
-  const_iterator begin() const{
-    return begin();
-  }
-  const_iterator end() const{
-    return end();
-  }
   const_iterator cbegin() const{
     return begin();
   }

@@ -18,9 +18,20 @@ namespace gsw{
 template<typename T>
 class accessor{
 public:
+  /*! Stored type
+   */
   typedef T value_type;
+  /*! Ref shorthand
+   */
   typedef value_type& reference;
+  /*! Cref shorthand
+   */
   typedef const value_type& const_reference;
+  /*! Callback definition
+   *
+   * Type of callback that will be called when this is assigned to.  Also type
+   * taken as a parameter to ctor.
+   */
   typedef std::function<bool(value_type)> callback;
 
 private:
@@ -33,6 +44,10 @@ public:
    * @param ref  Reference to an object to store
    *
    * @param cb  A callback to be run on assignment
+   *
+   * The reference will be stored, and will be assigned to when this object is
+   * assigned to.  The callback dictates whether assignment will actually occur
+   * based upon the value that was to be assigned.
    */
   accessor( reference ref, callback cb ):
     mRef( ref ),

@@ -5,6 +5,8 @@
 #include<functional>
 #include<cmath>
 
+#include<operators.hh>
+
 namespace gsw{
 
 class equation;
@@ -13,7 +15,9 @@ equation derive( const equation& eq, unsigned int order = 1 );
 equation antiderive( const equation& eq );
 double integrate( const equation& eq, double upperBound, double lowerBound );
 
-class equation{
+class equation : public additive<equation>,
+                        multiplicative<equation>,
+                        multiplicative<equation, double>{
 private:
   typedef std::vector<double> storage_type;
   storage_type mCoeff;
@@ -53,25 +57,15 @@ public:
 
   equation& operator=( equation&& eq );
 
-  equation operator+( const equation& rhs );
-
   equation& operator+=( const equation& rhs );
-
-  equation operator-( const equation& rhs );
 
   equation& operator-=( const equation& rhs );
 
-  equation operator*( const equation& rhs );
-
   equation& operator*=( const equation& rhs );
-
-  equation operator*( double d );
 
   equation& operator*=( double d );
 
-  equation operator/( const equation& rhs );
-
-  equation operator/( double d );
+  equation& operator/=( const equation& rhs );
 
   equation& operator/=( double d );
 
