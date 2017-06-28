@@ -2,6 +2,7 @@
 #define __UNIT_HH__
 
 #include<ratio.hh>
+#include<additive.hh>
 
 namespace gsw{
 
@@ -40,7 +41,8 @@ namespace gsw{
  * will be of type distance.
  */
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int DEGREE, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1, 1> >
-class unit{
+class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
+                    additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
 public:
   typedef DBL value_type;
   typedef FACTOR factor_type;
@@ -313,34 +315,6 @@ public:
     --( *this );
 
     return u;
-  }
-
-  /*! Addition operator
-   *
-   * @tparam D  Storage type for other.  Can be anything that can convert into
-   *            value_type.
-   *
-   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
-   *
-   * @return Unit value of same type as lhs, but with value of the addition
-   */
-  template<typename D, typename F>
-  unit operator+( const other_type<D, F>& other ) const{
-    return getRaw() + other.getRaw();
-  }
-
-  /*! Subtraction operator
-   *
-   * @tparam D  Storage type for other.  Can be anything that can convert into
-   *            value_type.
-   *
-   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
-   *
-   * @return Unit value of same type as lhs, but with value of the subtraction
-   */
-  template<typename D, typename F>
-  unit operator-( const other_type<D, F>& other ) const{
-    return getRaw() - other.getRaw();
   }
 
   /*! Add-assignment operator
