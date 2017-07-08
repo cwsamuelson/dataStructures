@@ -2,6 +2,8 @@
 
 #include<is_same.hh>
 
+using namespace gsw;
+
 class bar{
 public:
   typedef int value_type;

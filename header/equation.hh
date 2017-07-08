@@ -1,6 +1,10 @@
 #ifndef __EQUATION_HH__
 #define __EQUATION_HH__
 
+/*!
+ * @example test-equation.cc
+ */
+
 #include<vector>
 #include<functional>
 #include<cmath>

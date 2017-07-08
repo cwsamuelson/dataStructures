@@ -1,6 +1,10 @@
 #ifndef __VECTOR_HH__
 #define __VECTOR_HH__
 
+/*!
+ * @example test-vector.cc
+ */
+
 #include<cmath>
 #include<exception>
 #include<string>

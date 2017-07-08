@@ -1,6 +1,11 @@
 #ifndef __UNIT_HH__
 #define __UNIT_HH__
 
+/*! This file defines scientific and other units and their interactions
+ *
+ * @example test-unit.cc
+ */
+
 #include<ratio.hh>
 #include<additive.hh>
 

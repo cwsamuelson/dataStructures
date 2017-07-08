@@ -1,6 +1,10 @@
 #ifndef __REFERENCE_WRAPPER_HH__
 #define __REFERENCE_WRAPPER_HH__
 
+/*!
+ * @example test-wrapper.cc
+ */
+
 namespace gsw{
 
 template<typename T>

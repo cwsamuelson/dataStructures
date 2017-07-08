@@ -1,6 +1,10 @@
 #ifndef __MENU_HH__
 #define __MENU_HH__
 
+/*!
+ * @example test-menu.cc
+ */
+
 #include<map>
 #include<string>
 #include<functional>

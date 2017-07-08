@@ -1,6 +1,10 @@
 #ifndef __RANGE_HH__
 #define __RANGE_HH__
 
+/*!
+ * @example test-range.cc
+ */
+
 #include<functional>
 
 namespace gsw{

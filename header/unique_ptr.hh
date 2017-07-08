@@ -41,6 +41,12 @@ public:
     other.mData = nullptr;
   }
 
+  template<typename U>
+  unique_ptr( unique_ptr<U>&& other ):
+    mData( other.mData ){
+    other.mData = nullptr;
+  }
+
   /*! Dtor
    *
    * Delete data, if any still exists

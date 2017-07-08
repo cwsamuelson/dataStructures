@@ -1,7 +1,13 @@
 #ifndef __MEMORY_POOL_HH__
 #define __MEMORY_POOL_HH__
 
+/*!
+ * @example test-mempool.cc
+ */
+
 #include<vector>
+
+namespace gsw{
 
 template<class T>
 class memoryPool{
@@ -85,6 +91,8 @@ public:
     return mSize - mInUse;
   }
 };
+
+}
 
 #endif
 

@@ -1,6 +1,10 @@
 #ifndef __MAP_HH__
 #define __MAP_HH__
 
+/*!
+ * @example test-map.cc
+ */
+
 #include<algorithm>
 #include<exception>
 #include<functional>
@@ -173,12 +177,13 @@ public:
    * @param args  arguments to construct new object
    *
    * @return iterator to new value
+   *
+   * @todo return correct iterator
    */
   template<class ...Args>
   iterator emplace( const key_type& key, Args ...args ){
     mData.emplace_back( key, map_type( std::forward<Args>( args )... ) );
     normalize();
-    //TODO: return correct iterator
   }
 
   /*! Get iterator to first element

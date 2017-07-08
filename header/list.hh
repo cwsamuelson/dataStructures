@@ -1,6 +1,10 @@
 #ifndef __LIST_HH__
 #define __LIST_HH__
 
+/*!
+ * @example test-list.cc
+ */
+
 #include<normal_iterator.hh>
 
 class list_iterator;
@@ -143,7 +147,7 @@ public:
   /*!
    * @tparam ...Args  
    *
-   * @param 
+   * @param value
    *
    */
   template<typename ...Args>
@@ -151,6 +155,10 @@ public:
   void push_back( const value_type& value ){
     emplace_back( value );
   }
+
+  /*!
+   * @param value
+   */
   void push_back( value_type&& value )
   value_type pop_back(){
     value_type ret = back();

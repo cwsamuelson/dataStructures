@@ -1,6 +1,10 @@
 #ifndef __ALGORITHM_HH__
 #define __ALGORITHM_HH__
 
+/*!
+ * @example test-algorithm.cc
+ */
+
 #include<vector.hh>
 
 namespace gsw{

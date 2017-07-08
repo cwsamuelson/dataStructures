@@ -1,6 +1,10 @@
 #ifndef __DATE_TIME_HH__
 #define __DATE_TIME_HH__
 
+/*!
+ * @example test-time.cc
+ */
+
 #include<string>
 
 #include<unit.hh>

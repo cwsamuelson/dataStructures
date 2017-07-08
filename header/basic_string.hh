@@ -1,6 +1,10 @@
 #ifndef __BASIC_STRING_HH__
 #define __BASIC_STRING_HH__
 
+/*!
+ * @example test-string.cc
+ */
+
 #include<utility>
 
 #include<normal_iterator.hh>

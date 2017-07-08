@@ -1,6 +1,10 @@
 #ifndef __ADDITIVE_HH__
 #define __ADDITIVE_HH__
 
+/*!
+ * @example test-operators.cc
+ */
+
 namespace gsw{
 
 /*! Additive utility class to provide addition and subtraction operators

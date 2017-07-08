@@ -1,6 +1,10 @@
 #ifndef __ARRAY_HH__
 #define __ARRAY_HH__
 
+/*!
+ * @example test-array.cc
+ */
+
 #include<functional>
 #include<vector>
 

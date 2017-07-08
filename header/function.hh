@@ -1,6 +1,10 @@
 #ifndef __FUNCTION_HH__
 #define __FUNCTION_HH__
 
+/*!
+ * @example test-functional.cc
+ */
+
 #include<tuple.hh>
 
 namespace gsw{

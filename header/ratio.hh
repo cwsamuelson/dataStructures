@@ -1,6 +1,10 @@
 #ifndef __RATIO_HH__
 #define __RATIO_HH__
 
+/*!
+ * @example test-ratio.cc
+ */
+
 #include<numeric>
 
 namespace gsw{

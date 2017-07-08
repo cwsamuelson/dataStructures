@@ -1,6 +1,10 @@
 #ifndef __MULTIPLICATIVE_HH__
 #define __MULTIPLICATIVE_HH__
 
+/*!
+ * @example test-operators.cc
+ */
+
 namespace gsw{
 
 /*! Multiplicative utility class to provide multiplication and division operators

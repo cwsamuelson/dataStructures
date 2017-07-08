@@ -3,7 +3,7 @@
 #include<memory_pool.hh>
 
 TEST_CASE( "Memory pool will allocate resources from its collection.", "[mempool]" ){
-  memoryPool<int> test( 10 );
+  gsw::memoryPool<int> test( 10 );
   REQUIRE( test.in_use_count() == 0 );
   REQUIRE( test.available_space() == 10 );
 

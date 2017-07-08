@@ -1,6 +1,10 @@
 #ifndef __SHARED_PTR_HH__
 #define __SHARED_PTR_HH__
 
+/*!
+ * @example test-shared.cc
+ */
+
 namespace gsw{
 
 template<class T>

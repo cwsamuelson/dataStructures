@@ -1,6 +1,10 @@
 #ifndef __ACCESSOR_HH__
 #define __ACCESSOR_HH__
 
+/*!
+ * @example test-accessor.cc
+ */
+
 #include<functional>
 
 namespace gsw{

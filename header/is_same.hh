@@ -1,6 +1,12 @@
 #ifndef __IS_SAME_HH__
 #define __IS_SAME_HH__
 
+/*!
+ * @example test-same.cc
+ */
+
+namespace gsw{
+
 template<typename T>
 class is_same_helper{
 public:
@@ -27,5 +33,7 @@ class is_same{
 public:
     const static bool value = is_same_helper<T>() == is_same_helper<U>();
 };
+
+}
 
 #endif

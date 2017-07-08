@@ -1,6 +1,10 @@
 #ifndef __STRING_HH__
 #define __STRING_HH__
 
+/*!
+ * @example test-string.cc
+ */
+
 #include<basic_string.hh>
 
 namespace gsw{

@@ -1,6 +1,10 @@
 #ifndef __TUPLE_H__
 #define __TUPLE_H__
 
+/*!
+ * @example test-tuple.cc
+ */
+
 namespace gsw{
 
 template<size_t N, class ...Args>
