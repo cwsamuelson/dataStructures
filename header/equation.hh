@@ -26,24 +26,12 @@ private:
   typedef std::vector<double> storage_type;
   storage_type mCoeff;
 
-  template<class operation>
-  storage_type merge( const storage_type& small, const storage_type& large, bool swapOperands = false, operation op = operation() ){
-    storage_type vec;
-    int i = 0;
-
-    vec = large;
-
-    for( auto it : small ){
-      if( swapOperands ){
-        vec[i] = op( vec[i], it );
-      } else {
-        vec[i] = op( it, vec[i] );
-      }
-      ++i;
-    }
-
-    return vec;
-  }
+void mv( const equation& eq ){
+  mCoeff = eq.mCoeff;
+}
+void mv( equation&& eq ){
+  mCoeff = std::move( eq.mCoeff );
+}
 
 public:
   equation() = default;
@@ -53,13 +41,17 @@ public:
     mCoeff( first, last ){
   }
 
-  equation( const equation& eq );
+  template<typename U>
+  equation( U&& eq ){
+    mv( std::forward<U>( eq ) );
+  }
 
-  equation( equation&& eq );
+  template<typename U>
+  equation& operator=( U&& eq ){
+    mv( std::forward<U>( eq ) );
 
-  equation& operator=( const equation& eq );
-
-  equation& operator=( equation&& eq );
+    return *this;
+  }
 
   equation& operator+=( const equation& rhs );
 

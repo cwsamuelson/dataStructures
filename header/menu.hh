@@ -10,6 +10,7 @@
 #include<functional>
 #include<tuple>
 #include<memory>
+#include<utility>
 
 namespace gsw{
 
@@ -27,24 +28,15 @@ public:
    */
   menu() = default;
 
-  /*! Copy ctor
+  /* Copy/Move ctor
    *
-   * @param other  Parameter containing menu options to copy from
+   * @param other  Parameter containing menu options to copy/move
    *
-   * Copies menu options from other parameter
+   * Copies/moves menu options from other parameter
    */
-  menu( const menu& other ):
-    mOptions( other.mOptions ){
-  }
-
-  /*! Move ctor
-   *
-   * @param other  Parameter containing menu options to move
-   *
-   * Moves menu options from other parameter
-   */
-  menu( menu&& other ):
-    mOptions( std::forward<menu>( other.mOptions ) ){
+  template<typename U>
+  menu( U&& other ):
+    mOptions( std::forward<decltype( mOptions )>( other.mOptions ) ){
   }
 
   /*! Adds a new menu option to menu

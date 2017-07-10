@@ -66,21 +66,13 @@ public:
     normalize();
   }
 
-  /*! Copy ctor
+  /* Copy/move ctor
    *
-   * @param other  map to be copied
+   * @param other map to be copied/moved
    */
-  map( const map& other ){
-    mData = other.mData;
-    comparator = other.comparator;
-  }
-
-  /*! Move ctor
-   *
-   * @param other  map to be moved
-   */
-  map( map&& other ){
-    mData = std::forward<decltype( mData )>( other.mData );
+  template<typename U>
+  map( U&& other ){
+    mData = std::forward<U>( other );
     comparator = other.comparator;
   }
 

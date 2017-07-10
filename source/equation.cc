@@ -1,45 +1,7 @@
-#include<utility>
-
 #include<equation.hh>
 
 using namespace std;
 using namespace gsw;
-
-/*! Copy constructor
- *
- * @param eq  Equation to be copied from.
- */
-equation::equation( const equation& eq ):
-  mCoeff( eq.mCoeff ){
-}
-
-/*! Move constructor
- *
- * @param eq  Equation to be moved from.
- */
-equation::equation( equation&& eq ):
-  mCoeff( forward<storage_type>( eq.mCoeff ) ){
-}
-
-/*! Copy assignment operator
- *
- * @param eq  Equation to be copied from
- */
-equation& equation::operator=( const equation& eq ){
-  mCoeff = eq.mCoeff;
-
-  return *this;
-}
-
-/*! Move assignment operator
- *
- * @param eq  Equation to be moved from
- */
-equation& equation::operator=( equation&& eq ){
-  mCoeff = forward<storage_type>( eq.mCoeff );
-
-  return *this;
-}
 
 /*! Add-assignment operator
  *
@@ -50,10 +12,13 @@ equation& equation::operator=( equation&& eq ){
  * Adds 2 equations together, assigns result to lhs
  */
 equation& equation::operator+=( const equation& rhs ){
-  if( mCoeff.size() > rhs.mCoeff.size() ){
-    mCoeff = merge<std::plus<double> >( rhs.mCoeff, mCoeff );
-  } else {
-    mCoeff = merge<std::plus<double> >( mCoeff, rhs.mCoeff );
+  unsigned int i;
+  for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
+    mCoeff[i] += rhs.mCoeff[i];
+  }
+
+  while( rhs.mCoeff.size() > mCoeff.size() ){
+    mCoeff.push_back( rhs.mCoeff[i++] );
   }
 
   return ( *this );
@@ -68,10 +33,13 @@ equation& equation::operator+=( const equation& rhs ){
  * Subtracts 2 equations, assigns result to lhs
  */
 equation& equation::operator-=( const equation& rhs ){
-  if( mCoeff.size() > rhs.mCoeff.size() ){
-    mCoeff = merge<std::minus<double> >( rhs.mCoeff, mCoeff, true );
-  } else {
-    mCoeff = merge<std::minus<double> >( mCoeff, rhs.mCoeff );
+  unsigned int i;
+  for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
+    mCoeff[i] -= rhs.mCoeff[i];
+  }
+
+  while( rhs.mCoeff.size() > mCoeff.size() ){
+    mCoeff.push_back( -rhs.mCoeff[i++] );
   }
 
   return ( *this );

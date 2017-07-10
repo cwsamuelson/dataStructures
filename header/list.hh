@@ -5,9 +5,13 @@
  * @example test-list.cc
  */
 
+#include<utility>
+
 #include<normal_iterator.hh>
 
 class list_iterator;
+
+namespace gsw{
 
 /*!
  * @tparam T
@@ -41,12 +45,6 @@ private:
     template<typename Args...>
     node( Args... args ):
       data( std::forward<Args...>( args... ) ){
-    }
-    node( const reference value ):
-      data( value ){
-    }
-    node( value_type&& value ):
-      data( forward( value ) ){
     }
   };
   using node_type = node<value_type>;
@@ -284,6 +282,8 @@ public:
   }
 
 };
+
+}
 
 #endif
 

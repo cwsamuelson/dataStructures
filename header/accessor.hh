@@ -89,9 +89,10 @@ public:
    * Conditionally moves new value to stored reference, based upon the result
    * of the callback function provided at construction.
    */
-  reference operator=( value_type&& other ){
+  template<typename U>
+  reference operator=( U&& other ){
     if( mcb( other ) ){
-      mRef = std::forward<value_type>( other );
+      mRef = std::forward<U>( other );
     }
     return mRef;
   }

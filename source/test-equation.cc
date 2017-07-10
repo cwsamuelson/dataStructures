@@ -4,11 +4,22 @@
 
 using namespace std;
 
+TEST_CASE( "Equation can be intuitively copied", "[equ]" ){
+// compile checks
+  gsw::equation e;
+  auto a = e;
+  gsw::equation e0( a );
+  gsw::equation e1( gsw::equation() );
+}
+
 TEST_CASE( "Equations can be used in basic arithmetic", "[equ]" ){
   vector<double> vec { 1, 1, 1 };
   vector<double> vec2 { 2, 2, 2 };
   gsw::equation eq( vec.begin(), vec.end() );
   gsw::equation eq2( vec2.begin(), vec2.end() );
+
+  REQUIRE( eq( 2 ) == 7 );
+  REQUIRE( eq2( 2 ) == 14 );
 
   SECTION( "Addition" ){
     REQUIRE( ( eq + eq2 )( 2 ) == 21 );

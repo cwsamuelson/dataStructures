@@ -262,6 +262,7 @@ public:
     new ( ( pointer )( mData + ( mSize * datasize ) ) ) value_type( data );
     ++mSize;
   }
+
   /*! construct new object at the end of container
    *
    * @tparam ...Args  Parameter pack of types of parameters to forward to constructor 
