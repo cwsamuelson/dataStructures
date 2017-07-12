@@ -9,8 +9,6 @@
 
 #include<normal_iterator.hh>
 
-class list_iterator;
-
 namespace gsw{
 
 /*!
@@ -24,7 +22,6 @@ public:
   using reference = T&;
   using pointer = T*;
   using size_t = unsigned long;
-  using iterator = list_iterator;
 
 private:
   /*!
@@ -42,18 +39,98 @@ private:
     node* next;
     node* prev;
 
-    template<typename Args...>
+    template<typename ...Args>
     node( Args... args ):
-      data( std::forward<Args...>( args... ) ){
+      data( std::forward<Args...>( args... ) ),
+      next( nullptr ),
+      prev( nullptr ){
     }
   };
   using node_type = node<value_type>;
-  friend class list_iterator;
+
+  template<typename U>
+  class node_iter{
+  private:
+/* maybe should be node_type? */
+    node<U>* mCurrent;
+
+  public:
+    node_iter( pointer ptr ):
+      mCurrent( ptr ){
+    }
+
+    node_iter( const node_iter& other ):
+      mCurrent( other.mCurrent ){
+    }
+
+    node_iter& operator+=( long long mod ){
+      while( mod-- && mCurrent->next ){
+        mCurrent = mCurrent->next;
+      }
+      return *this;
+    }
+
+    node_iter& operator-=( long long mod ){
+      while( mod-- && mCurrent->prev ){
+        mCurrent = mCurrent->prev;
+      }
+      return *this;
+    }
+
+    bool operator==( const node_iter& other ) const{
+      return mCurrent == other.mCurrent;
+    }
+
+    bool operator!=( const node_iter& other ) const{
+      return !( *this == other );
+    }
+
+    reference operator*() const{
+      return mCurrent->data;
+    }
+
+    pointer operator->() const{
+      return &mCurrent->data;
+    }
+
+    node_iter& operator++(){
+      if( mCurrent ){
+        mCurrent = mCurrent->next;
+      }
+      return *this;
+    }
+
+    node_iter operator++( int ){
+      node_iter ret( *this );
+
+      if( mCurrent ){
+        mCurrent = mCurrent->next;
+      }
+      return ret;
+    }
+
+    node_iter& operator--(){
+      if( mCurrent ){
+        mCurrent = mCurrent->prev;
+      }
+      return *this;
+    }
+
+    node_iter operator--( int ){
+      node_iter ret( *this );
+
+      if( mCurrent ){
+        mCurrent = mCurrent->prev;
+      }
+      return ret;
+    }
+  };
 
   node_type* head;
   node_type* tail;
 
 public:
+  using iterator = normal_iterator<value_type, list, node_iter<value_type> >;
   /*!
    *
    */
@@ -105,22 +182,11 @@ public:
    *
    */
   void push_front( const value_type& value ){
-    node* first = head;
+    node_type* first = head;
 
-    head = new node( value );
+    head = new node_type( value );
     head->next = first;
-  }
-
-  /*!
-   * @tparam U  
-   *
-   * @param value  
-   *
-   */
-  template<typename U>
-  void push_front( U&& value ){
-    //correct usage of perfect forwarding?
-    //std::forward<U>
+    first->prev = head;
   }
 
   /*!
@@ -129,7 +195,7 @@ public:
    */
   value_type pop_front(){
     value_type ret = front();
-    node* rem = head;
+    node_type* rem = head;
 
     head = head->next;
 
@@ -143,24 +209,23 @@ public:
   }
 
   /*!
-   * @tparam ...Args  
-   *
    * @param value
    *
    */
-  template<typename ...Args>
-  void emplace_front
   void push_back( const value_type& value ){
-    emplace_back( value );
+    node_type* last = tail;
+
+    tail = new node_type( value );
+    tail->prev = last;
+    last->next = tail;
   }
 
   /*!
    * @param value
    */
-  void push_back( value_type&& value )
   value_type pop_back(){
     value_type ret = back();
-    node* rem = tail;
+    node_type* rem = tail;
  
     tail = tail->prev;
 
@@ -172,12 +237,31 @@ public:
 
     return ret;
   }
+
+  template<typename ...Args>
+  void emplace_front( Args... args ){
+    if( head != nullptr ){
+      node_type* first = head;
+
+      tail = new node_type( std::forward<Args>( args )... );
+      head->next = first;
+      first->next = head;
+    } else {
+      tail = head = new node_type( std::forward<Args>( args )... );
+    }
+  }
+
   template<typename ...Args>
   void emplace_back( Args... args ){
-    node* last = tail;
+    if( tail != nullptr ){
+      node_type* last = tail;
 
-    tail = new node( args... );
-    tail->prev = last;
+      tail = new node_type( std::forward<Args>( args )... );
+      tail->prev = last;
+      last->next = tail;
+    } else {
+      tail = head = new node_type( std::forward<Args>( args )... );
+    }
   }
 
   reference front(){
@@ -194,14 +278,14 @@ public:
       --idx;
     }
 
-    return node->data;
+    return cur->data;
   }
 
   iterator begin(){
-    return list_iterator( head );
+    return iterator( head );
   }
   iterator end(){
-    return list_iterator( nullptr );
+    return iterator( nullptr );
   }
   const iterator begin() const{
     return begin();
@@ -217,70 +301,20 @@ public:
     return head == tail;
   }
   unsigned long size(){
-    unsigned long count = 0;
-    node_type* cur = head;
+    if( head != nullptr ){
+      unsigned long count = 1;
+      node_type* cur = head;
 
-    while( cur->next != tail ){
-      ++count;
-      cur = cur->next;
+      while( cur->next != nullptr ){
+        ++count;
+        cur = cur->next;
+      }
+
+      return count;
+    } else {
+      return 0;
     }
-
-    return count + 1;
   }
-};
-
-template<typename T>
-class list_iterator{
-public:
-  using value_type = TYPE;
-  using pointer = value_type*;
-  using reference = value_type&;
-
-protected:
-  using node_type = list<T>::node_type;
-  node_type* mCurrent;
-
-public:
-  list_iterator( node_type* node ):
-    mCurrent( node ){
-  }
-  list_iterator( const list_iterator& other ):
-    mCurrent( other.mCurrent ){
-  }
-  list_iterator( list_iterator&& other ):
-    mCurrent( other.mCurrent ){
-    other.mCurrent = nullptr;
-  }
-
-  bool operator==( const list_iterator& other ) const{
-    return mCurrent == other.mCurrent;
-  }
-  bool operator!=( const list_iterator& other ) const{
-    return !( ( *this ) == other );
-  }
-
-  reference operator*() const{
-    return *mCurrent;
-  }
-  pointer operator->() const{
-    return mCurrent;
-  }
-
-  list_iterator& operator++(){
-    mCurrent = mCurrent.next;
-    return *this;
-  }
-  list_iterator operator++( int ){
-    return list_iterator( mCurrent.next );
-  }
-  list_iterator& operator--(){
-    mCurrent = mCurrent.prev;
-    return *this;
-  }
-  list_iterator operator--( int ){
-    return list_iterator( mCurrent.prev );
-  }
-
 };
 
 }

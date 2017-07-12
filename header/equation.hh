@@ -26,12 +26,13 @@ private:
   typedef std::vector<double> storage_type;
   storage_type mCoeff;
 
-void mv( const equation& eq ){
-  mCoeff = eq.mCoeff;
-}
-void mv( equation&& eq ){
-  mCoeff = std::move( eq.mCoeff );
-}
+  void mv( const equation& eq ){
+    mCoeff = eq.mCoeff;
+  }
+
+  void mv( equation&& eq ){
+    mCoeff = std::move( eq.mCoeff );
+  }
 
 public:
   equation() = default;

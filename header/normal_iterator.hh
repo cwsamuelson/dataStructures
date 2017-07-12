@@ -3,6 +3,8 @@
 
 #include<iterator>
 
+#include"additive.hh"
+
 namespace gsw{
 
 /*! Normalized iterator
@@ -11,13 +13,13 @@ namespace gsw{
  * @tparam CONTAINER  
  *
  */
-template<class TYPE, class CONTAINER>
-class normal_iterator{
+template<typename TYPE, typename CONTAINER, typename PTR_T = TYPE*>
+class normal_iterator : public additive<normal_iterator<TYPE, CONTAINER>, long long>{
 public:
-  typedef CONTAINER container;
-  typedef TYPE value_type;
-  typedef value_type* pointer;
-  typedef value_type& reference;
+  using container = CONTAINER;
+  using value_type = TYPE;
+  using pointer = PTR_T;
+  using reference = value_type&;
 
 protected:
   pointer mCurrent;
@@ -39,7 +41,7 @@ public:
   }
 
   /*!
-   * @param other  
+   * @param other
    */
   unsigned int operator-( const normal_iterator& other ) const{
     return mCurrent - other.mCurrent;
@@ -48,15 +50,17 @@ public:
   /*!
    * @param mod  
    */
-  normal_iterator operator+( int mod ) const{
-    return normal_iterator( mCurrent + mod );
+  normal_iterator& operator+=( long long mod ){
+    mCurrent += mod;
+    return *this;
   }
 
   /*!
    * @param mod  
    */
-  normal_iterator operator-( int mod ) const{
-    return normal_iterator( mCurrent - mod );
+  normal_iterator& operator-=( long long mod ){
+    mCurrent -= mod;
+    return *this;
   }
 
   /*!
@@ -81,6 +85,13 @@ public:
   }
 
   /*!
+   * @param other
+   */
+  bool operator>( const normal_iterator& other )const{
+    return mCurrent > other.mCurrent;
+  }
+
+  /*!
    *
    */
   reference operator*() const{
@@ -93,7 +104,7 @@ public:
   pointer operator->() const{
     return mCurrent;
   }
-  
+
   /*!
    *
    */
@@ -105,7 +116,7 @@ public:
   /*!
    *
    */
-  normal_iterator  operator++( int ){
+  normal_iterator operator++( int ){
     return normal_iterator( mCurrent++ );
   }
   
@@ -120,7 +131,7 @@ public:
   /*!
    *
    */
-  normal_iterator  operator--( int ){
+  normal_iterator operator--( int ){
     return normal_iterator( mCurrent-- );
   }
 };

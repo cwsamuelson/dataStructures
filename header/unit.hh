@@ -29,13 +29,13 @@ namespace gsw{
  *
  * @tparam PERCENTAGE  Percent
  *
- * @tparam TICK  Custom user type.  A common usage may be tick, but can be
- *               used for anything
+ * @tparam TICK  Custom user type.  A common usage may be tick, but can be used
+ *               for anything
  *
  * @tparam DBL  Internal storage type.
  *
  * @tparam FACTOR  Prefix factor.  Can be 1:1, 2:1, 1000:1, 1:1000 etc.  Allows
- *                 Semantic storage of kilometers (km) and the like.
+ *                 semantic storage of kilometers (km) and the like.
  *
  * The value of METERS...TICK describe the exponent value for that parameter.
  * For example, to describe length, METERS will be set to 1, and the rest 0,
