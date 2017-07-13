@@ -61,3 +61,37 @@ TEST_CASE( "Runs constructors/destructors when appropriate", "[list]" ){
   }
 }
 
+TEST_CASE( "Lists can be iterated across using standard mechanisms", "[list]" ){
+  gsw::list<int> lst;
+
+  lst.push_back( 1 );
+  lst.push_back( 2 );
+  lst.push_back( 3 );
+  lst.push_back( 4 );
+
+  SECTION( "Lists can participate in range-based for loops" ){
+    int i = 0;
+
+    for( auto it : lst ){
+      REQUIRE( it == lst[i] );
+      ++i;
+    }
+    REQUIRE( i == lst.size() );
+  }
+
+  SECTION( "Lists can be iterated like arrays" ){
+    for( unsigned int i = 0; i < lst.size(); ++i ){
+      REQUIRE( lst[i] == i + 1 );
+    }
+  }
+
+  SECTION( "Lists can be iterated by iterators(begin, end)" ){
+    int i = 1;
+
+    for( auto it = lst.begin(); it != lst.end(); ++it ){
+      REQUIRE( *it == i++ );
+    }
+  }
+}
+
+

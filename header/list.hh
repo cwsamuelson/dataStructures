@@ -48,14 +48,13 @@ private:
   };
   using node_type = node<value_type>;
 
-  template<typename U>
   class node_iter{
   private:
 /* maybe should be node_type? */
-    node<U>* mCurrent;
+    node_type* mCurrent;
 
   public:
-    node_iter( pointer ptr ):
+    node_iter( node_type* ptr ):
       mCurrent( ptr ){
     }
 
@@ -130,7 +129,7 @@ private:
   node_type* tail;
 
 public:
-  using iterator = normal_iterator<value_type, list, node_iter<value_type> >;
+  using iterator = normal_iterator<value_type, list, node_iter>;
   /*!
    *
    */
@@ -158,6 +157,7 @@ public:
 
     return iterator( next );
   }
+
   /*!
    * @param pos  
    *
@@ -175,18 +175,6 @@ public:
     delete pos.mCurrent;
 
     return ret;
-  }
-
-  /*!
-   * @param value  
-   *
-   */
-  void push_front( const value_type& value ){
-    node_type* first = head;
-
-    head = new node_type( value );
-    head->next = first;
-    first->prev = head;
   }
 
   /*!
@@ -210,18 +198,6 @@ public:
 
   /*!
    * @param value
-   *
-   */
-  void push_back( const value_type& value ){
-    node_type* last = tail;
-
-    tail = new node_type( value );
-    tail->prev = last;
-    last->next = tail;
-  }
-
-  /*!
-   * @param value
    */
   value_type pop_back(){
     value_type ret = back();
@@ -236,6 +212,38 @@ public:
     delete rem;
 
     return ret;
+  }
+
+  /*!
+   * @param value  
+   *
+   */
+  void push_front( const value_type& value ){
+    if( head != nullptr ){
+      node_type* first = head;
+
+      head = new node_type( value );
+      head->next = first;
+      first->prev = head;
+    } else {
+      tail = head = new node_type( value );
+    }
+  }
+
+  /*!
+   * @param value
+   *
+   */
+  void push_back( const value_type& value ){
+    if( tail != nullptr ){
+      node_type* last = tail;
+
+      tail = new node_type( value );
+      tail->prev = last;
+      last->next = tail;
+    } else {
+      tail = head = new node_type( value );
+    }
   }
 
   template<typename ...Args>
@@ -282,15 +290,15 @@ public:
   }
 
   iterator begin(){
-    return iterator( head );
+    return iterator( node_iter( head ) );
   }
   iterator end(){
     return iterator( nullptr );
   }
-  const iterator begin() const{
+  const iterator cbegin() const{
     return begin();
   }
-  const iterator end() const{
+  const iterator cend() const{
     return end();
   }
 

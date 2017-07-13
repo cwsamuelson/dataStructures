@@ -153,4 +153,3 @@ TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]
   }
 }
 
-
