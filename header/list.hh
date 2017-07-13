@@ -243,9 +243,9 @@ public:
     if( head != nullptr ){
       node_type* first = head;
 
-      tail = new node_type( std::forward<Args>( args )... );
+      head = new node_type( std::forward<Args>( args )... );
       head->next = first;
-      first->next = head;
+      first->prev = head;
     } else {
       tail = head = new node_type( std::forward<Args>( args )... );
     }
@@ -300,6 +300,7 @@ public:
   bool empty(){
     return head == tail;
   }
+
   unsigned long size(){
     if( head != nullptr ){
       unsigned long count = 1;
