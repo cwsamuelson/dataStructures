@@ -461,6 +461,9 @@ operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1, CANDELA1, 
 
 //                          m   s  kg   A   K  C  D  P  T
 template<typename T = double, typename F = ratio<1,1> >
+using none          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 0, T, F>;//meters
+
+template<typename T = double, typename F = ratio<1,1> >
 using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, 0, T, F>;//meters
 template<typename T = double, typename F = ratio<1,1> >
 using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, 0, T, F>;//kg
@@ -519,6 +522,12 @@ template<typename T = double, typename F = ratio<1,1> >
 using inductance    = unit< 2, -2,  1, -2,  0, 0, 0, 0, 0, T, F>;//henrys
 template<typename T = double, typename F = ratio<1,1> >
 using charge        = unit< 0,  1,  0,  1,  0, 0, 0, 0, 0, T, F>;//coulomb
+template<typename T = double, typename F = ratio<1,1> >
+using resistivity   = decltype( resistance<T, F>() * length<T, F>() );//ohm*meter
+template<typename T = double, typename F = ratio<1,1> >
+using conductivity  = decltype( none<T, F>( 1 ) / resistivity<T, F>() );//siemens/meter
+template<typename T = double, typename F = ratio<1,1> >
+using conductance   = decltype( conductivity<T, F>() * length<T, F>() );
 
 template<typename T = double, typename F = ratio<1,1> >
 using mag_field     = unit< 0, -2,  1,  1,  0, 0, 0, 0, 0, T, F>;//tesla
