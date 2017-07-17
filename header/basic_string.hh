@@ -192,6 +192,27 @@ OSTREAM& operator<<( OSTREAM& os, const basic_string<T>& str ){
   return os;
 }
 
+class test_ct_string{
+private:
+  const char* const mString;
+  const size_t mSize;
+
+public:
+  template<size_t N>
+  constexpr test_ct_string( const char( &a )[N] ):
+    mString( a ),
+    mSize( N - 1 ){
+  }
+
+  constexpr char operator[]( size_t n ) const{
+    return n < mSize ? mString[n] : throw 1;
+  }
+
+  constexpr size_t size() const{
+    return mSize;
+  }
+};
+
 template<char ...STRING>
 struct ct_string{
   static basic_string<char> string(){

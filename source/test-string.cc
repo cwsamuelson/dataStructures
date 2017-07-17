@@ -51,5 +51,9 @@ TEST_CASE( "Strings have compile time facility", "[string]" ){
   typedef typename gsw::concatenate<abc, nums>::result cat;
 
   REQUIRE( gsw::string( "abc123" ) == cat::string() );
+
+  constexpr gsw::test_ct_string test( "hello!" );
+  REQUIRE( test.size() == 6 );
+  REQUIRE( test[0] == 'h' );
 }
 
