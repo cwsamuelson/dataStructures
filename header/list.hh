@@ -246,6 +246,11 @@ public:
     }
   }
 
+  /*!
+   * @tparam
+   *
+   * @param
+   */
   template<typename ...Args>
   void emplace_front( Args... args ){
     if( head != nullptr ){
@@ -259,6 +264,11 @@ public:
     }
   }
 
+  /*!
+   * @tparam
+   *
+   * @param
+   */
   template<typename ...Args>
   void emplace_back( Args... args ){
     if( tail != nullptr ){
@@ -272,12 +282,23 @@ public:
     }
   }
 
+  /*!
+   * @return
+   */
   reference front(){
     return head->data;
   }
+
+  /*!
+   * @return
+   */
   reference back(){
     return tail->data;
   }
+
+  /*!
+   * @return
+   */
   reference operator[]( size_t idx ){
     node_type* cur = head;
 
@@ -289,26 +310,50 @@ public:
     return cur->data;
   }
 
+  /*!
+   * @return
+   */
   iterator begin(){
     return iterator( node_iter( head ) );
   }
+
+  /*!
+   * @return
+   */
   iterator end(){
     return iterator( nullptr );
   }
+
+  /*!
+   * @return
+   */
   const iterator cbegin() const{
     return begin();
   }
+
+  /*!
+   * @return
+   */
   const iterator cend() const{
     return end();
   }
 
+  /*!
+   * @return
+   */
   list& merge( list&& other ){
   }
 
+  /*!
+   * @return
+   */
   bool empty(){
     return head == tail;
   }
 
+  /*!
+   * @return
+   */
   unsigned long size(){
     if( head != nullptr ){
       unsigned long count = 1;

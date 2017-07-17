@@ -6,6 +6,7 @@
  */
 
 #include<utility>
+#include<initializer_list>
 
 #include<normal_iterator.hh>
 
@@ -28,6 +29,15 @@ private:
   static const value_type terminal;
 
 public:
+  basic_string( std::initializer_list<value_type> il ):
+    mSize( il.size() ),
+    mString( new value_type[mSize + 1] ){
+
+    unsigned int i = 0;
+    for( auto el : il ){
+      mString[i++] = el;
+    }
+  }
   template<typename U>
   basic_string( U&& other ):
     mSize( 0 ),
@@ -181,6 +191,21 @@ OSTREAM& operator<<( OSTREAM& os, const basic_string<T>& str ){
   }
   return os;
 }
+
+template<char ...STRING>
+struct ct_string{
+  static basic_string<char> string(){
+    return basic_string<char>{ STRING... };
+  }
+};
+
+template<typename L, typename R>
+struct concatenate;
+
+template<char ...Ls, char ...Rs>
+struct concatenate<ct_string<Ls...>, ct_string<Rs...> >{
+  using result = ct_string<Ls..., Rs...>;
+};
 
 }
 

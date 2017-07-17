@@ -45,3 +45,11 @@ TEST_CASE( "Strings can construct and assign with strings and string literals", 
   }
 }
 
+TEST_CASE( "Strings have compile time facility", "[string]" ){
+  typedef gsw::ct_string<'a', 'b', 'c'> abc;
+  typedef gsw::ct_string<'1', '2', '3'> nums;
+  typedef typename gsw::concatenate<abc, nums>::result cat;
+
+  REQUIRE( gsw::string( "abc123" ) == cat::string() );
+}
+
