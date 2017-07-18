@@ -199,8 +199,8 @@ private:
 
 public:
   template<size_t N>
-  constexpr test_ct_string( const char( &a )[N] ):
-    mString( a ),
+  constexpr test_ct_string( const char( &arr )[N] ):
+    mString( arr ),
     mSize( N - 1 ){
   }
 
