@@ -61,6 +61,8 @@ struct splice_helper<T[N]>{
  * @tparam T  Type of data stored in array
  *
  * @tparam N  Number of elements stored in array
+ *
+ * @todo This class is a good candidate to implement constexpr-ness
  */
 template<class T, unsigned int N>
 class array<T[N]>{
@@ -86,7 +88,7 @@ public:
    *
    * Returns the number of elements stored in the array.
    */
-  index_t size() const{
+  constexpr index_t size() const{
     return mSize;
   }
 
@@ -105,7 +107,7 @@ public:
    * Behaves the same as non-const version, but provides a const reference,
    * and can be used on const objects.
    */
-  const_reference operator[]( index_t idx ) const{
+  constexpr const_reference operator[]( index_t idx ) const{
     return mArr[idx];
   }
 

@@ -17,7 +17,7 @@ namespace gsw{
  * implementing the += and -= operators through inheritance.
  *
  * Intended usage:
- * class foo : public additive{
+ * class foo : public additive<foo>{
  * private:
  *   int x;
  *

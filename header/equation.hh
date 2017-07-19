@@ -19,6 +19,10 @@ equation derive( const equation& eq, unsigned int order = 1 );
 equation antiderive( const equation& eq );
 double integrate( const equation& eq, double upperBound, double lowerBound );
 
+/*! Equation wrapper.  Stores coefficients, and calculates a result
+ *
+ * @todo This class is a good candidate to implement constexpr-ness
+ */
 class equation : public additive<equation>,
                         multiplicative<equation>,
                         multiplicative<equation, double>{
