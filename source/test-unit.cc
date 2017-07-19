@@ -93,3 +93,21 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 }
 
+TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
+  const voltage<> v1( 3 );
+  const voltage<> v2( 3 );
+  const voltage<> v3( 5 );
+  const double d1 = v1.getValue();
+  const double d2 = v1.getRaw();
+  const double d3 = ( v1 + 4 ).getValue();
+
+  REQUIRE( d1 == 3 );
+  REQUIRE( d2 == 3 );
+  REQUIRE( d3 == 7 );
+  REQUIRE( v2 == v1 );
+  REQUIRE( v1 < v3 );
+  REQUIRE( v3 > v1 );
+  REQUIRE( v1 <= v2 );
+  REQUIRE( v1 >= v2 );
+}
+

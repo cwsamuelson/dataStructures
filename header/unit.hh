@@ -62,7 +62,7 @@ public:
    *
    * @param val  Value to initialize data, defaults to default ctor
    */
-  unit( value_type val = value_type() ):
+  constexpr unit( value_type val = value_type() ):
     mValue( val ){
   }
 
@@ -80,7 +80,7 @@ public:
    * based on the value in F.
    */
   template<typename D, typename F>
-  unit( const other_type<D, F>& other ):
+  constexpr unit( const other_type<D, F>& other ):
     mValue( ( other.getRaw() ) / factor_type::value ){
   }
 
@@ -134,7 +134,7 @@ public:
    * @todo Allow small error in comparison to account for floating point math.
    */
   template<typename D, typename F>
-  bool operator==( const other_type<D, F>& other ) const{
+  constexpr bool operator==( const other_type<D, F>& other ) const{
     return getRaw() == other.getRaw();
   }
 
@@ -152,7 +152,7 @@ public:
    * Compares this instance with another instance for inequality.
    */
   template<typename D, typename F>
-  bool operator!=( const other_type<D, F>& other ) const{
+  constexpr bool operator!=( const other_type<D, F>& other ) const{
     return !( *this == other );
   }
 
@@ -168,7 +168,7 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F>
-  bool operator<( const other_type<D, F>& other ) const{
+  constexpr bool operator<( const other_type<D, F>& other ) const{
     return getRaw() < other.getRaw();
   }
 
@@ -184,7 +184,7 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F>
-  bool operator>( const other_type<D, F>& other ) const{
+  constexpr bool operator>( const other_type<D, F>& other ) const{
     return getRaw() > other.getRaw();
   }
 
@@ -200,7 +200,7 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F>
-  bool operator<=( const other_type<D, F>& other ) const{
+  constexpr bool operator<=( const other_type<D, F>& other ) const{
     return !( ( *this ) > other );
   }
 
@@ -216,7 +216,7 @@ public:
    * @return Result of comparison
    */
   template<typename D, typename F>
-  bool operator>=( const other_type<D, F>& other ) const{
+  constexpr bool operator>=( const other_type<D, F>& other ) const{
     return !( ( *this ) < other );
   }
 
@@ -226,7 +226,7 @@ public:
    *
    * @return Result of comparison
    */
-  bool operator==( value_type other ) const{
+  constexpr bool operator==( value_type other ) const{
     return mValue == other;
   }
 
@@ -236,7 +236,7 @@ public:
    *
    * @return Result of comparison
    */
-  bool operator<( value_type other ) const{
+  constexpr bool operator<( value_type other ) const{
     return mValue < other;
   }
 
@@ -246,7 +246,7 @@ public:
    *
    * @return Result of comparison
    */
-  bool operator>( value_type other ) const{
+  constexpr bool operator>( value_type other ) const{
     return mValue > other;
   }
 
@@ -256,7 +256,7 @@ public:
    *
    * @return Result of comparison
    */
-  bool operator<=( value_type other ) const{
+  constexpr bool operator<=( value_type other ) const{
     return !( ( *this ) > other );
   }
 
@@ -266,7 +266,7 @@ public:
    *
    * @return Result of comparison
    */
-  bool operator>=( value_type other ) const{
+  constexpr bool operator>=( value_type other ) const{
     return !( ( *this ) < other );
   }
 
@@ -410,11 +410,15 @@ public:
 
   /*! Get factored, stored value
    */
-  value_type getValue() const{ return mValue; }
+  constexpr value_type getValue() const{
+    return mValue;
+  }
 
   /*! Retrieve actual raw value (factor is taken into account)
    */
-  value_type getRaw() const{ return ( mValue * factor_type::value ); }
+  constexpr value_type getRaw() const{
+    return ( mValue * factor_type::value );
+  }
 };
 
 /*! Multiplication operator

@@ -52,7 +52,7 @@ public:
    *
    * Adds together lhs and rhs using the += operator of the derived class.
    */
-  friend auto operator+( lhs_type lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend auto operator+( lhs_type lhs, const rhs_type& rhs ) noexcept{
     return ( lhs += rhs );
   }
 
@@ -66,7 +66,7 @@ public:
    *
    * Subtracts rhs from lhs using the -= operator of the derived class.
    */
-  friend auto operator-( lhs_type lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend auto operator-( lhs_type lhs, const rhs_type& rhs ) noexcept{
     return ( lhs -= rhs );
   }
 };
