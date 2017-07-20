@@ -9,21 +9,45 @@
 #include<exception>
 #include<string>
 #include<utility>
+#include<type_traits>
 
 #include<normal_iterator.hh>
 
 namespace gsw{
 
+template<typename T>
+using requireInputIter =
+        typename std::enable_if<
+                   std::is_convertible<typename std::iterator_traits<T>::iterator_category, 
+                                       std::input_iterator_tag
+                                      >::value
+                               >::type;
+/*! Out of bounds exception
+ *
+ * This exception is thrown when an index passed into a function is out of
+ * bounds, and there isn't a nice recovery possible that still produces a result
+ */
 class indexOutOfBoundsException : public std::exception{
 private:
   std::string msg;
 
 public:
-  indexOutOfBoundsException( unsigned long long idx ){
-    msg = "Index ";
-    msg += idx;
-    msg += " out of bounds!";
+  /*! Ctor
+   *
+   * @param idx Index value that exceeded bounds
+   *
+   * @param max maximum bound
+   *
+   * Generates an error message to be thrown up to a higher level and caught
+   */
+  indexOutOfBoundsException( unsigned long long idx, unsigned long long max ):
+    msg(  std::string( "Index" ) + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( max ) ){
   }
+
+  /*! Report what happened
+   *
+   * @return c-string message of what happened
+   */
   virtual const char* what() const noexcept{
     return msg.data();
   }
@@ -39,12 +63,32 @@ public:
 template<class T>
 class vector{
 public:
+  /*! Type of stored values
+   */
   typedef T value_type;
+
+  /*! pointer type to stored value
+   */
   typedef value_type* pointer;
+
+  /*! reference to stored value
+   */
   typedef value_type& reference;
+
+  /*! const reference to stored value
+   */
   typedef const value_type& const_reference;
+
+  /*! const pointer type to stored value
+   */
   typedef const value_type* const_pointer;
+
+  /*! Iterator type
+   */
   typedef normal_iterator<value_type, vector> iterator;
+
+  /*! Type used for anything associated with container size
+   */
   typedef unsigned long size_type;
 
 private:
@@ -148,7 +192,7 @@ public:
    *
    * @param last   one past the end of the container to be copied from
    */
-  template<typename inputIter>
+  template<typename inputIter, typename = requireInputIter<inputIter> >
   vector( inputIter first, inputIter last ){
     for( ; first != last; ++first ){
       push_back( *first );
@@ -216,7 +260,7 @@ public:
    */
   reference operator[]( size_type idx ){
     if( idx >= mSize ){
-      throw indexOutOfBoundsException( idx );
+      throw indexOutOfBoundsException( idx, mSize );
     }
 
     return ( reference )( *( mData + ( idx * datasize ) ) );

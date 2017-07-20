@@ -197,7 +197,6 @@ public:
   }
 
   /*!
-   * @param value
    */
   value_type pop_back(){
     value_type ret = back();
@@ -247,9 +246,9 @@ public:
   }
 
   /*!
-   * @tparam
+   * @tparam ...Args
    *
-   * @param
+   * @param args
    */
   template<typename ...Args>
   void emplace_front( Args... args ){
@@ -265,9 +264,9 @@ public:
   }
 
   /*!
-   * @tparam
+   * @tparam ...Args
    *
-   * @param
+   * @param args
    */
   template<typename ...Args>
   void emplace_back( Args... args ){

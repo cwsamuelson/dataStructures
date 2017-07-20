@@ -86,12 +86,15 @@ private:
   value_type mArr[mSize];
 
 public:
-  /*!
+  /*! Default ctor
    */
   constexpr array() = default;
 
-  /*!
-   * @param il
+  /*! List initialization ctor
+   *
+   * @tparam ...Args
+   *
+   * @param args
    */
   template<typename ...Args>
   constexpr array( Args... args ):

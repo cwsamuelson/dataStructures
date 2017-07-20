@@ -153,3 +153,14 @@ TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]
   }
 }
 
+TEST_CASE( "Constructors", "[vector]" ){
+  SECTION( "Copy list" ){
+    vector<int> vec( 42, 12 );
+
+    REQUIRE( vec.size() == 12 );
+    for( auto it : vec ){
+      REQUIRE( it == 42 );
+    }
+  }
+}
+
