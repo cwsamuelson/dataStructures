@@ -23,7 +23,6 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
   }
 }
 
-//TODO: performance testing on array splicing
 TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
   gsw::array<char[10]> arr;
 
@@ -70,5 +69,21 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
       REQUIRE( arr[i] == ( 'a' + i ) );
     }
   }
+}
+
+/*!
+ * @todo change some of these to compile-time checks
+ * REQUIRE( arr[0] == 1 );
+ * may execute at run time since operator[] is not declared constexpr, and not
+ * sure it can/should be.  the goal here is that it won't execute at run-time,
+ * only compile-time
+ */
+TEST_CASE( "", "[array]" ){
+  const gsw::array<int[5]> arr{ 1, 2, 3, 4, 5 };
+  const int i = arr[0];
+
+  REQUIRE( arr[0] == 1 );
+  REQUIRE( i == 1 );
+  REQUIRE( arr.size() == 5 );
 }
 

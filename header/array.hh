@@ -7,6 +7,7 @@
 
 #include<functional>
 #include<vector>
+#include<initializer_list>
 
 #include<normal_iterator.hh>
 
@@ -22,6 +23,9 @@ namespace gsw{
 template<class T>
 class array;
 
+/*!
+ * @todo Performance testing on array splicing.  may be a faster way to do this
+ */
 template<class T>
 struct splice_index{
   typedef std::function<bool( T, T )> opsig;
@@ -82,6 +86,18 @@ private:
   value_type mArr[mSize];
 
 public:
+  /*!
+   */
+  constexpr array() = default;
+
+  /*!
+   * @param il
+   */
+  template<typename ...Args>
+  constexpr array( Args... args ):
+    mArr{ args...}{
+  }
+
   /*! Get the size of the array
    *
    * @return The number of elements
@@ -205,18 +221,32 @@ public:
     return splicer( std::less_equal<value_type>(), idx );
   }
 
+  /*!
+   */
   iterator begin(){
     return Iterator( 0 );
   }
+
+  /*!
+   */
   iterator end(){
     return Iterator( mSize );
   }
+
+  /*!
+   */
   const_iterator cbegin() const{
     return begin();
   }
+
+  /*!
+   */
   const_iterator cend() const{
     return end();
   }
+
+  /*!
+   */
   iterator Iterator( index_t idx ){
     return iterator( &mArr[idx] );
   }
