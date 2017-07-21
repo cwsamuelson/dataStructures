@@ -8,11 +8,11 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   auto pm1 = std::make_shared<gsw::menu<int>>();
   std::shared_ptr<gsw::menu<int> > current( pm0 );
 
-  pm0->addOption( 0, "electric", pm1, [&](){ ss << "beep" << '\n'; } );
-  pm0->addOption( 1, "boogaloo", pm1, [&](){ ss << "boop" << '\n'; } );
-  pm1->addOption( 0, "foo",      pm0, [&](){ ss << "buup" << '\n'; } );
-  pm1->addOption( 1, "baz",      pm0, [&](){ ss << "biip" << '\n'; } );
-  pm1->addOption( 1, "bar",      pm0, [&](){ ss << "byyp" << '\n'; } );
+  pm0->addOption( 0, "electric", pm1, [&](int){ ss << "beep" << '\n'; } );
+  pm0->addOption( 1, "boogaloo", pm1, [&](int){ ss << "boop" << '\n'; } );
+  pm1->addOption( 0, "foo",      pm0, [&](int){ ss << "buup" << '\n'; } );
+  pm1->addOption( 1, "baz",      pm0, [&](int){ ss << "biip" << '\n'; } );
+  pm1->addOption( 1, "bar",      pm0, [&](int){ ss << "byyp" << '\n'; } );
 
   //ctor compile check
   gsw::menu<int> one;
@@ -20,7 +20,7 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   gsw::menu<int> three( gsw::menu<int>() );
   one.print( ss );
   one.print( ss );
-  one.print( ss );
+  ss << one;
 
   SECTION( "Prints menus when requested." ){
     for( unsigned int i = 0; i < 2; ++i ){

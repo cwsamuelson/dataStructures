@@ -17,18 +17,19 @@ namespace gsw{
 template<typename SELECTOR>
 class menu{
 public:
+  typedef SELECTOR selector;
   typedef std::shared_ptr<menu> menuPtr;
-  typedef std::function<void()> optionCallback;
+  typedef std::function<void(selector)> optionCallback;
 
 private:
-  std::map<SELECTOR, std::tuple<std::string, menuPtr, optionCallback> > mOptions;
+  std::map<selector, std::tuple<std::string, menuPtr, optionCallback> > mOptions;
 
 public:
   /*! Default ctor
    */
   menu() = default;
 
-  /* Copy/Move ctor
+  /*! Copy/Move ctor
    *
    * @param other  Parameter containing menu options to copy/move
    *
@@ -52,8 +53,8 @@ public:
    * Describe a new option including number, text, next menu, and action to
    * take upon selection
    */
-  void addOption( const SELECTOR& selection, const std::string& optText,
-                  menuPtr nextMenu, optionCallback callback = optionCallback( [](){} ) ){
+  void addOption( const selector& selection, const std::string& optText,
+                  menuPtr nextMenu, optionCallback callback = optionCallback( []( selector ){} ) ){
     mOptions[selection] = std::make_tuple( optText, nextMenu, callback );
   }
 
@@ -63,11 +64,11 @@ public:
    *
    * Retrieve the selection, call its callback, and return next menu
    */
-  menuPtr select( const SELECTOR& selection ){
+  menuPtr select( const selector& selection ){
     auto it = mOptions.at( selection );
 
     // call the callback
-    std::get<2>( it )();
+    std::get<2>( it )( selection );
 
     // return next menu
     return std::get<1>( it );
@@ -82,6 +83,18 @@ public:
     for( auto it : mOptions ){
       os << std::get<0>( it ) << '\t' << std::get<0>( std::get<1>( it ) ) << '\n';
     }
+
+    return os;
+  }
+
+  /*! Provide menu options to given stream
+   *
+   * @param os  Output stream to provide menu information to
+   */
+  template<typename OSTREAM>
+  friend
+  OSTREAM& operator<<( OSTREAM& os, menu m ){
+    m.print( os );
 
     return os;
   }
