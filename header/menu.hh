@@ -33,11 +33,22 @@ public:
    *
    * @param other  Parameter containing menu options to copy/move
    *
-   * Copies/moves menu options from other parameter
+   * Copies/moves menu options from other
    */
   template<typename U>
   menu( U&& other ):
     mOptions( std::forward<decltype( mOptions )>( other.mOptions ) ){
+  }
+
+  /*! Copy/move assignment
+   *
+   * @param other  Parameter containing menu options to copy/move
+   *
+   * Copies/moves menu options from other
+   */
+  template<typename U>
+  menu& operator=( U&& other ){
+    mOptions = std::forward<decltype( mOptions )>( other.mOptions );
   }
 
   /*! Adds a new menu option to menu
@@ -90,6 +101,8 @@ public:
   /*! Provide menu options to given stream
    *
    * @param os  Output stream to provide menu information to
+   *
+   * @param m  Menu printed options are to come from
    */
   template<typename OSTREAM>
   friend
