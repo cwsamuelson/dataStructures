@@ -9,7 +9,10 @@
 
 namespace gsw{
 
-template<class T>
+/*!
+ * @tparam T
+ */
+template<typename T>
 class memoryPool{
 public:
   typedef T value_type;
@@ -29,6 +32,9 @@ private:
   std::vector<size_type> mSizes;
  
 public:
+  /*!
+   * @param size
+   */
   memoryPool( size_type size ):
     mSize( size ),
     mInUse( 0 ),
@@ -37,8 +43,15 @@ public:
     mSlots( mSize, false ),
     mSizes( mSize, 0 ){
   }
-  virtual ~memoryPool(){ delete[] mStorageStart; }
 
+  /*!
+   */
+  virtual ~memoryPool(){
+    delete[] mStorageStart;
+  }
+
+  /*!
+   */
   template<typename ...Args>
   pointer allocate( size_type amt, Args... args ){
     size_type caveSize = 0;
@@ -58,7 +71,7 @@ public:
 
     if( caveFound ){
       for( size_type i = caveOpening; i < caveOpening + amt; ++i ){
-        new( mStorageStart + ( caveOpening * ptrdiff ) ) value_type(args...);
+        new( mStorageStart + ( caveOpening * ptrdiff ) ) value_type( std::forward<Args>( args )...);
         mSlots[i] = true;
       }
       mSizes[caveOpening] = amt;
@@ -70,6 +83,8 @@ public:
     }
   }
 
+  /*!
+   */
   void deallocate( pointer ptr ){
     if( ptr < ( pointer )mStorageStart || ptr > ( pointer )mStorageEnd ){
       return;
@@ -84,9 +99,14 @@ public:
     mSizes[idx] = 0;
   }
 
+  /*!
+   */
   size_type in_use_count(){
     return mInUse;
   }
+
+  /*!
+   */
   size_type available_space(){
     return mSize - mInUse;
   }

@@ -69,7 +69,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Unit prefixes can be used" ){
-    typedef voltage<double, ratio<1000, 1> > kiloVolt;
+    typedef voltage<double, kilo> kiloVolt;
     resistance<> r( 500 );
     kiloVolt kv( 3 );
 
@@ -109,5 +109,22 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
   REQUIRE( v3 > v1 );
   REQUIRE( v1 <= v2 );
   REQUIRE( v1 >= v2 );
+}
+
+TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
+  voltage<double, kilo> kv( 12 );
+  current<double, milli> a;
+  resistance<> o( 3 );
+  a = kv / o;
+
+  REQUIRE( a.getValue() == 4000000 );
+}
+
+TEST_CASE( "Upholstery Heater test", "[unit]" ){
+  using int_time = gsw::time<unsigned long long, milli>;
+  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, -1, unsigned long long, milli>;
+  const tick<> t = int_time( 50 ) / sched_tick_rate( 5 );
+
+  REQUIRE( t == 10 );
 }
 
