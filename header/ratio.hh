@@ -6,6 +6,7 @@
  */
 
 #include<numeric>
+#include<type_traits>
 
 namespace gsw{
 
@@ -70,8 +71,8 @@ template<size_t N, size_t D>
 class ratio{
 public:
   typedef size_t value_type;
-  static const value_type numerator = sign( N ) * sign( D ) * myAbs( N ) / gcd( N, D );
-  static const value_type denominator = myAbs( D ) / gcd( N, D );
+  static constexpr value_type numerator = sign( N ) * sign( D ) * myAbs( N ) / gcd( N, D );
+  static constexpr value_type denominator = myAbs( D ) / gcd( N, D );
   static constexpr double value = double( double( numerator ) / double( denominator ) );
   typedef ratio<numerator, denominator> type;
 
@@ -80,7 +81,7 @@ public:
    * This allows the number to be easily used at runtime, converting the ratio
    * to a double value
    */
-  constexpr operator double() const{
+  constexpr explicit operator double() const{
     return value;
   }
 
@@ -137,7 +138,7 @@ public:
  *
  * @return Number of type T, containing multiplication result
  */
-template<typename T, size_t N, size_t D>
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
 constexpr T operator*( T t, ratio<N, D> r ){
   return t * double( r );
 }
@@ -156,12 +157,12 @@ constexpr T operator*( T t, ratio<N, D> r ){
  *
  * @return Number of type T, containing multiplication result
  */
-template<typename T, size_t N, size_t D>
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
 constexpr T operator*( ratio<N, D> r, T t ){
   return t * double( r );
 }
 
-/*! Value of number dividedi by ratio
+/*! Value of number divided by ratio
  *
  * @tparam T  Type of number being divided
  *
@@ -175,9 +176,10 @@ constexpr T operator*( ratio<N, D> r, T t ){
  *
  * @return Number of type T, containing division result
  */
-template<typename T, size_t N, size_t D>
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
 constexpr T operator/( T t, ratio<N, D> r ){
-  return t / double( r );
+  typedef decltype( r ) R;
+  return ( t * R::denominator ) / R::numerator;
 }
 
 /*! Value of ratio divided by number
@@ -194,9 +196,11 @@ constexpr T operator/( T t, ratio<N, D> r ){
  *
  * @return Number of type T, containing division result
  */
-template<typename T, size_t N, size_t D>
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
 constexpr T operator/( ratio<N, D> r, T t ){
-  return double( r ) / t;
+  typedef decltype( r ) R;
+
+  return ( R::numerator / ( t * R::denominator ) );
 }
 
 /*! Check 'actual' equality of 2 ratios
@@ -238,14 +242,18 @@ constexpr bool operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
   return ! ( r1 == r2 );
 }
 
-//This declaration prevents a linker error
 template<size_t N, size_t D>
 constexpr double ratio<N, D>::value;
+template<size_t N, size_t D>
+constexpr typename ratio<N, D>::value_type ratio<N, D>::numerator;
+template<size_t N, size_t D>
+constexpr typename ratio<N, D>::value_type ratio<N, D>::denominator;
 
-using kilo = ratio<1000, 1>;
-using mega = ratio<1000000, 1>;
-using milli = ratio<1, 1000>;
-using micro = ratio<1, 1000000>;
+using unity = ratio<1,       1>;
+using kilo  = ratio<1000,    1>;
+using mega  = ratio<1000000, 1>;
+using milli = ratio<1,       1000>;
+using micro = ratio<1,       1000000>;
 
 }
 
