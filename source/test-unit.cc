@@ -101,6 +101,16 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
   const double d2 = v1.getRaw();
   const double d3 = ( v1 + 4 ).getValue();
 
+  static_assert( voltage<>( 3 ) == 3 );
+  static_assert( voltage<>( 3 ).getValue() == 3 );
+  static_assert( voltage<>( 3 ).getRaw() == 3 );
+  //static_assert( ( voltage<>( 3 ) + voltage<>( 4 ) ) == 7 );
+  static_assert( voltage<>( 3 ) == voltage<>( 3 ) );
+  static_assert( voltage<>( 3 ) < voltage<>( 4 ) );
+  static_assert( voltage<>( 4 ) > voltage<>( 3 ) );
+  static_assert( voltage<>( 3 ) <= voltage<>( 3 ) );
+  static_assert( voltage<>( 3 ) >= voltage<>( 3 ) );
+
   REQUIRE( d1 == 3 );
   REQUIRE( d2 == 3 );
   REQUIRE( d3 == 7 );

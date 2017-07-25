@@ -44,13 +44,20 @@ public:
     mSizes( mSize, 0 ){
   }
 
-  /*!
+  /*! Dtor
    */
   virtual ~memoryPool(){
     delete[] mStorageStart;
   }
 
   /*!
+   * @tparam ...Args
+   *
+   * @param amt
+   *
+   * @param args
+   *
+   * @return
    */
   template<typename ...Args>
   pointer allocate( size_type amt, Args... args ){
@@ -84,6 +91,7 @@ public:
   }
 
   /*!
+   * @param ptr
    */
   void deallocate( pointer ptr ){
     if( ptr < ( pointer )mStorageStart || ptr > ( pointer )mStorageEnd ){
@@ -100,12 +108,14 @@ public:
   }
 
   /*!
+   * @return
    */
   size_type in_use_count(){
     return mInUse;
   }
 
   /*!
+   * @return
    */
   size_type available_space(){
     return mSize - mInUse;
