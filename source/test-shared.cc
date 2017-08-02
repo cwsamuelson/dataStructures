@@ -1,8 +1,23 @@
+#include<utility>
+
 #include<catch.hpp>
 
 #include<shared_ptr.hh>
 
 using namespace gsw;
+
+class deathcry{
+private:
+  bool* val;
+
+public:
+  deathcry( bool* b ):
+    val( b ){
+  }
+  ~deathcry(){
+    *val = false;
+  }
+};
 
 TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_ptr]" ){
   int* iPtr0 = new int( 3 );
@@ -43,6 +58,31 @@ TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_
     }
 
     REQUIRE( *sPtr0 == 3 );
+  }
+
+  SECTION( "Destructors run appropriately" ){
+    bool b = true;
+    auto sp = make_shared<deathcry>( &b );
+    bool b1 = true;
+    {
+      auto dc = make_shared<deathcry>( &b1 );
+      dc = sp;
+    }
+    REQUIRE( b1 == false );
+  }
+}
+
+TEST_CASE( "Shared_ptrs obey move semantics", "[shared_ptr]" ){
+  bool b = true;
+  auto sp = make_shared<deathcry>( &b );
+
+  SECTION( "Move semantics will not prevent cleanup" ){
+    bool b1 = true;
+    {
+      auto dc = make_shared<deathcry>( &b1 );
+      dc = std::move( sp );
+    }
+    REQUIRE( b1 == false );
   }
 }
 
