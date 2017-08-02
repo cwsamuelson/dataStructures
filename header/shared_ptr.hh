@@ -39,7 +39,7 @@ public:
   }
   shared_ptr( shared_ptr&& other ):
     mData( other.mData ),
-    mCount( other.mcount ){
+    mCount( other.mCount ){
 
     other.mData = nullptr;
     other.mCount = nullptr;
@@ -77,11 +77,24 @@ public:
     return *this;
   }
   shared_ptr& operator=( shared_ptr&& other ){
+    // cleanup current storage
+    if( mCount != nullptr ){
+      --( *mCount );
+      if( *mCount == 0 ){
+        delete mData;
+        delete mCount;
+      }
+    }
+
+    //take on new storage
     mData = other.mData;
     mCount = other.mCount;
 
+    //obliterate old storage
     other.mData = nullptr;
     other.mCount = nullptr;
+
+    return *this;
   }
 
   bool operator==( pointer other ) const{
@@ -102,9 +115,7 @@ public:
 
 template<class T, class ... Args>
 shared_ptr<T> make_shared( Args ...args ){
-  T* temp = new T( args... );
-
-  return shared_ptr<T>( temp );
+  return shared_ptr<T>( new T( args... ) );
 }
 
 }
