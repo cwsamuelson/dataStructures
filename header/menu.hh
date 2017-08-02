@@ -14,15 +14,29 @@
 
 namespace gsw{
 
+/*! menu utility class.
+ *
+ * @tparam SELECTOR Selection type.  The type used to distinguish between menu options.
+ *
+ * Each menu object contains a list of menu 'nodes'.  These nodes, once
+ * connected, can be retrieved using the SELECTOR type and the select method,
+ * which will return the associated menu node.
+ */
 template<typename SELECTOR>
 class menu{
 public:
+  /*! selector type, used to differentiate and retrieve menu options from this node
+   */
   typedef SELECTOR selector;
-  typedef std::shared_ptr<menu> menuPtr;
-  typedef std::function<void(selector)> optionCallback;
+  /*! pointer to menu type
+   */
+  typedef std::shared_ptr<menu> pointer;
+  /*! callback used to inform user of changed state
+   */
+  typedef std::function<bool(selector)> optionCallback;
 
 private:
-  std::map<selector, std::tuple<std::string, menuPtr, optionCallback> > mOptions;
+  std::map<selector, std::tuple<std::string, pointer, optionCallback> > mOptions;
 
 public:
   /*! Default ctor
@@ -65,7 +79,7 @@ public:
    * take upon selection
    */
   void addOption( const selector& selection, const std::string& optText,
-                  menuPtr nextMenu, optionCallback callback = optionCallback( []( selector ){} ) ){
+                  pointer nextMenu, optionCallback callback = optionCallback( []( selector ){ return true; } ) ){
     mOptions[selection] = std::make_tuple( optText, nextMenu, callback );
   }
 
@@ -73,16 +87,20 @@ public:
    *
    * @param selection  Chosen option
    *
+   * @todo currently returns a new shared_ptr to this.  this enables double freeing.
+   *
    * Retrieve the selection, call its callback, and return next menu
    */
-  menuPtr select( const selector& selection ){
+  pointer select( const selector& selection ){
     auto it = mOptions.at( selection );
 
-    // call the callback
-    std::get<2>( it )( selection );
-
-    // return next menu
-    return std::get<1>( it );
+    // call the callback; return next menu
+    if( std::get<2>( it )( selection ) )
+    {
+      return std::get<1>( it );
+    } else {
+       return pointer( this );
+    }
   }
 
   /*! Provide menu options to given stream
