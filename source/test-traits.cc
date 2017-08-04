@@ -22,8 +22,9 @@ TEST_CASE( "is_void", "[traits]" ){
 
 TEST_CASE( "remove_cv", "[traits]" ){
   gsw::remove_cv<const int>::type G = 5;
+  bool test = gsw::is_same<gsw::remove_cv<const int>::type, int>::value;
 
   REQUIRE( ( G += 5 ) == 10 );
-  REQUIRE( gsw::is_same<gsw::remove_cv<const int>::type, int>::value );
+  REQUIRE( test );
 }
 
