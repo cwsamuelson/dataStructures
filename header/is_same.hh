@@ -7,6 +7,13 @@
 
 namespace gsw{
 
+/*! 'Stores' a type, and checks equality with another type
+ *
+ * @tparam T 'stored' type
+ *
+ * This class provides equality check operator that uses template
+ * specialization to determine type equality compared to the 'stored' type T.
+ */
 template<typename T>
 class is_same_helper{
 public:
