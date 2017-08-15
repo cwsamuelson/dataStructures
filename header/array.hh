@@ -224,31 +224,33 @@ public:
     return splicer( std::less_equal<value_type>(), idx );
   }
 
-  /*!
+  /*! Create an iterator to first element
    */
   iterator begin(){
     return Iterator( 0 );
   }
 
-  /*!
+  /*! Create an iterator to final element
    */
   iterator end(){
     return Iterator( mSize );
   }
 
-  /*!
+  /*! Create a const iterator to first element
    */
   const_iterator cbegin() const{
     return begin();
   }
 
-  /*!
+  /*! Create a const iterator to final element
    */
   const_iterator cend() const{
     return end();
   }
 
-  /*!
+  /*! Create iterator to specified element
+   *
+   * @param idx Index of element iterator will be directed to
    */
   iterator Iterator( index_t idx ){
     return iterator( &mArr[idx] );
