@@ -12,6 +12,12 @@
 
 namespace gsw{
 
+/*!
+ * @tparam T
+ *
+ * @todo verify msize is used correctly.  may be causing memory leak from incorrect usage
+ * @todo minimize usage of terminal
+ */
 template<class T>
 class basic_string{
 public:
@@ -29,6 +35,8 @@ private:
   static const value_type terminal;
 
 public:
+  /*! Initializer ctor
+   */
   basic_string( std::initializer_list<value_type> il ):
     mSize( il.size() ),
     mString( new value_type[mSize + 1] ){
@@ -38,16 +46,25 @@ public:
       mString[i++] = el;
     }
   }
+
+  /*!
+   */
   template<typename U>
   basic_string( U&& other ):
     mSize( 0 ),
     mString( nullptr ){
     *this = std::forward<U>( other );
   }
+
+  /*! Default ctor
+   */
   basic_string():
     mSize( 0 ),
     mString( nullptr ){
   }
+
+  /*! Construct from array of value_tyep
+   */
   basic_string( const_pointer str ):
     mSize( 0 ){
 
@@ -62,10 +79,15 @@ public:
       mString[i] = str[i];
     }
   }
+
+  /*! Dtor
+   */
   virtual ~basic_string(){
     delete[] mString;
   }
   
+  /*! Copy assignment
+   */
   basic_string& operator=( const basic_string& other ){
     if( mString ){
       delete[] mString;
@@ -74,14 +96,17 @@ public:
     mSize = other.mSize;
     
     mString = new value_type[mSize + 1];
-    mString[mSize] = terminal;
 
-    for( unsigned int i = 0; i < mSize; ++i ){
+    // be sure to include terminator (so use <= )
+    for( unsigned int i = 0; i <= mSize; ++i ){
       mString[i] = other.mString[i];
     }
     
     return *this;
   }
+
+  /*! Move assignment
+   */
   basic_string& operator=( basic_string&& other ){
     mSize = other.mSize;
     mString = other.mString;
@@ -91,6 +116,8 @@ public:
     return *this;
   }
 
+  /*! String equality compare
+   */
   bool operator==( const basic_string& other ) const{
     if( mSize != other.mSize ){
       return false;
@@ -103,82 +130,113 @@ public:
     }
     return ret;
   }
+
+  /*! Equality compare against array of value_type
+   */
   bool operator==( const_pointer other ) const{
     return *this == basic_string( other );
   }
 
-  basic_string operator+( const_reference vt ) const{
-    basic_string ret;
+  /*! Add-assign another string
+   *
+   * @param other
+   *
+   * Append other to this
+   */
+  basic_string operator+=( const basic_string& other ){
+    size_type new_size = size() + other.size();
+    pointer temp_string = new value_type[new_size + 1];
 
-    ret.mSize = mSize + 1;
-    ret.mString = new value_type[ret.mSize + 1];
-    ret.mString[ret.mSize] = terminal;
-
-    for( unsigned int i = 0; i < mSize; ++i ){
-      ret.mString[i] = mString[i];
+    size_type i;
+    for( i = 0; i < size(); ++i ){
+      temp_string[i] = mString[i];
     }
-    ret.mString[mSize] = vt;
-
-    return ret;
-  }
-  basic_string operator+( const_pointer ptr ){
-    size_type extra = 0;
-    basic_string ret;
-
-    while( ptr[extra] != terminal ){
-      ++extra;
+    //grab terminating character here
+    for( ; i <= new_size; ++i ){
+      temp_string[i] = other.mString[i - size()];
     }
-
-    ret.mSize = mSize + extra;
-    ret.mString = new value_type[ret.mSize + 1];
-    ret.mString[ret.mSize] = terminal;
-
-    for( unsigned int i = 0; i < mSize; ++i ){
-      ret.mString[i] = mString[i];
-    }
-    for( unsigned int i = 0; i < extra; ++i ){
-      ret.mString[i + mSize] = ptr[i];
-    }
-
-    return ret;
-  }
-  template<class U>
-  basic_string operator+( U u ){
-    return ( *this ) + value_type( u );
-  }
-  basic_string& operator+=( const_reference ref ){
-    return ( ( *this ) = ( *this ) + ref );
-  }
-  basic_string& operator+=( const_pointer ptr ){
-    return ( ( *this ) = ( *this ) + ptr );
-  }
-  template<class U>
-  basic_string& operator+=( U u ){
-    return ( ( *this ) = ( *this ) + u );
   }
 
+  /*! Add-assign array of value_type
+   *
+   * @param vt
+   *
+   * Append to this
+   */
+  basic_string operator+=( const_pointer& vt ){
+    basic_string str( vt );
+
+    return ( *this ) += str;
+  }
+
+  /*! Concatenation
+   *
+   * @param lhs base being appended to
+   *
+   * @param rhs what to append to lhs
+   */
+  constexpr friend auto operator+( basic_string lhs, const basic_string& rhs ) noexcept{
+    return ( lhs += rhs );
+  }
+
+  /*! Concatenation
+   *
+   * @param lhs base being appended to
+   *
+   * @param rhs what to append to lhs
+   */
+  constexpr friend auto operator+( basic_string lhs, const_pointer rhs ) noexcept{
+    return ( lhs += rhs );
+  }
+
+  /*! Reference access
+   *
+   * @param idx
+   */
   reference operator[]( unsigned int idx ){
     return mString[idx];
   }
+
+  /*! Value access
+   *
+   * @param idx
+   */
   const_reference operator[]( unsigned int idx ) const{
     return mString[idx];
   }
+
+  /*!
+   */
   size_type size() const{
     return mSize;
   }
+
+  /*!
+   */
   bool empty() const{
     return mSize == 0;
   }
+
+  /*!
+   */
   const char* data() const{
     return mString;
   }
 
+  /*!
+   */
   iterator begin(){
     return Iterator( 0 );
   }
+
+  /*!
+   */
   iterator end(){
     return Iterator( mSize );
   }
+
+  /*!
+   */
   iterator Iterator( unsigned long idx ){
     return iterator( mString + idx );
   }
