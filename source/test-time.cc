@@ -25,7 +25,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "A date is printed in a human readable format to an ostream." ){
-    gsw::date dayt( gsw::day( 11 ), 8, gsw::year( 2016 ) );
+    gsw::date dayt( 11, 8, 2016 );
     std::stringstream ss;
     std::string str;
 
@@ -59,7 +59,7 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Date time interacts with streams." ){
-    gsw::date_time dt( gsw::date( gsw::day( 11 ), 8, gsw::year( 2016 ) ), gsw::hour( 15 ), gsw::minute( 41 ), gsw::second( 14 ) );
+    gsw::date_time dt( gsw::date( 11, 8, 2016 ), 15, 41, 14 );
     std::stringstream ss;
     std::string str;
 
