@@ -28,7 +28,7 @@ public:
   time_type():
     base(){
   }
-  explicit time_type( under_type ut ):
+  time_type( under_type ut ):
     base( ut ){
   }
   template<typename D, typename F_t>
