@@ -3,6 +3,15 @@
 
 namespace gsw{
 
+/*! Constant value wrapper
+ *
+ * @tparam T type of stored value (must be integral)
+ *
+ * @tparam v value to be stored in constant
+ *
+ * Constant integral value wrapper.  Integral nature is enforced by template
+ * parameter rules.
+ */
 template<class T, T v>
 class integral_constant{
 public:
