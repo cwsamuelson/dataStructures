@@ -17,6 +17,7 @@ namespace gsw{
  * implementing the += and -= operators through inheritance.
  *
  * Intended usage:
+ * @code{.cpp}
  * class foo : public additive<foo>{
  * private:
  *   int x;
@@ -33,6 +34,7 @@ namespace gsw{
  *     return lhs;
  *   }
  * };
+ * @endcode
  *
  * This will provide 'for free' the + and - operators as well.
  */
