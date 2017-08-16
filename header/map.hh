@@ -23,6 +23,14 @@ public:
   }
 };
 
+/*! 1:N associative container
+ *
+ * @tparam KEY Type used to find, store, reference data
+ *
+ * @tparam VALUE Type of data to be stored
+ *
+ * @tparam COMPARE Functor used to compare data of type KEY
+ */
 template<class KEY, class VALUE, class COMPARE = std::less<KEY> >
 class map{
 public:
