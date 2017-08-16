@@ -89,7 +89,7 @@ public:
 
   /*! Ownership assignment
    *
-   * @param ptr Pointer to be taken ownership of
+   * @param other Pointer to be taken ownership of
    *
    * This constructor takes initial ownership of a provided pointer
    */
