@@ -5,7 +5,7 @@ namespace gsw{
 
 /*! Removes const qualifier
  *
- * @tparam
+ * @tparam T type to remove const qualifier from
  *
  * This class is used when remove_const is used with a class that doesn't have
  * a const qualifier, so the provided class is presented through type as is.
@@ -18,7 +18,7 @@ public:
 
 /*! Removes const qualifier
  *
- * @tparam
+ * @tparam T base type with const qualifier removed
  *
  * This class is  a template specialization and is used when remove_const is
  * used with a class that does have a const qualifier, so the provided class is
@@ -32,7 +32,7 @@ public:
 
 /*! Removes volatile qualifier
  *
- * @tparam
+ * @tparam T type to remove volatile qualifier from
  *
  * This class is used when remove_volatile is used with a class that doesn't
  * have a volatile qualifier, so the provided class is presented through type
@@ -46,7 +46,7 @@ public:
 
 /*! Removes volatile qualifier
  *
- * @tparam
+ * @tparam T base type with volatile qualifier removed
  *
  * This class is a template specialization and is used when remove_volatile is
  * used with a class that does have a volatile qualifier, so the provided class
@@ -60,7 +60,7 @@ public:
 
 /*! Removes const and volatile qualifiers
  *
- * @tparam
+ * @tparam T base type with const and volatile qualifiers removed
  *
  * Utilizes remove_const and remove_volatile to remove const and volatile
  * qualifiers.
