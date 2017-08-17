@@ -11,7 +11,7 @@
 
 namespace gsw{
 
-/*! Unit class that differentiates between different measurements.  i.e. Meters and area
+/*! Unit class that differentiates between different measurements.
  *
  * @tparam METERS  Distance
  *
@@ -45,15 +45,21 @@ namespace gsw{
  * appropriate type.  For instance if speed is multiplied by time, the result
  * will be of type distance.
  */
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1, 1> >
-class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
-                    additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>,
-                    multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
+         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename DBL = double, typename FACTOR = ratio<1, 1> >
+class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
+                                  CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
+                    additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
+                                  CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>,
+                    multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE,
+                                        KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
 public:
   typedef DBL value_type;
   typedef FACTOR factor_type;
   template<typename D_t = value_type, typename F_t = factor_type>
-  using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, D_t, F_t>;
+  using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
+                          DEGREE, PERCENTAGE, TICK, D_t, F_t>;
 
 private:
   value_type mValue;
