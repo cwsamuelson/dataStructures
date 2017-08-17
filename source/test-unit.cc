@@ -122,15 +122,19 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
 }
 
 TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
-  voltage<double, kilo> kv( 12 );
-  current<double, milli> a;
-  resistance<> o( 3 );
+  using kilo_amp = current<long, kilo>;
+
+  voltage<long, kilo> kv( 12 );
+  current<long, milli> a;
+  resistance<long> o( 3 );
   a = kv / o;
 
+  REQUIRE( a == 4000000 );
+  REQUIRE( a == kilo_amp( 4 ) );
   REQUIRE( a.getValue() == 4000000 );
 }
 
-TEST_CASE( "Upholstery Heater test", "[unit]" ){
+TEST_CASE( "Scheduler test", "[unit]" ){
   using int_time = gsw::time<unsigned long long, milli>;
   using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, -1, unsigned long long, milli>;
   const tick<> t = int_time( 50 ) / sched_tick_rate( 5 );
