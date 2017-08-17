@@ -7,7 +7,7 @@
  */
 
 #include<ratio.hh>
-#include<additive.hh>
+#include<operators.hh>
 
 namespace gsw{
 
@@ -47,7 +47,8 @@ namespace gsw{
  */
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0, typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
-                    additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
+                    additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>,
+                    multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
 public:
   typedef DBL value_type;
   typedef FACTOR factor_type;
@@ -101,7 +102,7 @@ public:
    */
   template<typename D, typename F>
   unit& operator=( const other_type<D, F>& other ){
-    mValue = other.getRaw() / factor_type::value;
+    mValue = other.getRaw() * ( 1.0 / factor_type::value );
 
     return *this;
   }
@@ -378,8 +379,8 @@ public:
     return *this;
   }
 
-  /* *= and /= only work with doubles because the * and / operations return a new type,
-   * and therefore cannot be assigned to either operand
+  /* *= and /= only work with value_type because the * and / operations return a
+   * new type, and therefore cannot be assigned to either operand
    */
 
   /*! Multiply-assignment operator
