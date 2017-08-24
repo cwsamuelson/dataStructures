@@ -69,7 +69,7 @@ public:
 
         if( caveSize == number ){
           for( unsigned int i = 0; i < number; ++i ){
-            mIndicators |= ( 1 << ( i + index ) );
+            mIndicators |= ( 1 << ( i + caveStart ) );
           }
 
           mSize += number;
@@ -78,8 +78,6 @@ public:
       } else {
         caveStart = index + 1;
       }
-
-      ++index;
     }
 
     throw bad_alloc();
