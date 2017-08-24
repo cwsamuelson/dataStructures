@@ -21,8 +21,8 @@ public:
   using size_type  = unsigned long long;
 
 private:
-  static const alloc_size = SIZE;
-  static const block_size = alloc_size * sizeof( value_type );
+  static const size_type alloc_size = SIZE;
+  static const size_type block_size = alloc_size * sizeof( value_type );
 
   struct block_node{
     unsigned char block[block_size];
@@ -37,12 +37,15 @@ public:
     mStart( nullptr ){
   }
 
-  block_allocator( const block_allocator& other ):
-    block_allocator(){
-  }
+  /*!
+   * @todo implement this
+   */
+  block_allocator( const block_allocator& other ) = delete;
 
-  block_allocator( block_allocator&& other ):
-    block_allocator(){
+  block_allocator( block_allocator&& other ){
+    mStart = other.mStart;
+
+    other.mStart = nullptr;
   }
 
   pointer allocate( size_type number ){
@@ -68,6 +71,15 @@ public:
 
         return current->block;
       }//TODO: calculate a cave, and return cave
+    }
+  }
+
+  void deallocate( pointer ptr, size_type number ){
+    block_node* current = mStart;
+
+    if( ( ptr > current->block ) &&
+        ( ( ptr + number ) <= ( current->block + block_size ) ) ){
+      
     }
   }
 };
