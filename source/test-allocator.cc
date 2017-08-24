@@ -30,20 +30,34 @@ TEST_CASE( "", "[allocator]" ){
   bools[2] = false;
 
   vals = traits::allocate( alloc, 3 );
-  traits::construct( alloc, &vals[0], bools[0] );
-  traits::construct( alloc, &vals[1], bools[1] );
-  traits::construct( alloc, &vals[2], bools[2] );
-
   REQUIRE( vals != nullptr );
 
+  traits::construct( alloc, &vals[0], bools[0] );
+  REQUIRE( bools[0] );
+  REQUIRE( !bools[1] );
+  REQUIRE( !bools[2] );
+
+  traits::construct( alloc, &vals[1], bools[1] );
+  REQUIRE( bools[0] );
+  REQUIRE( bools[1] );
+  REQUIRE( !bools[2] );
+
+  traits::construct( alloc, &vals[2], bools[2] );
   REQUIRE( bools[0] );
   REQUIRE( bools[1] );
   REQUIRE( bools[2] );
 
   traits::destroy( alloc, &vals[0] );
-  traits::destroy( alloc, &vals[1] );
-  traits::destroy( alloc, &vals[2] );
+  REQUIRE( !bools[0] );
+  REQUIRE( bools[1] );
+  REQUIRE( bools[2] );
 
+  traits::destroy( alloc, &vals[1] );
+  REQUIRE( !bools[0] );
+  REQUIRE( !bools[1] );
+  REQUIRE( bools[2] );
+
+  traits::destroy( alloc, &vals[2] );
   REQUIRE( !bools[0] );
   REQUIRE( !bools[1] );
   REQUIRE( !bools[2] );
