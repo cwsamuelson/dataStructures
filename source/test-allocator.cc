@@ -1,6 +1,7 @@
 #include<catch.hpp>
 
 #include<allocator.hh>
+#include<pool_allocator.hh>
 #include<allocator_traits.hh>
 
 class scoped{
@@ -17,11 +18,11 @@ public:
   }
 };
 
-TEST_CASE( "", "[allocator]" ){
+TEST_CASE( "Allocator allocates memory", "[allocator]" ){
   using type = scoped;
-  using traits = allocator_traits<allocator<type>>;
+  using traits = gsw::allocator_traits<gsw::allocator<type> >;
 
-  allocator<type> alloc;
+  gsw::allocator<type> alloc;
   type* vals = nullptr;
   bool bools[3];
 
@@ -63,8 +64,33 @@ TEST_CASE( "", "[allocator]" ){
   REQUIRE( !bools[2] );
 
   traits::deallocate( alloc, vals, 3 );
+}
 
-  SECTION( "" ){
-  }
+TEST_CASE( "pool", "[pool_allocator]" ){
+  using type = scoped;
+  using traits = gsw::allocator_traits<gsw::pool_allocator<type> >;
+
+  gsw::pool_allocator<type> alloc( 10 );
+  type* vals = nullptr;
+  bool bools[5];
+
+  type* foo = traits::allocate( alloc, 2 );
+  type* bar = traits::allocate( alloc, 1 );
+  type* baz = traits::allocate( alloc, 2 );
+
+  REQUIRE( foo != bar );
+  REQUIRE( foo != baz );
+  REQUIRE( bar != baz );
+
+  type* last = bar;
+  traits::deallocate( alloc, bar, 1 );
+  bar = traits::allocate( alloc, 2 );
+
+  REQUIRE( bar != last );
+  REQUIRE( ( baz + 2 ) == bar );
+
+  traits::deallocate( alloc, foo, 2 );
+  traits::deallocate( alloc, bar, 2 );
+  traits::deallocate( alloc, baz, 2 );
 }
 

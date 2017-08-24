@@ -1,6 +1,8 @@
 #ifndef __ALLOCATOR_HH__
 #define __ALLOCATOR_HH__
 
+namespace gsw{
+
 template<typename T>
 class allocator{
 public:
@@ -25,6 +27,8 @@ public:
     delete[] ( unsigned char* )( ptr );
   }
 };
+
+}
 
 #endif
 

@@ -3,6 +3,8 @@
 
 #include<utility>
 
+namespace gsw{
+
 template<typename Alloc>
 class allocator_traits{
 public:
@@ -31,6 +33,8 @@ public:
     ptr->~value_type();
   }
 };
+
+}
 
 #endif
 

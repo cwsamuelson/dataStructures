@@ -23,31 +23,47 @@ public:
 private:
   static const size_type ptrdiff = sizeof( value_type );
   size_type mIndicators;
-  char* pool;
+  unsigned int mMax;
+  unsigned int mSize;
+  unsigned char* mPool;
 
 public:
-  allocator():
+  pool_allocator( size_type count = 0 ):
     mIndicators( 0 ),
-    pool( new char[sizeof( mIndicators ) * 8 * ptrdiff] ){
+    mMax( count ),
+    mSize( 0 ){
+
+    if( count <= sizeof( mIndicators ) * 8 ){
+      mPool = new unsigned char[count * ptrdiff];
+    } else {
+      throw bad_alloc();
+    }
   }
 
-  allocator( const allocator& ) = delete;
+  pool_allocator( const pool_allocator& ) = delete;
 
-  allocator( allocator&& other ){
-    delete[] pool;
+  pool_allocator( pool_allocator&& other ){
+    delete[] mPool;
 
-    pool = other.pool;
     mIndicators = other.mIndicators;
+    mMax = other.mMax;
+    mPool = other.mPool;
 
-    other.pool = nullptr;
     other.mIndicators = 0;
+    other.mMax = 0;
+    other.mPool = nullptr;
   }
 
   pointer allocate( size_type number ){
-    int caveSize = 0;
-    int index = 0;
+    size_type caveStart = 0;
+    size_type caveSize = 0;
+    size_type index = 0;
 
-    for( unsigned int index = 0; index < sizeof( mIndicators ) * 8 ){
+    if( mSize + number > mMax ){
+      throw bad_alloc();
+    }
+
+    for( unsigned int index = 0; index < mMax; ++index ){
       if( !( mIndicators & 1 << index ) ){
         ++caveSize;
 
@@ -56,8 +72,11 @@ public:
             mIndicators |= ( 1 << ( i + index ) );
           }
 
-          return pool + ( index * ptrdiff );
+          mSize += number;
+          return pointer( mPool + ( caveStart * ptrdiff ) );
         }
+      } else {
+        caveStart = index + 1;
       }
 
       ++index;
@@ -67,11 +86,13 @@ public:
   }
 
   void deallocate( pointer ptr, size_type number ){
-    unsigned long start = ( ptr - pool ) / ptrdiff;
+    unsigned long start = ( ( unsigned char* )ptr - mPool ) / ptrdiff;
 
     for( unsigned int i = 0; i < number; ++i ){
       mIndicators &= ~( 1 << ( i + start ) );
     }
+
+    mSize -= number;
   }
 };
 
