@@ -17,11 +17,12 @@ public:
   allocator( allocator&& ) = default;
 
   pointer allocate( size_type number ){
-    return new value_type[number];
+    return pointer( new unsigned char[number * sizeof( value_type )] );
   }
 
-  void deallocate( pointer ptr ){
-    delete[] ptr;
+  void deallocate( pointer ptr, size_type number ){
+    ( void )number;
+    delete[] ( unsigned char* )( ptr );
   }
 };
 

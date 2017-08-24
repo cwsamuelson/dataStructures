@@ -7,8 +7,8 @@ template<typename Alloc>
 class allocator_traits{
 public:
   using allocator_type = Alloc;
-  using value_type = allocator_type::value_type;
-  using size_type  = allocator_type::size_type;
+  using value_type = typename allocator_type::value_type;
+  using size_type  = typename allocator_type::size_type;
   using pointer    = value_type*;
   using reference  = value_type&;
 
@@ -22,10 +22,12 @@ public:
 
   template<typename T, class ...Args>
   static void construct( allocator_type& alloc, T* ptr, Args&&... args ){
+    ( void )alloc;
     ::new (ptr) value_type( std::forward<Args>( args )... );
   }
 
   static void destroy( allocator_type& alloc, pointer ptr ){
+    ( void )alloc;
     ptr->~value_type();
   }
 };
