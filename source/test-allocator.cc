@@ -89,6 +89,10 @@ TEST_CASE( "pool", "[pool_allocator]" ){
   REQUIRE( bar != last );
   REQUIRE( ( baz + 2 ) == bar );
 
+  type* quux = traits::allocate( alloc, 2 );
+  
+  REQUIRE( ( bar + 2 ) == quux );
+
   traits::deallocate( alloc, foo, 2 );
   traits::deallocate( alloc, bar, 2 );
   traits::deallocate( alloc, baz, 2 );

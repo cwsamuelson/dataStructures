@@ -65,9 +65,7 @@ public:
 
     for( unsigned int index = 0; index < mMax; ++index ){
       if( !( mIndicators & 1 << index ) ){
-        ++caveSize;
-
-        if( caveSize == number ){
+        if( ++caveSize == number ){
           for( unsigned int i = 0; i < number; ++i ){
             mIndicators |= ( 1 << ( i + caveStart ) );
           }
@@ -77,6 +75,7 @@ public:
         }
       } else {
         caveStart = index + 1;
+        caveSize = 0;
       }
     }
 
