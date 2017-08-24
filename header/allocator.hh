@@ -3,6 +3,9 @@
 
 namespace gsw{
 
+/*!
+ * @tparam T
+ */
 template<typename T>
 class allocator{
 public:
@@ -14,14 +17,26 @@ public:
 private:
 
 public:
+  /*!
+   */
   allocator() = default;
+
+  /*!
+   */
   allocator( const allocator& ) = default;
+
+  /*!
+   */
   allocator( allocator&& ) = default;
 
+  /*!
+   */
   pointer allocate( size_type number ){
     return pointer( new unsigned char[number * sizeof( value_type )] );
   }
 
+  /*!
+   */
   void deallocate( pointer ptr, size_type number ){
     ( void )number;
     delete[] ( unsigned char* )( ptr );

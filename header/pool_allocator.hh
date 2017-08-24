@@ -12,6 +12,10 @@ public:
   }
 };
 
+/*! Creates a 'pool' of memory and allocates space from it
+ *
+ * @tparam T Type to allocate space for
+ */
 template<typename T>
 class pool_allocator{
 public:
@@ -28,6 +32,9 @@ private:
   unsigned char* mPool;
 
 public:
+  /*!
+   * @param count
+   */
   pool_allocator( size_type count = 0 ):
     mIndicators( 0 ),
     mMax( count ),
@@ -42,6 +49,9 @@ public:
 
   pool_allocator( const pool_allocator& ) = delete;
 
+  /*!
+   * @param other
+   */
   pool_allocator( pool_allocator&& other ){
     delete[] mPool;
 
@@ -54,6 +64,9 @@ public:
     other.mPool = nullptr;
   }
 
+  /*!
+   * @param number
+   */
   pointer allocate( size_type number ){
     size_type caveStart = 0;
     size_type caveSize = 0;
@@ -82,6 +95,11 @@ public:
     throw bad_alloc();
   }
 
+  /*!
+   * @param ptr
+   *
+   * @param number
+   */
   void deallocate( pointer ptr, size_type number ){
     unsigned long start = ( ( unsigned char* )ptr - mPool ) / ptrdiff;
 
