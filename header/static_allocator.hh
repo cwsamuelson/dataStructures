@@ -19,8 +19,10 @@ public:
 
 private:
   static const size_type ptrdiff = sizeof( value_type );
+  static const size_type block_size = storage_size * ptrdiff;
   using ind_type = std::bitset<storage_size>;
-  std::array<unsigned char, storage_size * sizeof( value_type)> mStorage;
+
+  std::array<unsigned char, block_size> mStorage;
   ind_type mIndicator;
 
 public:
@@ -63,6 +65,14 @@ public:
     for( unsigned int i = 0; i < number; ++i ){
       mIndicator.reset( i + start );
     }
+  }
+
+  value_type* storage(){
+    return mStorage.data();
+  }
+
+  bool free_space( size_type amount = 1 ){
+    return storage_size - mIndicator.count()
   }
 };
 
