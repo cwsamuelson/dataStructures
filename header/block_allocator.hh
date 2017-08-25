@@ -88,14 +88,17 @@ public:
     block_node* current = mStart;
 
     // find which block node the pointer is in
-    while( !( ( ptr > current->block ) &&
-              ( ( ptr + number ) <= ( current->block + block_size ) ) ) ){
+    while( !( ( ptr > current->alloc.storage() ) &&
+              ( ( ptr + number ) <= ( current->alloc.storage() + block_size ) ) ) ){
       current = current->next;
 
+      // couldn't find.  not our pointer to deallocate.
       if( current == nullptr ){
         throw block_allocation_exception();
       }
     }
+
+    current->alloc.deallocate( ptr, number );
   }
 };
 

@@ -72,7 +72,7 @@ public:
   }
 
   bool free_space( size_type amount = 1 ){
-    return storage_size - mIndicator.count()
+    return storage_size - mIndicator.count();
   }
 };
 
