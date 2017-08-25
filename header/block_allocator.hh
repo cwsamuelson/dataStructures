@@ -3,6 +3,8 @@
 
 #include<bitset>
 
+#include<static_allocator.hh>
+
 namespace gsw{
 
 class block_allocation_exception : public std::excepion{
@@ -25,8 +27,7 @@ private:
   static const size_type block_size = alloc_size * sizeof( value_type );
 
   struct block_node{
-    unsigned char block[block_size];
-    std::bitset<alloc_size> indicator;
+    static_allocator<value_type, alloc_size> alloc;
     block_node* next;
   };
 
@@ -59,19 +60,24 @@ public:
     }
 
     block_node* current = mStart;
-    bool space_found = false;
-    while( !space_found ){
-      if( current->indicator.all() ){
-        current->next = new block_node;
-        current = current->next;
-
-        for( unsigned int i = 0; i < number; ++i ){
-          current->indicator[i] = true;
+    block_node* last;
+    do{
+      if( current->alloc.free_space( number ) ){
+        try{
+          return current->alloc.allocate( number );
+        } catch( bad_alloc& ){
+          last = current;
+          current = current->next;
         }
+      }
+    } while( current != nullptr; );
 
-        return current->block;
-      }//TODO: calculate a cave, and return cave
-    }
+    // if a node with space exists, it should have been found.
+    // if not, create it now
+    current = last;
+    current->next = new block_node;
+    current = current->next;
+    return current->alloc.allocate( number );
   }
 
   void deallocate( pointer ptr, size_type number ){
