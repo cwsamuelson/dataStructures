@@ -1,8 +1,9 @@
 #include<catch.hpp>
 
 #include<allocator.hh>
-#include<static_allocator.hh>
 #include<pool_allocator.hh>
+#include<block_allocator.hh>
+#include<static_allocator.hh>
 #include<allocator_traits.hh>
 
 class scoped{
@@ -104,6 +105,36 @@ TEST_CASE( "static", "[static_allocator]" ){
   using traits = gsw::allocator_traits<gsw::static_allocator<type, 7> >;
 
   gsw::static_allocator<type, 7> alloc;
+
+  type* foo = traits::allocate( alloc, 2 );
+  type* bar = traits::allocate( alloc, 1 );
+  type* baz = traits::allocate( alloc, 2 );
+
+  REQUIRE( foo != bar );
+  REQUIRE( bar != baz );
+  REQUIRE( baz != foo );
+
+  type* last = bar;
+  traits::deallocate( alloc, bar, 1 );
+
+  bar = traits::allocate( alloc, 1 );
+  REQUIRE( bar == last );
+
+  traits::deallocate( alloc, bar, 1 );
+  bar = traits::allocate( alloc, 2 );
+
+  REQUIRE( bar != last );
+
+  traits::deallocate( alloc, foo, 2 );
+  traits::deallocate( alloc, bar, 2 );
+  traits::deallocate( alloc, baz, 2 );
+}
+
+TEST_CASE( "block", "[block_allocator]" ){
+  using type = scoped;
+  using traits = gsw::allocator_traits<gsw::block_allocator<type, 7> >;
+
+  gsw::block_allocator<type, 7> alloc;
 
   type* foo = traits::allocate( alloc, 2 );
   type* bar = traits::allocate( alloc, 1 );

@@ -2,12 +2,13 @@
 #define __BLOCK_ALLOCATOR_HH__
 
 #include<bitset>
+#include<exception>
 
 #include<static_allocator.hh>
 
 namespace gsw{
 
-class block_allocation_exception : public std::excepion{
+class block_allocation_exception : public std::exception{
 public:
   virtual const char* what() const noexcept{
     return "Allocation size too large!";
@@ -70,7 +71,7 @@ public:
           current = current->next;
         }
       }
-    } while( current != nullptr; );
+    } while( current != nullptr );
 
     // if a node with space exists, it should have been found.
     // if not, create it now
@@ -88,8 +89,8 @@ public:
     block_node* current = mStart;
 
     // find which block node the pointer is in
-    while( !( ( ptr > current->alloc.storage() ) &&
-              ( ( ptr + number ) <= ( current->alloc.storage() + block_size ) ) ) ){
+    while( !( ( ptr >= current->alloc.storage() ) &&
+              ( ( ptr + number ) < ( current->alloc.storage() + block_size ) ) ) ){
       current = current->next;
 
       // couldn't find.  not our pointer to deallocate.
