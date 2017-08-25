@@ -1,16 +1,9 @@
 #ifndef __POOL_ALLOCATOR_HH__
 #define __POOL_ALLOCATOR_HH__
 
-#include<exception>
+#include<mem_exceptions.hh>
 
 namespace gsw{
-
-class bad_alloc : public std::exception{
-public:
-  virtual const char* what() const noexcept{
-    return "Bad allocation!";
-  }
-};
 
 /*! Creates a 'pool' of memory and allocates space from it
  *

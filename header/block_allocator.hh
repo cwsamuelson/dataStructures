@@ -75,11 +75,20 @@ public:
   }
 
   void deallocate( pointer ptr, size_type number ){
+    if( mStart == nullptr ){
+      throw block_allocation_exception();
+    }
+
     block_node* current = mStart;
 
-    if( ( ptr > current->block ) &&
-        ( ( ptr + number ) <= ( current->block + block_size ) ) ){
-      
+    // find which block node the pointer is in
+    while( !( ( ptr > current->block ) &&
+              ( ( ptr + number ) <= ( current->block + block_size ) ) ) ){
+      current = current->next;
+
+      if( current == nullptr ){
+        throw block_allocation_exception();
+      }
     }
   }
 };
