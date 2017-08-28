@@ -78,6 +78,8 @@ public:
    *
    * @param eq equation to copy/move from
    *
+   * @return Resulting equation after assignment
+   *
    * This enables copy and move operations. eq is forwarded appropriately for 
    * either copy or move
    */
@@ -92,6 +94,8 @@ public:
    *
    * @param rhs equation to be added to this one
    *
+   * @return Resulting equation after subtraction
+   *
    * Adds the coefficients from this equation to those of rhs
    */
   equation& operator+=( const equation& rhs );
@@ -99,6 +103,8 @@ public:
   /*! Subtract-assign operator
    *
    * @param rhs equation to be subtracted from this one
+   *
+   * @return Resulting equation after subtraction
    *
    * Subtracts the coefficients from rhs from those of this equation
    */
@@ -108,6 +114,8 @@ public:
    *
    * @param rhs equation to multiply with this one
    *
+   * @return Resulting equation after multiplication
+   *
    * Multiplies rhs with this equation
    */
   equation& operator*=( const equation& rhs );
@@ -115,6 +123,8 @@ public:
   /*! Multiply-assign operator
    *
    * @param d value to multiply each coefficient by
+   *
+   * @return Resulting equation after multiplication
    *
    * Multiplies each coefficient in this equation by d
    */
@@ -124,6 +134,8 @@ public:
    *
    * @param rhs equation to divide this equation by
    *
+   * @return Resulting equation after division
+   *
    * Divides this equation by rhs
    */
   equation& operator/=( const equation& rhs );
@@ -132,6 +144,8 @@ public:
    *
    * @param d value to divide each coefficient by
    *
+   * @return Resulting equation after division
+   *
    * Divides each coefficient in this equation by d
    */
   equation& operator/=( double d );
@@ -139,6 +153,8 @@ public:
   /*! Find the value of the equation at a particular value
    *
    * @param X the x-value of the equation to 'solve' for
+   *
+   * @return Result of solving the equation for X
    *
    * Calculate a y-value for the given x-value
    */

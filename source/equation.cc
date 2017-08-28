@@ -3,14 +3,6 @@
 using namespace std;
 using namespace gsw;
 
-/*! Add-assignment operator
- *
- * @param rhs  Right hand side of the += operator
- *
- * @return Reference to lhs/the result of the addition operation
- *
- * Adds 2 equations together, assigns result to lhs
- */
 equation& equation::operator+=( const equation& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
@@ -24,14 +16,6 @@ equation& equation::operator+=( const equation& rhs ){
   return ( *this );
 }
 
-/*! Subtract-assignment operator
- *
- * @param rhs Right hand side of the -= operator
- *
- * @return Reference to lhs/the result of the subtraction operation
- *
- * Subtracts 2 equations, assigns result to lhs
- */
 equation& equation::operator-=( const equation& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
@@ -45,14 +29,6 @@ equation& equation::operator-=( const equation& rhs ){
   return ( *this );
 }
 
-/*! Multiply-assignment operator
- *
- * @param rhs  Right hand side of the *= operator
- *
- * @return References to lhs/the result of the subtraction operation
- *
- * Multiplies 2 equations, assigns the result to lhs
- */
 equation& equation::operator*=( const equation& rhs ){
   storage_type vec( mCoeff.size() + rhs.mCoeff.size() - 1 );
 
@@ -67,15 +43,6 @@ equation& equation::operator*=( const equation& rhs ){
   return *this;
 }
 
-/*! Multiply-assignment operator
- *
- * @param d  Right hand side of the *= operator
- *
- * @return Reference to lhs/the result of the multiplication operation
- *
- * Multiplies an equation by a number, effectively multiplying each coefficient
- * by the constant
- */
 equation& equation::operator*=( double d ){
   for( double& it : mCoeff ){
     it *= d;
