@@ -51,7 +51,7 @@ public:
   template<typename T, class ...Args>
   static void construct( allocator_type& alloc, T* ptr, Args&&... args ){
     ( void )alloc;
-    ::new (ptr) value_type( std::forward<Args>( args )... );
+    ::new ( ptr ) value_type( std::forward<Args>( args )... );
   }
 
   /*!
