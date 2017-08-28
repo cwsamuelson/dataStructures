@@ -138,7 +138,7 @@ public:
  *
  * @return Number of type T, containing multiplication result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
 constexpr T operator*( T t, ratio<N, D> r ){
   return t * double( r );
 }
@@ -157,7 +157,7 @@ constexpr T operator*( T t, ratio<N, D> r ){
  *
  * @return Number of type T, containing multiplication result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
 constexpr T operator*( ratio<N, D> r, T t ){
   return t * double( r );
 }
@@ -176,7 +176,7 @@ constexpr T operator*( ratio<N, D> r, T t ){
  *
  * @return Number of type T, containing division result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
 constexpr T operator/( T t, ratio<N, D> r ){
   typedef decltype( r ) R;
   return ( t * R::denominator ) / R::numerator;
@@ -239,7 +239,7 @@ constexpr bool operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
 template<size_t N1, size_t D1,
          size_t N2, size_t D2>
 constexpr bool operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
-  return ! ( r1 == r2 );
+  return !( r1 == r2 );
 }
 
 template<size_t N, size_t D>
@@ -249,11 +249,13 @@ constexpr typename ratio<N, D>::value_type ratio<N, D>::numerator;
 template<size_t N, size_t D>
 constexpr typename ratio<N, D>::value_type ratio<N, D>::denominator;
 
-using unity = ratio<1,       1>;
-using kilo  = ratio<1000,    1>;
-using mega  = ratio<1000000, 1>;
-using milli = ratio<1,       1000>;
-using micro = ratio<1,       1000000>;
+using unity = ratio<1,          1>;
+using kilo  = ratio<1000,       1>;
+using mega  = ratio<1000000,    1>;
+using giga  = ratio<1000000000, 1>;
+using milli = ratio<1,          1000>;
+using micro = ratio<1,          1000000>;
+using nano  = ratio<1,          1000000000>;
 
 }
 
