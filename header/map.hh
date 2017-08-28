@@ -31,7 +31,7 @@ public:
  *
  * @tparam COMPARE Functor used to compare data of type KEY
  */
-template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY> >
+template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY>, typename ALLOC = allocator<tuple<KEY, VALUE> > >
 class map{
 public:
   /*!
@@ -58,8 +58,12 @@ public:
    */
   using iterator     = normal_iterator<storage_type, map>;
 
+  /*!
+   */
+  using alloc        = ALLOC;
+
 private:
-  vector<storage_type> mData;
+  vector<storage_type, alloc> mData;
   compare comparator;
 
   void normalize(){
@@ -75,7 +79,9 @@ public:
    *
    * No data stored.
    */
-  map() = default;
+  map( const alloc& alc = alloc() ):
+    mData( 1, alc ){
+  }
 
   /*! Copy ctor
    *
@@ -86,8 +92,8 @@ public:
    * @param last  one past the end of the range of elements to be copied
    */
   template<class inputIter>
-  map( inputIter first, inputIter last ):
-    mData( first, last ){
+  map( inputIter first, inputIter last, const alloc& alc = alloc() ):
+    mData( first, last, alc ){
     normalize();
   }
 
@@ -96,8 +102,9 @@ public:
    * @param other map to be copied/moved
    */
   template<typename U>
-  map( U&& other ){
-    mData = std::forward<U>( other );
+  map( U&& other, const alloc& alc = alloc() ):
+    mData( alc ){
+    mData = std::forward<U>( other.mData );
     comparator = other.comparator;
   }
 

@@ -44,6 +44,12 @@ namespace gsw{
  * Units can be multiplied by another, and this will result in a new,
  * appropriate type.  For instance if speed is multiplied by time, the result
  * will be of type distance.
+ *
+ * In a practical sense, these types have no particular meaning.  In other words
+ * each template parameter can be reassigned a measurement, and used however
+ * the user pleases.  Do bear in mind that doing so precludes usage of the
+ * special typedefs below, and using said values with other libraries, as those
+ * will be using the defaults specified here.
  */
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
          int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
@@ -495,7 +501,7 @@ using current       = unit< 0,  0,  0,  1,  0, 0, 0, 0, 0, T, F>;//amps
 template<typename T = double, typename F = ratio<1, 1> >
 using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, 0, 0, T, F>;//kelvin
 template<typename T = double, typename F = ratio<1, 1> >
-using l_intensity   = unit< 0,  0,  0,  0,  0, 1, 0, 0, 0, T, F>;//luminous intensity
+using l_intensity   = unit< 0,  0,  0,  0,  0, 1, 0, 0, 0, T, F>;//luminous intensity, candela
 template<typename T = double, typename F = ratio<1, 1> >
 using time          = unit< 0,  1,  0,  0,  0, 0, 0, 0, 0, T, F>;//seconds
 template<typename T = double, typename F = ratio<1, 1> >
