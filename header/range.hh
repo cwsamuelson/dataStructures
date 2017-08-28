@@ -25,65 +25,96 @@ class range;
 template<class CONTAINER>
 class range_iterator{
 public:
-  typedef CONTAINER container;
-  typedef typename container::value_type value_type;
-  typedef typename container::value_type& reference;
-  typedef typename container::value_type* pointer;
-  typedef const value_type const_value;
-  typedef typename container::iterator iterator;
+  using container   = CONTAINER;
+  using value_type  = typename container::value_type;
+  using reference   = typename container::value_type&;
+  using pointer     = typename container::value_type*;
+  using const_value = const value_type;
+  using iterator    = typename container::iterator;
 
 private:
   const range<container>* mRange;
   iterator mIterator;
 
 public:
+  /*!
+   */
   range_iterator( const range<container>* rang, iterator iter ):
     mRange( rang ),
     mIterator( iter ){
   }
+
+  /*!
+   */
   range_iterator( const range_iterator& iter ):
     mRange( iter.mRange ),
     mIterator( iter.mIterator ){
   }
 
+  /*!
+   */
   bool operator==( const range_iterator& other ) const{
     return mIterator == other.mIterator;
   }
+
+  /*!
+   */
   bool operator==( const iterator& other ) const{
     return mIterator == other;
   }
+
+  /*!
+   */
   bool operator!=( const range_iterator& other ) const{
     return !( ( *this ) == other );
   }
+
+  /*!
+   */
   bool operator!=( const iterator& other ) const{
     return !( mIterator == other );
   }
 
+  /*!
+   */
   value_type operator*() const{
     return mRange->mModifier( *mIterator );
   }
+
+  /*!
+   */
   pointer operator->() const{
     return mIterator.operator->();
   }
   
+  /*!
+   */
   range_iterator& operator++(){
     while( ( !mRange->mFilter( *++mIterator ) ) && ( mRange->end() != mIterator ) ){
       ;
     }
     return *this;
   }
+
+  /*!
+   */
   range_iterator operator++( int ){
     range_iterator ret( *this );
     ++( *this );
     return ret;
   }
   
+  /*!
+   */
   range_iterator& operator--(){
     while( !mRange->mFilter( *--mIterator ) && ( mRange->begin() != mIterator ) ){
       ;
     }
     return *this;
   }
+
+  /*!
+   */
   range_iterator operator--( int ){
     range_iterator ret( *this );
     --( *this );
@@ -102,14 +133,14 @@ public:
 template<class CONTAINER>
 class range{
 public:
-  typedef CONTAINER container;
-  typedef typename container::value_type value_type;
-  typedef typename container::pointer pointer;
-  typedef typename container::reference reference;
-  typedef typename container::iterator contIter;
-  typedef std::function<bool( const reference )> filter;
-  typedef std::function<value_type( const reference )> modifier;
-  typedef range_iterator<container> iterator;
+  using container  = CONTAINER;
+  using value_type = typename container::value_type;
+  using reference  = typename container::reference;
+  using pointer    = typename container::pointer;
+  using contIter   = typename container::iterator;
+  using filter     = std::function<bool( const reference )>;
+  using modifier   = std::function<value_type( const reference )>;
+  using iterator   = range_iterator<container>;
 
 private:
   contIter mBegin;

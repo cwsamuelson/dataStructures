@@ -98,4 +98,3 @@ TEST_CASE( "Ranges can modify the values from a container before returning them"
   }
 }
 
-
