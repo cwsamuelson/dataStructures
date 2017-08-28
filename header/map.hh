@@ -31,15 +31,32 @@ public:
  *
  * @tparam COMPARE Functor used to compare data of type KEY
  */
-template<class KEY, class VALUE, class COMPARE = std::less<KEY> >
+template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY> >
 class map{
 public:
-  typedef KEY key_type;
-  typedef VALUE map_type;
-  typedef unsigned long size_type;
-  typedef COMPARE compare;
-  typedef tuple<key_type, map_type> storage_type;
-  typedef normal_iterator<storage_type, map> iterator;
+  /*!
+   */
+  using key_type     = KEY;
+
+  /*!
+   */
+  using map_type     = VALUE;
+
+  /*!
+   */
+  using size_type    = unsigned long;
+
+  /*!
+   */
+  using compare      = COMPARE;
+
+  /*!
+   */
+  using storage_type = tuple<key_type, map_type>;
+
+  /*!
+   */
+  using iterator     = normal_iterator<storage_type, map>;
 
 private:
   vector<storage_type> mData;

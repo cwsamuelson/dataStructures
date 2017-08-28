@@ -9,6 +9,8 @@
 #include<initializer_list>
 
 #include<normal_iterator.hh>
+#include<allocator.hh>
+#include<allocator_traits.hh>
 
 namespace gsw{
 
@@ -18,18 +20,45 @@ namespace gsw{
  * @todo verify msize is used correctly.  may be causing memory leak from incorrect usage
  * @todo minimize usage of terminal
  */
-template<class T>
+template<typename T, typename ALLOC = allocator<T> >
 class basic_string{
 public:
-  typedef T value_type;
-  typedef value_type* pointer;
-  typedef const value_type* const_pointer;
-  typedef value_type& reference;
-  typedef const reference const_reference;
-  typedef unsigned long size_type;
-  typedef normal_iterator<value_type, basic_string> iterator;
+  /*!
+   */
+  using value_type = T;
+
+  /*!
+   */
+  using pointer = value_type*;
+
+  /*!
+   */
+  using const_pointer = const value_type*;
+
+  /*!
+   */
+  using reference = value_type&;
+
+  /*!
+   */
+  using const_reference = const reference;
+
+  /*!
+   */
+  using size_type = unsigned long;
+
+  /*!
+   */
+  using iterator = normal_iterator<value_type, basic_string>;
+
+  /*!
+   */
+  using alloc = ALLOC;
 
 private:
+  using alloc_traits = allocator_traits<alloc>;
+
+  alloc mAlloc;
   unsigned int mSize;
   pointer mString;
   static const value_type terminal;
@@ -39,7 +68,7 @@ public:
    */
   basic_string( std::initializer_list<value_type> il ):
     mSize( il.size() ),
-    mString( new value_type[mSize + 1] ){
+    mString( alloc_traits::allocate( mAlloc, mSize + 1 ) ){
 
     unsigned int i = 0;
     for( auto el : il ){
@@ -72,7 +101,7 @@ public:
       ++mSize;
     }
 
-    mString = new value_type[mSize + 1];
+    mString = alloc_traits::allocate( mAlloc, mSize + 1 );
 
     mString[mSize] = terminal;
     for( unsigned int i = 0; i < mSize; ++i ){
@@ -83,19 +112,19 @@ public:
   /*! Dtor
    */
   virtual ~basic_string(){
-    delete[] mString;
+    alloc_traits::deallocate( mAlloc, mString, mSize + 1 );
   }
   
   /*! Copy assignment
    */
   basic_string& operator=( const basic_string& other ){
     if( mString ){
-      delete[] mString;
+      alloc_traits::deallocate( mAlloc, mString, mSize + 1 );
     }
 
     mSize = other.mSize;
     
-    mString = new value_type[mSize + 1];
+    mString = alloc_traits::allocate( mAlloc, mSize + 1 );
 
     // be sure to include terminator (so use <= )
     for( unsigned int i = 0; i <= mSize; ++i ){
@@ -145,7 +174,7 @@ public:
    */
   basic_string operator+=( const basic_string& other ){
     size_type new_size = size() + other.size();
-    pointer temp_string = new value_type[new_size + 1];
+    pointer temp_string = alloc_traits::allocate( mAlloc, new_size + 1 );
 
     size_type i;
     for( i = 0; i < size(); ++i ){
