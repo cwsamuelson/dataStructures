@@ -24,19 +24,22 @@ class accessor{
 public:
   /*! Stored type
    */
-  typedef T value_type;
+  using value_type = T;
+
   /*! Ref shorthand
    */
-  typedef value_type& reference;
+  using reference = value_type&;
+
   /*! Cref shorthand
    */
-  typedef const value_type& const_reference;
+  using const_reference = const value_type&;
+
   /*! Callback definition
    *
    * Type of callback that will be called when this is assigned to.  Also type
    * taken as a parameter to ctor.
    */
-  typedef std::function<bool(value_type)> callback;
+  using callback = std::function<bool( value_type )>;
 
 private:
   reference mRef;

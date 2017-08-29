@@ -10,11 +10,11 @@
 namespace gsw{
 
 /*!
- * @tparam N
+ * @tparam N tuple size
  *
- * @tparam ...Args
+ * @tparam ...Args parameter pack of stored types
  */
-template<size_t N, class ...Args>
+template<size_t N, typename ...Args>
 class tuple_impl;
 
 /*! Recursion termination tuple_impl
@@ -25,12 +25,12 @@ class tuple_impl;
  *
  * The tail end of a tuple chain.  Contains the tail's type and value.
  */
-template<size_t N, class T>
+template<size_t N, typename T>
 class tuple_impl<N, T>{
 public:
   /*! Type of value stored here
    */
-  typedef T value_type;
+  using value_type = T;
 
   value_type data;
 
@@ -42,7 +42,7 @@ public:
 
   /*! Basic init ctor
    *
-   * @param vt Value of
+   * @param vt Value of data to store in this unit
    */
   tuple_impl( value_type vt ):
     data( vt ){
@@ -60,13 +60,13 @@ public:
  * Tuple chain link.  Each link inherits from the next link, creating a
  * compile-time linked list
  */
-template<size_t N, class T, class ...Args>
+template<size_t N, typename T, typename ...Args>
 class tuple_impl<N, T, Args...> : public tuple_impl<N + 1, Args...>{
 public:
-  typedef T value_type;
+  using value_type = T;
 
 private:
-  typedef tuple_impl<N + 1, Args...> base;
+  using base = tuple_impl<N + 1, Args...>;
 
 public:
   value_type data;
@@ -100,10 +100,10 @@ public:
  * template/compile-time linked list; this class is effectively a pointer to
  * the head.
  */
-template<class ...Args>
+template<typename ...Args>
 class tuple : public tuple_impl<0, Args...>{
 private:
-  typedef tuple_impl<0, Args...> base;
+  using base = tuple_impl<0, Args...>;
 
 public:
   /*! Default ctor
@@ -134,7 +134,7 @@ public:
  *
  * @tparam ...Args Remaining types in tuple
  */
-template<size_t M, size_t N, class T, class ...Args>
+template<size_t M, size_t N, typename T, typename ...Args>
 class get_impl{
 public:
   /*! Get data from a provided tuple
@@ -171,7 +171,7 @@ public:
  * If a tuple is thought of as a linked list, this is the final node from a get
  * operation.
  */
-template<size_t N, class T, class ...Args>
+template<size_t N, typename T, typename ...Args>
 class get_impl<0, N, T, Args...>{
 public:
   /*! Get data from a provided tuple
@@ -209,7 +209,7 @@ public:
  *
  * @return Reference to the data at M in tup
  */
-template<size_t M, class ...Args>
+template<size_t M, typename ...Args>
 auto& get( tuple<Args...>& tup ){
   return get_impl<M, 0, Args...>::get( static_cast<tuple_impl<0, Args...>& >( tup ) );
 }
@@ -224,7 +224,7 @@ auto& get( tuple<Args...>& tup ){
  *
  * @return Const reference to the data at M in tup
  */
-template<size_t M, class ...Args>
+template<size_t M, typename ...Args>
 const auto& get( const tuple<Args...>& tup ){
   return get_impl<M, 0, Args...>::get( static_cast<const tuple_impl<0, Args...>& >( tup ) );
 }
@@ -239,7 +239,7 @@ const auto& get( const tuple<Args...>& tup ){
  * many types are desired in the tuple, and it would appear nasty to specify
  * all of them.
  */
-template<class ...Args>
+template<typename ...Args>
 tuple<Args...> make_tuple( Args... args ){
   return tuple<Args...>( std::forward<Args>( args )... );
 }
@@ -257,10 +257,10 @@ class tuple_element;
  *
  * @tparam ...TAIL
  */
-template<class HEAD, class ...TAIL>
+template<typename HEAD, typename ...TAIL>
 class tuple_element<0, tuple<HEAD, TAIL...> >{
 public:
-  typedef HEAD type;
+  using type = HEAD;
 };
 
 /*!
@@ -270,8 +270,8 @@ public:
  *
  * @tparam ...TAIL
  */
-template<size_t N, class HEAD, class ...TAIL>
-class tuple_element<N, tuple<HEAD, TAIL...> >: public tuple_element<N - 1, tuple<TAIL...> >{
+template<size_t N, typename HEAD, typename ...TAIL>
+class tuple_element<N, tuple<HEAD, TAIL...> > : public tuple_element<N - 1, tuple<TAIL...> >{
 };
 
 }

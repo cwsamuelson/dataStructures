@@ -19,9 +19,9 @@ template<typename T>
 class list{
 public:
   using value_type = T;
-  using reference = T&;
-  using pointer = T*;
-  using size_t = unsigned long;
+  using reference  = T&;
+  using pointer    = T*;
+  using size_t     = unsigned long;
 
 private:
   /*!
@@ -41,7 +41,7 @@ private:
 
     template<typename ...Args>
     node( Args... args ):
-      data( std::forward<Args...>( args... ) ),
+      data( std::forward<Args>( args )... ),
       next( nullptr ),
       prev( nullptr ){
     }
@@ -130,6 +130,7 @@ private:
 
 public:
   using iterator = normal_iterator<value_type, list, node_iter>;
+
   /*!
    *
    */
@@ -354,19 +355,19 @@ public:
    * @return
    */
   unsigned long size(){
-    if( head != nullptr ){
-      unsigned long count = 1;
-      node_type* cur = head;
-
-      while( cur->next != nullptr ){
-        ++count;
-        cur = cur->next;
-      }
-
-      return count;
-    } else {
+    if( head == nullptr ){
       return 0;
     }
+
+    unsigned long count = 1;
+    node_type* cur = head;
+
+    while( cur->next != nullptr ){
+      ++count;
+      cur = cur->next;
+    }
+
+    return count;
   }
 };
 
