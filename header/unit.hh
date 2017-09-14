@@ -373,7 +373,7 @@ public:
    *
    * Stored value is increased by other, and saved
    */
-  unit& operator+=( value_type other ){
+  constexpr unit& operator+=( value_type other ){
     mValue += other;
     return *this;
   }
@@ -386,7 +386,7 @@ public:
    *
    * Stored value is reduced by other, and saved
    */
-  unit& operator-=( value_type other ){
+  constexpr unit& operator-=( value_type other ){
     mValue -= other;
     return *this;
   }
@@ -403,7 +403,7 @@ public:
    *
    * Stored value is multiplied by val, and saved
    */
-  unit& operator*=( const value_type& val ){
+  constexpr unit& operator*=( const value_type& val ){
     mValue *= val;
     return ( *this );
   }
@@ -416,7 +416,7 @@ public:
    *
    * Stored value is divided by val, and saved
    */
-  unit& operator/=( const value_type& val ){
+  constexpr unit& operator/=( const value_type& val ){
     mValue /= val;
     return ( *this );
   }
