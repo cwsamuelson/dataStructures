@@ -113,7 +113,7 @@ public:
    * based on the value in F.
    */
   template<typename D, typename F>
-  unit& operator=( const other_type<D, F>& other ){
+  constexpr unit& operator=( const other_type<D, F>& other ){
     mValue = other.getRaw() * ( 1.0 / factor_type::value );
 
     return *this;
@@ -127,7 +127,7 @@ public:
    *
    * Copies value raw as this' new value.
    */
-  unit& operator=( value_type value ){
+  constexpr unit& operator=( value_type value ){
     mValue = value;
 
     return *this;
@@ -289,7 +289,7 @@ public:
    *
    * Increments value.
    */
-  unit& operator++(){
+  constexpr unit& operator++(){
     ++mValue;
     return *this;
   }
@@ -300,7 +300,7 @@ public:
    *
    * @return Value before increment
    */
-  unit operator++( int ){
+  constexpr unit operator++( int ){
     unit u = *this;
  
     ++( *this );
@@ -314,7 +314,7 @@ public:
    *
    * Deccrements value.
    */
-  unit& operator--(){
+  constexpr unit& operator--(){
     --mValue;
     return *this;
   }
@@ -327,7 +327,7 @@ public:
    *
    * Deccrements value.
    */
-  unit operator--( int ){
+  constexpr unit operator--( int ){
     unit u = *this;
 
     --( *this );

@@ -112,11 +112,16 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
   static_assert( ( voltage<>( 8 ) -= 5 ) == 3 );
   static_assert( ( voltage<>( 4 ) *= 3 ) == 12 );
   static_assert( ( voltage<>( 12 ) /= 3 ) == 4 );
+  static_assert( voltage<>( 5 )++ == 5 );
+  static_assert( ++voltage<>( 5 ) == 6 );
+  static_assert( voltage<>( 5 )-- == 5 );
+  static_assert( --voltage<>( 5 ) == 4 );
   static_assert( voltage<>( 3 ) == voltage<>( 3 ) );
   static_assert( voltage<>( 3 ) < voltage<>( 4 ) );
   static_assert( voltage<>( 4 ) > voltage<>( 3 ) );
   static_assert( voltage<>( 3 ) <= voltage<>( 3 ) );
   static_assert( voltage<>( 3 ) >= voltage<>( 3 ) );
+  static_assert( ( voltage<>( 5 ) = 6.0 ) == 6 );
 
   REQUIRE( d1 == 3 );
   REQUIRE( d2 == 3 );
