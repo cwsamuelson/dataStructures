@@ -104,7 +104,7 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
   static_assert( voltage<>( 3 ) == 3 );
   static_assert( voltage<>( 3 ).getValue() == 3 );
   static_assert( voltage<>( 3 ).getRaw() == 3 );
-  //static_assert( ( voltage<>( 3 ) + voltage<>( 4 ) ) == 7 );
+  static_assert( ( voltage<>( 3 ) + voltage<>( 4 ) ) == 7 );
   static_assert( voltage<>( 3 ) == voltage<>( 3 ) );
   static_assert( voltage<>( 3 ) < voltage<>( 4 ) );
   static_assert( voltage<>( 4 ) > voltage<>( 3 ) );

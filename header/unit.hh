@@ -345,7 +345,7 @@ public:
    * @return Reference to lhs, but with value of the addition
    */
   template<typename D, typename F>
-  unit& operator+=( const other_type<D, F>& other ){
+  constexpr unit& operator+=( const other_type<D, F>& other ){
     mValue = getRaw() + other.getRaw();
     return *this;
   }
@@ -360,7 +360,7 @@ public:
    * @return Reference to lhs, but with value of the subtraction
    */
   template<typename D, typename F>
-  unit& operator-=( const other_type<D, F>& other ){
+  constexpr unit& operator-=( const other_type<D, F>& other ){
     mValue = getRaw() - other.getRaw();
     return *this;
   }
