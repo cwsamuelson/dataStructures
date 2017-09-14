@@ -34,7 +34,10 @@ public:
 
 private:
   const range<container>* mRange;
-  iterator mIterator;
+  /* made mutable such that it can be incremented when dereferencing in case of
+   * an invalid value.
+   */
+  mutable iterator mIterator;
 
 public:
   /*!
@@ -78,6 +81,9 @@ public:
   /*!
    */
   value_type operator*() const{
+    while( !mRange->mFilter( *mIterator ) && ( mRange->end() != mIterator ) ){
+      ++mIterator;
+    }
     return mRange->mModifier( *mIterator );
   }
 
@@ -195,11 +201,7 @@ public:
    * @return Iterator pointing to beginning of container
    */
   iterator begin() const{
-    contIter iter( mBegin );
-    while( !mFilter( *iter ) ){
-      ++iter;
-    }
-    return iterator( this, iter );
+    return iterator( this, mBegin );
   }
 
   /*! Get ending iterator
