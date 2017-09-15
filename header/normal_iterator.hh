@@ -21,6 +21,9 @@ public:
   using pointer = PTR_T;
   using reference = value_type&;
 
+  template<typename T1, typename C1, typename P1>
+  friend class normal_iterator;
+
 protected:
   pointer mCurrent;
 
@@ -35,8 +38,15 @@ public:
 
   /*!
    * @param iter  
+   *
+   * @todo verify if making this ctor a template could cause issues
+   * this was made a template for use in map, allowing a vector (actual storage
+   * type) iterator to be converted to a map iterator for external usage.
+   * However, allowing iterators to convert between iterator types could be an
+   * issue, and is probably something to be guarded against.
    */
-  normal_iterator( const normal_iterator& iter ):
+  template<typename T1, typename C1, typename P1>
+  normal_iterator( const normal_iterator<T1, C1, P1>& iter ):
     mCurrent( iter.mCurrent ){
   }
 

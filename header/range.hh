@@ -22,7 +22,7 @@ class range;
  * as well as modified by a provided modification callback.  This allows for a
  * customized view into a storage container.
  */
-template<class CONTAINER>
+template<typename CONTAINER>
 class range_iterator{
 public:
   using container   = CONTAINER;
@@ -92,7 +92,7 @@ public:
   pointer operator->() const{
     return mIterator.operator->();
   }
-  
+
   /*!
    */
   range_iterator& operator++(){
@@ -109,7 +109,7 @@ public:
     ++( *this );
     return ret;
   }
-  
+
   /*!
    */
   range_iterator& operator--(){
@@ -136,7 +136,7 @@ public:
  * and will provide custom iterators to said container.  These custom iterators
  * allow custom data filtering and data modification based on provided callbacks.
  */
-template<class CONTAINER>
+template<typename CONTAINER>
 class range{
 public:
   using container  = CONTAINER;
@@ -190,7 +190,7 @@ public:
    * Takes container, filtering, and modification information that will be
    * needed when continuing to use range.
    */
-  range( container& cont, 
+  range( container& cont,
          filter filFN = []( const reference ){ return true; },
          modifier modFN = []( const reference t ){ return t; } ):
     range( cont.begin(), cont.end(), filFN, modFN ){

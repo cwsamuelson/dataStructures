@@ -6,7 +6,7 @@
  */
 
 #include<algorithm>
-#include<exception>
+#include<stdexcept>
 #include<functional>
 #include<utility>
 
@@ -16,10 +16,10 @@
 
 namespace gsw{
 
-class keyNotFoundException : public std::exception{
+class keyNotFoundException : public std::out_of_range{
 public:
-  virtual const char* what() const noexcept{
-    return "Requested key not found!";
+  keyNotFoundException():
+    std::out_of_range( "Requested key not found!" ){
   }
 };
 
@@ -73,6 +73,28 @@ private:
       }
     );
   }
+  
+  size_type seek_index( const key_type& key ){
+    size_type min = 0;
+    size_type max = mData.size() - 1;
+    size_type idx = ( max + min ) / 2.0;
+
+    while( get<0>( mData[idx] ) != key ){
+      if( min == max || idx >= mData.size() ){
+        throw keyNotFoundException();
+      }
+
+      if( comparator( key, get<0>( mData[idx] ) ) ){
+        max = idx - 1;
+      } else {
+        min = idx + 1;
+      }
+
+      idx = ( max + min ) / 2.0;
+    }
+    
+    return idx;
+  }
 
 public:
   /*! Default ctor
@@ -122,25 +144,7 @@ public:
       throw keyNotFoundException();
     }
 
-    unsigned int idx;
-    unsigned int min = 0;
-    unsigned int max = mData.size() - 1;
-
-    idx = ( max + min ) / 2.0;
-
-    while( get<0>( mData[idx] ) != key ){
-      if( min == max || idx >= mData.size() ){
-        throw keyNotFoundException();
-      }
-      if( comparator( key, get<0>( mData[idx] ) ) ){
-        max = idx - 1;
-      } else {
-        min = idx + 1;
-      }
-
-      idx = ( max + min ) / 2.0;
-    }
-    return get<1>( mData[idx] );
+    return get<1>( mData[seek_index( key )] );
   }
 
   /*! Get reference associated with key
@@ -156,8 +160,7 @@ public:
     try{
       return at( key );
     } catch ( keyNotFoundException& ex ){
-      mData.emplace_back( key, map_type() );
-      normalize();
+      emplace( key, map_type() );
 
       return at( key );
     }
@@ -186,9 +189,10 @@ public:
    */
   template<class inputIter>
   void insert( inputIter first, inputIter last ){
-    for( ;first != last; ++first ){
+    for( ; first != last; ++first ){
       mData.push_back( *first );
     }
+
     normalize();
   }
 
@@ -207,7 +211,10 @@ public:
   template<class ...Args>
   iterator emplace( const key_type& key, Args ...args ){
     mData.emplace_back( key, map_type( std::forward<Args>( args )... ) );
+
     normalize();
+
+    return mData.Iterator( seek_index( key ) );
   }
 
   /*! Get iterator to first element
