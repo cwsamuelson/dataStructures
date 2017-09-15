@@ -27,16 +27,16 @@ class menu{
 public:
   /*! selector type, used to differentiate and retrieve menu options from this node
    */
-  typedef SELECTOR selector;
+  using selector = SELECTOR;
   /*! pointer to menu type
    */
-  typedef std::shared_ptr<menu> pointer;
+  using pointer = std::shared_ptr<menu>;
   /*! callback used to inform user of changed state
    */
-  typedef std::function<bool(selector)> optionCallback;
+  using optionCallback = std::function<bool(selector)>;
 
 private:
-  std::map<selector, std::tuple<std::string, pointer, optionCallback> > mOptions;
+  std::map<selector, std::tuple<std::string, pointer, optionCallback> > mSubMenus;
 
 public:
   /*! Default ctor
@@ -51,7 +51,7 @@ public:
    */
   template<typename U>
   menu( U&& other ):
-    mOptions( std::forward<decltype( mOptions )>( other.mOptions ) ){
+    mSubMenus( std::forward<decltype( mSubMenus )>( other.mSubMenus ) ){
   }
 
   /*! Copy/move assignment
@@ -62,7 +62,7 @@ public:
    */
   template<typename U>
   menu& operator=( U&& other ){
-    mOptions = std::forward<decltype( mOptions )>( other.mOptions );
+    mSubMenus = std::forward<decltype( mSubMenus )>( other.mSubMenus );
   }
 
   /*! Adds a new menu option to menu
@@ -80,7 +80,7 @@ public:
    */
   void addOption( const selector& selection, const std::string& optText,
                   pointer nextMenu, optionCallback callback = optionCallback( []( selector ){ return true; } ) ){
-    mOptions[selection] = std::make_tuple( optText, nextMenu, callback );
+    mSubMenus[selection] = std::make_tuple( optText, nextMenu, callback );
   }
 
   /*! Select a menu option
@@ -92,11 +92,10 @@ public:
    * Retrieve the selection, call its callback, and return next menu
    */
   pointer select( const selector& selection ){
-    auto it = mOptions.at( selection );
+    auto it = mSubMenus.at( selection );
 
     // call the callback; return next menu
-    if( std::get<2>( it )( selection ) )
-    {
+    if( std::get<2>( it )( selection ) ){
       return std::get<1>( it );
     } else {
        return pointer( this );
@@ -109,7 +108,7 @@ public:
    */
   template<typename OSTREAM>
   OSTREAM& print( OSTREAM& os ){
-    for( auto it : mOptions ){
+    for( auto it : mSubMenus ){
       os << std::get<0>( it ) << '\t' << std::get<0>( std::get<1>( it ) ) << '\n';
     }
 
