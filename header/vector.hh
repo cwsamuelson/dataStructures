@@ -59,6 +59,8 @@ public:
  *
  * @tparam T  Type of items to be stored
  *
+ * @tparam ALLOC type of allocator to use
+ *
  * This class stores a dynamic number of items of type T, allocating additional
  * space as it becomes necessary.
  */
@@ -128,6 +130,8 @@ public:
   /*! ctor, initialize with given capacity
    *
    * @param capacity  the value the capacity will be initialized to
+   *
+   * @param alc Allocator object to allocate data
    */
   vector( size_type capacity = 1, const alloc& alc = alloc() ):
     mAlloc( alc ),
@@ -141,6 +145,8 @@ public:
    * @param val  data to be copied
    *
    * @param count  the number of copies of val to be made
+   *
+   * @param alc Allocator object to allocate data
    */
   vector( const_reference val, size_type count, const alloc& alc = alloc() ):
     vector( count, alc ){
@@ -153,6 +159,8 @@ public:
   /*! copy ctor, copy other
    *
    * @param other  vector to copy data from
+   *
+   * @param alc Allocator object to allocate data
    */
   vector( const vector& other, const alloc& alc = alloc() ):
     mAlloc( alc ),
@@ -168,6 +176,8 @@ public:
   /*! move ctor, move other to this container
    *
    * @param other  vector to be moved here
+   *
+   * @param alc Allocator object to allocate data
    */
   vector( vector&& other, const alloc& alc = alloc() ):
     mAlloc( alc ),
@@ -185,6 +195,8 @@ public:
    * @param other  array to copy values from
    *
    * @param size   the number of elements in other
+   *
+   * @param alc Allocator object to allocate data
    */
   vector( pointer other, size_type size, const alloc& alc = alloc() ):
     mAlloc( alc ),
@@ -204,6 +216,8 @@ public:
    * @param first  first element to be copied
    *
    * @param last   one past the end of the container to be copied from
+   *
+   * @param alc Allocator object to allocate data
    */
   template<typename inputIter, typename = requireInputIter<inputIter> >
   vector( inputIter first, inputIter last, const alloc& alc = alloc() ):

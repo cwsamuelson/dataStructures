@@ -30,6 +30,8 @@ public:
  * @tparam VALUE Type of data to be stored
  *
  * @tparam COMPARE Functor used to compare data of type KEY
+ *
+ * @tparam ALLOC type of allocator to use
  */
 template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY>, typename ALLOC = allocator<tuple<KEY, VALUE> > >
 class map{
@@ -112,6 +114,8 @@ public:
    * @param first  first element of a range to be copied
    *
    * @param last  one past the end of the range of elements to be copied
+   *
+   * @param alc Allocator object to allocate data
    */
   template<class inputIter>
   map( inputIter first, inputIter last, const alloc& alc = alloc() ):
