@@ -1,6 +1,10 @@
 #ifndef __LOGIC_HH__
 #define __LOGIC_HH__
 
+/*!
+ * @example test-logic.cc
+ */
+
 #include<string>
 #include<set>
 #include<memory>
@@ -11,6 +15,8 @@ class prop;
 
 prop operator""_lvar( const char* name, size_t sz );
 
+/*! Logical proposition
+ */
 class prop{
 private:
   struct operation{
@@ -55,12 +61,40 @@ public:
 
   prop implies( const prop& consequent ) const;
 
+  /*! If and only if
+   *
+   * @param consequent proposition to evaluate against
+   */
   prop iff( const prop& consequent ) const;
 
+  /*! Evaluate proposition using given facts
+   *
+   * @param facts Set of established truths.
+   *
+   * @return Whether the proposition is true given facts
+   */
   bool evaluate( const std::set<std::string> facts ) const;
-  
+
+  /*! Reverse evaluation
+   *
+   * @param variables set of variables to work with
+   *
+   * @return set of all possible solutions to proposition
+   *
+   * Determine what combinations of given variables make proposition true.
+   * Provided solutions only consist of those that can be made up from vars
+   * provided in variables.
+   */
   std::set<std::set<std::string> > evaluate_all( const std::set<std::string>& variables ) const;
 
+  /*! Creates basic proposition that consists only of a variable named name
+   *
+   * User string literal operator.
+   * Used as:
+   * "foo"_lvar;
+   *
+   * To create a variable proposition named foo.
+   */
   friend prop operator""_lvar( const char* name, size_t sz );
 };
 
