@@ -11,13 +11,13 @@
 
 namespace gsw{
 
-class prop;
+class proposition;
 
-prop operator""_lvar( const char* name, size_t sz );
+proposition operator""_lvar( const char* name, size_t sz );
 
 /*! Logical proposition
  */
-class prop{
+class proposition{
 private:
   struct operation{
     virtual bool evaluate( const std::set<std::string>& facts ) const = 0;
@@ -48,24 +48,24 @@ private:
     bool evaluate( const std::set<std::string>& facts ) const;
   };
 
-  prop( const op_ptr value );
+  proposition( const op_ptr value );
 
   op_ptr mValue;
 
 public:
-  prop operator&&( const prop& conjunct ) const;
+  proposition operator&&( const proposition& conjunct ) const;
 
-  prop operator||( const prop& disjunct ) const;
+  proposition operator||( const proposition& disjunct ) const;
 
-  prop operator!() const;
+  proposition operator!() const;
 
-  prop implies( const prop& consequent ) const;
+  proposition implies( const proposition& consequent ) const;
 
   /*! If and only if
    *
    * @param consequent proposition to evaluate against
    */
-  prop iff( const prop& consequent ) const;
+  proposition iff( const proposition& consequent ) const;
 
   /*! Evaluate proposition using given facts
    *
@@ -95,7 +95,7 @@ public:
    *
    * To create a variable proposition named foo.
    */
-  friend prop operator""_lvar( const char* name, size_t sz );
+  friend proposition operator""_lvar( const char* name, size_t sz );
 };
 
 }

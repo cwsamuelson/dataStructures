@@ -47,10 +47,10 @@ TEST_CASE( "", "[logic]" ){
   REQUIRE( ( "foo"_lvar.iff( "bar"_lvar ) ).evaluate_all( {"foo", "bar"} )
            == set<set<string>>( {{"foo", "bar"}, {}} ) );
 
-  auto proposition = ("A"_lvar && !"B"_lvar).implies("C"_lvar) && (!"A"_lvar).iff("B"_lvar && "C"_lvar);
+  auto prop = ("A"_lvar && !"B"_lvar).implies("C"_lvar) && (!"A"_lvar).iff("B"_lvar && "C"_lvar);
   int i = 0;
-  for( auto solution : proposition.evaluate_all( {"A", "B", "C"} ) ){
-    REQUIRE( proposition.evaluate( solution ) );
+  for( auto solution : prop.evaluate_all( {"A", "B", "C"} ) ){
+    REQUIRE( prop.evaluate( solution ) );
     ++i;
   }
   REQUIRE( i == 3 );
