@@ -54,11 +54,29 @@ prop prop::iff( const prop& equivalent ) const{
 bool prop::evaluate( const set<string> facts ) const{
   return mValue->evaluate( facts );
 }
-/*
-std::set<std::set<std::string> > evaluate_all( const std::set<std::string>& variables ) const{
+
+std::set<std::set<std::string> > prop::evaluate_all( const std::set<std::string>& variables ) const{
   set<set<string> > assignments;
-  return;
-}*/
+  size_t max = 1 << ( variables.size() + 1 );
+  
+  for( size_t mask = 0; mask < max; ++mask ){
+    set<string> test;
+    
+    size_t j = 1;
+    for( auto it : variables ){
+      if( j & mask ){
+        test.insert( it );
+      }
+      j <<= 1;
+    }
+    
+    if( evaluate( test ) ){
+      assignments.insert( test );
+    }
+  }
+  
+  return assignments;
+}
 
 prop gsw::operator""_lvar( const char* name, size_t sz ){
   auto var = std::make_shared<prop::variable>();

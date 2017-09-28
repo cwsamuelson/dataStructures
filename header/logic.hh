@@ -59,7 +59,7 @@ public:
 
   bool evaluate( const std::set<std::string> facts ) const;
   
-  //std::set<std::set<std::string> > evaluate_all( const std::set<std::string>& variables ) const;
+  std::set<std::set<std::string> > evaluate_all( const std::set<std::string>& variables ) const;
 
   friend prop operator""_lvar( const char* name, size_t sz );
 };
