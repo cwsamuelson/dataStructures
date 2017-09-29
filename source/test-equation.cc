@@ -80,6 +80,11 @@ TEST_CASE( "Equation", "[equ]" ){
 
   SECTION( "Integral" ){
     REQUIRE( integrate( eq2, 3, 1 ) == ( 29.0 + ( 1.0 / 3.0 ) ) );
+
+    vector<double> v { 1 };
+    gsw::equation e( v.begin(), v.end() );
+
+    REQUIRE( integrate( e, 3, 0 ) == 3 );
   }
 }
 
