@@ -81,10 +81,20 @@ TEST_CASE( "Equation", "[equ]" ){
   SECTION( "Integral" ){
     REQUIRE( integrate( eq2, 3, 1 ) == ( 29.0 + ( 1.0 / 3.0 ) ) );
 
-    vector<double> v { 1 };
-    gsw::equation e( v.begin(), v.end() );
+    vector<double> v1 { 1 };
+    gsw::equation e1( v1.begin(), v1.end() );
 
-    REQUIRE( integrate( e, 3, 0 ) == 3 );
+    REQUIRE( integrate( e1, 3, 0 ) == 3 );
+
+    vector<double> v2 { 1, 2, 3 };
+    gsw::equation e2( v2.begin(), v2.end() );
+
+    REQUIRE( integrate( e2, 3, 0 ) == 39 );
+
+    vector<double> v3 { 3, 2, 1 };
+    gsw::equation e3( v3.begin(), v3.end() );
+
+    REQUIRE( integrate( e3, 3, 0 ) == 27 );
   }
 }
 

@@ -101,7 +101,7 @@ equation gsw::antiderive( const equation& eq ){
   equation ret;
   ret.mCoeff.push_back( 0 );
 
-  for( unsigned int i = 0; i <= eq.mCoeff.size(); ++i ){
+  for( unsigned int i = 0; i < eq.mCoeff.size(); ++i ){
     ret.mCoeff.push_back( eq.mCoeff[i] / ( i + 1 ) );
   }
 
