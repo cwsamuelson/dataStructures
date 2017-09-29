@@ -57,6 +57,10 @@ public:
     }
   }
 
+  /*! Ownership assignment
+   *
+   * @param other pointer to take ownership of
+   */
   unique_ptr& operator=( pointer other ){
     if( mData ){
       delete mData;
@@ -65,6 +69,11 @@ public:
 
     return *this;
   }
+
+  /*! Move assignment operator
+   *
+   * @param other unique_ptr to transfer ownership from
+   */
   unique_ptr& operator=( unique_ptr&& other ){
     if( mData != other.mData && mData ){
       delete mData;
@@ -100,7 +109,7 @@ public:
   bool operator==( const unique_ptr& other ) const{
     return ( mData == other.mData );
   }
-  
+
   /*! Dereference operator
    *
    * @return reference to stored object
@@ -110,11 +119,17 @@ public:
   reference operator*(){
     return *mData;
   }
-  
+
+  /*!
+   */
   pointer operator->(){
     return mData;
   }
 
+  /*! Pointer getter
+   *
+   * @return raw stored pointer/resource
+   */
   pointer get(){
     return mData;
   }
@@ -136,8 +151,8 @@ public:
 };
 
 template<class T, class ...Args>
-unique_ptr<T> make_unique( Args... args ){
-  return new T( args... );
+unique_ptr<T> make_unique( Args&&... args ){
+  return new T( std::forward<Args>( args )... );
 }
 
 }

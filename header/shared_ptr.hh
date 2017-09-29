@@ -16,13 +16,13 @@ namespace gsw{
  * Class to model a pointer that has multiple 'owners'.  When no more owners
  * exist, object cleans itself up.
  */
-template<class T>
+template<typename T>
 class shared_ptr{
 public:
-  typedef T value_type;
-  typedef value_type* pointer;
-  typedef value_type& reference;
-  typedef unsigned long count_t;
+  using value_type = T;
+  using pointer = value_type*;
+  using reference = value_type&;
+  using count_t = unsigned long;
 
 private:
   pointer mData;
@@ -206,7 +206,7 @@ public:
  * @param ...args Arguments to be forwarded to objects constructor
  */
 template<class T, class ...Args>
-shared_ptr<T> make_shared( Args ...args ){
+shared_ptr<T> make_shared( Args&&... args ){
   return shared_ptr<T>( new T( std::forward<Args>( args )... ) );
 }
 
