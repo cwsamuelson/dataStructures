@@ -85,7 +85,7 @@ public:
 
   /*! If and only if
    *
-   * @param consequent proposition to evaluate against
+   * @param equivalent proposition to evaluate against
    *
    * @return A new proposition of the tautology of this and equivalent
    */

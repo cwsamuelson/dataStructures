@@ -20,13 +20,13 @@ namespace gsw{
 //  the first says values at indexes greater than 5 are set to -1
 //  the other says values at indexes stored in data2 are set to -2
 
-template<class T>
+template<typename T>
 class array;
 
 /*!
  * @todo Performance testing on array splicing.  may be a faster way to do this
  */
-template<class T>
+template<typename T>
 struct splice_index{
   typedef std::function<bool( T, T )> opsig;
 
@@ -39,10 +39,10 @@ struct splice_index{
   }
 };
 
-template<class T>
+template<typename T>
 struct splice_helper;
 
-template<class T, unsigned int N>
+template<typename T, unsigned int N>
 struct splice_helper<T[N]>{
   array<T[N]>& mArr;
   std::vector<unsigned int> mIdxs;
@@ -68,7 +68,7 @@ struct splice_helper<T[N]>{
  *
  * @todo This class is a good candidate to implement constexpr-ness
  */
-template<class T, unsigned int N>
+template<typename T, unsigned int N>
 class array<T[N]>{
 public:
   typedef T value_type;
