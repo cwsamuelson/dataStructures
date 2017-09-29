@@ -1,3 +1,5 @@
+#include<cmath>
+
 #include<logic.hh>
 
 using namespace std;
@@ -55,9 +57,9 @@ bool proposition::evaluate( const set<string> facts ) const{
   return mValue->evaluate( facts );
 }
 
-std::set<std::set<std::string> > proposition::evaluate_all( const std::set<std::string>& variables ) const{
+set<set<string> > proposition::evaluate_all( const set<string>& variables ) const{
   set<set<string> > assignments;
-  size_t max = 1 << ( variables.size() + 1 );
+  size_t max = pow( 2, variables.size() );
 
   // mask used to describe which elements from variables should be tested
   // and is then incremented to retrieve the next 'permutation'
