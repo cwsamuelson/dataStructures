@@ -11,7 +11,7 @@ namespace gsw{
  * copy persists, and will be automatically destroyed at the end of the objects
  * lifespan.
  */
-template<class T>
+template<typename T>
 class unique_ptr{
 public:
   typedef T value_type;
@@ -150,7 +150,7 @@ public:
   }
 };
 
-template<class T, class ...Args>
+template<typename T, typename ...Args>
 unique_ptr<T> make_unique( Args&&... args ){
   return new T( std::forward<Args>( args )... );
 }

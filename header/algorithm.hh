@@ -40,7 +40,7 @@ auto invoke(  OBJ obj, MEMBER_FN memfun, Args ...args  ){
  *
  * @tparam T  Type to be compared
  */
-template<class T>
+template<typename T>
 struct less{
   /*!
    */
@@ -49,7 +49,7 @@ struct less{
   }
 };
 
-template<class iter>
+template<typename iter>
 unsigned long distance( iter first, iter last ){
   unsigned long ret = 0;
 
@@ -60,14 +60,14 @@ unsigned long distance( iter first, iter last ){
   return ret;
 }
 
-template<class iter>
+template<typename iter>
 void myswap( iter x, iter y ){
   auto z = *x;
   *x = *y;
   *y = z;
 }
 
-template<class iter, class compare>
+template<typename iter, typename compare>
 void merge( iter first, iter mid, iter last, compare comp ){
   vector<typename iter::value_type> vec;
   auto middle = mid;
@@ -96,7 +96,7 @@ void merge( iter first, iter mid, iter last, compare comp ){
   }
 }
 
-template<class iter, class compare = less<typename iter::value_type> >
+template<typename iter, typename compare = less<typename iter::value_type> >
 void sort( iter first, iter last, compare comp = compare() ){
   auto length = distance( first, last );
 

@@ -271,7 +271,7 @@ public:
   }
 };
 
-template<class T, typename OSTREAM>
+template<typename T, typename OSTREAM>
 OSTREAM& operator<<( OSTREAM& os, const basic_string<T>& str ){
   for( unsigned int i = 0; i < str.size(); ++i ){
     os << str[i];

@@ -53,7 +53,7 @@ public:
    *
    * Provide the coefficients for this equation from an extant container
    */
-  template<class inputIter>
+  template<typename inputIter>
   equation( inputIter first, inputIter last ):
     mCoeff( first, last ){
   }

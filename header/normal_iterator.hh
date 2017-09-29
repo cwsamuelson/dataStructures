@@ -150,7 +150,7 @@ public:
 
 namespace std{
 
-template<class TYPE, class CONTAINER>
+template<typename TYPE, typename CONTAINER>
 struct iterator_traits<gsw::normal_iterator<TYPE, CONTAINER> >{
 public:
   typedef typename gsw::normal_iterator<TYPE, CONTAINER>::value_type value_type;

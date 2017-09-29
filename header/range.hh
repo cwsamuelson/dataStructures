@@ -9,7 +9,7 @@
 
 namespace gsw{
 
-template<class>
+template<typename>
 class range;
 
 /*! Range filtering iterator

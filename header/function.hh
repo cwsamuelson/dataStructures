@@ -9,7 +9,7 @@
 
 namespace gsw{
 
-template<class T>
+template<typename T>
 class function;
 
 /*! General functor class
@@ -20,7 +20,7 @@ class function;
  *
  * Function pointer wrapper
  */
-template<class R, class ...Args>
+template<typename R, typename ...Args>
 class function<R( Args... )>{
 public:
   typedef R( *func )( Args... );

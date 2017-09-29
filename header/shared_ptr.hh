@@ -205,7 +205,7 @@ public:
  *
  * @param ...args Arguments to be forwarded to objects constructor
  */
-template<class T, class ...Args>
+template<typename T, typename ...Args>
 shared_ptr<T> make_shared( Args&&... args ){
   return shared_ptr<T>( new T( std::forward<Args>( args )... ) );
 }

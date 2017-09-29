@@ -117,7 +117,7 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  template<class inputIter>
+  template<typename inputIter>
   map( inputIter first, inputIter last, const alloc& alc = alloc() ):
     mData( first, last, alc ){
     normalize();
@@ -191,7 +191,7 @@ public:
    *
    * @param last  one past the end of the range of elements to be copied
    */
-  template<class inputIter>
+  template<typename inputIter>
   void insert( inputIter first, inputIter last ){
     for( ; first != last; ++first ){
       mData.push_back( *first );
@@ -212,7 +212,7 @@ public:
    *
    * @todo return correct iterator
    */
-  template<class ...Args>
+  template<typename ...Args>
   iterator emplace( const key_type& key, Args ...args ){
     mData.emplace_back( key, map_type( std::forward<Args>( args )... ) );
 

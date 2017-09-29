@@ -12,7 +12,7 @@ namespace gsw{
  * Constant integral value wrapper.  Integral nature is enforced by template
  * parameter rules.
  */
-template<class T, T v>
+template<typename T, T v>
 class integral_constant{
 public:
   using value_type = T;

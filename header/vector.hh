@@ -346,7 +346,7 @@ public:
    *
    * Forwards args to value_type constructor.
    */
-  template<class ...Args>
+  template<typename ...Args>
   void emplace_back( Args&&... args ){
     if( mSize + 1 > mCapacity ){
       reallocateTo( std::ceil( mCapacity * goldenRatio ) );
