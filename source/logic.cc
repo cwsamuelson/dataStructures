@@ -58,10 +58,14 @@ bool proposition::evaluate( const set<string> facts ) const{
 std::set<std::set<std::string> > proposition::evaluate_all( const std::set<std::string>& variables ) const{
   set<set<string> > assignments;
   size_t max = 1 << ( variables.size() + 1 );
-  
+
+  // mask used to describe which elements from variables should be tested
+  // and is then incremented to retrieve the next 'permutation'
   for( size_t mask = 0; mask < max; ++mask ){
     set<string> test;
-    
+
+    // each element of variables is mapped to a bit in mask
+    // each bit is tested, and each element of variables is added appropriately
     size_t j = 1;
     for( auto it : variables ){
       if( j & mask ){
@@ -69,12 +73,13 @@ std::set<std::set<std::string> > proposition::evaluate_all( const std::set<std::
       }
       j <<= 1;
     }
-    
+
+    // once a set of values from variables is generated, test it
     if( evaluate( test ) ){
       assignments.insert( test );
     }
   }
-  
+
   return assignments;
 }
 
