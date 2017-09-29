@@ -53,19 +53,43 @@ private:
   op_ptr mValue;
 
 public:
+  /*! Conjunction operator
+   *
+   * @param conjunct
+   *
+   * @return A new proposition of the conjunction of this and conjunct
+   */
   proposition operator&&( const proposition& conjunct ) const;
 
+  /*! Disjunction operator
+   *
+   * @param disjunct
+   *
+   * @return A new proposition of the disjunction of this and disjunct
+   */
   proposition operator||( const proposition& disjunct ) const;
 
+  /*! Negation operator
+   *
+   * @return A new proposition of the negation of this
+   */
   proposition operator!() const;
 
+  /*! Implication operation
+   *
+   * @param consequent
+   *
+   * @return A new proposition of the implication of this and consequent
+   */
   proposition implies( const proposition& consequent ) const;
 
   /*! If and only if
    *
    * @param consequent proposition to evaluate against
+   *
+   * @return A new proposition of the tautology of this and equivalent
    */
-  proposition iff( const proposition& consequent ) const;
+  proposition iff( const proposition& equivalent ) const;
 
   /*! Evaluate proposition using given facts
    *
@@ -88,6 +112,8 @@ public:
   std::set<std::set<std::string> > evaluate_all( const std::set<std::string>& variables ) const;
 
   /*! Creates basic proposition that consists only of a variable named name
+   *
+   * @return A proposition representing a variable named name
    *
    * User string literal operator.
    * Used as:
