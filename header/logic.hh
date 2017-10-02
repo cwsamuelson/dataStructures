@@ -42,6 +42,12 @@ private:
 
     bool evaluate( const std::set<std::string>& facts ) const;
   };
+  struct exDisjunction : public operation{
+    op_ptr lhs;
+    op_ptr rhs;
+
+    bool evaluate( const std::set<std::string>& facts ) const;
+  };
   struct negation : public operation{
     op_ptr operand;
 
@@ -69,9 +75,21 @@ public:
    */
   proposition operator||( const proposition& disjunct ) const;
 
+  /*! Xor operator
+   *
+   * @param operand
+   *
+   * @return A new proposition of the exclusive disjunction of this and operand
+   */
+  proposition operator^( const proposition& operand ) const;
+
   /*! Negation operator
    *
    * @return A new proposition of the negation of this
+   *
+   * @todo automatically optimize double negation?
+   * when a negation prop receives a negation, instead return the original
+   * negation's child
    */
   proposition operator!() const;
 

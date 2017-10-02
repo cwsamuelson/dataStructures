@@ -17,6 +17,10 @@ bool proposition::disjunction::evaluate( const set<string>& facts ) const{
   return lhs->evaluate( facts ) || rhs->evaluate( facts );
 }
 
+bool proposition::exDisjunction::evaluate( const set<string>& facts ) const{
+  return lhs->evaluate( facts ) ^ rhs->evaluate( facts );
+}
+
 bool proposition::negation::evaluate( const set<string>& facts ) const{
   return !operand->evaluate( facts );
 }
@@ -36,6 +40,13 @@ proposition proposition::operator||( const proposition& disjunct ) const{
   auto var = make_shared<proposition::disjunction>();
   var->lhs = mValue;
   var->rhs = disjunct.mValue;
+  return {var};
+}
+
+proposition proposition::operator^( const proposition& operand ) const{
+  auto var = make_shared<proposition::exDisjunction>();
+  var->lhs = mValue;
+  var->rhs = operand.mValue;
   return {var};
 }
 
