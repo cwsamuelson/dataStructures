@@ -127,7 +127,7 @@ public:
    * Provided solutions only consist of those that can be made up from vars
    * provided in variables.
    */
-  std::set<std::set<std::string> > evaluate_all( const std::set<std::string>& variables ) const;
+  std::set<std::set<std::string> > solve( const std::set<std::string>& variables ) const;
 
   /*! Creates basic proposition that consists only of a variable named name
    *

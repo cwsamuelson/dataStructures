@@ -68,7 +68,7 @@ bool proposition::evaluate( const set<string> facts ) const{
   return mValue->evaluate( facts );
 }
 
-set<set<string> > proposition::evaluate_all( const set<string>& variables ) const{
+set<set<string> > proposition::solve( const set<string>& variables ) const{
   set<set<string> > assignments;
   size_t max = pow( 2, variables.size() );
 
