@@ -75,7 +75,7 @@ private:
       }
     );
   }
-  
+
   size_type seek_index( const key_type& key ){
     size_type min = 0;
     size_type max = mData.size() - 1;
@@ -94,7 +94,7 @@ private:
 
       idx = ( max + min ) / 2.0;
     }
-    
+
     return idx;
   }
 

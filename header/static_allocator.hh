@@ -26,12 +26,24 @@ private:
   ind_type mIndicator;
 
 public:
+  /*!
+   */
   static_allocator() = default;
 
-  static_allocator( const static_allocator& ) = default;
+  /*!
+   *
+   * @param other
+   */
+  static_allocator( const static_allocator& other ) = default;
 
-  static_allocator( static_allocator&& ) = default;
+  /*!
+   *
+   * @param other
+   */
+  static_allocator( static_allocator&& other ) = default;
 
+  /*!
+   */
   pointer allocate( size_type number ){
     size_type caveStart = 0;
     size_type caveSize = 0;
@@ -59,6 +71,8 @@ public:
     throw bad_alloc();
   }
 
+  /*!
+   */
   void deallocate( pointer ptr, size_type number ){
     unsigned long start = ( ( unsigned char* )ptr - mStorage.data() ) / ptrdiff;
 
@@ -67,10 +81,14 @@ public:
     }
   }
 
+  /*!
+   */
   pointer storage(){
     return pointer( mStorage.data() );
   }
 
+  /*!
+   */
   bool free_space( size_type amount = 1 ){
     return ( storage_size - mIndicator.count() ) >= amount;
   }

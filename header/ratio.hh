@@ -74,7 +74,7 @@ public:
   static constexpr value_type numerator = sign( N ) * sign( D ) * myAbs( N ) / gcd( N, D );
   static constexpr value_type denominator = myAbs( D ) / gcd( N, D );
   static constexpr double value = double( double( numerator ) / double( denominator ) );
-  typedef ratio<numerator, denominator> type;
+  using type = ratio<numerator, denominator>;
 
   /*! Value of ( numerator / denominator ) or of template parameters ( N / D )
    *
@@ -250,13 +250,20 @@ template<size_t N, size_t D>
 constexpr typename ratio<N, D>::value_type ratio<N, D>::denominator;
 
 using unity = ratio<1,          1>;
+
 using kilo  = ratio<1000,       1>;
 using mega  = ratio<1000000,    1>;
 using giga  = ratio<1000000000, 1>;
 using milli = ratio<1,          1000>;
 using micro = ratio<1,          1000000>;
 using nano  = ratio<1,          1000000000>;
+using pico  = ratio<1,          1000000000000>;
+using femto = ratio<1,          1000000000000000>;
 
+using kibi  = ratio<1024,          1>;
+using mebi  = ratio<1048576,       1>;
+using gibi  = ratio<1073741824,    1>;
+using tebi  = ratio<1099511627776, 1>;
 }
 
 #endif

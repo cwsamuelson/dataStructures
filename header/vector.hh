@@ -43,7 +43,7 @@ public:
    * Generates an error message to be thrown up to a higher level and caught
    */
   indexOutOfBoundsException( unsigned long long idx, unsigned long long max ):
-    msg(  std::string( "Index" ) + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( max ) ){
+    msg( std::string( "Index" ) + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( max ) ){
   }
 
   /*! Report what happened
@@ -57,7 +57,7 @@ public:
 
 /*! Class that stores items of type T
  *
- * @tparam T  Type of items to be stored
+ * @tparam T Type of items to be stored
  *
  * @tparam ALLOC type of allocator to use
  *
