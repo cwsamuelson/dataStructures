@@ -257,13 +257,13 @@ using giga  = ratio<1000000000, 1>;
 using milli = ratio<1,          1000>;
 using micro = ratio<1,          1000000>;
 using nano  = ratio<1,          1000000000>;
-using pico  = ratio<1,          1000000000000>;
-using femto = ratio<1,          1000000000000000>;
+//using pico  = ratio<1,          1000000000000>;
+//using femto = ratio<1,          1000000000000000>;
 
 using kibi  = ratio<1024,          1>;
 using mebi  = ratio<1048576,       1>;
 using gibi  = ratio<1073741824,    1>;
-using tebi  = ratio<1099511627776, 1>;
+//using tebi  = ratio<1099511627776, 1>;
 }
 
 #endif
