@@ -59,19 +59,51 @@ private:
     bool evaluate( const data& variables ) const;
   };
 
+  op_ptr mValue;
+
 public:
+  /*!
+   */
   equation operator*( const equation& multiplicand ) const;
+
+  /*!
+   */
   equation operator/( const equation& dividend ) const;
+
+  /*!
+   */
   equation operator+( const equation& operand ) const;
+
+  /*!
+   */
   equation operator-( const equation& operand ) const;
+
+  /*!
+   */
   equation operator-() const;
+
+  /*!
+   */
   equation pow( const equation& operand ) const;
+
+  /*!
+   */
   equation derive( unsigned long long order = 1 ) const;
+
+  /*!
+   */
   equation integrate( unsigned long long min = 0, unsigned long long max = 0 ) const;
 
+  /*!
+   */
   double evaluate( const data& variables ) const;
+
+  /*!
+   */
   std::set<data> solve( const data& variables ) const;
 
+  /*!
+   */
   friend equation operator""_evar( const char* name, size_t sz );
 };
 
