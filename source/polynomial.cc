@@ -1,9 +1,9 @@
-#include<equation.hh>
+#include<polynomial.hh>
 
 using namespace std;
 using namespace gsw;
 
-equation& equation::operator+=( const equation& rhs ){
+polynomial& polynomial::operator+=( const polynomial& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
     mCoeff[i] += rhs.mCoeff[i];
@@ -16,7 +16,7 @@ equation& equation::operator+=( const equation& rhs ){
   return ( *this );
 }
 
-equation& equation::operator-=( const equation& rhs ){
+polynomial& polynomial::operator-=( const polynomial& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
     mCoeff[i] -= rhs.mCoeff[i];
@@ -29,7 +29,7 @@ equation& equation::operator-=( const equation& rhs ){
   return ( *this );
 }
 
-equation& equation::operator*=( const equation& rhs ){
+polynomial& polynomial::operator*=( const polynomial& rhs ){
   storage_type vec( mCoeff.size() + rhs.mCoeff.size() - 1 );
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
@@ -43,7 +43,7 @@ equation& equation::operator*=( const equation& rhs ){
   return *this;
 }
 
-equation& equation::operator*=( double d ){
+polynomial& polynomial::operator*=( double d ){
   for( double& it : mCoeff ){
     it *= d;
   }
@@ -51,7 +51,7 @@ equation& equation::operator*=( double d ){
   return ( *this );
 }
 
-equation& equation::operator/=( const equation& rhs ){
+polynomial& polynomial::operator/=( const polynomial& rhs ){
   storage_type vec( mCoeff.size() + rhs.mCoeff.size() - 1 );
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
@@ -65,7 +65,7 @@ equation& equation::operator/=( const equation& rhs ){
   return *this;
 }
 
-equation& equation::operator/=( double d ){
+polynomial& polynomial::operator/=( double d ){
   for( double& it : mCoeff ){
     it /= d;
   }
@@ -73,11 +73,11 @@ equation& equation::operator/=( double d ){
   return *this;
 }
 
-double& equation::operator[]( size_t idx ){
+double& polynomial::operator[]( size_t idx ){
   return mCoeff[idx];
 }
 
-double equation::operator()( double X ) const{
+double polynomial::operator()( double X ) const{
   double val = 0.0;
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
@@ -87,52 +87,52 @@ double equation::operator()( double X ) const{
   return val;
 }
 
-bool gsw::operator==( const equation& eq, point p ){
+bool gsw::operator==( const polynomial& eq, point p ){
   return eq( p.x ) == p.y;
 }
 
-bool gsw::operator<( const equation& eq, point p ){
+bool gsw::operator<( const polynomial& eq, point p ){
   return eq( p.x ) < p.y;
 }
 
-bool gsw::operator>( const equation& eq, point p ){
+bool gsw::operator>( const polynomial& eq, point p ){
   return eq( p.x ) > p.y;
 }
 
-bool gsw::operator<=( const equation& eq, point p ){
+bool gsw::operator<=( const polynomial& eq, point p ){
   return !( eq > p );
 }
 
-bool gsw::operator>=( const equation& eq, point p ){
+bool gsw::operator>=( const polynomial& eq, point p ){
   return !( eq < p );
 }
 
-bool gsw::operator==( point p, const equation& eq ){
+bool gsw::operator==( point p, const polynomial& eq ){
   return eq == p;
 }
 
-bool gsw::operator<( point p, const equation& eq ){
+bool gsw::operator<( point p, const polynomial& eq ){
   return p.y < eq( p.x );
 }
 
-bool gsw::operator>( point p, const equation& eq ){
+bool gsw::operator>( point p, const polynomial& eq ){
   return p.y > eq( p.x );
 }
 
-bool gsw::operator<=( point p, const equation& eq ){
+bool gsw::operator<=( point p, const polynomial& eq ){
   return !( p > eq );
 }
 
-bool gsw::operator>=( point p, const equation& eq ){
+bool gsw::operator>=( point p, const polynomial& eq ){
   return !( p < eq );
 }
 
-equation gsw::derive( const equation& eq, unsigned int order ){
+polynomial gsw::derive( const polynomial& eq, unsigned int order ){
   if( order == 0 ){
     return eq;
   }
 
-  equation ret;
+  polynomial ret;
 
   for( unsigned int i = 1; i < eq.mCoeff.size(); ++i ){
     ret.mCoeff.push_back( eq.mCoeff[i] * i );
@@ -141,8 +141,8 @@ equation gsw::derive( const equation& eq, unsigned int order ){
   return ret;
 }
 
-equation gsw::antiderive( const equation& eq ){
-  equation ret;
+polynomial gsw::antiderive( const polynomial& eq ){
+  polynomial ret;
   ret.mCoeff.push_back( 0 );
 
   for( unsigned int i = 0; i < eq.mCoeff.size(); ++i ){
@@ -152,8 +152,8 @@ equation gsw::antiderive( const equation& eq ){
   return ret;
 }
 
-double gsw::integrate( const equation& eq, double upperBound, double lowerBound ){
-  equation anti( antiderive( eq ) );
+double gsw::integrate( const polynomial& eq, double upperBound, double lowerBound ){
+  polynomial anti( antiderive( eq ) );
 
   return anti( upperBound ) - anti( lowerBound );
 }
