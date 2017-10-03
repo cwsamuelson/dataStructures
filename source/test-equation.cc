@@ -98,3 +98,74 @@ TEST_CASE( "Equation", "[equ]" ){
   }
 }
 
+TEST_CASE( "Equations can be compared to points", "[equ]" ){
+  SECTION( "Degree 0 equation" ){
+    vector<double> v1 {1};
+    gsw::equation e1( v1.begin(), v1.end() );
+    gsw::point p1;
+    gsw::point p2;
+    gsw::point p3;
+
+    p1.y = 0;
+    p2.y = 2;
+    p3.y = 1;
+
+    for( int i = -5; i < 5; ++i ){
+      p1.x = i;
+      p2.x = i;
+      p3.x = i;
+
+      REQUIRE( p1 <  e1 );
+      REQUIRE( e1 >  p1 );
+      REQUIRE( p1 <= e1 );
+      REQUIRE( e1 >= p1 );
+
+      REQUIRE( p2 >  e1 );
+      REQUIRE( e1 <  p2 );
+      REQUIRE( p2 >= e1 );
+      REQUIRE( e1 <= p2 );
+
+      REQUIRE( e1 == p3 );
+      REQUIRE( p3 == e1 );
+      REQUIRE( e1 >= p3 );
+      REQUIRE( p3 >= e1 );
+      REQUIRE( e1 <= p3 );
+      REQUIRE( p3 <= e1 );
+    }
+  }
+
+  SECTION( "Degree 1 equation" ){
+    vector<double> v1 {0, 2};
+    gsw::equation e1( v1.begin(), v1.end() );
+    gsw::point p1;
+    gsw::point p2;
+    gsw::point p3;
+
+    for( int i = -5; i < 5; ++i ){
+      p1.x = i;
+      p2.x = i;
+      p3.x = i;
+      p1.y = 2 * i - 1;
+      p2.y = 2 * i + 1;
+      p3.y = 2 * i;
+
+      REQUIRE( p1 <  e1 );
+      REQUIRE( e1 >  p1 );
+      REQUIRE( p1 <= e1 );
+      REQUIRE( e1 >= p1 );
+
+      REQUIRE( p2 >  e1 );
+      REQUIRE( e1 <  p2 );
+      REQUIRE( p2 >= e1 );
+      REQUIRE( e1 <= p2 );
+
+      REQUIRE( e1 == p3 );
+      REQUIRE( p3 == e1 );
+      REQUIRE( e1 >= p3 );
+      REQUIRE( p3 >= e1 );
+      REQUIRE( e1 <= p3 );
+      REQUIRE( p3 <= e1 );
+    }
+  }
+}
+

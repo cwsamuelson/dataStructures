@@ -73,7 +73,11 @@ equation& equation::operator/=( double d ){
   return *this;
 }
 
-double equation::operator()( double X ){
+double& equation::operator[]( size_t idx ){
+  return mCoeff[idx];
+}
+
+double equation::operator()( double X ) const{
   double val = 0.0;
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
@@ -81,6 +85,46 @@ double equation::operator()( double X ){
   }
 
   return val;
+}
+
+bool gsw::operator==( const equation& eq, point p ){
+  return eq( p.x ) == p.y;
+}
+
+bool gsw::operator<( const equation& eq, point p ){
+  return eq( p.x ) < p.y;
+}
+
+bool gsw::operator>( const equation& eq, point p ){
+  return eq( p.x ) > p.y;
+}
+
+bool gsw::operator<=( const equation& eq, point p ){
+  return !( eq > p );
+}
+
+bool gsw::operator>=( const equation& eq, point p ){
+  return !( eq < p );
+}
+
+bool gsw::operator==( point p, const equation& eq ){
+  return eq == p;
+}
+
+bool gsw::operator<( point p, const equation& eq ){
+  return p.y < eq( p.x );
+}
+
+bool gsw::operator>( point p, const equation& eq ){
+  return p.y > eq( p.x );
+}
+
+bool gsw::operator<=( point p, const equation& eq ){
+  return !( p > eq );
+}
+
+bool gsw::operator>=( point p, const equation& eq ){
+  return !( p < eq );
 }
 
 equation gsw::derive( const equation& eq, unsigned int order ){

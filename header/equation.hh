@@ -15,6 +15,23 @@ namespace gsw{
 
 class equation;
 
+struct point{
+  double x;
+  double y;
+};
+
+bool operator==( const equation& eq, point p );
+bool operator<(  const equation& eq, point p );
+bool operator<=( const equation& eq, point p );
+bool operator>(  const equation& eq, point p );
+bool operator>=( const equation& eq, point p );
+
+bool operator==( point p, const equation& eq );
+bool operator<(  point p, const equation& eq );
+bool operator<=( point p, const equation& eq );
+bool operator>(  point p, const equation& eq );
+bool operator>=( point p, const equation& eq );
+
 equation derive( const equation& eq, unsigned int order = 1 );
 equation antiderive( const equation& eq );
 double integrate( const equation& eq, double upperBound, double lowerBound );
@@ -150,6 +167,14 @@ public:
    */
   equation& operator/=( double d );
 
+  /*!
+   *
+   * @param idx
+   *
+   * @return
+   */
+  double& operator[]( size_t idx );
+
   /*! Find the value of the equation at a particular value
    *
    * @param X the x-value of the equation to 'solve' for
@@ -158,10 +183,118 @@ public:
    *
    * Calculate a y-value for the given x-value
    */
-  double operator()( double X );
+  double operator()( double X ) const;
 
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator==( const equation& eq, point p );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator<( const equation& eq, point p );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator<=( const equation& eq, point p );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator>( const equation& eq, point p );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator>=( const equation& eq, point p );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator==( point p, const equation& eq );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator<( point p, const equation& eq );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator<=( point p, const equation& eq );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator>( point p, const equation& eq );
+
+  /*!
+   *
+   * @param eq
+   *
+   * @param p
+   *
+   * @return
+   */
+  friend bool operator>=( point p, const equation& eq );
+
+  /*!
+   */
   friend equation derive( const equation& eq, unsigned int order );
+
+  /*!
+   */
   friend equation antiderive( const equation& eq );
+
+  /*!
+   */
   friend double integrate( const equation& eq, double upperBound, double lowerBound );
 };
 
