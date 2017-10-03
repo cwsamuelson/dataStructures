@@ -6,6 +6,9 @@
  */
 
 #include<set>
+#include<memory>
+#include<map>
+#include<string>
 
 namespace gsw{
 
@@ -60,6 +63,8 @@ private:
 
     double evaluate( const data& variables ) const;
   };
+
+  equation( const op_ptr value );
 
   op_ptr mValue;
 
