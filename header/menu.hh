@@ -34,9 +34,12 @@ public:
   /*! callback used to inform user of changed state
    */
   using optionCallback = std::function<bool(selector)>;
+  /*!
+   */
+  using menu_item = std::tuple<std::string, pointer, optionCallback>;
 
 private:
-  std::map<selector, std::tuple<std::string, pointer, optionCallback> > mSubMenus;
+  std::map<selector, menu_item > mSubMenus;
 
 public:
   /*! Default ctor
@@ -63,6 +66,16 @@ public:
   template<typename U>
   menu& operator=( U&& other ){
     mSubMenus = std::forward<decltype( mSubMenus )>( other.mSubMenus );
+  }
+
+  /*!
+   *
+   * @param sel
+   *
+   * @return
+   */
+  menu_item& operator[]( const selector& sel ){
+    return mSubMenus[sel];
   }
 
   /*! Adds a new menu option to menu
