@@ -23,7 +23,7 @@ TEST_CASE( "Maps are associative containers", "[map]" ){
       REQUIRE( mp[i] == i + 1 );
     }
   }
-  
+
   SECTION( "" ){
     gsw::map<string, string> m;
 
