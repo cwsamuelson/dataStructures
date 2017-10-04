@@ -15,7 +15,7 @@ namespace gsw{
 class equation;
 
 equation operator""_evar( const char* name, size_t sz );
-equation log( size_t sz, const equation& eq );
+equation log( const equation& b, const equation& eq );
 
 /*! Mathematical equation
  */
@@ -75,6 +75,12 @@ private:
 
     double evaluate( const data& variables ) const;
   };
+  struct logarithm : public operation{
+    op_ptr base;
+    op_ptr value;
+
+    double evaluate( const data& variables ) const;
+  };
 
   equation( const op_ptr value );
 
@@ -127,7 +133,7 @@ public:
 
   /*!
    */
-  friend equation log( size_t sz, const equation& eq );
+  friend equation log( const equation& b, const equation& eq );
 };
 
 }

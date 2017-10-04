@@ -39,6 +39,10 @@ double equation::exponentiation::evaluate( const equation::data& variables ) con
   return std::pow( base->evaluate( variables ), exponent->evaluate( variables ) );
 }
 
+double equation::logarithm::evaluate( const data& variables ) const{
+  return std::log( value->evaluate( variables ) ) / std::log( base->evaluate( variables ) );
+}
+
 equation::equation( const equation::op_ptr value ):
   mValue( value ){
 }
@@ -84,7 +88,11 @@ equation equation::pow( const equation& operand ) const{
   return {var};
 }
 
-equation gsw::log( size_t sz, const equation& eq ){
+equation gsw::log( const equation& b, const equation& eq ){
+  auto var = make_shared<equation::logarithm>();
+  var->base = b.mValue;
+  var->value = eq.mValue;
+  return {var};
 }
 
 equation equation::derive( unsigned long long order ) const{

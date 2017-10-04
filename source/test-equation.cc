@@ -1,3 +1,4 @@
+#include<algorithm>
 #include<cmath>
 
 #include<catch.hpp>
@@ -5,6 +6,11 @@
 #include<equation.hh>
 
 using namespace gsw;
+
+template<typename T>
+static bool are_equal( T f1, T f2 ){
+  return ( std::fabs( f1 - f2 ) <= std::numeric_limits<T>::epsilon() * std::max( {1.0, std::fabs( f1 ), std::fabs( f2 )} ) );
+}
 
 TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
   SECTION( "Basic operation" ){
@@ -68,6 +74,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 3}, {"Y", -3}} ) == ( 1.0 / 27.0 ) );
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 2}, {"Y", 1.5}} ) == std::pow( 2, 1.5 ) );
     REQUIRE( ( "2"_evar ).pow( "X"_evar ).evaluate( {{"X", 3}} ) == std::pow( 2, 3 ) );
+    REQUIRE( are_equal( gsw::log( "X"_evar, "8"_evar ).evaluate( {{"X", 2}} ), std::log2( 8 ) ) );
   }
 }
 
