@@ -10,37 +10,87 @@ double equation::variable::evaluate( const equation::data& variables ) const{
   return variables.at( name );
 }
 
+equation equation::variable::derive( std::string var ) const{
+  auto cnstnt = make_shared<equation::constant>();
+
+  if( var == name ){
+    cnstnt->value = 1;
+  } else {
+    cnstnt->value = 0;
+  }
+
+  return {cnstnt};
+}
+
 double equation::constant::evaluate( const equation::data& variables ) const{
   (void) variables;
   return value;
+}
+
+equation equation::constant::derive( std::string var ) const{
+  (void) var;
+  auto ptr = make_shared<equation::constant>();
+  ptr->value = 0;
+  return {ptr};
 }
 
 double equation::multiplication::evaluate( const equation::data& variables ) const{
   return lhs->evaluate( variables ) * rhs->evaluate( variables );
 }
 
+equation equation::multiplication::derive( std::string var ) const{
+  return ( equation( lhs ) * rhs->derive( var ) ) + ( equation( rhs ) * lhs->derive( var ) );
+}
+
 double equation::division::evaluate( const equation::data& variables ) const{
   return lhs->evaluate( variables ) / rhs->evaluate( variables );
+}
+
+equation equation::division::derive( std::string var ) const{
+  return ( ( lhs->derive( var ) * rhs ) - ( equation( rhs ) * lhs->derive( var ) ) ) / ( equation( rhs ) * equation( rhs ) );
 }
 
 double equation::addition::evaluate( const equation::data& variables ) const{
   return lhs->evaluate( variables ) + rhs->evaluate( variables );
 }
 
+equation equation::addition::derive( std::string var ) const{
+  return lhs->derive( var ) + rhs->derive( var );
+}
+
 double equation::subtraction::evaluate( const equation::data& variables ) const{
   return lhs->evaluate( variables ) - rhs->evaluate( variables );
+}
+
+equation equation::subtraction::derive( std::string var ) const{
+  return lhs->derive( var ) - rhs->derive( var );
 }
 
 double equation::inversion::evaluate( const equation::data& variables ) const{
   return -operand->evaluate( variables );
 }
 
+equation equation::inversion::derive( std::string var ) const{
+  return -equation( operand->derive( var ) );
+}
+
 double equation::exponentiation::evaluate( const equation::data& variables ) const{
   return std::pow( base->evaluate( variables ), exponent->evaluate( variables ) );
 }
 
+equation equation::exponentiation::derive( std::string var ) const{
+  auto original = make_shared<equation::exponentiation>();
+  original->exponent = exponent;
+  original->base = base;
+  return exponent->derive( var ) * equation( original ) * gsw::log( "2.718281828459"_evar, {base} );
+}
+
 double equation::logarithm::evaluate( const data& variables ) const{
   return std::log( value->evaluate( variables ) ) / std::log( base->evaluate( variables ) );
+}
+
+equation equation::logarithm::derive( std::string var ) const{
+  return "1"_evar / ( equation( value ) * gsw::log( "2.718281828459"_evar, {base} ) );
 }
 
 equation::equation( const equation::op_ptr value ):
@@ -81,6 +131,10 @@ equation equation::operator-() const{
   return {var};
 }
 
+double equation::operator()( const data& variables ) const{
+  return evaluate( variables );
+}
+
 equation equation::pow( const equation& operand ) const{
   auto var = make_shared<equation::exponentiation>();
   var->base = mValue;
@@ -95,7 +149,10 @@ equation gsw::log( const equation& b, const equation& eq ){
   return {var};
 }
 
-equation equation::derive( unsigned long long order ) const{
+equation equation::derive( std::string var, unsigned long long order ) const{
+//  while( order-- ){
+    return mValue->derive( var );
+//  }
 }
 
 equation equation::integrate( unsigned long long min, unsigned long long max ) const{

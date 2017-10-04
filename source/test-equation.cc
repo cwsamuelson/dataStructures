@@ -74,7 +74,15 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 3}, {"Y", -3}} ) == ( 1.0 / 27.0 ) );
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 2}, {"Y", 1.5}} ) == std::pow( 2, 1.5 ) );
     REQUIRE( ( "2"_evar ).pow( "X"_evar ).evaluate( {{"X", 3}} ) == std::pow( 2, 3 ) );
+    REQUIRE( ( "X"_evar ).pow( "3"_evar ).evaluate( {{"X", 3}} ) == 27 );
     REQUIRE( are_equal( gsw::log( "X"_evar, "8"_evar ).evaluate( {{"X", 2}} ), std::log2( 8 ) ) );
+  }
+
+  SECTION( "Derivation" ){
+    REQUIRE( ( "2"_evar ).derive( "X" ).evaluate( {} ) == 0 );
+    REQUIRE( ( "X"_evar ).derive( "X" ).evaluate( {} ) == 1 );
+    REQUIRE( ( "2"_evar * "X"_evar ).derive( "X" ).evaluate( {{"X", 0}} ) == 2 );
+    REQUIRE( ( "X"_evar ).pow( "2"_evar ).derive( "X" ).evaluate( {{"X", 3}} ) == 6 );
   }
 }
 

@@ -26,6 +26,7 @@ public:
 private:
   struct operation{
     virtual double evaluate( const data& variables ) const = 0;
+    virtual equation derive( std::string var ) const = 0;
   };
 
   using op_ptr = std::shared_ptr<operation>;
@@ -34,52 +35,61 @@ private:
     double value;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct variable : public operation{
     std::string name;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct multiplication : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct division : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct addition : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct subtraction : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct inversion : public operation{
     op_ptr operand;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct exponentiation : public operation{
     op_ptr base;
     op_ptr exponent;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
   struct logarithm : public operation{
     op_ptr base;
     op_ptr value;
 
     double evaluate( const data& variables ) const;
+    equation derive( std::string var ) const;
   };
 
   equation( const op_ptr value );
@@ -106,6 +116,10 @@ public:
   /*!
    */
   equation operator-() const;
+  
+  /*!
+   */
+  double operator()( const data& variables ) const;
 
   /*!
    */
@@ -113,7 +127,7 @@ public:
 
   /*!
    */
-  equation derive( unsigned long long order = 1 ) const;
+  equation derive( std::string var, unsigned long long order = 1 ) const;
 
   /*!
    */
