@@ -1,10 +1,12 @@
+#include<cmath>
+
 #include<catch.hpp>
 
 #include<equation.hh>
 
 using namespace gsw;
 
-TEST_CASE( "operators behave as expected", "[poly]" ){
+TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
   SECTION( "Basic operation" ){
     REQUIRE( ( "X"_evar ).evaluate( {{"X", 1}} ) == 1 );
     //REQUIRE( ( "foo"_lvar ).solve( {"foo"} ) ==
@@ -45,6 +47,15 @@ TEST_CASE( "operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", 4}} ) == 1 );
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", 7}} ) == -2 );
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == 12 );
+    //REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
+    //         set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
+  }
+
+  SECTION( "Exponentiation (^)" ){
+    REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 2}, {"Y", 10}} ) == 1024 );
+    REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 3}, {"Y", 3}} ) == 27 );
+    REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 3}, {"Y", -3}} ) == ( 1.0 / 27.0 ) );
+    REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 2}, {"Y", 1.5}} ) == std::pow( 2, 1.5 ) );
   }
 }
 

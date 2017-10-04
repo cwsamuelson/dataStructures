@@ -78,6 +78,9 @@ equation equation::pow( const equation& operand ) const{
   return {var};
 }
 
+equation gsw::log( size_t sz, const equation& eq ){
+}
+
 equation equation::derive( unsigned long long order ) const{
 }
 

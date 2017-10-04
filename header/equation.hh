@@ -15,6 +15,7 @@ namespace gsw{
 class equation;
 
 equation operator""_evar( const char* name, size_t sz );
+equation log( size_t sz, const equation& eq );
 
 /*! Mathematical equation
  */
@@ -118,6 +119,10 @@ public:
   /*!
    */
   friend equation operator""_evar( const char* name, size_t sz );
+
+  /*!
+   */
+  friend equation log( size_t sz, const equation& eq );
 };
 
 }
