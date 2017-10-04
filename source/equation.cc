@@ -78,11 +78,12 @@ double equation::exponentiation::evaluate( const equation::data& variables ) con
   return std::pow( base->evaluate( variables ), exponent->evaluate( variables ) );
 }
 
+/*! @todo distinguish between using power rule and exponentiation rule */
 equation equation::exponentiation::derive( std::string var ) const{
   auto original = make_shared<equation::exponentiation>();
   original->exponent = exponent;
   original->base = base;
-  return exponent->derive( var ) * equation( original ) * gsw::log( "2.718281828459"_evar, {base} );
+  return exponent->derive( var ) * equation( original ) * gsw::log( gsw::e_evar, {base} );
 }
 
 double equation::logarithm::evaluate( const data& variables ) const{
@@ -90,7 +91,7 @@ double equation::logarithm::evaluate( const data& variables ) const{
 }
 
 equation equation::logarithm::derive( std::string var ) const{
-  return "1"_evar / ( equation( value ) * gsw::log( "2.718281828459"_evar, {base} ) );
+  return "1"_evar / ( equation( value ) * gsw::log( gsw::e_evar, {base} ) );
 }
 
 equation::equation( const equation::op_ptr value ):

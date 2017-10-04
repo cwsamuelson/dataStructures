@@ -150,6 +150,8 @@ public:
   friend equation log( const equation& b, const equation& eq );
 };
 
+const equation e_evar = "2.718281828459"_evar;
+const equation pi_evar = "3.141592"_evar;
 }
 
 #endif
