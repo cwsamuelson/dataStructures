@@ -1,4 +1,5 @@
 #include<cmath>
+#include<sstream>
 
 #include<equation.hh>
 
@@ -7,6 +8,11 @@ using namespace gsw;
 
 double equation::variable::evaluate( const equation::data& variables ) const{
   return variables.at( name );
+}
+
+double equation::constant::evaluate( const equation::data& variables ) const{
+  (void) variables;
+  return value;
 }
 
 double equation::multiplication::evaluate( const equation::data& variables ) const{
@@ -91,12 +97,22 @@ double equation::evaluate( const equation::data& variables ) const{
   return mValue->evaluate( variables );
 }
 
-std::set<equation::data> equation::solve( const equation::data& variables ) const{
+set<equation::data> equation::solve( const equation::data& variables ) const{
 }
 
 equation gsw::operator""_evar( const char* name, size_t sz ){
-  auto var = std::make_shared<equation::variable>();
-  var->name = std::string( name, sz );
-  return {var};
+  string str_name( name, sz );
+  stringstream ss( str_name );
+  double val;
+
+  if( ss >> val ){
+    auto var = make_shared<equation::constant>();
+    var->value = val;
+    return {var};
+  } else {
+    auto var = make_shared<equation::variable>();
+    var->name = str_name;
+    return {var};
+  }
 }
 

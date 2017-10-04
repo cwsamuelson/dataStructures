@@ -13,9 +13,16 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     //         set<set<string> > {{"foo"}} );
   }
 
+  SECTION( "Constants" ){
+    REQUIRE( ( "1"_evar ).evaluate( {} ) == 1 );
+    REQUIRE( ( "5"_evar ).evaluate( {{"X", 1}} ) == 5 );
+    REQUIRE( ( "4.2"_evar ).evaluate( {{"X", 1}} ) == 4.2 );
+  }
+
   SECTION( "Negation" ){
     REQUIRE( ( -"X"_evar ).evaluate( {{"X", 1}} ) == -1 );
     REQUIRE( ( - -"X"_evar ).evaluate( {{"X", 1}} ) == 1 );
+    REQUIRE( ( -"5"_evar ).evaluate( {{"X", 1}} ) == -5 );
     //REQUIRE( ( !"foo"_lvar ).solve( {"foo"} ) == 
     //         set<set<string> > {{}} );
   }
@@ -25,6 +32,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar * "Y"_evar ).evaluate( {{"X", 3}, {"Y", -3}} ) == -9 );
     REQUIRE( ( "X"_evar * "Y"_evar ).evaluate( {{"X", 4}, {"Y", 3}} ) == 12 );
     REQUIRE( ( "X"_evar * "X"_evar ).evaluate( {{"X", 3}} ) == 9 );
+    REQUIRE( ( "4.2"_evar * "X"_evar ).evaluate( {{"X", 2}} ) == 8.4 );
     //REQUIRE( ( "foo"_lvar && "bar"_lvar ).solve( {"foo", "bar"} ) ==
     //         set<set<string> >( {{"foo", "bar"}} ) );
   }

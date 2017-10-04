@@ -30,6 +30,11 @@ private:
 
   using op_ptr = std::shared_ptr<operation>;
 
+  struct constant : public operation{
+    double value;
+
+    double evaluate( const data& variables ) const;
+  };
   struct variable : public operation{
     std::string name;
 
