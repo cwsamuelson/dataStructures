@@ -41,12 +41,14 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar / "Y"_evar ).evaluate( {{"X", 12}, {"Y", 4}} ) == 3 );
     REQUIRE( ( "X"_evar / "Y"_evar ).evaluate( {{"X", 12}, {"Y", -2}} ) == -6 );
     REQUIRE( ( "X"_evar / "X"_evar ).evaluate( {{"X", 12}} ) == 1 );
+    REQUIRE( ( "4.2"_evar / "X"_evar ).evaluate( {{"X", 2}} ) == 2.1 );
   }
 
   SECTION( "Addition (+)" ){
     REQUIRE( ( "X"_evar + "Y"_evar ).evaluate( {{"X", 1}, {"Y", 2}} ) == 3 );
     REQUIRE( ( "X"_evar + "Y"_evar ).evaluate( {{"X", 3}, {"Y", 2}} ) == 5 );
     REQUIRE( ( "X"_evar + "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == -2 );
+    REQUIRE( ( "5"_evar + "3"_evar ).evaluate( {} ) == 8 );
     //REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
     //         set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
   }
@@ -55,6 +57,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", 4}} ) == 1 );
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", 7}} ) == -2 );
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == 12 );
+    REQUIRE( ( "5"_evar - "3"_evar ).evaluate( {} ) == 2 );
     //REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
     //         set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
   }
@@ -64,6 +67,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 3}, {"Y", 3}} ) == 27 );
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 3}, {"Y", -3}} ) == ( 1.0 / 27.0 ) );
     REQUIRE( ( "X"_evar ).pow( "Y"_evar ).evaluate( {{"X", 2}, {"Y", 1.5}} ) == std::pow( 2, 1.5 ) );
+    REQUIRE( ( "2"_evar ).pow( "X"_evar ).evaluate( {{"X", 3}} ) == std::pow( 2, 3 ) );
   }
 }
 
