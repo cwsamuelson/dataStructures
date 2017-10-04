@@ -63,6 +63,12 @@ private:
 
     double evaluate( const data& variables ) const;
   };
+  struct exponentiation : public operation{
+    op_ptr base;
+    op_ptr exponent;
+
+    double evaluate( const data& variables ) const;
+  };
 
   equation( const op_ptr value );
 

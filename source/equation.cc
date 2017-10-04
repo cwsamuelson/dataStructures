@@ -1,3 +1,5 @@
+#include<cmath>
+
 #include<equation.hh>
 
 using namespace std;
@@ -25,6 +27,10 @@ double equation::subtraction::evaluate( const equation::data& variables ) const{
 
 double equation::inversion::evaluate( const equation::data& variables ) const{
   return -operand->evaluate( variables );
+}
+
+double equation::exponentiation::evaluate( const equation::data& variables ) const{
+  return std::pow( base->evaluate( variables ), exponent->evaluate( variables ) );
 }
 
 equation::equation( const equation::op_ptr value ):
@@ -66,6 +72,10 @@ equation equation::operator-() const{
 }
 
 equation equation::pow( const equation& operand ) const{
+  auto var = make_shared<equation::exponentiation>();
+  var->base = mValue;
+  var->exponent = operand.mValue;
+  return {var};
 }
 
 equation equation::derive( unsigned long long order ) const{
