@@ -98,6 +98,7 @@ double equation::logarithm::evaluate( const data& variables ) const{
 }
 
 equation equation::logarithm::derive( std::string var ) const{
+  (void) var;
   return "1"_evar / ( equation( value ) * gsw::log( gsw::e_evar, {base} ) );
 }
 
@@ -143,10 +144,6 @@ equation equation::operator-() const{
   return {var};
 }
 
-double equation::operator()( const data& variables ) const{
-  return evaluate( variables );
-}
-
 equation equation::pow( const equation& operand ) const{
   auto var = make_shared<equation::exponentiation>( false );
   var->base = mValue;
@@ -168,20 +165,30 @@ equation gsw::log( const equation& b, const equation& eq ){
   return {var};
 }
 
+/*! @todo implement higher order derivation */
 equation equation::derive( std::string var, unsigned long long order ) const{
+  (void) order;
 //  while( order-- ){
     return mValue->derive( var );
 //  }
 }
 
+/*! @todo implement equation integration */
 equation equation::integrate( unsigned long long min, unsigned long long max ) const{
+  (void) min;
+  (void) max;
+
+  return {nullptr};
 }
 
 double equation::evaluate( const equation::data& variables ) const{
   return mValue->evaluate( variables );
 }
 
+/*! @todo implement equation solver */
 set<equation::data> equation::solve( const equation::data& variables ) const{
+  (void) variables;
+  return {};
 }
 
 equation gsw::operator""_evar( const char* name, size_t sz ){
@@ -201,7 +208,7 @@ equation gsw::operator""_evar( const char* name, size_t sz ){
 }
 
 equation::const_eq gsw::operator""_cvar( const char* name, size_t sz ){
-  stringstream ss( name );
+  stringstream ss( string( name, sz ) );
   double val;
 
   if( ss >> val ){
@@ -209,7 +216,8 @@ equation::const_eq gsw::operator""_cvar( const char* name, size_t sz ){
     var->value = val;
     return {var};
   } else {
-    //throw exception
+    /*! @todo create exception to throw */
+    throw -1;
   }
 }
 

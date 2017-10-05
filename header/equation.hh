@@ -160,8 +160,12 @@ public:
    * @param variables Set of variable name, value pairs to evaluate on
    *
    * @return This function evaluated with the given variable names and values
+   *
+   * Implementation provided here to assist with inlining
    */
-  double operator()( const data& variables ) const;
+  double operator()( const data& variables ) const{
+    return evaluate( variables );
+  }
 
   /*!
    */
