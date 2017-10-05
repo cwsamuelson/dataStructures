@@ -12,11 +12,6 @@
 
 namespace gsw{
 
-class equation;
-
-equation operator""_evar( const char* name, size_t sz );
-equation log( const equation& b, const equation& eq );
-
 /*! Mathematical equation
  */
 class equation{
@@ -78,8 +73,14 @@ private:
     equation derive( std::string var ) const;
   };
   struct exponentiation : public operation{
+  private:
+    bool use_power;
+
+  public:
     op_ptr base;
     op_ptr exponent;
+
+    exponentiation( bool power = false );
 
     double evaluate( const data& variables ) const;
     equation derive( std::string var ) const;
@@ -97,6 +98,22 @@ private:
   op_ptr mValue;
 
 public:
+  using const_ptr = std::shared_ptr<constant>;
+
+  class const_eq{
+  private:
+    const_eq( const const_ptr value );
+
+    const_ptr mValue;
+
+  public:
+    /*!
+     */
+    friend const_eq operator""_cvar( const char* name, size_t sz );
+
+    friend equation;
+  };
+
   /*!
    */
   equation operator*( const equation& multiplicand ) const;
@@ -127,6 +144,10 @@ public:
 
   /*!
    */
+  equation pow( const const_eq& operand ) const;
+
+  /*!
+   */
   equation derive( std::string var, unsigned long long order = 1 ) const;
 
   /*!
@@ -148,10 +169,20 @@ public:
   /*!
    */
   friend equation log( const equation& b, const equation& eq );
+
+  /*!
+   */
+  friend const_eq operator""_cvar( const char* name, size_t sz );
 };
 
-const equation e_evar = "2.718281828459"_evar;
+equation::const_eq operator""_cvar( const char* name, size_t sz );
+equation operator""_evar( const char* name, size_t sz );
+equation log( const equation& b, const equation& eq );
+
+
+const equation e_evar  = "2.718281828459"_evar;
 const equation pi_evar = "3.141592"_evar;
+const equation gr_evar = "1.61803398875"_evar;
 }
 
 #endif

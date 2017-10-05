@@ -83,8 +83,8 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "X"_evar ).derive( "X" ).evaluate( {} ) == 1 );
     REQUIRE( ( "2"_evar * "X"_evar ).derive( "X" ).evaluate( {{"X", 0}} ) == 2 );
     REQUIRE( e_evar.pow( "X"_evar ).evaluate( {{"X", 1}} ) == e_evar.evaluate( {} ) );
-    REQUIRE( e_evar.pow( "X"_evar ).derive( "X" ).evaluate( {{"X", 1}} ) == e_evar.evaluate( {} ) );
-    REQUIRE( ( "X"_evar ).pow( "2"_evar ).derive( "X" ).evaluate( {{"X", 3}} ) == 6 );
+    REQUIRE( are_equal( e_evar.pow( "X"_evar ).derive( "X" ).evaluate( {{"X", 1}} ), e_evar.evaluate( {} ) ) );
+    REQUIRE( ( "X"_evar ).pow( "2"_cvar ).derive( "X" ).evaluate( {{"X", 3}} ) == 6 );
   }
 }
 

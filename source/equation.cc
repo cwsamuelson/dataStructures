@@ -78,12 +78,19 @@ double equation::exponentiation::evaluate( const equation::data& variables ) con
   return std::pow( base->evaluate( variables ), exponent->evaluate( variables ) );
 }
 
-/*! @todo distinguish between using power rule and exponentiation rule */
 equation equation::exponentiation::derive( std::string var ) const{
-  auto original = make_shared<equation::exponentiation>();
-  original->exponent = exponent;
-  original->base = base;
-  return exponent->derive( var ) * equation( original ) * gsw::log( gsw::e_evar, {base} );
+  if( use_power ){
+    return equation( base ) * equation( exponent );
+  } else {
+    auto original = make_shared<equation::exponentiation>();
+    original->exponent = exponent;
+    original->base = base;
+    return exponent->derive( var ) * equation( original ) * gsw::log( gsw::e_evar, {base} );
+  }
+}
+
+equation::exponentiation::exponentiation( bool power ):
+  use_power( power ){
 }
 
 double equation::logarithm::evaluate( const data& variables ) const{
@@ -95,6 +102,10 @@ equation equation::logarithm::derive( std::string var ) const{
 }
 
 equation::equation( const equation::op_ptr value ):
+  mValue( value ){
+}
+
+equation::const_eq::const_eq( const equation::const_ptr value ):
   mValue( value ){
 }
 
@@ -137,7 +148,14 @@ double equation::operator()( const data& variables ) const{
 }
 
 equation equation::pow( const equation& operand ) const{
-  auto var = make_shared<equation::exponentiation>();
+  auto var = make_shared<equation::exponentiation>( false );
+  var->base = mValue;
+  var->exponent = operand.mValue;
+  return {var};
+}
+
+equation equation::pow( const const_eq& operand ) const{
+  auto var = make_shared<equation::exponentiation>( true );
   var->base = mValue;
   var->exponent = operand.mValue;
   return {var};
@@ -179,6 +197,19 @@ equation gsw::operator""_evar( const char* name, size_t sz ){
     auto var = make_shared<equation::variable>();
     var->name = str_name;
     return {var};
+  }
+}
+
+equation::const_eq gsw::operator""_cvar( const char* name, size_t sz ){
+  stringstream ss( name );
+  double val;
+
+  if( ss >> val ){
+    auto var = make_shared<equation::constant>();
+    var->value = val;
+    return {var};
+  } else {
+    //throw exception
   }
 }
 
