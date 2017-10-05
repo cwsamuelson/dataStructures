@@ -100,6 +100,12 @@ private:
 public:
   using const_ptr = std::shared_ptr<constant>;
 
+  /*! Constant equation
+   *
+   * Stores a constant pointer to be forwarded to an equation, used to
+   * distinguish between when to use the power rule and exponentiation rule for
+   * derivatives
+   */
   class const_eq{
   private:
     const_eq( const const_ptr value );
@@ -107,34 +113,53 @@ public:
     const_ptr mValue;
 
   public:
-    /*!
-     */
     friend const_eq operator""_cvar( const char* name, size_t sz );
-
     friend equation;
   };
 
-  /*!
+  /*! Multiplication operator
+   *
+   * @param multiplicand operand equation to be multiplied with this
+   *
+   * @return an equation that represents the multiplication of this and multiplicand
    */
   equation operator*( const equation& multiplicand ) const;
 
-  /*!
+  /*! Division operator
+   *
+   * @param dividend operand equation to divide this by
+   *
+   * @return an equation that represents the division of this by dividend
    */
   equation operator/( const equation& dividend ) const;
 
-  /*!
+  /*! Addition operator
+   *
+   * @param dividend operand equation to divide this by
+   *
+   * @return an equation that represents the division of this by dividend
    */
   equation operator+( const equation& operand ) const;
 
-  /*!
+  /*! Subtraction operator
+   *
+   * @param operand operand equation to subtract from this
+   *
+   * @return an equation that represents the subtraction of operand from this
    */
   equation operator-( const equation& operand ) const;
 
-  /*!
+  /*! Negation operator
+   *
+   * @return negative of this
    */
   equation operator-() const;
   
-  /*!
+  /*! Evaluation operator
+   *
+   * @param variables Set of variable name, value pairs to evaluate on
+   *
+   * @return This function evaluated with the given variable names and values
    */
   double operator()( const data& variables ) const;
 
@@ -146,7 +171,11 @@ public:
    */
   equation pow( const const_eq& operand ) const;
 
-  /*!
+  /*! Take the derivative of this wrt var
+   *
+   * @param var Variable with which to take the derivative
+   *
+   * @param order The number of derivatives to take (order-th derivative)
    */
   equation derive( std::string var, unsigned long long order = 1 ) const;
 
@@ -154,7 +183,11 @@ public:
    */
   equation integrate( unsigned long long min = 0, unsigned long long max = 0 ) const;
 
-  /*!
+  /*! Evaluate this function
+   *
+   * @param variables Set of variable name, value pairs to evaluate on
+   *
+   * @return This function evaluated with the given variable names and values
    */
   double evaluate( const data& variables ) const;
 
@@ -162,26 +195,48 @@ public:
    */
   std::set<data> solve( const data& variables ) const;
 
-  /*!
-   */
   friend equation operator""_evar( const char* name, size_t sz );
-
-  /*!
-   */
-  friend equation log( const equation& b, const equation& eq );
-
-  /*!
-   */
   friend const_eq operator""_cvar( const char* name, size_t sz );
+  friend equation log( const equation& b, const equation& eq );
 };
 
-equation::const_eq operator""_cvar( const char* name, size_t sz );
+/*! Equation string
+ *
+ * @param name Name of variable, or content of constant
+ *
+ * @param sz Length of name array
+ *
+ * @return Constant or variable equation, depending on data at name
+ */
 equation operator""_evar( const char* name, size_t sz );
+
+/*! Constant value equation
+ *
+ * @param name Constant data value
+ *
+ * @param sz Length of name array
+ *
+ * @return Constant value wrapper
+ *
+ * This operator is used to distinguish between power and exponent rules in the
+ * pow function within equation.  Using this operator as the argument to
+ * equation::pow means the power rule will be utilized when taking the
+ * derivative of the return value from pow.
+ */
+equation::const_eq operator""_cvar( const char* name, size_t sz );
+
+/*! Logarithm of eq with base b
+ *
+ * @param b logarithm base (natural log base == e)
+ *
+ * @param eq Equation to take the logarithm of
+ *
+ * @return Equation representing log base b of eq
+ */
 equation log( const equation& b, const equation& eq );
 
-
 const equation e_evar  = "2.718281828459"_evar;
-const equation pi_evar = "3.141592"_evar;
+const equation pi_evar = "3.141592653589"_evar;
 const equation gr_evar = "1.61803398875"_evar;
 }
 
