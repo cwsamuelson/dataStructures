@@ -158,6 +158,15 @@ equation equation::pow( const const_eq& operand ) const{
   return {var};
 }
 
+equation equation::pow( double operand ) const{
+  auto var = make_shared<equation::exponentiation>( true );
+  auto cnst = make_shared<equation::constant>();
+  cnst->value = operand;
+  var->base = mValue;
+  var->exponent = cnst;
+  return {var};
+}
+
 equation gsw::log( const equation& b, const equation& eq ){
   auto var = make_shared<equation::logarithm>();
   var->base = b.mValue;
@@ -165,12 +174,14 @@ equation gsw::log( const equation& b, const equation& eq ){
   return {var};
 }
 
-/*! @todo implement higher order derivation */
 equation equation::derive( std::string var, unsigned long long order ) const{
-  (void) order;
-//  while( order-- ){
-    return mValue->derive( var );
-//  }
+  equation temp = mValue->derive( var );
+
+  while( --order ){
+    temp = temp.derive( var );
+  }
+
+  return temp;
 }
 
 /*! @todo implement equation integration */

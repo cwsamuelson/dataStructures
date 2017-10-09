@@ -13,6 +13,8 @@
 namespace gsw{
 
 /*! Mathematical equation
+ *
+ * @todo implement operators with doubles
  */
 class equation{
 public:
@@ -175,11 +177,17 @@ public:
    */
   equation pow( const const_eq& operand ) const;
 
+  /*!
+   */
+  equation pow( double operand ) const;
+
   /*! Take the derivative of this wrt var
    *
    * @param var Variable with which to take the derivative
    *
    * @param order The number of derivatives to take (order-th derivative)
+   *
+   * @todo fix finding repeated derivatives of exponents
    */
   equation derive( std::string var, unsigned long long order = 1 ) const;
 
