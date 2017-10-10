@@ -24,5 +24,20 @@ TEST_CASE( "Sort algorithm", "[algorithm]" ){
   for( unsigned int i = 1; i < vec.size(); ++i ){
     REQUIRE( vec[i] >= vec[i - 1] );
   }
+
+  SECTION( "Floating point comparison" ){
+    float f = 0.1f;
+    float sum = 0;
+
+    for( int i = 0; i < 10; ++i ){
+      sum += f;
+    }
+    float product = f * 10;
+
+    REQUIRE( product != sum );
+    REQUIRE( are_equal( product, sum ) );
+    REQUIRE( are_equal( product, f * 10 ) );
+    REQUIRE( are_equal( sum, f * 10 ) );
+  }
 }
 

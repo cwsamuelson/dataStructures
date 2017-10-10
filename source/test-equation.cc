@@ -1,16 +1,10 @@
-#include<algorithm>
-#include<cmath>
 
 #include<catch.hpp>
 
+#include<algorithm.hh>
 #include<equation.hh>
 
 using namespace gsw;
-
-template<typename T>
-static bool are_equal( T f1, T f2 ){
-  return ( std::fabs( f1 - f2 ) <= std::numeric_limits<T>::epsilon() * std::max( {1.0, std::fabs( f1 ), std::fabs( f2 )} ) );
-}
 
 TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
   SECTION( "Basic operation" ){
