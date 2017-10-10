@@ -1,3 +1,4 @@
+#include<cmath>
 #include<random>
 
 #include<catch.hpp>
@@ -38,6 +39,10 @@ TEST_CASE( "Sort algorithm", "[algorithm]" ){
     REQUIRE( are_equal( product, sum ) );
     REQUIRE( are_equal( product, f * 10 ) );
     REQUIRE( are_equal( sum, f * 10 ) );
+
+    // atan(1)*4 == pi
+    REQUIRE( std::sin( std::atan( 1 ) * 4 ) != 0.0 );
+    REQUIRE( are_equal( std::sin( std::atan( 1 ) * 4 ), 0.0 ) );
   }
 }
 
