@@ -55,7 +55,7 @@ SOURCES:=$(shell find $(sourcedir) -name '*$(sourceextension)')
 OBJECTS:=$(subst $(sourcedir),$(objdir), $(subst $(sourceextension),.o, $(SOURCES)))
 DEPENDS:=$(subst $(sourcedir),$(depdir), $(subst $(sourceextension),.d, $(SOURCES)))
 CREATEDIRS:=$(objectdir) $(objdir) $(dependdir) $(depdir) $(binarydir) $(bindir)
-DIRS := $(sourcedir) $(headerdir) $(objectdir) $(objdir) $(dependdir) $(depdir) $(binarydir) $(bindir) $(librarydir)
+DIRS:=$(CREATEDIRS) $(sourcedir) $(headerdir) $(librarydir)
 LIBS:=$(patsubst %,-l%,$(libraries))
 INCLUDES:=$(patsubst %,-I./%,$(includedirs))
 
@@ -79,7 +79,7 @@ $(CREATEDIRS):
 #   fmt -1: list words one per line
 #   sed:    strip leading spaces
 #   sed:    add trailing colons
-$(objdir)/%.o:|$(DIRS)
+$(objdir)/%.o:|$(CREATEDIRS)
 	$(CC) -c -MMD -MP -MF $(depdir)/$*.d $(sourcedir)/$*$(sourceextension) $(FLAGS) $(INCLUDES) -o $@
 
 endif
