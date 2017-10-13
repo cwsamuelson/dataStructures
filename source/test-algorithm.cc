@@ -25,22 +25,23 @@ TEST_CASE( "Sort algorithm", "[algorithm]" ){
   for( unsigned int i = 1; i < vec.size(); ++i ){
     REQUIRE( vec[i] >= vec[i - 1] );
   }
-
 }
 
 TEST_CASE( "Floating point comparison", "[algorithm]" ){
   float f = 0.1f;
   float sum = 0;
 
-  for( int i = 0; i < 10; ++i ){
+  for( int i = 0; i < 1000; ++i ){
     sum += f;
   }
-  float product = f * 10;
+  float product = f * 1000;
 
   REQUIRE( product != sum );
   REQUIRE( are_equal( product, sum ) );
-  REQUIRE( are_equal( product, f * 10 ) );
-  REQUIRE( are_equal( sum, f * 10 ) );
+  REQUIRE( are_equal( product, f * 1000 ) );
+  REQUIRE( are_equal( sum, f * 1000 ) );
+  REQUIRE( are_equal( sum, 100.0f ) );
+  REQUIRE( are_equal( product, 100.0f ) );
 
   // atan(1)*4 == pi
   REQUIRE( std::sin( std::atan( 1 ) * 4 ) != 0.0 );

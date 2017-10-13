@@ -3,6 +3,29 @@
 using namespace std;
 using namespace gsw;
 
+set<double> polynomial::solve( double hint ){
+  // should find (size - 1) roots
+  // bounds
+  double lower = hint;
+  double upper = hint;
+  std::set<double> roots;
+  double root = hint;
+  auto derivative = derive( *this );
+
+  for( int i = 0; i < mCoeff.size(); ++i ){
+    // Newton's method
+    for( int i = 0; i < 5; ++i ){
+      root =  root - ( (*this)( root ) / derivative( root ) );
+      lower = std::min( lower, root );
+      upper = std::max( upper, root );
+    }
+
+    roots.insert( root );
+  }
+
+  return roots;
+}
+
 polynomial& polynomial::operator+=( const polynomial& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){

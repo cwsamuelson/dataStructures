@@ -5,6 +5,7 @@
  * @example test-polynomial.cc
  */
 
+#include<set>
 #include<vector>
 #include<functional>
 #include<cmath>
@@ -19,22 +20,6 @@ struct point{
   double x;
   double y;
 };
-
-bool operator==( const polynomial& eq, point p );
-bool operator<(  const polynomial& eq, point p );
-bool operator<=( const polynomial& eq, point p );
-bool operator>(  const polynomial& eq, point p );
-bool operator>=( const polynomial& eq, point p );
-
-bool operator==( point p, const polynomial& eq );
-bool operator<(  point p, const polynomial& eq );
-bool operator<=( point p, const polynomial& eq );
-bool operator>(  point p, const polynomial& eq );
-bool operator>=( point p, const polynomial& eq );
-
-polynomial derive( const polynomial& eq, unsigned int order = 1 );
-polynomial antiderive( const polynomial& eq );
-double integrate( const polynomial& eq, double upperBound, double lowerBound );
 
 /*! Polynomial wrapper.  Stores coefficients, and calculates a result
  *
@@ -88,6 +73,10 @@ public:
   polynomial( U&& eq ){
     mv( std::forward<U>( eq ) );
   }
+
+  /*!
+   */
+  std::set<double> solve( double hint = 1.0 );
 
   /*! copy/move assignment
    *
@@ -177,7 +166,7 @@ public:
 
   /*! Find the value of the polynomial at a particular value
    *
-   * @param X the x-value of the polynomial to 'solve' for
+   * @param X the x-value of the polynomial to compute
    *
    * @return Result of solving the polynomial for X
    *
@@ -297,6 +286,22 @@ public:
    */
   friend double integrate( const polynomial& eq, double upperBound, double lowerBound );
 };
+
+bool operator==( const polynomial& eq, point p );
+bool operator<(  const polynomial& eq, point p );
+bool operator<=( const polynomial& eq, point p );
+bool operator>(  const polynomial& eq, point p );
+bool operator>=( const polynomial& eq, point p );
+
+bool operator==( point p, const polynomial& eq );
+bool operator<(  point p, const polynomial& eq );
+bool operator<=( point p, const polynomial& eq );
+bool operator>(  point p, const polynomial& eq );
+bool operator>=( point p, const polynomial& eq );
+
+polynomial derive( const polynomial& eq, unsigned int order = 1 );
+polynomial antiderive( const polynomial& eq );
+double integrate( const polynomial& eq, double upperBound, double lowerBound );
 
 }
 

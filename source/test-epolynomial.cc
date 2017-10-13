@@ -1,6 +1,7 @@
 #include<catch.hpp>
 
 #include<polynomial.hh>
+#include<algorithm.hh>
 
 using namespace std;
 
@@ -166,6 +167,28 @@ TEST_CASE( "polynomial can be compared to points", "[equ]" ){
       REQUIRE( e1 <= p3 );
       REQUIRE( p3 <= e1 );
     }
+  }
+}
+
+TEST_CASE( "", "[equ]" ){
+  SECTION( "" ){
+    vector<double> v1{-5, 3};
+    gsw::polynomial e1( v1.begin(), v1.end() );
+    auto answers = e1.solve();
+
+    REQUIRE( answers.size() == 1 );
+    for( auto solution : answers ){
+      REQUIRE( gsw::are_equal( solution, 5.0 / 3.0 ) );
+    }
+  }
+
+  SECTION( "" ){
+    vector<double> v1{10, -7, 1};
+    gsw::polynomial e1( v1.begin(), v1.end() );
+    auto answers = e1.solve();
+
+    CHECK( answers.size() == 2 );
+    CHECK( answers == set<double>( {5, 2} ) );
   }
 }
 
