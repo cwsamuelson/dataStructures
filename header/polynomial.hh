@@ -30,7 +30,20 @@ class polynomial : public additive<polynomial>,
                           multiplicative<polynomial, double>{
 private:
   using storage_type = std::vector<double>;
-  storage_type mCoeff;
+  /*! Polynomial coefficient list
+   *
+   * mCoeff is declared mutable such that the equation can be 'reduced' in a
+   * const context.  Meaning when checking the order, or for comparison,
+   * excess 0s can be cropped off, tho it does not change the 'value' of the
+   * equation, this makes it easier to use.
+   */
+  mutable storage_type mCoeff;
+
+  void reduce() const{
+    while( !mCoeff.empty() && ( mCoeff.back() == 0 ) ){
+      mCoeff.pop_back();
+    }
+  }
 
   void mv( const polynomial& eq ){
     mCoeff = eq.mCoeff;
@@ -77,6 +90,12 @@ public:
   /*!
    */
   std::set<double> solve( double hint = 1.0 );
+
+  /*!
+   *
+   * @return the order of the polynomial (X^2+x+1 has order 2)
+   */
+  unsigned int order() const;
 
   /*! copy/move assignment
    *
@@ -144,7 +163,7 @@ public:
    *
    * Divides this polynomial by rhs
    */
-  polynomial& operator/=( const polynomial& rhs );
+  polynomial& operator/=( const polynomial& divisor );
 
   /*! Divide-assign operator
    *
@@ -173,6 +192,16 @@ public:
    * Calculate a y-value for the given x-value
    */
   double operator()( double X ) const;
+
+  /*!
+   *
+   * @param lhs
+   *
+   * @param rhs
+   *
+   * @return
+   */
+  friend bool operator==( const polynomial& lhs, const polynomial& rhs );
 
   /*!
    *
@@ -287,6 +316,7 @@ public:
   friend double integrate( const polynomial& eq, double upperBound, double lowerBound );
 };
 
+bool operator==( const polynomial& lhs, const polynomial& rhs );
 bool operator==( const polynomial& eq, point p );
 bool operator<(  const polynomial& eq, point p );
 bool operator<=( const polynomial& eq, point p );

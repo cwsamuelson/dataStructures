@@ -47,9 +47,19 @@ TEST_CASE( "polynomial can be used in basic arithmetic", "[equ]" ){
     REQUIRE( ( eq5 * eq6 )( 2 ) == 21 );
   }
 
-//TODO:test dividing polynomial by another polynomial
+  /*! @todo test dividing polynomial by another polynomial */
   SECTION( "Division" ){
     REQUIRE( ( eq2 / 2 )( 2 ) == eq2( 2 ) / 2 );
+
+    vector<double> vec1{-5, 1};
+    vector<double> vec2{-2, 1};
+    vector<double> vec3{10, -7, 1};
+    gsw::polynomial eq1( vec1.begin(), vec1.end() );
+    gsw::polynomial eq2( vec2.begin(), vec2.end() );
+    gsw::polynomial eq3( vec3.begin(), vec3.end() );
+
+    REQUIRE( ( eq1 * eq2 ) == eq3 );
+    REQUIRE( ( eq3 / eq2 ) == eq1 );
   }
 }
 

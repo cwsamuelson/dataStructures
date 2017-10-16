@@ -26,6 +26,16 @@ set<double> polynomial::solve( double hint ){
   return roots;
 }
 
+unsigned int polynomial::order() const{
+  reduce();
+
+  if( mCoeff.size() > 0 ){
+    return mCoeff.size() - 1;
+  } else {
+    return 0;
+  }
+}
+
 polynomial& polynomial::operator+=( const polynomial& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
@@ -36,7 +46,7 @@ polynomial& polynomial::operator+=( const polynomial& rhs ){
     mCoeff.push_back( rhs.mCoeff[i++] );
   }
 
-  return ( *this );
+  return *this;
 }
 
 polynomial& polynomial::operator-=( const polynomial& rhs ){
@@ -49,7 +59,7 @@ polynomial& polynomial::operator-=( const polynomial& rhs ){
     mCoeff.push_back( -rhs.mCoeff[i++] );
   }
 
-  return ( *this );
+  return *this;
 }
 
 polynomial& polynomial::operator*=( const polynomial& rhs ){
@@ -57,9 +67,13 @@ polynomial& polynomial::operator*=( const polynomial& rhs ){
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
     for( unsigned int j = 0; j < rhs.mCoeff.size(); ++j ){
-      vec[i + j] += mCoeff[i] * rhs.mCoeff[i];
+      vec[i + j] += mCoeff[i] * rhs.mCoeff[j];
     }
   }
+
+  // prevent incidental memory inflation
+  /*! @todo consider whether this memory operation may be too much */
+  vec.shrink_to_fit();
 
   mCoeff = move( vec );
 
@@ -71,19 +85,29 @@ polynomial& polynomial::operator*=( double d ){
     it *= d;
   }
 
-  return ( *this );
+  return *this;
 }
 
 polynomial& polynomial::operator/=( const polynomial& rhs ){
-  storage_type vec( mCoeff.size() + rhs.mCoeff.size() - 1 );
+  polynomial divisor = rhs;
+  storage_type quotient( mCoeff.size() + divisor.mCoeff.size() - 1 );
+  polynomial remainder = *this;
 
-  for( unsigned int i = 0; i < mCoeff.size(); ++i ){
-    for( unsigned int j = 0; j < rhs.mCoeff.size(); ++j ){
-      vec[i - j] -= mCoeff[i] / rhs.mCoeff[i];
-    }
+  // perform long division
+  while( remainder.order() > 0 ){
+    unsigned int term_order = remainder.order() - divisor.order();
+    double term_value = ( quotient[term_order] = remainder.mCoeff.back() / divisor.mCoeff.back() );
+    storage_type term_vec( term_order );
+    term_vec.push_back( term_value );
+    polynomial term( term_vec.begin(), term_vec.end() );
+    remainder -= term * divisor;
   }
 
-  mCoeff = move( vec );
+  // prevent incidental memory inflation
+  /*! @todo consider whether this memory operation may be too much */
+  quotient.shrink_to_fit();
+
+  mCoeff = move( quotient );
 
   return *this;
 }
@@ -108,6 +132,12 @@ double polynomial::operator()( double X ) const{
   }
 
   return val;
+}
+
+bool gsw::operator==( const polynomial& lhs, const polynomial& rhs ){
+  lhs.reduce();
+  rhs.reduce();
+  return lhs.mCoeff == rhs.mCoeff;
 }
 
 bool gsw::operator==( const polynomial& eq, point p ){
