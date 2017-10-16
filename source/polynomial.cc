@@ -5,22 +5,24 @@ using namespace gsw;
 
 set<double> polynomial::solve( double hint ){
   // should find (size - 1) roots
-  // bounds
-  double lower = hint;
-  double upper = hint;
   std::set<double> roots;
   double root = hint;
-  auto derivative = derive( *this );
+  auto intermediate = *this;
 
   for( int i = 0; i < mCoeff.size(); ++i ){
+    auto derivative = derive( intermediate );
     // Newton's method
-    for( int i = 0; i < 5; ++i ){
-      root =  root - ( (*this)( root ) / derivative( root ) );
-      lower = std::min( lower, root );
-      upper = std::max( upper, root );
+    for( int i = 0; i < 6; ++i ){
+      root =  root - ( intermediate( root ) / derivative( root ) );
     }
 
     roots.insert( root );
+
+    vector<double> v;
+    v.push_back( -root );
+    v.push_back( 1 );
+
+    intermediate /= polynomial( v.begin(), v.end() );
   }
 
   return roots;
