@@ -13,14 +13,12 @@ set<double> polynomial::solve( double hint ){
     auto derivative = derive( intermediate );
     // Newton's method
     for( int i = 0; i < 6; ++i ){
-      root =  root - ( intermediate( root ) / derivative( root ) );
+      root = root - ( intermediate( root ) / derivative( root ) );
     }
 
     roots.insert( root );
 
-    vector<double> v;
-    v.push_back( -root );
-    v.push_back( 1 );
+    vector<double> v{-root, 1};
 
     intermediate /= polynomial( v.begin(), v.end() );
   }
@@ -91,18 +89,17 @@ polynomial& polynomial::operator*=( double d ){
 }
 
 polynomial& polynomial::operator/=( const polynomial& rhs ){
-  polynomial divisor = rhs;
-  storage_type quotient( mCoeff.size() + divisor.mCoeff.size() - 1 );
+  storage_type quotient( mCoeff.size() + rhs.mCoeff.size() - 1 );
   polynomial remainder = *this;
 
   // perform long division
   while( remainder.order() > 0 ){
-    unsigned int term_order = remainder.order() - divisor.order();
-    double term_value = ( quotient[term_order] = remainder.mCoeff.back() / divisor.mCoeff.back() );
+    unsigned int term_order = remainder.order() - rhs.order();
+    double term_value = ( quotient[term_order] = remainder.mCoeff.back() / rhs.mCoeff.back() );
     storage_type term_vec( term_order );
     term_vec.push_back( term_value );
     polynomial term( term_vec.begin(), term_vec.end() );
-    remainder -= term * divisor;
+    remainder -= term * rhs;
   }
 
   // prevent incidental memory inflation
@@ -123,6 +120,10 @@ polynomial& polynomial::operator/=( double d ){
 }
 
 double& polynomial::operator[]( size_t idx ){
+  return mCoeff[idx];
+}
+
+const double& polynomial::operator[]( size_t idx ) const{
   return mCoeff[idx];
 }
 

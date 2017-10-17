@@ -31,20 +31,37 @@ TEST_CASE( "Floating point comparison", "[algorithm]" ){
   float f = 0.1f;
   float sum = 0;
 
-  for( int i = 0; i < 1000; ++i ){
+  for( int i = 0; i < 100; ++i ){
     sum += f;
   }
-  float product = f * 1000;
+  float product = f * 100;
 
-  REQUIRE( product != sum );
-  REQUIRE( are_equal( product, sum ) );
-  REQUIRE( are_equal( product, f * 1000 ) );
-  REQUIRE( are_equal( sum, f * 1000 ) );
-  REQUIRE( are_equal( sum, 100.0f ) );
-  REQUIRE( are_equal( product, 100.0f ) );
+  REQUIRE(            1.0 * ( 0.5 - 0.4 - 0.1 ) != 0.0 );
+  REQUIRE( are_equal( 1.0 * ( 0.5 - 0.4 - 0.1 ),   0.0 ) );
+
+  CHECK(            1.0 / 3.0 != 0.333333333333333333333 );
+  CHECK( are_equal( 1.0 / 3.0,   0.333333333333333333333 ) );
+
+  CHECK(            3.0 * ( 1.0 / 3.0 ) != 1.0 );
+  CHECK( are_equal( 3.0 * ( 1.0 / 3.0 ),   1.0 ) );
+
+  CHECK(            product != sum );
+  CHECK( are_equal( product, sum ) );
+
+  CHECK(            product != f * 100 );
+  CHECK( are_equal( product,   f * 100 ) );
+
+  CHECK(            sum != f * 100 );
+  CHECK( are_equal( sum,   f * 100 ) );
+
+  CHECK(            sum != 10.0f );
+  CHECK( are_equal( sum,   10.0f ) );
+
+  CHECK(            product != 10.0f );
+  CHECK( are_equal( product,   10.0f ) );
 
   // atan(1)*4 == pi
-  REQUIRE( std::sin( std::atan( 1 ) * 4 ) != 0.0 );
-  REQUIRE( are_equal( std::sin( std::atan( 1 ) * 4 ), 0.0 ) );
+  REQUIRE(            std::sin( std::atan( 1 ) * 4 ) != 0.0 );
+  REQUIRE( are_equal( std::sin( std::atan( 1 ) * 4 ),   0.0 ) );
 }
 

@@ -183,6 +183,14 @@ public:
    */
   double& operator[]( size_t idx );
 
+  /*!
+   *
+   * @param idx
+   *
+   * @return
+   */
+  const double& operator[]( size_t idx ) const;
+
   /*! Find the value of the polynomial at a particular value
    *
    * @param X the x-value of the polynomial to compute
