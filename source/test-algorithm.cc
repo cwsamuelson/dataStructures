@@ -36,6 +36,12 @@ TEST_CASE( "Floating point comparison", "[algorithm]" ){
   }
   float product = f * 100;
 
+  SECTION( "Negative testing" ){
+    REQUIRE( !are_equal( 1, 5 ) );
+    REQUIRE( !are_equal( 1, 2 ) );
+    REQUIRE( !are_equal( 1, 100 ) );
+  }
+
   REQUIRE(            1.0 * ( 0.5 - 0.4 - 0.1 ) != 0.0 );
   REQUIRE( are_equal( 1.0 * ( 0.5 - 0.4 - 0.1 ),   0.0 ) );
 
