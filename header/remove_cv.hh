@@ -71,6 +71,62 @@ public:
   using type = typename remove_const<typename remove_volatile<T>::type>::type;
 };
 
+/*!
+ */
+template<typename T>
+class remove_reference{
+public:
+  using type = T;
+};
+
+/*!
+ */
+template<typename T>
+class remove_reference<T&>{
+public:
+  using type = T;
+};
+
+/*!
+ */
+template<typename T>
+class remove_reference<T&&>{
+public:
+  using type = T;
+};
+
+/*!
+ */
+template<typename T>
+class remove_extent{
+public:
+  using type = T;
+};
+
+/*!
+ */
+template<typename T, size_t N>
+class remove_extent<T[N]>{
+public:
+  using type = T*;
+};
+
+/*!
+ */
+template<typename T>
+class remove_pointer{
+public:
+  using type = T;
+};
+
+/*!
+ */
+template<typename T>
+class remove_pointer<T*>{
+public:
+  using type = T;
+};
+
 }
 
 #endif

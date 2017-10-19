@@ -118,7 +118,7 @@ private:
 
     // copy data to new buffer
     for( size_type i = 0; i < mSize; ++i ){
-      bfr[i] = mData[i];
+      bfr[i] = std::move( mData[i] );
     }
 
     alloc_traits::deallocate( mAlloc, mData, mCapacity );
