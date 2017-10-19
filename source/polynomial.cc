@@ -3,16 +3,16 @@
 using namespace std;
 using namespace gsw;
 
-set<double> polynomial::solve( double hint ){
+set<double> polynomial::solve( double hint, unsigned int iterations ){
   // should find (size - 1) roots
   std::set<double> roots;
   double root = hint;
   auto intermediate = *this;
 
-  for( int i = 0; i < mCoeff.size(); ++i ){
+  for( unsigned int i = 0; i < mCoeff.size(); ++i ){
     auto derivative = derive( intermediate );
     // Newton's method
-    for( int i = 0; i < 6; ++i ){
+    for( int j = 0; j < iterations; ++j ){
       root = root - ( intermediate( root ) / derivative( root ) );
     }
 
@@ -128,10 +128,11 @@ const double& polynomial::operator[]( size_t idx ) const{
 }
 
 double polynomial::operator()( double X ) const{
-  double val = 0.0;
+  double val = mCoeff.back();
 
-  for( unsigned int i = 0; i < mCoeff.size(); ++i ){
-    val += std::pow( X, i ) * mCoeff[i];
+  for( int i = mCoeff.size() - 2; i >= 0; --i ){
+    val *= X;
+    val += mCoeff[i];
   }
 
   return val;

@@ -8,7 +8,6 @@
 #include<set>
 #include<vector>
 #include<functional>
-#include<cmath>
 
 #include<operators.hh>
 
@@ -29,7 +28,13 @@ class polynomial : public additive<polynomial>,
                           multiplicative<polynomial>,
                           multiplicative<polynomial, double>{
 private:
+  /*!
+   *
+   * @todo instead of a vector, try a set or map of 'term' objects
+   * using a map or set may be more capable of very large polynomials
+   */
   using storage_type = std::vector<double>;
+
   /*! Polynomial coefficient list
    *
    * mCoeff is declared mutable such that the equation can be 'reduced' in a
@@ -88,8 +93,9 @@ public:
   }
 
   /*!
+   * 6 iterations is chosen arbitrarily to provide 'sufficient' default accuracy
    */
-  std::set<double> solve( double hint = 1.0 );
+  std::set<double> solve( double hint = 1.0, unsigned int iterations = 6 );
 
   /*!
    *
