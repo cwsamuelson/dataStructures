@@ -218,17 +218,9 @@ equation gsw::operator""_evar( const char* name, size_t sz ){
   }
 }
 
-equation::const_eq gsw::operator""_cvar( const char* name, size_t sz ){
-  stringstream ss( string( name, sz ) );
-  double val;
-
-  if( ss >> val ){
-    auto var = make_shared<equation::constant>();
-    var->value = val;
-    return {var};
-  } else {
-    /*! @todo create exception to throw */
-    throw -1;
-  }
+equation::const_eq gsw::operator""_cvar( long double value ){
+  auto var = make_shared<equation::constant>();
+  var->value = value;
+  return {var};
 }
 

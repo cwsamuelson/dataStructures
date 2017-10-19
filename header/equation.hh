@@ -115,7 +115,7 @@ public:
     const_ptr mValue;
 
   public:
-    friend const_eq operator""_cvar( const char* name, size_t sz );
+    friend const_eq operator""_cvar( long double value );
     friend equation;
   };
 
@@ -208,7 +208,7 @@ public:
   std::set<data> solve( const data& variables ) const;
 
   friend equation operator""_evar( const char* name, size_t sz );
-  friend const_eq operator""_cvar( const char* name, size_t sz );
+  friend const_eq operator""_cvar( long double value );
   friend equation log( const equation& b, const equation& eq );
 };
 
@@ -235,7 +235,7 @@ equation operator""_evar( const char* name, size_t sz );
  * equation::pow means the power rule will be utilized when taking the
  * derivative of the return value from pow.
  */
-equation::const_eq operator""_cvar( const char* name, size_t sz );
+equation::const_eq operator""_cvar( long double value );
 
 /*! Logarithm of eq with base b
  *

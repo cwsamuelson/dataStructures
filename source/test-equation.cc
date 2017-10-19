@@ -77,21 +77,21 @@ TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
     REQUIRE( ( "2"_evar ).derive( "X" ).evaluate( {} ) == 0 );
     REQUIRE( ( "2"_evar ).derive( "X" ).evaluate( {{"X", 5}} ) == 0 );
     REQUIRE( ( "X"_evar ).derive( "X" ).evaluate( {} ) == 1 );
-    REQUIRE( ( "5"_evar * "X"_evar.pow( "2"_cvar ) + ( "2"_evar * "X"_evar ) ).derive( "X" ).evaluate( {{"X", 3}} ) == 32 );
+    REQUIRE( ( "5"_evar * "X"_evar.pow( 2.0_cvar ) + ( "2"_evar * "X"_evar ) ).derive( "X" ).evaluate( {{"X", 3}} ) == 32 );
     REQUIRE( ( "2"_evar * "X"_evar ).derive( "X" ).evaluate( {{"X", 0}} ) == 2 );
     REQUIRE( e_evar.pow( "X"_evar ).evaluate( {{"X", 1}} ) == e_evar.evaluate( {} ) );
     REQUIRE( e_evar.pow( "X"_evar ).evaluate( {{"X", 0}} ) == 1 );
     REQUIRE( are_equal( e_evar.pow( "X"_evar ).derive( "X" ).evaluate( {{"X", 1}} ), e_evar.evaluate( {} ) ) );
     REQUIRE( are_equal( e_evar.pow( "X"_evar ).derive( "X" ).evaluate( {{"X", 0}} ), 1.0 ) );
-    REQUIRE( ( "X"_evar ).pow( "2"_cvar ).derive( "X" ).evaluate( {{"X", 3}} ) == 6 );
+    REQUIRE( ( "X"_evar ).pow( 2.0_cvar ).derive( "X" ).evaluate( {{"X", 3}} ) == 6 );
 
     REQUIRE( ( "2"_evar ).derive( "X", 2 ).evaluate( {} ) == 0 );
     REQUIRE( ( "2"_evar ).derive( "X", 2 ).evaluate( {{"X", 5}} ) == 0 );
     REQUIRE( ( "X"_evar ).derive( "X", 2 ).evaluate( {} ) == 0 );
-    REQUIRE( ( "5"_evar * "X"_evar.pow( "2"_cvar ) + ( "2"_evar * "X"_evar ) ).derive( "X", 2 ).evaluate( {{"X", 3}} ) == 10 );
+    REQUIRE( ( "5"_evar * "X"_evar.pow( 2.0_cvar ) + ( "2"_evar * "X"_evar ) ).derive( "X", 2 ).evaluate( {{"X", 3}} ) == 10 );
     REQUIRE( ( "2"_evar * "X"_evar ).derive( "X", 2 ).evaluate( {{"X", 0}} ) == 0 );
-    REQUIRE( ( "X"_evar ).pow( "2"_cvar ).derive( "X", 2 ).evaluate( {{"X", 3}} ) == 2 );
-    REQUIRE( ( "X"_evar ).pow( "2"_cvar ).derive( "X", 2 ).evaluate( {{"X", 5}} ) == 2 );
+    REQUIRE( ( "X"_evar ).pow( 2.0_cvar ).derive( "X", 2 ).evaluate( {{"X", 3}} ) == 2 );
+    REQUIRE( ( "X"_evar ).pow( 2.0_cvar ).derive( "X", 2 ).evaluate( {{"X", 5}} ) == 2 );
     //REQUIRE( are_equal( e_evar.pow( "X"_evar ).derive( "X", 2 ).evaluate( {{"X", 1}} ), e_evar.evaluate( {} ) ) );
     //REQUIRE( are_equal( e_evar.pow( "X"_evar ).derive( "X", 2 ).evaluate( {{"X", 0}} ), 1 ) );
 
