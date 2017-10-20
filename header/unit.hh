@@ -566,6 +566,38 @@ using elec_field    = unit< 1, -3,  1, -1,  0, 0, 0, 0, 0, T, F>;
 template<typename T = double, typename F = ratio<1, 1> >
 using specificHeat  = decltype( energy<T, F>() / temperature<T, F>() );
 
+constexpr auto operator""_0( long double val ){
+  return none<long double>( val );
+}
+
+constexpr auto operator""_len( long double val ){
+  return length<long double>( val );
+}
+
+constexpr auto operator""_mass( long double val ){
+  return mass<long double>( val );
+}
+
+constexpr auto operator""_A( long double val ){
+  return current<long double>( val );
+}
+
+constexpr auto operator""_temp( long double val ){
+  return temperature<long double>( val );
+}
+
+constexpr auto operator""_t( long double val ){
+  return time<long double>( val );
+}
+
+constexpr auto operator""_V( long double val ){
+  return voltage<long double>( val );
+}
+
+constexpr auto operator""_R( long double val ){
+  return resistance<long double>( val );
+}
+
 }
 
 #endif

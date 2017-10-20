@@ -190,8 +190,8 @@ TEST_CASE( "polynomial can be compared to points", "[poly]" ){
   }
 }
 
-TEST_CASE( "", "[poly]" ){
-  SECTION( "" ){
+TEST_CASE( "Polynomial can find its roots", "[poly]" ){
+  SECTION( "Linear equation" ){
     vector<double> v1{-5, 3};
     gsw::polynomial e1( v1.begin(), v1.end() );
     auto answers = e1.solve();
@@ -202,7 +202,7 @@ TEST_CASE( "", "[poly]" ){
     }
   }
 
-  SECTION( "" ){
+  SECTION( "Quadratic equation(with integral roots)" ){
     vector<double> v1{10, -7, 1};
     gsw::polynomial e1( v1.begin(), v1.end() );
     auto answers = e1.solve();

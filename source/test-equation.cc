@@ -6,7 +6,7 @@
 
 using namespace gsw;
 
-TEST_CASE( "Mathematical operators behave as expected", "[poly]" ){
+TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
   SECTION( "Basic operation" ){
     REQUIRE( ( "X"_evar ).evaluate( {{"X", 1}} ) == 1 );
     //REQUIRE( ( "foo"_lvar ).solve( {"foo"} ) ==
