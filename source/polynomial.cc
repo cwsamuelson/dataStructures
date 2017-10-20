@@ -120,7 +120,7 @@ polynomial& polynomial::operator/=( double d ){
 }
 
 double& polynomial::operator[]( size_t idx ){
-  while( idx > mCoeff.size() ){
+  while( idx >= mCoeff.size() ){
     mCoeff.push_back( 0.0 );
   }
 
