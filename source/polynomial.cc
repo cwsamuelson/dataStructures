@@ -12,7 +12,7 @@ set<double> polynomial::solve( double hint, unsigned int iterations ){
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
     auto derivative = derive( intermediate );
     // Newton's method
-    for( int j = 0; j < iterations; ++j ){
+    for( unsigned int j = 0; j < iterations; ++j ){
       root = root - ( intermediate( root ) / derivative( root ) );
     }
 
@@ -120,11 +120,15 @@ polynomial& polynomial::operator/=( double d ){
 }
 
 double& polynomial::operator[]( size_t idx ){
+  while( idx > mCoeff.size() ){
+    mCoeff.push_back( 0.0 );
+  }
+
   return mCoeff[idx];
 }
 
 const double& polynomial::operator[]( size_t idx ) const{
-  return mCoeff[idx];
+  return mCoeff.at( idx );
 }
 
 double polynomial::operator()( double X ) const{
