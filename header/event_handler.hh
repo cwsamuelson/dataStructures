@@ -62,6 +62,7 @@ public:
   }
 
   /*!
+   * @todo implement handler de-registration
    */
   event_channel& operator-=( const handler& handler );
 
