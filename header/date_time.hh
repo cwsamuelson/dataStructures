@@ -25,25 +25,53 @@ class time_type : public time<under_type, ratio<F, 1> >{
 public:
   typedef time<under_type, ratio<F, 1> > base;
 
-  time_type():
+  constexpr time_type():
     base(){
   }
-  time_type( under_type ut ):
+  constexpr time_type( under_type ut ):
     base( ut ){
   }
   template<typename D, typename F_t>
-  time_type( const typename base::template other_type<D, F_t>& other ):
+  constexpr time_type( const typename base::template other_type<D, F_t>& other ):
     base( other ){
   }
 };
 
 using second = time_type<1>;
 using minute = time_type<60>;
-using hour   = time_type<3600>;
-using day    = time_type<86400>;
-using week   = time_type<604800>;
-using month  = time_type<2592000>;
-using year   = time_type<31536000>;
+using hour   = time_type<60 * 60>;
+using day    = time_type<60 * 60 * 24>;
+using week   = time_type<60 * 60 * 24 * 7>;
+using month  = time_type<60 * 60 * 24 * 7 * 4>;
+using year   = time_type<60 * 60 * 24 * 365>;
+
+constexpr second operator""_s( under_type val ){
+  return val;
+}
+
+constexpr minute operator""_m( under_type val ){
+  return val;
+}
+
+constexpr hour operator""_h( under_type val ){
+  return val;
+}
+
+constexpr day operator""_d( under_type val ){
+  return val;
+}
+
+constexpr week operator""_w( under_type val ){
+  return val;
+}
+
+constexpr month operator""_M( under_type val ){
+  return val;
+}
+
+constexpr year operator""_y( under_type val ){
+  return val;
+}
 
 /*! Outputs a data, and it's name to os
  *

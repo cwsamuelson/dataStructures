@@ -2,20 +2,23 @@
 
 #include<date_time.hh>
 
+using namespace std;
+using namespace gsw;
+
 TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
   SECTION( "Time units convert nicely, and report expected amounts." ){
-    gsw::minute m( 1 );
-    gsw::second s( m );
+    minute m( 1 );
+    second s( m );
 
     REQUIRE( s == 60 );
     REQUIRE( m == 1 );
   }
 
   SECTION( "Units interact with ostreams." ){
-    gsw::minute m( 1 );
-    std::stringstream ss;
-    std::string str;
+    minute m( 1 );
+    stringstream ss;
+    string str;
 
     ss << m;
     ss >> str;
@@ -25,9 +28,9 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "A date is printed in a human readable format to an ostream." ){
-    gsw::date dayt( 11, 8, 2016 );
-    std::stringstream ss;
-    std::string str;
+    date dayt( 11, 8, 2016 );
+    stringstream ss;
+    string str;
 
     ss << dayt;
     ss >> str;
@@ -39,11 +42,11 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Mathematical operations can be performed on time units." ){
-    gsw::minute m( 59 );
+    minute m( 59 );
 
     m += 1;
 
-    gsw::hour h( m );
+    hour h( m );
 
     REQUIRE( h == 1 );
 
@@ -59,9 +62,9 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Date time interacts with streams." ){
-    gsw::date_time dt( gsw::date( 11, 8, 2016 ), 15, 41, 14 );
-    std::stringstream ss;
-    std::string str;
+    date_time dt( date( 11, 8, 2016 ), 15, 41, 14 );
+    stringstream ss;
+    string str;
 
     ss << dt;
     ss >> str;
@@ -76,18 +79,44 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
   }
 
   SECTION( "Units convert when using streams." ){
-    std::string str( "5 seconds" );
-    gsw::time_type<5> tu;
-    std::stringstream ss( str );
+    string str( "5 seconds" );
+    time_type<5> tu;
+    stringstream ss( str );
 
     ss >> tu;
     REQUIRE( tu == 1 );
 
-    std::stringstream ss2;
+    stringstream ss2;
 
-    ss2 << gsw::second( 10 );
+    ss2 << second( 10 );
     ss2 >> tu;
     REQUIRE( tu == 2 );
   }
+}
+
+TEST_CASE( "Some units of time provide literal suffixes", "[time]" ){
+  REQUIRE( 1_s == second( 1 ) );
+  REQUIRE( 1_m == minute( 1 ) );
+  REQUIRE( 1_m == second( 60 ) );
+  REQUIRE( 2_m == second( 120 ) );
+
+  REQUIRE( ( second( 1 ) + second( 1 ) ) == 2 );
+  REQUIRE( ( second( 1 ) + 1_s )         == 2 );
+  REQUIRE( ( 1_s         + 1_s )         == 2 );
+  REQUIRE( ( 1_s         + second( 1 ) ) == 2 );
+
+  REQUIRE( ( second( 1 ) + second( 1 ) ) == second( 2 ) );
+  REQUIRE( ( second( 1 ) + 1_s )         == second( 2 ) );
+  REQUIRE( ( 1_s         + 1_s )         == second( 2 ) );
+  REQUIRE( ( 1_s         + second( 1 ) ) == second( 2 ) );
+
+  REQUIRE( ( 0_s + second( 3 ) ) == 3 );
+  REQUIRE( ( 0_m + minute( 3 ) ) == 3 );
+  REQUIRE( ( 0_h +   hour( 3 ) ) == 3 );
+  REQUIRE( ( 0_d +    day( 3 ) ) == 3 );
+  REQUIRE( ( 0_w +   week( 3 ) ) == 3 );
+  REQUIRE( ( 0_M +  month( 3 ) ) == 3 );
+  REQUIRE( ( 0_y +   year( 3 ) ) == 3 );
+  REQUIRE( ( 1_w +    day( 7 ) ) == 2_w );
 }
 
