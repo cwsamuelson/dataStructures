@@ -346,8 +346,26 @@ public:
    */
   template<typename D, typename F>
   constexpr unit& operator+=( const other_type<D, F>& other ){
-    mValue = getRaw() + other.getRaw();
+    mValue = getRaw() + ( other.getRaw() / FACTOR::value );
     return *this;
+  }
+
+  /*! Addition operator
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return value of the sum of this and other
+   *
+   * this operator can not be obtained by inheritance from additive.  This is
+   * because the D and F parameters are on a per call basis, but would need to
+   * be part of the class to be used in inheritance.
+   */
+  template<typename D, typename F>
+  constexpr auto operator+( const other_type<D,F>& other ) const{
+    return ( unit( *this ) += other );
   }
 
   /*! Subtraction-assignment operator
@@ -361,8 +379,26 @@ public:
    */
   template<typename D, typename F>
   constexpr unit& operator-=( const other_type<D, F>& other ){
-    mValue = getRaw() - other.getRaw();
+    mValue = getRaw() - ( other.getRaw() / factor_type::value );
     return *this;
+  }
+
+  /*! Subtraction operator
+   *
+   * @tparam D  Storage type for other.  Can be anything that can convert into
+   *            value_type.
+   *
+   * @tparam F  Prefix factor.  Can be anything, but expected to be 'k' or 'M' etc.
+   *
+   * @return value of the difference of this and other
+   *
+   * this operator can not be obtained by inheritance from additive.  This is
+   * because the D and F parameters are on a per call basis, but would need to
+   * be part of the class to be used in inheritance.
+   */
+  template<typename D, typename F>
+  constexpr auto operator-( const other_type<D,F>& other ) const{
+    return ( unit( *this ) -= other );
   }
 
   /*! Add-assignment operator

@@ -5,9 +5,10 @@
 using namespace gsw;
 
 TEST_CASE( "Units participate in arithmetic", "[unit]" ){
-  typedef unit<1, 0, 0, 0, 0, 0, 0> test_t;
+  using test_t = unit<1, 0, 0, 0, 0, 0, 0>;
 
   SECTION( "Units of same type can be added and subtracted" ){
+    using kilovolt = voltage<double, kilo>;
     double valX = 1;
     double valY = 2;
 
@@ -21,6 +22,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     REQUIRE( y == valY );
     REQUIRE( z == valX + valY );
     REQUIRE( w == valY - valX );
+    REQUIRE( ( kilovolt( 1 ) + kilovolt( 1 ) ) == 2 );
   }
 
   SECTION( "Units multiplication/division result in new unit types" ){
@@ -80,6 +82,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     REQUIRE( I == 6.0 );
     REQUIRE( kv == 3.0 );
     REQUIRE( kv.getRaw() == 3000.0 );
+    REQUIRE( kv == voltage<double>( 3000 ) );
   }
 
   SECTION( "Compatible storage classes can be used together" ){
