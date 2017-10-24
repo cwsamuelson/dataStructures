@@ -34,6 +34,8 @@ public:
    */
   event_handler& operator=( const callback& cb ){
     mCallback = cb;
+
+    return *this;
   }
 
   /*!
