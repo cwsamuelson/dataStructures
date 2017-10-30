@@ -119,6 +119,13 @@ polynomial& polynomial::operator/=( double d ){
   return *this;
 }
 
+polynomial& polynomial::operator-(){
+  for( auto& coeff : mCoeff ){
+    coeff = -coeff;
+  }
+  return *this;
+}
+
 double& polynomial::operator[]( size_t idx ){
   while( idx >= mCoeff.size() ){
     mCoeff.push_back( 0.0 );

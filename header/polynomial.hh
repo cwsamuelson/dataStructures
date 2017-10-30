@@ -183,6 +183,12 @@ public:
 
   /*!
    *
+   * @return
+   */
+  polynomial& operator-();
+
+  /*!
+   *
    * @param idx
    *
    * @return

@@ -61,8 +61,8 @@ class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
                     multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE,
                                         KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
 public:
-  typedef DBL value_type;
-  typedef FACTOR factor_type;
+  using value_type = DBL;
+  using factor_type = FACTOR;
   template<typename D_t = value_type, typename F_t = factor_type>
   using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
                           DEGREE, PERCENTAGE, TICK, D_t, F_t>;
@@ -94,7 +94,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit( const other_type<D, F>& other ):
-    mValue( ( other.getRaw() ) / factor_type::value ){
+    mValue( other.getRaw() / factor_type::value ){
   }
 
   /*! Copy-assignment operator
@@ -346,7 +346,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit& operator+=( const other_type<D, F>& other ){
-    mValue = getRaw() + ( other.getRaw() / FACTOR::value );
+    mValue = getRaw() + ( other.getRaw() / factor_type::value );
     return *this;
   }
 
