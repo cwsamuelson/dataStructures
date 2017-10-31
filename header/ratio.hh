@@ -81,7 +81,7 @@ public:
    * This allows the number to be easily used at runtime, converting the ratio
    * to a double value
    */
-  constexpr explicit operator double() const{
+  constexpr operator double() const{
     return value;
   }
 
@@ -98,7 +98,7 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
-  constexpr auto operator*( ratio<NUM, DEN> other ){
+  constexpr auto operator*( ratio<NUM, DEN> other ) const{
     typedef decltype( other ) OTHER;
 
     return ratio<numerator * OTHER::numerator, denominator * OTHER::denominator>();
@@ -117,10 +117,17 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
-  constexpr auto operator/( ratio<NUM, DEN> other ){
+  constexpr auto operator/( ratio<NUM, DEN> other ) const{
     typedef decltype( other ) OTHER;
 
     return ratio<numerator * OTHER::denominator, denominator * OTHER::numerator>();
+  }
+
+  /*!
+   * @return
+   */
+  constexpr auto invert() const{
+    return ratio<denominator, numerator>();
   }
 };
 
@@ -178,7 +185,8 @@ constexpr T operator*( ratio<N, D> r, T t ){
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
 constexpr T operator/( T t, ratio<N, D> r ){
-  typedef decltype( r ) R;
+  using R = decltype( r );
+
   return ( t * R::denominator ) / R::numerator;
 }
 
@@ -198,7 +206,7 @@ constexpr T operator/( T t, ratio<N, D> r ){
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
 constexpr T operator/( ratio<N, D> r, T t ){
-  typedef decltype( r ) R;
+  using R = decltype( r );
 
   return ( R::numerator / ( t * R::denominator ) );
 }
