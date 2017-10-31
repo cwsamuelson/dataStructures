@@ -123,8 +123,9 @@ polynomial& polynomial::operator/=( double d ){
   return *this;
 }
 
-polynomial polynomial::operator-(){
+polynomial polynomial::operator-() const{
   polynomial p( *this );
+
   for( auto& coeff : p.mCoeff ){
     coeff = -coeff;
   }

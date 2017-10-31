@@ -196,7 +196,7 @@ public:
    *
    * @return This 
    */
-  polynomial operator-();
+  polynomial operator-() const;
 
   /*!
    *
