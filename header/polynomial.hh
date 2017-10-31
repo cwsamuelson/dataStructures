@@ -62,7 +62,14 @@ public:
    */
   polynomial() = default;
 
-  /*!
+  /*! Initializer list ctor
+   *
+   * @param il
+   *
+   * Enables convenient construction as:
+   * @code{.cpp}
+   *   gsw::polynomial p( {1, 2, 3, 4} );
+   * @endcode
    */
   polynomial( std::initializer_list<double> il );
 
@@ -95,7 +102,8 @@ public:
     mv( std::forward<U>( eq ) );
   }
 
-  /*!
+  /*! Solve for the zeroes of this polynomial
+   *
    * 6 iterations is chosen arbitrarily to provide 'sufficient' default accuracy
    */
   std::set<double> solve( double hint = 1.0, unsigned int iterations = 6 );
@@ -184,11 +192,11 @@ public:
    */
   polynomial& operator/=( double d );
 
-  /*!
+  /*! Negation operator
    *
-   * @return
+   * @return This 
    */
-  polynomial& operator-();
+  polynomial operator-();
 
   /*!
    *

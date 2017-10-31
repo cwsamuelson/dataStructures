@@ -123,11 +123,13 @@ polynomial& polynomial::operator/=( double d ){
   return *this;
 }
 
-polynomial& polynomial::operator-(){
-  for( auto& coeff : mCoeff ){
+polynomial polynomial::operator-(){
+  polynomial p( *this );
+  for( auto& coeff : p.mCoeff ){
     coeff = -coeff;
   }
-  return *this;
+
+  return p;
 }
 
 double& polynomial::operator[]( size_t idx ){
