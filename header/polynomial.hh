@@ -8,12 +8,11 @@
 #include<set>
 #include<vector>
 #include<functional>
+#include<initializer_list>
 
 #include<operators.hh>
 
 namespace gsw{
-
-class polynomial;
 
 struct point{
   double x;
@@ -62,6 +61,10 @@ public:
   /*! default ctor
    */
   polynomial() = default;
+
+  /*!
+   */
+  polynomial( std::initializer_list<double> il );
 
   /*! Container ctor
    *

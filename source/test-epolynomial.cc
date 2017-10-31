@@ -84,6 +84,16 @@ TEST_CASE( "polynomial", "[poly]" ){
     REQUIRE( p( 2 ) == 17 );
   }
 
+  SECTION( "Inline poly creation" ){
+    gsw::polynomial p( {1, 2, 3} );
+
+    REQUIRE( p( 2 ) == 17 );
+
+    p[0] = 2;
+
+    REQUIRE( p( 2 ) == 18 );
+  }
+
   SECTION( "polynomial with different number of terms" ){
     vec.push_back( 1 );
     gsw::polynomial eq3( vec.begin(), vec.end() );

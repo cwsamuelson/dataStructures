@@ -3,6 +3,10 @@
 using namespace std;
 using namespace gsw;
 
+polynomial::polynomial( std::initializer_list<double> il ):
+  mCoeff( il ){
+}
+
 set<double> polynomial::solve( double hint, unsigned int iterations ){
   // should find (size - 1) roots
   std::set<double> roots;
