@@ -75,6 +75,7 @@ public:
   static constexpr value_type denominator = myAbs( D ) / gcd( N, D );
   static constexpr double value = double( double( numerator ) / double( denominator ) );
   using type = ratio<numerator, denominator>;
+  using invert_type = ratio<denominator, numerator>;
 
   /*! Value of ( numerator / denominator ) or of template parameters ( N / D )
    *

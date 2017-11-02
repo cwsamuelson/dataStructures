@@ -94,7 +94,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit( const other_type<D, F>& other ):
-    mValue( other.getRaw() / factor_type::value ){
+    mValue( other.getRaw() * typename factor_type::invert_type() ){
   }
 
   /*! Copy-assignment operator
@@ -114,7 +114,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit& operator=( const other_type<D, F>& other ){
-    mValue = other.getRaw() * ( 1.0 / factor_type::value );
+    mValue = other.getRaw() * typename factor_type::invert_type();
 
     return *this;
   }
