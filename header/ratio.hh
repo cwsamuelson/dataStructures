@@ -121,14 +121,14 @@ public:
   constexpr auto operator/( ratio<NUM, DEN> other ) const{
     typedef decltype( other ) OTHER;
 
-    return ratio<numerator * OTHER::denominator, denominator * OTHER::numerator>();
+    return (*this) * typename OTHER::invert_type();
   }
 
   /*!
    * @return
    */
   constexpr auto invert() const{
-    return ratio<denominator, numerator>();
+    return invert_type();
   }
 };
 
@@ -188,7 +188,7 @@ template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T
 constexpr T operator/( T t, ratio<N, D> r ){
   using R = decltype( r );
 
-  return ( t * R::denominator ) / R::numerator;
+  return ( t * typename R::invert_type() );
 }
 
 /*! Value of ratio divided by number

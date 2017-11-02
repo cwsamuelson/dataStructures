@@ -23,6 +23,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     REQUIRE( z == valX + valY );
     REQUIRE( w == valY - valX );
     REQUIRE( ( kilovolt( 1 ) + kilovolt( 1 ) ) == 2 );
+    REQUIRE( ( kilovolt( 1 ) - kilovolt( 1 ) ) == 0 );
   }
 
   SECTION( "Units multiplication/division result in new unit types" ){
