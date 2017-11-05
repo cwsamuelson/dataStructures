@@ -48,6 +48,8 @@ public:
 template<typename ...Args>
 class event_channel{
 public:
+  /*!
+   */
   using handler = event_handler<event_channel, Args...>;
 
 private:
@@ -70,10 +72,17 @@ public:
 
   /*!
    */
-  void fire( Args... args ){
+  void fire( Args... args ) const{
     for( auto& handle : handlers ){
       handle.second( *this, args... );
     }
+  }
+
+  /*!
+   */
+  void clear(){
+    handlers.clear();
+    idCounter = 0;
   }
 };
 
