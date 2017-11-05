@@ -12,6 +12,7 @@ struct foo{
 
 TEST_CASE( "Basic event control flow", "[events]" ){
   int g_i = 0;
+  int g_j = 0;
   foo g_f;
   g_f.x = 0;
 
@@ -23,6 +24,10 @@ TEST_CASE( "Basic event control flow", "[events]" ){
                                      [&]( gsw::event_channel<foo>, foo f ){
                                        g_f = f;
                                      } );
+  gsw::event_channel<int>::handler handler2(
+                                     [&]( gsw::event_channel<int>, int i ){
+                                       g_j = i;
+                                     } );
 
   handler0 =
     [&]( gsw::event_channel<int>, int i ){
@@ -30,15 +35,18 @@ TEST_CASE( "Basic event control flow", "[events]" ){
     };
 
   chan0 += handler0;
+  chan0 += handler2;
   chan1 += handler1;
 
   REQUIRE( g_i   == 0 );
+  REQUIRE( g_j   == 0 );
   REQUIRE( g_f.x == 0 );
 
   chan0.fire(     42 );
   chan1.fire( foo{69} );
 
   REQUIRE( g_i   == 42 );
+  REQUIRE( g_j   == 42 );
   REQUIRE( g_f.x == 69 );
 }
 
