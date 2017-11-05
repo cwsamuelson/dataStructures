@@ -61,8 +61,16 @@ class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
                     multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE,
                                         KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
 public:
+  /*! Storage type
+   */
   using value_type = DBL;
+
+  /*! Type storing the order of magnitude of the type(mega, giga etc)
+   */
   using factor_type = FACTOR;
+
+  /*! Convenience type used for conversion between storage and factor types
+   */
   template<typename D_t = value_type, typename F_t = factor_type>
   using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
                           DEGREE, PERCENTAGE, TICK, D_t, F_t>;
@@ -169,7 +177,7 @@ public:
     return !( *this == other );
   }
 
-  /*!
+  /*! Less than comparison operator
    *
    * @tparam D  Storage type for other.  Can be anything that can convert into
    *            value_type.
@@ -185,7 +193,7 @@ public:
     return getRaw() < other.getRaw();
   }
 
-  /*!
+  /*! Greater than comparison operator
    *
    * @tparam D  Storage type for other.  Can be anything that can convert into
    *            value_type.
@@ -291,6 +299,7 @@ public:
    */
   constexpr unit& operator++(){
     ++mValue;
+
     return *this;
   }
 
@@ -316,6 +325,7 @@ public:
    */
   constexpr unit& operator--(){
     --mValue;
+
     return *this;
   }
 
@@ -347,6 +357,7 @@ public:
   template<typename D, typename F>
   constexpr unit& operator+=( const other_type<D, F>& other ){
     mValue = getRaw() + ( other.getRaw() / factor_type::value );
+
     return *this;
   }
 
@@ -365,7 +376,7 @@ public:
    */
   template<typename D, typename F>
   constexpr auto operator+( const other_type<D,F>& other ) const{
-    return ( unit( *this ) += other );
+    return unit( *this ) += other;
   }
 
   /*! Subtraction-assignment operator
@@ -380,6 +391,7 @@ public:
   template<typename D, typename F>
   constexpr unit& operator-=( const other_type<D, F>& other ){
     mValue = getRaw() - ( other.getRaw() / factor_type::value );
+
     return *this;
   }
 
@@ -398,7 +410,7 @@ public:
    */
   template<typename D, typename F>
   constexpr auto operator-( const other_type<D,F>& other ) const{
-    return ( unit( *this ) -= other );
+    return unit( *this ) -= other;
   }
 
   /*! Add-assignment operator
@@ -411,6 +423,7 @@ public:
    */
   constexpr unit& operator+=( value_type other ){
     mValue += other;
+
     return *this;
   }
 
@@ -424,6 +437,7 @@ public:
    */
   constexpr unit& operator-=( value_type other ){
     mValue -= other;
+
     return *this;
   }
 
@@ -441,7 +455,8 @@ public:
    */
   constexpr unit& operator*=( const value_type& val ){
     mValue *= val;
-    return ( *this );
+
+    return *this;
   }
 
   /*! Divide-assignment operator
@@ -454,7 +469,8 @@ public:
    */
   constexpr unit& operator/=( const value_type& val ){
     mValue /= val;
-    return ( *this );
+
+    return *this;
   }
 
   /*! Get factored, stored value
