@@ -66,6 +66,20 @@ public:
   }
 
   /*!
+   */
+  unsigned long long enlist( const handler& handler ){
+    handlers[idCounter] = handler;
+
+    return idCounter++;
+  }
+
+  /*!
+   */
+  void delist( unsigned long long ref ){
+    handlers.erase( ref );
+  }
+
+  /*!
    * @todo implement handler de-registration
    */
   event_channel& operator-=( const handler& handler );
