@@ -72,7 +72,7 @@ public:
 
   /*!
    */
-  void fire( Args... args ) const{
+  void fire( Args... args ){
     for( auto& handle : handlers ){
       handle.second( *this, args... );
     }
