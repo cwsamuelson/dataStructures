@@ -11,9 +11,9 @@
 
 namespace gsw{
 
-/*!
- * @tparam T
+/*! Linked list
  *
+ * @tparam T Type of data stored in list
  */
 template<typename T>
 class list{
@@ -24,9 +24,9 @@ public:
   using size_t     = unsigned long;
 
 private:
-  /*!
-   * @tparam U
+  /*! Node containing data within list
    *
+   * @tparam U Type of data stored in node
    */
   template<typename U>
   class node{
@@ -131,19 +131,20 @@ private:
 public:
   using iterator = normal_iterator<value_type, list, node_iter>;
 
-  /*!
-   *
+  /*! Default ctor
    */
   list():
     head( nullptr ),
     tail( nullptr ){
   }
 
-  /*!
-   * @param pos  
+  /*! Insert new element at pos
    *
-   * @param value  
+   * @param pos Iterator to location to place new element 
    *
+   * @param value New value to place in list
+   *
+   * @return iterator to new value
    */
   iterator insert( iterator pos, const value_type& value ){
     node_type* next = new node_type( value );
@@ -159,11 +160,11 @@ public:
     return iterator( next );
   }
 
-  /*!
-   * @param pos  
+  /*! Erase element at pos
    *
-   * @return
+   * @param pos Iterator to element to remove
    *
+   * @return Iterator to element now at same position
    */
   iterator erase( iterator pos ){
     iterator ret = pos.next;
@@ -178,9 +179,9 @@ public:
     return ret;
   }
 
-  /*!
-   * @return
+  /*! Remove front element
    *
+   * @return Copy of element that was at the front
    */
   value_type pop_front(){
     value_type ret = front();
@@ -197,7 +198,9 @@ public:
     return ret;
   }
 
-  /*!
+  /*! Remove back element
+   *
+   * @return Copy of element that was at the back
    */
   value_type pop_back(){
     value_type ret = back();
@@ -214,9 +217,9 @@ public:
     return ret;
   }
 
-  /*!
-   * @param value  
+  /*! Create copy of value at front of list
    *
+   * @param value
    */
   void push_front( const value_type& value ){
     if( head != nullptr ){
@@ -230,9 +233,9 @@ public:
     }
   }
 
-  /*!
-   * @param value
+  /*! Create copy of value at back of list
    *
+   * @param value
    */
   void push_back( const value_type& value ){
     if( tail != nullptr ){
@@ -246,10 +249,11 @@ public:
     }
   }
 
-  /*!
-   * @tparam ...Args
+  /*! Construct a new object at front of the list
    *
-   * @param args
+   * @tparam ...Args Types of arguments to be forwarded to new object
+   *
+   * @param args Arguments to be passed to constructor of new object
    */
   template<typename ...Args>
   void emplace_front( Args... args ){
@@ -264,10 +268,11 @@ public:
     }
   }
 
-  /*!
-   * @tparam ...Args
+  /*! Construct a new object at back of the list
    *
-   * @param args
+   * @tparam ...Args Types of arguments to be forwarded to new object
+   *
+   * @param args Arguments to be passed to constructor of new object
    */
   template<typename ...Args>
   void emplace_back( Args... args ){
@@ -282,29 +287,33 @@ public:
     }
   }
 
-  /*!
-   * @return
+  /*! Examine front object of list
+   *
+   * @return Reference to the first object in the list
    */
   reference front(){
     return head->data;
   }
 
-  /*!
-   * @return
+  /*! Examine back object of list
+   *
+   * @return Reference to the last object in the list
    */
   reference back(){
     return tail->data;
   }
 
-  /*!
-   * @return
+  /*! Accessor operator
+   *
+   * @param idx Index of object in list of interest
+   *
+   * @return Object sitting at position idx
    */
   reference operator[]( size_t idx ){
     node_type* cur = head;
 
-    while( idx != 0 ){
+    while( idx-- != 0 ){
       cur = cur->next;
-      --idx;
     }
 
     return cur->data;
