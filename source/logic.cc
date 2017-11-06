@@ -64,7 +64,7 @@ proposition proposition::iff( const proposition& equivalent ) const{
   return this->implies( equivalent ) && equivalent.implies( *this );
 }
 
-bool proposition::evaluate( const set<string> facts ) const{
+bool proposition::evaluate( const set<string>& facts ) const{
   return mValue->evaluate( facts );
 }
 

@@ -11,10 +11,6 @@
 
 namespace gsw{
 
-class proposition;
-
-proposition operator""_lvar( const char* name, size_t sz );
-
 /*! Logical proposition
  */
 class proposition{
@@ -115,7 +111,19 @@ public:
    *
    * @return Whether the proposition is true given facts
    */
-  bool evaluate( const std::set<std::string> facts ) const;
+  bool evaluate( const std::set<std::string>& facts ) const;
+
+  /*! Evaluation operator
+   *
+   * @param facts Set of established truths.
+   *
+   * @return Whether the proposition is true given facts
+   *
+   * Alias for bool proposition::evaluate( set<string> )
+   */
+  bool operator()( const std::set<std::string>& facts ) const{
+    return evaluate( facts );
+  }
 
   /*! Reverse evaluation
    *
@@ -135,12 +143,17 @@ public:
    *
    * User string literal operator.
    * Used as:
-   * "foo"_lvar;
+   * @code{.cpp}
+   * auto foo = "bar"_lvar;
+   * @endcode
    *
-   * To create a variable proposition named foo.
+   * To create a variable proposition named bar, and assigned to a variable
+   * named foo.
    */
   friend proposition operator""_lvar( const char* name, size_t sz );
 };
+
+proposition operator""_lvar( const char* name, size_t sz );
 
 }
 
