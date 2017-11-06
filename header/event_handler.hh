@@ -7,6 +7,7 @@
 
 #include<map>
 #include<functional>
+#include<utility>
 
 namespace gsw{
 
@@ -55,7 +56,7 @@ public:
    */
   void fire( Args... args ){
     for( auto& handle : handlers ){
-      handle.second( *this, args... );
+      handle.second( *this, std::forward<Args>( args )... );
     }
   }
 
