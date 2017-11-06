@@ -2,7 +2,7 @@
 #define __POLYNOMIAL_HH__
 
 /*!
- * @example test-polynomial.cc
+ * @example test-epolynomial.cc
  */
 
 #include<set>
@@ -174,7 +174,7 @@ public:
 
   /*! Divide-assign operator
    *
-   * @param rhs polynomial to divide this polynomial by
+   * @param divisor polynomial to divide this polynomial by
    *
    * @return Resulting polynomial after division
    *

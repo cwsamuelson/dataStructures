@@ -137,7 +137,7 @@ public:
 
   /*! Addition operator
    *
-   * @param dividend operand equation to divide this by
+   * @param operand equation to divide this by
    *
    * @return an equation that represents the division of this by dividend
    */
@@ -145,7 +145,7 @@ public:
 
   /*! Subtraction operator
    *
-   * @param operand operand equation to subtract from this
+   * @param operand equation to subtract from this
    *
    * @return an equation that represents the subtraction of operand from this
    */
@@ -224,9 +224,7 @@ equation operator""_evar( const char* name, size_t sz );
 
 /*! Constant value equation
  *
- * @param name Constant data value
- *
- * @param sz Length of name array
+ * @param value Literal value
  *
  * @return Constant value wrapper
  *
