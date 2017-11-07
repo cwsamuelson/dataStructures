@@ -11,7 +11,9 @@
 
 namespace gsw{
 
-/*!
+/*! Event channel system
+ *
+ * @tparam Args...
  */
 template<typename ...Args>
 class event_channel{
@@ -25,7 +27,11 @@ private:
   unsigned long long idCounter = 0;
 
 public:
-  /*!
+  /*! Register new handler
+   *
+   * @param handler
+   *
+   * @return
    */
   event_channel& operator+=( const handler& handler ){
     handlers[idCounter++] = handler;
@@ -33,7 +39,11 @@ public:
     return *this;
   }
 
-  /*!
+  /*! Register new handler
+   *
+   * @param handler
+   *
+   * @return
    */
   unsigned long long enlist( const handler& handler ){
     handlers[idCounter] = handler;
@@ -41,7 +51,9 @@ public:
     return idCounter++;
   }
 
-  /*!
+  /*! Unregister a previously registered handler
+   *
+   * @param ref
    */
   void delist( unsigned long long ref ){
     handlers.erase( ref );
@@ -52,7 +64,12 @@ public:
    */
   event_channel& operator-=( const handler& handler );
 
-  /*!
+  /*! Fire the event!
+   *
+   * @param args Arguments to pass on to handlers
+   *
+   * @todo find a nice way to fire handlers in parallel
+   * @todo determine if parameters should be forwarded or not. if they are, that implies trying to move an object to multiple handlers, which is an oxymoron
    */
   void fire( Args... args ){
     for( auto& handle : handlers ){
@@ -60,7 +77,7 @@ public:
     }
   }
 
-  /*!
+  /*! Remove all registered handlers
    */
   void clear(){
     handlers.clear();
