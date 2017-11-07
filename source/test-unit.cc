@@ -165,5 +165,12 @@ TEST_CASE( "Some units provide literal suffixes", "[unit]" ){
   REQUIRE( ( 0.0_temp + temperature<long double>( 3 ) ) == 3 );
   REQUIRE( ( 0.0_t    + gsw::time<long double>( 3 ) )   == 3 );
   REQUIRE( 3.0_A * 4.0_R == 12.0_V );
+
+  REQUIRE( ( 0_0    + none<unsigned long long>( 3 ) )        == 3 );
+  REQUIRE( ( 0_len  + length<unsigned long long>( 3 ) )      == 3 );
+  REQUIRE( ( 0_mass + mass<unsigned long long>( 3 ) )        == 3 );
+  REQUIRE( ( 0_temp + temperature<unsigned long long>( 3 ) ) == 3 );
+  REQUIRE( ( 0_t    + gsw::time<unsigned long long>( 3 ) )   == 3 );
+  REQUIRE( 3_A * 4_R == 12_V );
 }
 

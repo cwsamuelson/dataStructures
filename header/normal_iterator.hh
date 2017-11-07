@@ -8,10 +8,10 @@
 namespace gsw{
 
 /*! Normalized iterator
+ *
  * @tparam TYPE  
  *
  * @tparam CONTAINER  
- *
  */
 template<typename TYPE, typename CONTAINER, typename PTR_T = TYPE*>
 class normal_iterator : public additive<normal_iterator<TYPE, CONTAINER>, long long>{
