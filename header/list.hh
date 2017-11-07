@@ -319,29 +319,33 @@ public:
     return cur->data;
   }
 
-  /*!
-   * @return
+  /*! Obtain iterator to the beginning of the list
+   *
+   * @return Iterator to the beginning of the list
    */
   iterator begin(){
     return iterator( node_iter( head ) );
   }
 
-  /*!
-   * @return
+  /*! Obtain iterator to the end of the list
+   *
+   * @return Iterator to the end of the list
    */
   iterator end(){
     return iterator( nullptr );
   }
 
-  /*!
-   * @return
+  /*! Obtain const iterator to the beginning of the list
+   *
+   * @return const iterator to the beginning of the list
    */
   const iterator cbegin() const{
     return begin();
   }
 
-  /*!
-   * @return
+  /*! Obtain const iterator to the end of the list
+   *
+   * @return const iterator to the end of the list
    */
   const iterator cend() const{
     return end();
@@ -353,15 +357,17 @@ public:
   list& merge( list&& other ){
   }
 
-  /*!
-   * @return
+  /*! Determine whether list is empty
+   *
+   * @return Empty-ness of list
    */
   bool empty(){
-    return head == tail;
+    return head == nullptr;
   }
 
-  /*!
-   * @return
+  /*! Calculate list size
+   *
+   * @return Current size of the list
    */
   unsigned long size(){
     if( head == nullptr ){
