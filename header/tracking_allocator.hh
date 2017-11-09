@@ -17,8 +17,8 @@ public:
   using base       = A;
 
 private:
-  static size_type mMaxStored = 0;
-  static size_type mCurrentStored = 0;
+  static size_type mMaxStored;
+  static size_type mCurrentStored;
 
 public:
   pointer allocate( size_type number ){
@@ -26,11 +26,28 @@ public:
 
     mMaxStored = std::max( mMaxStored, mCurrentStored );
 
-    base::allocate( number );
+    return base::allocate( number );
   }
 
-  using base::deallocate;
+  void deallocate( pointer ptr, size_type number ){
+    mCurrentStored -= number;
+
+    base::deallocate( ptr, number );
+  }
+
+  size_type usage() const{
+    return mCurrentStored;
+  }
+
+  size_type max_usage() const{
+    return mMaxStored;
+  }
 };
+
+template<typename T, typename A>
+typename tracking_allocator<T, A>::size_type tracking_allocator<T, A>::mMaxStored = 0;
+template<typename T, typename A>
+typename tracking_allocator<T, A>::size_type tracking_allocator<T, A>::mCurrentStored = 0;
 
 }
 
