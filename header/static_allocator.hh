@@ -8,6 +8,18 @@
 
 namespace gsw{
 
+/*! Uses stack space to allocate from
+ *
+ * @tparam T Type of objects to allocate space for
+ *
+ * @tparam N How many objects can be allocated (how many to create space for)
+ *
+ * Of course if this allocator is created on the heap, the memory will actually
+ * pull from the heap.  However the memory used is in a local array, so by
+ * creating this allocator, all memory that can be retrieved from this
+ * allocator is already set aside, meaning allocation cannot fail unless an
+ * allocation request is made in excess of N.
+ */
 template<typename T, size_t N>
 class static_allocator{
 public:
@@ -26,37 +38,32 @@ private:
   ind_type mIndicator;
 
 public:
-  /*!
+  /*! Default ctor
    */
   static_allocator() = default;
 
-  /*!
-   *
-   * @param other
+  /*! Copy ctor
    */
-  static_allocator( const static_allocator& other ) = default;
+  static_allocator( const static_allocator& ) = default;
 
-  /*!
-   *
-   * @param other
+  /*! Move ctor
    */
-  static_allocator( static_allocator&& other ) = default;
+  static_allocator( static_allocator&& ) = default;
 
   /*!
    */
   pointer allocate( size_type number ){
     size_type caveStart = 0;
     size_type caveSize = 0;
-    size_type index = 0;
 
     if( number > ( storage_size - mIndicator.count() ) ){
       throw bad_alloc();
     }
 
-    for( unsigned int index = 0; index < storage_size; ++index ){
+    for( size_type index = 0; index < storage_size; ++index ){
       if( !mIndicator[index] ){
         if( ++caveSize == number ){
-          for( unsigned int i = 0; i < number; ++i ){
+          for( size_type i = 0; i < number; ++i ){
             mIndicator.set( i + caveStart );
           }
 

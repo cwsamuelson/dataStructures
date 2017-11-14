@@ -17,25 +17,31 @@ public:
 private:
 
 public:
-  /*!
+  /*! Default ctor
    */
   allocator() = default;
 
-  /*!
+  /*! Copy ctor
    */
   allocator( const allocator& ) = default;
 
-  /*!
+  /*! Move ctor
    */
   allocator( allocator&& ) = default;
 
-  /*!
+  /*! Allocate memory
+   *
+   * @param number Number of objects to allocate space for
+   *
+   * Allocate enough memory for number objects of type T
    */
   pointer allocate( size_type number ){
     return pointer( new unsigned char[number * sizeof( value_type )] );
   }
 
-  /*!
+  /*! Deallocate memory
+   *
+   * Deallocate/delete memory previously allocated by this allocator
    */
   void deallocate( pointer ptr, size_type number ){
     ( void )number;

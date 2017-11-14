@@ -15,6 +15,13 @@ public:
   }
 };
 
+/*! Allocate memory blocks at a time
+ *
+ * @tparam T Type of objects to be stored in a block
+ *
+ * @tparam SIZE
+ *
+ */
 template<typename T, size_t SIZE = 1>
 class block_allocator{
 public:
@@ -50,6 +57,10 @@ public:
     other.mStart = nullptr;
   }
 
+  /*!
+   *
+   * @param number
+   */
   pointer allocate( size_type number ){
     if( number > alloc_size ){
       throw block_allocation_exception();
@@ -81,6 +92,12 @@ public:
     return current->alloc.allocate( number );
   }
 
+  /*!
+   *
+   * @param ptr
+   *
+   * @param number
+   */
   void deallocate( pointer ptr, size_type number ){
     if( mStart == nullptr ){
       throw block_allocation_exception();
