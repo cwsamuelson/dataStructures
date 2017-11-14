@@ -18,13 +18,13 @@ TEST_CASE( "Maps are associative containers", "[map]" ){
     mp[i] = i + 1;
   }
 
-  SECTION( "" ){
+  SECTION( "Basic value mapping" ){
     for( int i = 0; i < nIters; ++i ){
       REQUIRE( mp[i] == i + 1 );
     }
   }
 
-  SECTION( "" ){
+  SECTION( "More detailed value mapping, and value changing" ){
     gsw::map<string, string> m;
 
     m["test"] = "foo";

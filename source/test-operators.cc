@@ -58,7 +58,7 @@ public:
   }
 };
 
-TEST_CASE( "", "[]" ){
+TEST_CASE( "Operator usage", "[]" ){
   foo a( 3 );
   foo b( 3 );
   bar c( 3 );

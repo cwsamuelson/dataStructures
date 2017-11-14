@@ -78,7 +78,7 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
  * sure it can/should be.  the goal here is that it won't execute at run-time,
  * only compile-time
  */
-TEST_CASE( "", "[array]" ){
+TEST_CASE( "Brace initialization", "[array]" ){
   const gsw::array<int[5]> arr{ 1, 2, 3, 4, 5 };
   const int i = arr[0];
 

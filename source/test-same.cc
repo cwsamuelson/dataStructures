@@ -23,7 +23,7 @@ public:
   }
 };
 
-TEST_CASE( "", "[is_same]"){
+TEST_CASE( "Same-ness checks", "[is_same]"){
   typedef is_same<int, signed int> SIGNED;
   typedef is_same<int, volatile int> VOLATILE;
   typedef is_same<int, const int> CONST_SAME;
