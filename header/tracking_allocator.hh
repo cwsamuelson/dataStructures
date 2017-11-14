@@ -21,6 +21,10 @@ private:
   static size_type mCurrentStored;
 
 public:
+  /*! Update tracking data, call base allocation
+   *
+   * @return Pointer to newly allocated objects
+   */
   pointer allocate( size_type number ){
     mCurrentStored += number;
 
@@ -29,16 +33,28 @@ public:
     return base::allocate( number );
   }
 
+  /*! Update tracking data, call base deallocation
+   */
   void deallocate( pointer ptr, size_type number ){
     mCurrentStored -= number;
 
     base::deallocate( ptr, number );
   }
 
+  /*! Get the current number of T objects
+   *
+   * @return The current usage value
+   */
   size_type usage() const{
     return mCurrentStored;
   }
 
+  /*! Get the max usage thus far
+   *
+   * @return The maximum usage value
+   *
+   * Maximum number of objects of type T allocated at one time
+   */
   size_type max_usage() const{
     return mMaxStored;
   }
