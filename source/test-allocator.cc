@@ -155,10 +155,16 @@ TEST_CASE( "block", "[block_allocator]" ){
   bar = traits::allocate( alloc, 2 );
 
   REQUIRE( bar != last );
+  REQUIRE( bar == ( baz + 2 ) );
+
+  // create new block
+  type* quux = traits::allocate( alloc, 2 );
+  REQUIRE( quux != ( bar + 2 ) );
 
   traits::deallocate( alloc, foo, 2 );
   traits::deallocate( alloc, bar, 2 );
   traits::deallocate( alloc, baz, 2 );
+  traits::deallocate( alloc, quux, 2 );
 }
 
 TEST_CASE( "tracking", "[tracking_allocator]" ){

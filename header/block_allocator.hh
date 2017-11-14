@@ -8,7 +8,7 @@
 
 namespace gsw{
 
-class block_allocation_exception : public std::exception{
+class block_allocation_exception : public std::bad_alloc{
 public:
   virtual const char* what() const noexcept{
     return "Allocation size too large!";
@@ -20,7 +20,6 @@ public:
  * @tparam T Type of objects to be stored in a block
  *
  * @tparam SIZE
- *
  */
 template<typename T, size_t SIZE = 1>
 class block_allocator{
@@ -36,15 +35,23 @@ private:
 
   struct block_node{
     static_allocator<value_type, alloc_size> alloc;
-    block_node* next;
+    block_node* next = nullptr;
   };
 
-  block_node* mStart;
+  void clear( block_node* node ){
+    if( node->next != nullptr ){
+      clear( node->next );
+    }
+
+    delete node;
+  }
+
+  block_node* mStart = nullptr;
 
 public:
-  block_allocator():
-    mStart( nullptr ){
-  }
+  /*!
+   */
+  block_allocator() = default;
 
   /*!
    * @todo implement this
@@ -55,6 +62,12 @@ public:
     mStart = other.mStart;
 
     other.mStart = nullptr;
+  }
+
+  /*!
+   */
+  ~block_allocator(){
+    clear( mStart );
   }
 
   /*!
@@ -74,13 +87,11 @@ public:
     block_node* current = mStart;
     block_node* last;
     do{
-      if( current->alloc.free_space( number ) ){
-        try{
-          return current->alloc.allocate( number );
-        } catch( bad_alloc& ){
-          last = current;
-          current = current->next;
-        }
+      try{
+        return current->alloc.allocate( number );
+      } catch( bad_alloc& ){
+        last = current;
+        current = current->next;
       }
     } while( current != nullptr );
 
