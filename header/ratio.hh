@@ -148,7 +148,7 @@ public:
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
 constexpr T operator*( T t, ratio<N, D> r ){
-  return t * double( r );
+  return ( t * N ) / D;
 }
 
 /*! Value of ratio multiplied with a number
@@ -167,7 +167,7 @@ constexpr T operator*( T t, ratio<N, D> r ){
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
 constexpr T operator*( ratio<N, D> r, T t ){
-  return t * double( r );
+  return ( t * N ) / D;
 }
 
 /*! Value of number divided by ratio
