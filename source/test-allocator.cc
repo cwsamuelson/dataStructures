@@ -176,6 +176,9 @@ TEST_CASE( "tracking", "[tracking_allocator]" ){
   vals = traits::allocate( alloc, 3 );
   REQUIRE( vals != nullptr );
 
+  REQUIRE( alloc.usage() == 3 );
+  REQUIRE( alloc.max_usage() == 3 );
+
   traits::construct( alloc, &vals[0], bools[0] );
   REQUIRE( bools[0] );
   REQUIRE( !bools[1] );
@@ -207,5 +210,7 @@ TEST_CASE( "tracking", "[tracking_allocator]" ){
   REQUIRE( !bools[2] );
 
   traits::deallocate( alloc, vals, 3 );
+  REQUIRE( alloc.usage() == 0 );
+  REQUIRE( alloc.max_usage() == 3 );
 }
 
