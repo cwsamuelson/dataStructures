@@ -56,5 +56,10 @@ TEST_CASE( "Strings have compile time facility", "[string]" ){
   static_assert( test[0] == 'h' );
   REQUIRE( test.size() == 6 );
   REQUIRE( test[0] == 'h' );
+
+  static_assert( gsw::test_ct_string( "hello!" ) == test );
+  static_assert( gsw::test_ct_string( "test!" ) != test );
+  REQUIRE( gsw::test_ct_string( "hello!" ) == test );
+  REQUIRE( gsw::test_ct_string( "test!" ) != test );
 }
 
