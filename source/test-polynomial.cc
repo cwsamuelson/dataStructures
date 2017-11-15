@@ -14,25 +14,25 @@ TEST_CASE( "polynomial can be intuitively copied", "[poly]" ){
 }
 
 TEST_CASE( "polynomial can be used in basic arithmetic", "[poly]" ){
-  vector<double> vec {1, 1, 1};
+  vector<double> vec1 {1, 1, 1};
   vector<double> vec2 {2, 2, 2};
-  gsw::polynomial eq( vec.begin(), vec.end() );
+  gsw::polynomial eq1( vec1.begin(), vec1.end() );
   gsw::polynomial eq2( vec2.begin(), vec2.end() );
 
-  REQUIRE( eq( 2 ) == 7 );
+  REQUIRE( eq1( 2 ) == 7 );
   REQUIRE( eq2( 2 ) == 14 );
 
   SECTION( "Addition" ){
-    REQUIRE( ( eq + eq2 )( 2 ) == 21 );
+    REQUIRE( ( eq1 + eq2 )( 2 ) == 21 );
   }
 
   SECTION( "Subtraction" ){
-    REQUIRE( ( eq2 - eq )( 2 ) == 7 );
-    REQUIRE( ( eq - eq2 )( 2 ) == -7 );
+    REQUIRE( ( eq2 - eq1 )( 2 ) == 7 );
+    REQUIRE( ( eq1 - eq2 )( 2 ) == -7 );
   }
 
   SECTION( "Multiplication" ){
-    REQUIRE( ( eq * 2 )( 2 ) == 2 * eq( 2 ) );
+    REQUIRE( ( eq1 * 2 )( 2 ) == 2 * eq1( 2 ) );
 
     vector<double> vec3 {1, 1};
     gsw::polynomial eq3( vec3.begin(), vec3.end() );
@@ -64,13 +64,13 @@ TEST_CASE( "polynomial can be used in basic arithmetic", "[poly]" ){
 }
 
 TEST_CASE( "polynomial", "[poly]" ){
-  vector<double> vec {1, 1, 1};
+  vector<double> vec1 {1, 1, 1};
   vector<double> vec2 {2, 2, 2};
-  gsw::polynomial eq( vec.begin(), vec.end() );
+  gsw::polynomial eq1( vec1.begin(), vec1.end() );
   gsw::polynomial eq2( vec2.begin(), vec2.end() );
 
   SECTION( "polynomial can be evaluated" ){
-    REQUIRE( eq( 2 ) == 7 );
+    REQUIRE( eq1( 2 ) == 7 );
     REQUIRE( eq2( 2 ) == 14 );
   }
 
@@ -95,12 +95,12 @@ TEST_CASE( "polynomial", "[poly]" ){
   }
 
   SECTION( "polynomial with different number of terms" ){
-    vec.push_back( 1 );
-    gsw::polynomial eq3( vec.begin(), vec.end() );
+    vec1.push_back( 1 );
+    gsw::polynomial eq3( vec1.begin(), vec1.end() );
 
     REQUIRE( eq3( 2 ) == 15 );
-    REQUIRE( ( eq3 + eq )( 2 ) == 22 );
-    REQUIRE( ( eq3 - eq )( 2 ) == 8 );
+    REQUIRE( ( eq3 + eq1 )( 2 ) == 22 );
+    REQUIRE( ( eq3 - eq1 )( 2 ) == 8 );
   }
 
   SECTION( "Derivative" ){
@@ -130,6 +130,7 @@ TEST_CASE( "polynomial", "[poly]" ){
 }
 
 TEST_CASE( "polynomial can be compared to points", "[poly]" ){
+
   SECTION( "Degree 0 polynomial" ){
     vector<double> v1 {1};
     gsw::polynomial e1( v1.begin(), v1.end() );
