@@ -21,6 +21,30 @@ namespace gsw{
  * Each menu object contains a list of menu 'nodes'.  These nodes, once
  * connected, can be retrieved using the SELECTOR type and the select method,
  * which will return the associated menu node.
+ *
+ * @code{.cpp}
+ * auto node1 = make_shared<menu<int> >();
+ * auto node2 = make_shared<menu<int> >();
+ * auto node3 = make_shared<menu<int> >();
+ *
+ * node1->addOption( 0, "Menu selection 0, from node 1", node1 );
+ * node1->addOption( 1, "Menu selection 1, from node 1", node2 );
+ * node1->addOption( 2, "Menu selection 2, from node 1", node3 );
+ *
+ * node2->addOption( 0, "Menu selection 0, from node 2", node1 );
+ * node2->addOption( 1, "Menu selection 1, from node 2", node2 );
+ * node2->addOption( 2, "Menu selection 2, from node 2", node3 );
+ *
+ * node3->addOption( 0, "Menu selection 0, from node 3", node1 );
+ * node3->addOption( 1, "Menu selection 1, from node 3", node2 );
+ * node3->addOption( 2, "Menu selection 2, from node 3", node3 );
+ *
+ * auto current_node = node1;
+ *
+ * while( true ){
+ *   current_node->select( getUserInput() );
+ * }
+ * @endcode
  */
 template<typename SELECTOR>
 class menu{
