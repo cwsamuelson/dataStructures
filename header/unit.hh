@@ -356,7 +356,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit& operator+=( const other_type<D, F>& other ){
-    mValue = getRaw() + ( other.getRaw() / factor_type::value );
+    mValue = ( getRaw() + other.getRaw() ) / factor_type::value;
 
     return *this;
   }
@@ -390,7 +390,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit& operator-=( const other_type<D, F>& other ){
-    mValue = getRaw() - ( other.getRaw() / factor_type::value );
+    mValue = ( getRaw() - other.getRaw() ) / factor_type::value;
 
     return *this;
   }

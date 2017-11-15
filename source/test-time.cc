@@ -46,6 +46,8 @@ TEST_CASE( "Regular operations can be performed on time units", "[time]" ){
 
     m += 1;
 
+    REQUIRE( m == 60 );
+
     hour h( m );
 
     REQUIRE( h == 1 );
@@ -110,13 +112,27 @@ TEST_CASE( "Some units of time provide literal suffixes", "[time]" ){
   REQUIRE( ( 1_s         + 1_s )         == second( 2 ) );
   REQUIRE( ( 1_s         + second( 1 ) ) == second( 2 ) );
 
+  REQUIRE( ( second( 1 ) + second( 1 ) ) == 2_s );
+  REQUIRE( ( second( 1 ) + 1_s )         == 2_s );
+  REQUIRE( ( 1_s         + 1_s )         == 2_s );
+  REQUIRE( ( 1_s         + second( 1 ) ) == 2_s );
+
   REQUIRE( ( 0_s + second( 3 ) ) == 3 );
+  REQUIRE( ( 2_s + second( 3 ) ) == 5 );
   REQUIRE( ( 0_m + minute( 3 ) ) == 3 );
+  REQUIRE( ( 2_m + minute( 3 ) ) == 5 );
   REQUIRE( ( 0_h +   hour( 3 ) ) == 3 );
+  REQUIRE( ( 2_h +   hour( 3 ) ) == 5 );
   REQUIRE( ( 0_d +    day( 3 ) ) == 3 );
+  REQUIRE( ( 2_d +    day( 3 ) ) == 5 );
   REQUIRE( ( 0_w +   week( 3 ) ) == 3 );
+  REQUIRE( ( 2_w +   week( 3 ) ) == 5 );
   REQUIRE( ( 0_M +  month( 3 ) ) == 3 );
+  REQUIRE( ( 2_M +  month( 3 ) ) == 5 );
   REQUIRE( ( 0_y +   year( 3 ) ) == 3 );
-  REQUIRE( ( 1_w +    day( 7 ) ) == 2_w );
+  REQUIRE( ( 2_y +   year( 3 ) ) == 5 );
+
+  REQUIRE( ( 1_w + day( 7 ) ) == 2_w );
+  REQUIRE( ( 1_w - day( 7 ) ) == 0_w );
 }
 
