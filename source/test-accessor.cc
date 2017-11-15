@@ -6,7 +6,7 @@ using namespace gsw;
 
 class bar{
 public:
-  typedef int value_type;
+  using value_type = int;
 
 private:
   value_type i;

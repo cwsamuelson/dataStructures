@@ -48,11 +48,12 @@ TEST_CASE( "Strings can construct and assign with strings and string literals", 
 TEST_CASE( "Strings have compile time facility", "[string]" ){
   typedef gsw::ct_string<'a', 'b', 'c'> abc;
   typedef gsw::ct_string<'1', '2', '3'> nums;
-  typedef typename gsw::concatenate<abc, nums>::result cat;
 
-  REQUIRE( gsw::string( "abc123" ) == cat::string() );
+  REQUIRE( gsw::string( "abc123" ) == gsw::concatenate<abc, nums>::result::string() );
 
   constexpr gsw::test_ct_string test( "hello!" );
+  static_assert( test.size() == 6 );
+  static_assert( test[0] == 'h' );
   REQUIRE( test.size() == 6 );
   REQUIRE( test[0] == 'h' );
 }

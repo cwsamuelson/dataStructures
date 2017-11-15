@@ -6,7 +6,7 @@ using namespace gsw;
 
 class bar{
 public:
-  typedef int value_type;
+  using value_type = int;
 
 private:
   value_type i;
@@ -24,18 +24,11 @@ public:
 };
 
 TEST_CASE( "Same-ness checks", "[is_same]"){
-  typedef is_same<int, signed int> SIGNED;
-  typedef is_same<int, volatile int> VOLATILE;
-  typedef is_same<int, const int> CONST_SAME;
-  typedef is_same<int, float> FLOAT;
-  typedef is_same<int, bar> BAR;
-  typedef is_same<bar, bar> BAR_BAR;
-
-  REQUIRE( SIGNED::value );
-  REQUIRE( BAR_BAR::value );
-  REQUIRE( !VOLATILE::value );
-  REQUIRE( !CONST_SAME::value );
-  REQUIRE( !FLOAT::value );
-  REQUIRE( !BAR::value );
+  REQUIRE( is_same<int, signed int>::value );
+  REQUIRE( is_same<bar, bar>::value );
+  REQUIRE( !is_same<int, volatile int>::value );
+  REQUIRE( !is_same<int, const int>::value );
+  REQUIRE( !is_same<int, float>::value );
+  REQUIRE( !is_same<int, bar>::value );
 }
 

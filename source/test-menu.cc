@@ -67,15 +67,7 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   }
 
   SECTION( "Forwards out of range exception when accessing an invalid menu option." ){
-    bool exceptionSanity = false;
-
-    try{
-      pm0->select( 3 );
-    }catch( std::out_of_range& ){
-      exceptionSanity = true;
-    }
-
-    REQUIRE( exceptionSanity );
+    REQUIRE_THROWS_AS( pm0->select( 3 ), std::out_of_range );
   }
 }
 
