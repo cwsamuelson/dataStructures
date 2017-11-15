@@ -49,6 +49,12 @@ public:
     return mRef;
   }
 
+  /*!
+   */
+  operator const_ref() const{
+    return mRef;
+  }
+
   /*! Get wrapped reference
    */
   reference get(){

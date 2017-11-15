@@ -1,3 +1,5 @@
+#include<algorithm>
+
 #include<catch.hpp>
 
 #include<range.hh>

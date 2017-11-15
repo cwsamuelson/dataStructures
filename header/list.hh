@@ -303,6 +303,18 @@ public:
     return tail->data;
   }
 
+  /*!
+   */
+  const reference front() const{
+    return front();
+  }
+
+  /*!
+   */
+  const reference back() const{
+    return back();
+  }
+
   /*! Accessor operator
    *
    * @param idx Index of object in list of interest

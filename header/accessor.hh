@@ -67,6 +67,12 @@ public:
     return mRef;
   }
 
+  /*!
+   */
+  operator const value_type() const{
+    return mRef;
+  }
+
   /*! Assignment operator, assigns to stored reference
    *
    * @param cref  New value to be assigned

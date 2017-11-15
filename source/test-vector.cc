@@ -24,7 +24,7 @@ public:
     ref = w.ref;
     return *this;
   }
-  bool operator==( const wrapper& other ){
+  bool operator==( const wrapper& other ) const{
     return ref == other.ref;
   }
 };

@@ -1,3 +1,5 @@
+#include<sstream>
+
 #include<catch.hpp>
 
 #include<date_time.hh>
