@@ -66,12 +66,15 @@ public:
   using menu_item = std::tuple<std::string, pointer, optionCallback>;
 
 private:
+  std::string mMenuText;
   std::map<selector, menu_item > mSubMenus;
 
 public:
-  /*! Default ctor
+  /*! Menu text and default ctor
    */
-  menu() = default;
+  menu( std::string text = "" ):
+    mMenuText( text ){
+  }
 
   /*! Copy/Move ctor
    *
@@ -81,6 +84,7 @@ public:
    */
   template<typename U>
   menu( U&& other ):
+    mMenuText( std::forward<std::string>( other.mMenuText ) ),
     mSubMenus( std::forward<decltype( mSubMenus )>( other.mSubMenus ) ){
   }
 
@@ -92,17 +96,37 @@ public:
    */
   template<typename U>
   menu& operator=( U&& other ){
+    mMenuText = std::forward<std::string>( other.mMenuText );
     mSubMenus = std::forward<decltype( mSubMenus )>( other.mSubMenus );
   }
 
-  /*!
+  /*! Menu text assignment operator
    *
-   * @param sel
+   * @param newText New menu text to be displayed
    *
-   * @return
+   * @return Updated menu
+   */
+  menu& operator=( const std::string& newText ){
+    mMenuText = newText;
+
+    return *this;
+  }
+
+  /*! Menu option accessor
+   *
+   * @param sel Which menu option to select
+   *
+   * @return The selected menu item
    */
   menu_item& operator[]( const selector& sel ){
     return mSubMenus[sel];
+  }
+
+  /*!
+   * @return
+   */
+  std::string& prompt(){
+    return mMenuText;
   }
 
   /*! Adds a new menu option to menu
@@ -119,7 +143,10 @@ public:
    * take upon selection
    */
   void addOption( const selector& selection, const std::string& optText,
-                  pointer nextMenu, optionCallback callback = optionCallback( []( selector ){ return true; } ) ){
+                  pointer nextMenu, optionCallback callback = optionCallback(
+                                                     []( selector ){
+                                                       return true;
+                                                     } ) ){
     mSubMenus[selection] = std::make_tuple( optText, nextMenu, callback );
   }
 
@@ -142,12 +169,21 @@ public:
     }
   }
 
+  /*!
+   */
+  template<typename OSTREAM>
+  OSTREAM& print_prompt( OSTREAM& os ) const{
+    os << mMenuText << '\n';
+
+    return os;
+  }
+
   /*! Provide menu options to given stream
    *
    * @param os  Output stream to provide menu information to
    */
   template<typename OSTREAM>
-  OSTREAM& print( OSTREAM& os ){
+  OSTREAM& print_options( OSTREAM& os ) const{
     for( auto it : mSubMenus ){
       os << std::get<0>( it ) << '\t' << std::get<0>( std::get<1>( it ) ) << '\n';
     }
@@ -163,8 +199,9 @@ public:
    */
   template<typename OSTREAM>
   friend
-  OSTREAM& operator<<( OSTREAM& os, menu m ){
-    m.print( os );
+  OSTREAM& operator<<( OSTREAM& os, const menu& m ){
+    m.print_prompt( os );
+    m.print_options( os );
 
     return os;
   }

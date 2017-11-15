@@ -19,13 +19,13 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
   gsw::menu<int> one;
   gsw::menu<int> two( one );
   gsw::menu<int> three( gsw::menu<int>() );
-  one.print( ss );
-  one.print( ss );
+  one.print_options( ss );
+  one.print_options( ss );
   ss << one;
 
   SECTION( "Prints menus when requested." ){
     for( unsigned int i = 0; i < 2; ++i ){
-      current->print( ss );
+      current->print_options( ss );
       current = current->select( i );
     }
     int i;
