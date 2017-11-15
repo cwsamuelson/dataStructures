@@ -102,7 +102,7 @@ public:
    */
   template<typename D, typename F>
   constexpr unit( const other_type<D, F>& other ):
-    mValue( other.getRaw() * typename factor_type::invert_type() ){
+    mValue( ( other.getRaw() * factor_type::denominator ) / factor_type::numerator ){
   }
 
   /*! Copy-assignment operator
