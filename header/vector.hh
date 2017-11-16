@@ -262,8 +262,10 @@ public:
    * @return reference to data located at index idx
    */
   reference operator[]( size_type idx ){
+    using namespace std::string_literals;
+
     if( idx >= mSize ){
-      throw std::out_of_range( "Index "s + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( max ) );
+      throw std::out_of_range( "Index "s + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( mSize ) );
     }
 
     return ( reference )( *( mData + idx ) );

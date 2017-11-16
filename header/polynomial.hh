@@ -2,7 +2,7 @@
 #define __POLYNOMIAL_HH__
 
 /*!
- * @example test-epolynomial.cc
+ * @example test-polynomial.cc
  */
 
 #include<set>

@@ -106,13 +106,23 @@ struct ct_string{
 template<typename L, typename R>
 struct concatenate;
 
-/*!
- * @tparam Ls...
+/*! Concatenate two ct_strings together
  *
- * @tparam Rs...
+ * @tparam Ls... Lefthand side string characters
+ *
+ * @tparam Rs... Righthand side string characters
+ *
+ * @code{.cpp}
+ * ct_string<'h'> h;
+ * ct_string<'i'> i;
+ *
+ * assert( concatenate<h, i>::result == ct_string<'h', 'i'> );
+ * @endcode
  */
 template<char ...Ls, char ...Rs>
 struct concatenate<ct_string<Ls...>, ct_string<Rs...> >{
+  /*! Result of the concatenation
+   */
   using result = ct_string<Ls..., Rs...>;
 };
 
