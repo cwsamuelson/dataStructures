@@ -24,36 +24,6 @@ using requireInputIter =
                                        std::input_iterator_tag
                                       >::value
                                >::type;
-/*! Out of bounds exception
- *
- * This exception is thrown when an index passed into a function is out of
- * bounds, and there isn't a nice recovery possible that still produces a result
- */
-class indexOutOfBoundsException : public std::exception{
-private:
-  std::string msg;
-
-public:
-  /*! Ctor
-   *
-   * @param idx Index value that exceeded bounds
-   *
-   * @param max maximum bound
-   *
-   * Generates an error message to be thrown up to a higher level and caught
-   */
-  indexOutOfBoundsException( unsigned long long idx, unsigned long long max ):
-    msg( std::string( "Index" ) + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( max ) ){
-  }
-
-  /*! Report what happened
-   *
-   * @return c-string message of what happened
-   */
-  virtual const char* what() const noexcept{
-    return msg.data();
-  }
-};
 
 /*! Class that stores items of type T
  *
@@ -272,6 +242,8 @@ public:
    * @return reference to this container
    */
   vector& operator=( vector&& other ){
+    alloc_traits::deallocate( mAlloc, mData, mCapacity );
+
     mSize = other.mSize;
     mCapacity = other.mCapacity;
     mData = other.mData;
@@ -291,7 +263,7 @@ public:
    */
   reference operator[]( size_type idx ){
     if( idx >= mSize ){
-      throw indexOutOfBoundsException( idx, mSize );
+      throw std::out_of_range( "Index "s + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( max ) );
     }
 
     return ( reference )( *( mData + idx ) );
@@ -417,7 +389,7 @@ public:
    * @param cap  new capacity
    */
   void reserve( size_type cap ){
-    if( ( mCapacity < cap ) && ( cap > 0 ) ){
+    if( ( cap > mCapacity ) && ( cap > 0 ) ){
       reallocateTo( cap );
     }
   }

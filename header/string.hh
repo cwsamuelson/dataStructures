@@ -5,6 +5,8 @@
  * @example test-string.cc
  */
 
+#include<stdexcept>
+
 #include<basic_string.hh>
 
 namespace gsw{
@@ -33,7 +35,11 @@ public:
   /*!
    */
   constexpr char operator[]( size_t n ) const{
-    return n < mSize ? mString[n] : throw 1;
+    if( n < mSize ){
+      return mString[n];
+    } else {
+      throw std::out_of_range( "Supplied value is out of range" );
+    }
   }
 
   /*!
@@ -49,7 +55,7 @@ public:
       return false;
     }
 
-    for( auto i = 0; i < mSize; ++i ){
+    for( size_t i = 0; i < mSize; ++i ){
       if( mString[i] != other.mString[i] ){
         return false;
       }
