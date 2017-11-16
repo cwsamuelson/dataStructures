@@ -57,6 +57,12 @@ public:
 
     return true;
   }
+
+  /*!
+   */
+  constexpr bool operator!=( const test_ct_string& other ) const{
+    return !( *this == other );
+  }
 };
 
 /*!
@@ -64,6 +70,8 @@ public:
  */
 template<char ...STRING>
 struct ct_string{
+  /*!
+   */
   static basic_string<char> string(){
     return basic_string<char>{ STRING... };
   }
@@ -79,6 +87,13 @@ struct ct_string{
   template<char ...OTHER_STRING>
   constexpr bool operator==( const ct_string<OTHER_STRING...>& ) const{
     return false;
+  }
+
+  /*!
+   */
+  template<char ...OTHER_STRING>
+  constexpr bool operator!=( const ct_string<OTHER_STRING...>& other ) const{
+    return !( *this == other );
   }
 };
 

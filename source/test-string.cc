@@ -50,6 +50,8 @@ TEST_CASE( "Strings have compile time facility", "[string]" ){
   typedef gsw::ct_string<'1', '2', '3'> nums;
 
   REQUIRE( gsw::string( "abc123" ) == gsw::concatenate<abc, nums>::result::string() );
+  REQUIRE( gsw::ct_string<'a', 'b', 'c', '1', '2', '3'>() == gsw::concatenate<abc, nums>::result() );
+  REQUIRE( !( gsw::ct_string<'a', 'b', 'c', '1', '2', '3'>() != gsw::concatenate<abc, nums>::result() ) );
 
   constexpr gsw::test_ct_string test( "hello!" );
   static_assert( test.size() == 6 );
@@ -61,5 +63,7 @@ TEST_CASE( "Strings have compile time facility", "[string]" ){
   static_assert( gsw::test_ct_string( "test!" ) != test );
   REQUIRE( gsw::test_ct_string( "hello!" ) == test );
   REQUIRE( gsw::test_ct_string( "test!" ) != test );
+  REQUIRE( !( gsw::test_ct_string( "hello!" ) != test ) );
+  REQUIRE( !( gsw::test_ct_string( "test!" ) == test ) );
 }
 
