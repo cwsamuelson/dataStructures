@@ -7,6 +7,7 @@
 
 #include<additive.hh>
 #include<multiplicative.hh>
+#include<comparitive.hh>
 
 #endif
 
