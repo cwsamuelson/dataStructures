@@ -7,6 +7,7 @@
 
 #include<numeric>
 #include<type_traits>
+#include<cmath>
 
 namespace gsw{
 
