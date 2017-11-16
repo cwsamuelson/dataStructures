@@ -7,7 +7,7 @@ polynomial::polynomial( std::initializer_list<double> il ):
   mCoeff( il ){
 }
 
-set<double> polynomial::solve( double hint, unsigned int iterations ){
+set<double> polynomial::solve( double hint, unsigned int iterations ) const{
   // should find (size - 1) roots
   std::set<double> roots;
   double root = hint;
@@ -22,9 +22,7 @@ set<double> polynomial::solve( double hint, unsigned int iterations ){
 
     roots.insert( root );
 
-    vector<double> v{-root, 1};
-
-    intermediate /= polynomial( v.begin(), v.end() );
+    intermediate /= polynomial( {-root, 1} );
   }
 
   return roots;

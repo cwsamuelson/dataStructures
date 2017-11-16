@@ -104,9 +104,13 @@ public:
 
   /*! Solve for the zeroes of this polynomial
    *
+   * @param hint Starting point for root search
+   *
+   * @param iterations Number of times to run newton's method.  Bigger is higher accuracy
+   *
    * 6 iterations is chosen arbitrarily to provide 'sufficient' default accuracy
    */
-  std::set<double> solve( double hint = 1.0, unsigned int iterations = 6 );
+  std::set<double> solve( double hint = 1.0, unsigned int iterations = 6 ) const;
 
   /*!
    *
