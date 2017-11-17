@@ -8,13 +8,6 @@
 
 namespace gsw{
 
-class block_allocation_exception : public std::bad_alloc{
-public:
-  virtual const char* what() const noexcept{
-    return "Allocation size too large!";
-  }
-};
-
 /*! Allocate memory blocks at a time
  *
  * @tparam T Type of objects to be stored in a block
@@ -28,10 +21,11 @@ public:
   using pointer    = value_type*;
   using reference  = value_type&;
   using size_type  = unsigned long long;
+  static const size_type ptrdiff = sizeof( value_type );
 
 private:
   static const size_type alloc_size = SIZE;
-  static const size_type block_size = alloc_size * sizeof( value_type );
+  static const size_type block_size = alloc_size * ptrdiff;
 
   struct block_node{
     static_allocator<value_type, alloc_size> alloc;
@@ -76,7 +70,7 @@ public:
    */
   pointer allocate( size_type number ){
     if( number > alloc_size ){
-      throw block_allocation_exception();
+      throw std::bad_alloc();
     }
 
     if( mStart == nullptr ){
@@ -89,7 +83,7 @@ public:
     do{
       try{
         return current->alloc.allocate( number );
-      } catch( bad_alloc& ){
+      } catch( std::bad_alloc& ){
         last = current;
         current = current->next;
       }
@@ -111,19 +105,19 @@ public:
    */
   void deallocate( pointer ptr, size_type number ){
     if( mStart == nullptr ){
-      throw block_allocation_exception();
+      throw std::bad_alloc();
     }
 
     block_node* current = mStart;
 
     // find which block node the pointer is in
     while( !( ( ptr >= current->alloc.storage() ) &&
-              ( ( ptr + number ) < ( current->alloc.storage() + block_size ) ) ) ){
+              ( ptr < ( ( void* )current->alloc.storage() + block_size ) ) ) ){
       current = current->next;
 
       // couldn't find.  not our pointer to deallocate.
       if( current == nullptr ){
-        throw block_allocation_exception();
+        throw std::bad_alloc();
       }
     }
 

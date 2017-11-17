@@ -51,13 +51,14 @@ public:
   static_allocator( static_allocator&& ) = default;
 
   /*!
+   * @todo create subclasses of bad_alloc in order to provide values in throw statements
    */
   pointer allocate( size_type number ){
     size_type caveStart = 0;
     size_type caveSize = 0;
 
     if( number > ( storage_size - mIndicator.count() ) ){
-      throw bad_alloc();
+      throw std::bad_alloc();
     }
 
     for( size_type index = 0; index < storage_size; ++index ){
@@ -75,7 +76,7 @@ public:
       }
     }
 
-    throw bad_alloc();
+    throw std::bad_alloc();
   }
 
   /*!
