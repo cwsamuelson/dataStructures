@@ -21,7 +21,7 @@ public:
   }
 };
 
-TEST_CASE( "Allocator allocates memory", "[allocator]" ){
+TEST_CASE( "Allocator allocates memory", "[base_allocator][allocator]" ){
   using type = scoped;
   using traits = gsw::allocator_traits<gsw::allocator<type> >;
 
@@ -69,7 +69,7 @@ TEST_CASE( "Allocator allocates memory", "[allocator]" ){
   traits::deallocate( alloc, vals, 3 );
 }
 
-TEST_CASE( "pool", "[pool_allocator]" ){
+TEST_CASE( "pool", "[pool_allocator][allocator]" ){
   using type = scoped;
   using traits = gsw::allocator_traits<gsw::pool_allocator<type> >;
 
@@ -101,7 +101,7 @@ TEST_CASE( "pool", "[pool_allocator]" ){
   traits::deallocate( alloc, baz, 2 );
 }
 
-TEST_CASE( "static", "[static_allocator]" ){
+TEST_CASE( "static", "[static_allocator][allocator]" ){
   using type = scoped;
   using traits = gsw::allocator_traits<gsw::static_allocator<type, 7> >;
 
@@ -131,7 +131,7 @@ TEST_CASE( "static", "[static_allocator]" ){
   traits::deallocate( alloc, baz, 2 );
 }
 
-TEST_CASE( "block", "[block_allocator]" ){
+TEST_CASE( "block", "[block_allocator][allocator]" ){
   using type = scoped;
   using traits = gsw::allocator_traits<gsw::block_allocator<type, 7> >;
 
@@ -167,7 +167,7 @@ TEST_CASE( "block", "[block_allocator]" ){
   traits::deallocate( alloc, quux, 2 );
 }
 
-TEST_CASE( "tracking", "[tracking_allocator]" ){
+TEST_CASE( "tracking", "[tracking_allocator][allocator]" ){
   using type = scoped;
   using traits = gsw::allocator_traits<gsw::tracking_allocator<type> >;
 
