@@ -9,6 +9,8 @@
 
 namespace gsw{
 
+namespace detail{
+
 /*!
  * @tparam N tuple size
  *
@@ -92,38 +94,6 @@ public:
   }
 };
 
-/*! Containing tuple class
- *
- * @tparam ...Args
- *
- * Inherits from first element in actual tuple chain.  Tuple works as
- * template/compile-time linked list; this class is effectively a pointer to
- * the head.
- */
-template<typename ...Args>
-class tuple : public tuple_impl<0, Args...>{
-private:
-  using base = tuple_impl<0, Args...>;
-
-public:
-  /*! Default ctor
-   */
-  tuple():
-    base(){
-  }
-
-  /*! Basic init ctor
-   *
-   * @tparam ...ARGS List of argument types to be passed into tuple implementation
-   *
-   * @param args List af arguments to be passed into tuple implementation
-   */
-  template<typename ...ARGS>
-  tuple( ARGS... args ):
-    base( std::forward<ARGS>( args )... ){
-  }
-};
-
 /*! Tuple chain crawler
  *
  * @tparam M Remaining indexes to crawl
@@ -199,6 +169,40 @@ public:
   }
 };
 
+}//detail
+
+/*! Containing tuple class
+ *
+ * @tparam ...Args
+ *
+ * Inherits from first element in actual tuple chain.  Tuple works as
+ * template/compile-time linked list; this class is effectively a pointer to
+ * the head.
+ */
+template<typename ...Args>
+class tuple : public detail::tuple_impl<0, Args...>{
+private:
+  using base = detail::tuple_impl<0, Args...>;
+
+public:
+  /*! Default ctor
+   */
+  tuple():
+    base(){
+  }
+
+  /*! Basic init ctor
+   *
+   * @tparam ...ARGS List of argument types to be passed into tuple implementation
+   *
+   * @param args List af arguments to be passed into tuple implementation
+   */
+  template<typename ...ARGS>
+  tuple( ARGS... args ):
+    base( std::forward<ARGS>( args )... ){
+  }
+};
+
 /*! Tuple getter method
  *
  * @tparam M Index of desired element from tup
@@ -211,7 +215,7 @@ public:
  */
 template<size_t M, typename ...Args>
 auto& get( tuple<Args...>& tup ){
-  return get_impl<M, 0, Args...>::get( static_cast<tuple_impl<0, Args...>& >( tup ) );
+  return detail::get_impl<M, 0, Args...>::get( static_cast<detail::tuple_impl<0, Args...>& >( tup ) );
 }
 
 /*! Tuple getter method
@@ -226,7 +230,7 @@ auto& get( tuple<Args...>& tup ){
  */
 template<size_t M, typename ...Args>
 const auto& get( const tuple<Args...>& tup ){
-  return get_impl<M, 0, Args...>::get( static_cast<const tuple_impl<0, Args...>& >( tup ) );
+  return detail::get_impl<M, 0, Args...>::get( static_cast<const detail::tuple_impl<0, Args...>& >( tup ) );
 }
 
 /*! Tuple factory method

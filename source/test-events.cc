@@ -80,7 +80,7 @@ public:
 
   rxEvent rxDataEvent;
 
-  void send( const string& str ){
+  void send( const string& ){
     rxDataEvent.fire( "response!" );
   }
 };
