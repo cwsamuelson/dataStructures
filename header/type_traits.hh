@@ -5,6 +5,7 @@
 #include<integral_constant.hh>
 #include<is_void.hh>
 #include<remove_cv.hh>
+#include<common_type.hh>
 
 #endif
 

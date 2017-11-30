@@ -1,3 +1,5 @@
+#include<type_traits>
+
 #include<catch.hpp>
 
 #include<type_traits.hh>
@@ -47,5 +49,37 @@ TEST_CASE( "remove_cv", "[traits]" ){
                             ::type>
                           ::type,
                         int>::value );
+}
+
+class base{
+};
+class d1 : public base{
+};
+class d2 : public base{
+};
+class d3 : public base{
+};
+
+TEST_CASE( "common_type", "[traits]" ){
+  SECTION( "Built-in types" ){
+    REQUIRE( gsw::is_same<gsw::common_type<double, int     >::type, double>::value );
+    REQUIRE( gsw::is_same<gsw::common_type<double, int, int>::type, double>::value );
+    REQUIRE( gsw::is_same<gsw::common_type<long,      short>::type, long>::value );
+  }
+
+  SECTION( "Class and it's base" ){
+    CHECK( gsw::is_same<gsw::common_type<base, base>::type, base>::value );
+    CHECK( gsw::is_same<gsw::common_type<base,   d1>::type, base>::value );
+    CHECK( gsw::is_same<gsw::common_type<d1,     d1>::type,   d1>::value );
+    CHECK( gsw::is_same<gsw::common_type<d1,   base>::type, base>::value );
+  }
+
+  SECTION( "More than 2 types" ){
+    CHECK( gsw::is_same<gsw::common_type<base, d2, d1    >::type, base>::value );
+    CHECK( gsw::is_same<gsw::common_type<base, d3, d2, d1>::type, base>::value );
+    //CHECK( gsw::is_same<gsw::common_type<d1, d2, base    >::type, base>::value );
+    //CHECK( gsw::is_same<gsw::common_type<d1, d3, d2, base>::type, base>::value );
+    //CHECK( gsw::is_same<gsw::common_type<d1, d2          >::type, base>::value );
+  }
 }
 
