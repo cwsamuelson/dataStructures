@@ -9,6 +9,8 @@
 #include<functional>
 #include<utility>
 
+#include<tuple.hh>
+
 namespace gsw{
 
 /*! Event channel system
@@ -21,6 +23,11 @@ public:
   /*!
    */
   using handler = std::function<void(const event_channel&, Args...)>;
+  /*!
+   * @tparam
+   */
+  template<size_t N>
+  using arg_types = tuple_element<N, tuple<Args...> >;
 
 private:
   std::map<unsigned long long, handler> handlers;

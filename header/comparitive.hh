@@ -37,8 +37,8 @@ namespace gsw{
 template<typename LHS, typename RHS = LHS>
 class comparitive{
 public:
-  typedef LHS lhs_type;
-  typedef RHS rhs_type;
+  using lhs_type = LHS;
+  using rhs_type = RHS;
 
   /*! Non-equality comparison operator
    *

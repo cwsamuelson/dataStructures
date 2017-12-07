@@ -41,8 +41,8 @@ namespace gsw{
 template<typename LHS, typename RHS = LHS>
 class multiplicative{
 public:
-  typedef LHS lhs_type;
-  typedef RHS rhs_type;
+  using lhs_type = LHS;
+  using rhs_type = RHS;
 
   /*! Multiplication operator
    *
