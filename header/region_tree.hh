@@ -30,20 +30,27 @@ template<typename T, size_t DIM>
 class region_tree{
 public:
   using value_type = T;
+  using dimensions = std::tuple<vec<DIM>, vec<DIM> >;
 
 private:
   static constexpr div_count = 2 << DIM;
   std::vector<region_tree> mDivisions;
   std::vector<std::tuple<value_type, vec<DIM> > > mObjects;
-  std::tuple<vec<DIM>, vec<DIM> > mDimensions;
+  dimensions mDimensions;
   unsigned long mMaxObjects;
 
-  template<size_t N>
-  void dim_helper( vec<DIM>& dims ){
-    auto& ref = std::get<N>( dims );
-    ref = ref / 2;
+  template<size_t N, typename T, typename ...ARGS>
+  void dim_helper( dimensions& dims, const T& t, ARGS... args ){
+    auto& ref1 = std::get<N>( std::get<0>( dims ) );
+    auto& ref2 = std::get<N>( std::get<1>( dims ) );
 
-    dim_helper<N - 1>( dims );
+    if( t ){
+      ref1 = ( ref1 + ref2 ) / 2;
+    } else {
+      ref2 = ( ref1 + ref2 ) / 2;
+    }
+
+    dim_helper<N - 1>( dims, args... );
   }
 
   template<size_t N, typename ...ARGS>
@@ -56,9 +63,7 @@ private:
   template<typename ...ARGS>
   void recur_helper<0>( ARGS... args ){
     auto dims = mDimensions;
-    dim_helper<DIM>( dims );
-
-
+    dim_helper<DIM>( dims, args... );
 
     mDivisions.emplace_back( dims, mMaxObjects );
   }
