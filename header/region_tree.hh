@@ -39,46 +39,46 @@ private:
   dimensions mDimensions;
   unsigned long mMaxObjects;
 
-  template<size_t N, typename T, typename ...ARGS>
-  void dim_helper( dimensions& dims, const T& t, ARGS... args ){
-    auto& ref1 = std::get<N>( std::get<0>( dims ) );
-    auto& ref2 = std::get<N>( std::get<1>( dims ) );
-
-    if( t ){
-      ref1 = ( ref1 + ref2 ) / 2;
-    } else {
-      ref2 = ( ref1 + ref2 ) / 2;
-    }
-
-    dim_helper<N - 1>( dims, args... );
-  }
-
-  template<size_t N, typename ...ARGS>
-  void recur_helper( ARGS... args ){
+  template<size_t N>
+  void split_helper( dimensions& dims ){
     for( unsigned int i = 0; i < 2; ++i ){
-      recur_helper<N - 1>( i, args... );
+      auto& ref1 = std::get<N>( std::get<0>( dims ) );
+      auto& ref2 = std::get<N>( std::get<1>( dims ) );
+
+      if( i == 0 ){
+        ref1 = ( ref1 + ref2 ) / 2;
+      } else {
+        ref2 = ( ref1 + ref2 ) / 2;
+      }
+
+      split_helper<N - 1>( dims );
     }
   }
 
-  template<typename ...ARGS>
-  void recur_helper<0>( ARGS... args ){
-    auto dims = mDimensions;
-    dim_helper<DIM>( dims, args... );
-
+  template<>
+  void split_helper<0>( dimensions& dims ){
     mDivisions.emplace_back( dims, mMaxObjects );
   }
 
   template<size_t N>
-  void split_helper(){
-    
+  void insert_helper( const vec<DIMS>& pos, const value_type& obj ){
+    auto split = ( std::get<N>( std::get<0>( mDimensions ) ) +
+                   std::get<N>( std::get<1>( mDimensions ) ) ) / 2;
+
+    if( std::get<N>( pos ) < split ){
+    }
+
+    insert_helper<N - 1>( pos, obj );
   }
 
   void split(){
-    // splits new segments
-    recur_helper<DIM>();
+    auto dims = mDimensions;
+    // split new segments
+    split_helper<DIM>( dims );
 
+    // insert current objects into new groupings
     for( auto obj : mObjects ){
-      
+      insert_helper<DIMS>( std::get<1>( obj ) );
     }
   }
 
