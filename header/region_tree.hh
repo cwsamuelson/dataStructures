@@ -33,7 +33,7 @@ public:
   using dimensions = std::tuple<vec<DIM>, vec<DIM> >;
 
 private:
-  static constexpr div_count = 2 << DIM;
+  static constexpr int div_count = 2 << DIM;
   std::vector<region_tree> mDivisions;
   std::vector<std::tuple<value_type, vec<DIM> > > mObjects;
   dimensions mDimensions;
@@ -42,33 +42,25 @@ private:
   template<size_t N>
   void split_helper( dimensions& dims ){
     for( unsigned int i = 0; i < 2; ++i ){
-      auto& ref1 = std::get<N>( std::get<0>( dims ) );
-      auto& ref2 = std::get<N>( std::get<1>( dims ) );
+      auto& ref1 = std::get<N - 1>( std::get<0>( dims ) );
+      auto& ref2 = std::get<N - 1>( std::get<1>( dims ) );
 
       if( i == 0 ){
-        ref1 = ( ref1 + ref2 ) / 2;
-      } else {
         ref2 = ( ref1 + ref2 ) / 2;
+      } else {
+        ref1 = ( ref1 + ref2 ) / 2;
       }
 
       split_helper<N - 1>( dims );
     }
   }
 
-  template<>
-  void split_helper<0>( dimensions& dims ){
-    mDivisions.emplace_back( dims, mMaxObjects );
-  }
+  void insert_helper( const vec<DIM>& pos, const value_type& obj ){
+    int i = 0;
 
-  template<size_t N>
-  void insert_helper( const vec<DIMS>& pos, const value_type& obj ){
-    auto split = ( std::get<N>( std::get<0>( mDimensions ) ) +
-                   std::get<N>( std::get<1>( mDimensions ) ) ) / 2;
-
-    if( std::get<N>( pos ) < split ){
+    while( i++ < mDivisions.size() && !mDivisions[i].insert( obj, pos ) ){
+      ;
     }
-
-    insert_helper<N - 1>( pos, obj );
   }
 
   void split(){
@@ -78,11 +70,35 @@ private:
 
     // insert current objects into new groupings
     for( auto obj : mObjects ){
-      insert_helper<DIMS>( std::get<1>( obj ) );
+      insert_helper( std::get<1>( obj ), std::get<0>( obj ) );
     }
+
+    mObjects.clear();
+  }
+
+  template<size_t N>
+  bool bounds_helper( const vec<DIM>& v ){
+    return ( std::get<N>( v ) < std::get<N>( std::get<1>( mDimensions ) ) ) &&
+           ( std::get<N>( v ) > std::get<N>( std::get<0>( mDimensions ) ) );
+  }
+
+  template<size_t N>
+  bool bounds_check( const vec<DIM>& v ){
+    return bounds_check<N - 1>( v ) && bounds_helper<N>( v );
+  }
+
+  template<>
+  bool bounds_check<0>( const vec<DIM>& v ){
+    return bounds_helper( v );
+  }
+
+  template<>
+  void split_helper<0>( dimensions& dims ){
+    mDivisions.emplace_back( dims, mMaxObjects );
   }
 
 public:
+  //! @todo mdimensions initialization needs to be refactored for higher dimensions
   region_tree( const vec<DIM>& dim1, const vec<DIM>& dim2, unsigned long max = 2 ):
     mDimensions( {std::min( std::get<0>( dim1 ), std::get<0>( dim2 ) ),
                   std::min( std::get<1>( dim1 ), std::get<1>( dim2 ) )},
@@ -91,15 +107,25 @@ public:
     mMaxObjects( max ){
   }
 
-  void insert( const value_type& vt, const vec<DIM>& v ){
-    // if we're already split, insert appropriately
+  bool insert( const value_type& vt, const vec<DIM>& v ){
+    // return false when this object doesn't belong in our bounds
+    if( !bounds_check<DIM>( v ) ){
+      return false;
+    }
 
-    // if not split, insert normally and split if necessary
-    mObjects.push_back( vt );
+    if( mDivisions.size() > 0 ){
+      // if we're already split, insert appropriately
+      insert_helper( v, vt );
+    } else {
+      // if not split, insert normally and split if necessary
+      mObjects.push_back( vt );
+    }
 
     if( mObjects.size() > mMaxObjects ){
       split();
     }
+
+    return true;
   }
 };
 
