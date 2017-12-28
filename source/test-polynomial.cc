@@ -64,8 +64,8 @@ TEST_CASE( "polynomial can be used in basic arithmetic", "[poly]" ){
 }
 
 TEST_CASE( "polynomial", "[poly]" ){
-  vector<double> vec1 {1, 1, 1};
-  vector<double> vec2 {2, 2, 2};
+  vector<double> vec1{1, 1, 1};
+  vector<double> vec2{2, 2, 2};
   gsw::polynomial eq1( vec1.begin(), vec1.end() );
   gsw::polynomial eq2( vec2.begin(), vec2.end() );
 
