@@ -142,6 +142,7 @@ public:
     }
   }
 
+  //! @todo should be sets, not vectors?
   std::vector<std::vector<value_type> > get_groups(){
     std::vector<std::vector<value_type> > ret;
 
