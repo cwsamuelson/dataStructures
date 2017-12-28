@@ -3,6 +3,7 @@
 
 #include<tuple>
 #include<vector>
+#include<set>
 #include<algorithm>
 
 namespace gsw{
@@ -90,15 +91,15 @@ private:
     mObjects.clear();
   }
 
-  void get_groups( std::vector<std::vector<value_type> >& groups ){
-    std::vector<value_type> list;
+  void get_groups( std::set<std::set<value_type> >& groups ){
+    std::set<value_type> list;
 
     for( auto data : mObjects ){
-      list.push_back( std::get<0>( data ) );
+      list.insert( std::get<0>( data ) );
     }
 
     if( !list.empty() ){
-      groups.push_back( list );
+      groups.insert( list );
     }
 
     for( auto region : mSubRegions ){
@@ -143,8 +144,8 @@ public:
   }
 
   //! @todo should be sets, not vectors?
-  std::vector<std::vector<value_type> > get_groups(){
-    std::vector<std::vector<value_type> > ret;
+  std::set<std::set<value_type> > get_groups(){
+    std::set<std::set<value_type> > ret;
 
     get_groups( ret );
 
