@@ -27,15 +27,15 @@ public:
 template<size_t DIM>
 using vec = typename detail::vec_helper<DIM>::type;
 
-template<typename T>
-class quad_tree{
+template<typename T, size_t DIM>
+class region_tree{
 public:
   using value_type = T;
   using vector = std::tuple<double, double>;
 
 private:
   std::vector<std::tuple<value_type, vector> > mObjects;
-  std::vector<quad_tree> mSubRegions;
+  std::vector<region_tree> mSubRegions;
   std::tuple<vector, vector> mBounds;
   const unsigned int mMaxObjects;
 
@@ -108,7 +108,7 @@ private:
   }
 
 public:
-  quad_tree( vector v1, vector v2, int max = 2 ):
+  region_tree( vector v1, vector v2, int max = 2 ):
     mBounds( {std::min( std::get<0>( v1 ), std::get<0>( v2 ) ),
               std::min( std::get<1>( v1 ), std::get<1>( v2 ) )},
              {std::max( std::get<0>( v1 ), std::get<0>( v2 ) ),
@@ -143,7 +143,6 @@ public:
     }
   }
 
-  //! @todo should be sets, not vectors?
   std::set<std::set<value_type> > get_groups(){
     std::set<std::set<value_type> > ret;
 
@@ -256,14 +255,14 @@ public:
     return true;
   }
 };
+*/
 
 template<typename T>
 using quad_tree = region_tree<T, 2>;
 template<typename T>
 using oct_tree = region_tree<T, 3>;
 template<typename T>
-using octree = region_tree<T, 3>;
-*/
+using octree = oct_tree<T>;
 
 }
 
