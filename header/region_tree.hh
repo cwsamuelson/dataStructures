@@ -31,42 +31,35 @@ template<typename T, size_t DIM>
 class region_tree{
 public:
   using value_type = T;
-  using vector = std::tuple<double, double>;
+  using vector = vec<DIM>;
 
 private:
-  std::vector<std::tuple<value_type, vector> > mObjects;
-  std::vector<region_tree> mSubRegions;
+  std::set<std::tuple<value_type, vector> > mObjects;
+  std::set<region_tree> mSubRegions;
   std::tuple<vector, vector> mBounds;
   const unsigned int mMaxObjects;
 
-  void sub_insert( const value_type& obj, vector v ){
-    int idx;
+  bool check_bounds( vector bounds ){
     auto min_bound = std::get<0>( mBounds );
     auto max_bound = std::get<1>( mBounds );
     auto min_x = std::get<0>( min_bound );
     auto min_y = std::get<1>( min_bound );
     auto max_x = std::get<0>( max_bound );
     auto max_y = std::get<1>( max_bound );
-    auto split_x = ( min_x + max_x ) / 2;
-    auto split_y = ( min_y + max_y ) / 2;
-    auto x = std::get<0>( v );
-    auto y = std::get<1>( v );
+    auto x = std::get<0>( bounds );
+    auto y = std::get<1>( bounds );
 
-    if( x < split_x ){
-      if( y < split_y ){
-        idx = 0;
-      } else {
-        idx = 1;
-      }
-    } else {
-      if( y < split_y ){
-        idx = 2;
-      } else {
-        idx = 3;
+    return ( ( x > min_x ) && ( x < max_x ) ) &&
+           ( ( y > min_y ) && ( y < max_y ) );
+  }
+
+  void sub_insert( const value_type& obj, vector v ){
+    for( auto region : mSubRegions ){
+      if( region.check_bounds( v ) ){
+        region.insert( obj, v );
+        break;
       }
     }
-
-    mSubRegions[idx].insert( obj, v );
   }
 
   void split(){
@@ -79,10 +72,10 @@ private:
     auto split_x = ( min_x + max_x ) / 2;
     auto split_y = ( min_y + max_y ) / 2;
 
-    mSubRegions.emplace_back( vector{min_x, min_y}, vector{split_x, split_y}, mMaxObjects );
-    mSubRegions.emplace_back( vector{min_x, split_y}, vector{split_x, max_y}, mMaxObjects );
-    mSubRegions.emplace_back( vector{split_x, min_y}, vector{max_x, split_y}, mMaxObjects );
-    mSubRegions.emplace_back( vector{split_x, split_y}, vector{max_x, max_y}, mMaxObjects );
+    mSubRegions.emplace( vector{min_x, min_y}, vector{split_x, split_y}, mMaxObjects );
+    mSubRegions.emplace( vector{min_x, split_y}, vector{split_x, max_y}, mMaxObjects );
+    mSubRegions.emplace( vector{split_x, min_y}, vector{max_x, split_y}, mMaxObjects );
+    mSubRegions.emplace( vector{split_x, split_y}, vector{max_x, max_y}, mMaxObjects );
 
     for( auto obj : mObjects ){
       sub_insert( std::get<0>( obj ), std::get<1>( obj ) );
@@ -135,7 +128,7 @@ public:
     if( !mSubRegions.empty() ){
       sub_insert( obj, v );
     } else {
-      mObjects.emplace_back( obj, v );
+      mObjects.emplace( obj, v );
 
       if( mObjects.size() > mMaxObjects ){
         split();
@@ -149,6 +142,33 @@ public:
     get_groups( ret );
 
     return ret;
+  }
+
+  bool operator<( const region_tree& rt ) const{
+    auto l_min_bound = std::get<0>( mBounds );
+    auto l_max_bound = std::get<1>( mBounds );
+    auto l_min_x = std::get<0>( l_min_bound );
+    auto l_min_y = std::get<1>( l_min_bound );
+    auto l_max_x = std::get<0>( l_max_bound );
+    auto l_max_y = std::get<1>( l_max_bound );
+    auto r_min_bound = std::get<0>( rt.mBounds );
+    auto r_max_bound = std::get<1>( rt.mBounds );
+    auto r_min_x = std::get<0>( r_min_bound );
+    auto r_min_y = std::get<1>( r_min_bound );
+    auto r_max_x = std::get<0>( r_max_bound );
+    auto r_max_y = std::get<1>( r_max_bound );
+
+    if( ( l_min_x < r_min_x ) ||
+        ( ( l_min_x == r_min_x ) &&
+          ( l_max_x <  r_max_x ) ) ||
+        ( ( l_max_x == r_max_x ) &&
+          ( l_min_y < r_min_y ) ) ||
+        ( ( l_min_y == r_min_y ) &&
+          ( l_max_y < r_max_y ) ) ){
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
