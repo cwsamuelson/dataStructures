@@ -2,7 +2,6 @@
 #define __REGION_TREE_HH__
 
 #include<tuple>
-#include<vector>
 #include<set>
 #include<algorithm>
 
@@ -10,10 +9,11 @@ namespace gsw{
 
 namespace detail{
 
-template<size_t DIM, typename ...ARGS>
+template<size_t DIM, typename T, typename ...ARGS>
 class vec_helper{
 public:
-  using type = typename vec_helper<DIM - 1, double, ARGS...>::type;
+  using value_type = T;
+  using type = typename vec_helper<DIM - 1, value_type, ARGS...>::type;
 };
 
 template<typename ...ARGS>
@@ -27,35 +27,128 @@ public:
 template<size_t DIM>
 using vec = typename detail::vec_helper<DIM>::type;
 
+namespace detail{
+
+template<size_t DIM, size_t MAX = DIM + 1>
+class bounds_helper : public bounds_helper<DIM - 1, MAX>{
+public:
+  using vector = vec<MAX, double>;
+  using base = bounds_helper<DIM - 1, MAX>;
+
+private:
+  std::tuple<double, double> mBounds;
+
+protected:
+  void split_helper( vector& v ){
+    auto min_bound = std::get<0>( mBounds );
+    auto max_bound = std::get<1>( mBounds );
+    auto split_bound = ( min_bound + max_bound ) / 2;
+
+    std::get<DIM>( v ) = split_bound;
+
+    base::split_helper( v );
+  }
+
+public:
+  bounds_helper( vector v1, vector v2 ):
+    base( v1, v2 ),
+    mBounds( {std::min( std::get<DIM>( v1 ), std::get<DIM>( v2 ) ),
+              std::max( std::get<DIM>( v1 ), std::get<DIM>( v2 ) )} ){
+  }
+
+  bool check( vector v ){
+    return ( std::get<DIM>( v ) >  std::get<0>( mBounds ) ) &&
+           ( std::get<DIM>( v ) <= std::get<1>( mBounds ) ) &&
+           base::check( v );
+  }
+
+  vector split(){
+    vector v;
+
+    split_helper( v );
+
+    return v;
+  }
+
+  bool operator<( const bounds_helper& rt ) const{
+    auto l_min = std::get<0>( mBounds );
+    auto l_max = std::get<1>( mBounds );
+    auto r_min = std::get<0>( rt.mBounds );
+    auto r_max = std::get<1>( rt.mBounds );
+
+    if( ( l_min < r_min ) ||
+        ( ( l_min == r_min ) &&
+          ( l_max <  r_max ) ) ||
+        base::operator<( rt::base( rt ) ) ){
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
+
+template<size_t MAX>
+class bounds_helper<0, MAX>{
+private:
+  using vector = vec<MAX, double>;
+
+private:
+  std::tuple<double, double> mBounds;
+  constexpr size_t DIM = 0;
+
+protected:
+  void split_helper( vector& v ){
+    auto min_bound = std::get<0>( mBounds );
+    auto max_bound = std::get<1>( mBounds );
+    auto split_bound = ( min_bound + max_bound ) / 2;
+
+    std::get<DIM>( v ) = split_bound;
+  }
+
+public:
+  bounds_helper( vector v1, vector v2 ):
+    mBounds( {std::min( std::get<DIM>( v1 ), std::get<DIM>( v2 ) ),
+              std::max( std::get<DIM>( v1 ), std::get<DIM>( v2 ) )} ){
+  }
+
+  bool check( vector v ){
+    return ( std::get<DIM>( v ) >  std::get<0>( mBounds ) ) &&
+           ( std::get<DIM>( v ) <= std::get<1>( mBounds ) );
+  }
+
+  bool operator<( const bounds_helper& rt ) const{
+    auto l_min = std::get<0>( mBounds );
+    auto l_max = std::get<1>( mBounds );
+    auto r_min = std::get<0>( rt.mBounds );
+    auto r_max = std::get<1>( rt.mBounds );
+
+    if( ( l_min < r_min ) ||
+        ( ( l_min == r_min ) &&
+          ( l_max <  r_max ) ) ){
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
+
+}
+
 template<typename T, size_t DIM>
 class region_tree{
 public:
   using value_type = T;
-  using vector = vec<DIM>;
+  using vector = vec<DIM, double>;
 
 private:
   std::set<std::tuple<value_type, vector> > mObjects;
   std::set<region_tree> mSubRegions;
-  std::tuple<vector, vector> mBounds;
+  detail::bounds_helper<DIM> mBounds;
   const unsigned int mMaxObjects;
-
-  bool check_bounds( vector bounds ){
-    auto min_bound = std::get<0>( mBounds );
-    auto max_bound = std::get<1>( mBounds );
-    auto min_x = std::get<0>( min_bound );
-    auto min_y = std::get<1>( min_bound );
-    auto max_x = std::get<0>( max_bound );
-    auto max_y = std::get<1>( max_bound );
-    auto x = std::get<0>( bounds );
-    auto y = std::get<1>( bounds );
-
-    return ( ( x > min_x ) && ( x < max_x ) ) &&
-           ( ( y > min_y ) && ( y < max_y ) );
-  }
 
   void sub_insert( const value_type& obj, vector v ){
     for( auto region : mSubRegions ){
-      if( region.check_bounds( v ) ){
+      if( region.mBounds.check( v ) ){
         region.insert( obj, v );
         break;
       }
@@ -63,19 +156,15 @@ private:
   }
 
   void split(){
-    auto min_bound = std::get<0>( mBounds );
-    auto max_bound = std::get<1>( mBounds );
-    auto min_x = std::get<0>( min_bound );
-    auto min_y = std::get<1>( min_bound );
-    auto max_x = std::get<0>( max_bound );
-    auto max_y = std::get<1>( max_bound );
-    auto split_x = ( min_x + max_x ) / 2;
-    auto split_y = ( min_y + max_y ) / 2;
+    auto split_point = mBounds.split();
 
-    mSubRegions.emplace( vector{min_x, min_y}, vector{split_x, split_y}, mMaxObjects );
-    mSubRegions.emplace( vector{min_x, split_y}, vector{split_x, max_y}, mMaxObjects );
-    mSubRegions.emplace( vector{split_x, min_y}, vector{max_x, split_y}, mMaxObjects );
-    mSubRegions.emplace( vector{split_x, split_y}, vector{max_x, max_y}, mMaxObjects );
+    helper<DIM - 1> h( std::get<0>( mBounds ),
+                       split_point,
+                       std::get<1>( mBounds ) );
+
+    h.use_values( []( vector v1, vector v2 ){
+      mSubRegions.emplace( v1, v2, mMaxObjects );
+    } );
 
     for( auto obj : mObjects ){
       sub_insert( std::get<0>( obj ), std::get<1>( obj ) );
@@ -100,28 +189,18 @@ private:
     }
   }
 
+  void sub_insert( const value_type& obj, vector v ){
+  }
+
 public:
   region_tree( vector v1, vector v2, int max = 2 ):
-    mBounds( {std::min( std::get<0>( v1 ), std::get<0>( v2 ) ),
-              std::min( std::get<1>( v1 ), std::get<1>( v2 ) )},
-             {std::max( std::get<0>( v1 ), std::get<0>( v2 ) ),
-              std::max( std::get<1>( v1 ), std::get<1>( v2 ) )} ),
+    mBounds( {v1, v2} ),
     mMaxObjects( max ){
   }
 
   void insert( const value_type& obj, vector v ){
-    auto min_bound = std::get<0>( mBounds );
-    auto max_bound = std::get<1>( mBounds );
-    auto min_x = std::get<0>( min_bound );
-    auto min_y = std::get<1>( min_bound );
-    auto max_x = std::get<0>( max_bound );
-    auto max_y = std::get<1>( max_bound );
-    auto x = std::get<0>( v );
-    auto y = std::get<1>( v );
-
     // validate bounds
-    if( ( x < min_x ) || ( y < min_y ) ||
-        ( x > max_x ) || ( y > max_y ) ){
+    if( mBounds.check( v ) ){
       return;//! @todo should throw?
     }
 
@@ -145,137 +224,91 @@ public:
   }
 
   bool operator<( const region_tree& rt ) const{
-    auto l_min_bound = std::get<0>( mBounds );
-    auto l_max_bound = std::get<1>( mBounds );
-    auto l_min_x = std::get<0>( l_min_bound );
-    auto l_min_y = std::get<1>( l_min_bound );
-    auto l_max_x = std::get<0>( l_max_bound );
-    auto l_max_y = std::get<1>( l_max_bound );
-    auto r_min_bound = std::get<0>( rt.mBounds );
-    auto r_max_bound = std::get<1>( rt.mBounds );
-    auto r_min_x = std::get<0>( r_min_bound );
-    auto r_min_y = std::get<1>( r_min_bound );
-    auto r_max_x = std::get<0>( r_max_bound );
-    auto r_max_y = std::get<1>( r_max_bound );
-
-    if( ( l_min_x < r_min_x ) ||
-        ( ( l_min_x == r_min_x ) &&
-          ( l_max_x <  r_max_x ) ) ||
-        ( ( l_max_x == r_max_x ) &&
-          ( l_min_y < r_min_y ) ) ||
-        ( ( l_min_y == r_min_y ) &&
-          ( l_max_y < r_max_y ) ) ){
-      return true;
-    } else {
-      return false;
-    }
+    return mBounds < rt.mBounds;
   }
 };
 
-/*
-template<typename T, size_t DIM>
-class region_tree{
+namespace detail{
+
+template<typename T>
+class swapper{
 public:
   using value_type = T;
-  using dimensions = std::tuple<vec<DIM>, vec<DIM> >;
 
 private:
-  static constexpr int div_count = 2 << DIM;
-  std::vector<region_tree> mDivisions;
-  std::vector<std::tuple<value_type, vec<DIM> > > mObjects;
-  dimensions mDimensions;
-  unsigned long mMaxObjects;
-
-  template<size_t N>
-  void split_helper( dimensions& dims ){
-    for( unsigned int i = 0; i < 2; ++i ){
-      auto& ref1 = std::get<N - 1>( std::get<0>( dims ) );
-      auto& ref2 = std::get<N - 1>( std::get<1>( dims ) );
-
-      if( i == 0 ){
-        ref2 = ( ref1 + ref2 ) / 2;
-      } else {
-        ref1 = ( ref1 + ref2 ) / 2;
-      }
-
-      split_helper<N - 1>( dims );
-    }
-  }
-
-  void insert_helper( const vec<DIM>& pos, const value_type& obj ){
-    int i = 0;
-
-    while( i++ < mDivisions.size() && !mDivisions[i].insert( obj, pos ) ){
-      ;
-    }
-  }
-
-  void split(){
-    auto dims = mDimensions;
-    // split new segments
-    split_helper<DIM>( dims );
-
-    // insert current objects into new groupings
-    for( auto obj : mObjects ){
-      insert_helper( std::get<1>( obj ), std::get<0>( obj ) );
-    }
-
-    mObjects.clear();
-  }
-
-  template<size_t N>
-  bool bounds_helper( const vec<DIM>& v ){
-    return ( std::get<N>( v ) < std::get<N>( std::get<1>( mDimensions ) ) ) &&
-           ( std::get<N>( v ) > std::get<N>( std::get<0>( mDimensions ) ) );
-  }
-
-  template<size_t N>
-  bool bounds_check( const vec<DIM>& v ){
-    return bounds_check<N - 1>( v ) && bounds_helper<N>( v );
-  }
-
-  template<>
-  bool bounds_check<0>( const vec<DIM>& v ){
-    return bounds_helper( v );
-  }
-
-  template<>
-  void split_helper<0>( dimensions& dims ){
-    mDivisions.emplace_back( dims, mMaxObjects );
-  }
+  value_type a;
+  value_type b;
+  bool swapped = false;
 
 public:
-  //! @todo mdimensions initialization needs to be refactored for higher dimensions
-  region_tree( const vec<DIM>& dim1, const vec<DIM>& dim2, unsigned long max = 2 ):
-    mDimensions( {std::min( std::get<0>( dim1 ), std::get<0>( dim2 ) ),
-                  std::min( std::get<1>( dim1 ), std::get<1>( dim2 ) )},
-                 {std::max( std::get<0>( dim1 ), std::get<0>( dim2 ) ),
-                  std::max( std::get<1>( dim1 ), std::get<1>( dim2 ) )} ),
-    mMaxObjects( max ){
+  swapper( const value_type& x, const value_type& y ):
+    a( x ),
+    b( y ){
   }
 
-  bool insert( const value_type& vt, const vec<DIM>& v ){
-    // return false when this object doesn't belong in our bounds
-    if( !bounds_check<DIM>( v ) ){
-      return false;
-    }
+  operator value_type(){
+    return swapped ? a : b;
+  }
 
-    if( mDivisions.size() > 0 ){
-      // if we're already split, insert appropriately
-      insert_helper( v, vt );
-    } else {
-      // if not split, insert normally and split if necessary
-      mObjects.push_back( vt );
-    }
-
-    if( mObjects.size() > mMaxObjects ){
-      split();
-    }
-
-    return true;
+  void swap(){
+    swapped = !swapped;
   }
 };
-*/
+
+template<size_t DIM, size_t MAX = DIM + 1>
+class helper : public helper<DIM - 1, MAX>{
+public:
+  using base = helper<DIM - 1, MAX>;
+  using vector = vec<double, MAX>;
+
+private:
+  std::tuple<swapper<double>, swapper<double> > swaps;
+
+public:
+  helper( vector a, vector b, vector c ):
+    base( a, b, c ),
+    swaps( {{std::get<DIM>( a ), std::get<DIM>( b )},
+            {std::get<DIM>( b ), std::get<DIM>( c )}} ){
+  }
+
+  void use_values( vector v1, vector v2, std::function<void( vector, vector )> fn ){
+    for( int i = 0; i < 2; ++i ){
+      std::get<DIM>( v1 ) = std::get<0>( swaps );
+      std::get<DIM>( v2 ) = std::get<1>( swaps );
+
+      base::use_values( v1, v2, fn );
+
+      std::get<0>( swaps ).swap();
+      std::get<1>( swaps ).swap();
+    }
+  }
+};
+
+template<size_t MAX>
+class helper<0, MAX>{
+private:
+  std::tuple<swapper<double>, swapper<double> > swaps;
+
+public:
+  helper( vector a, vector b, vector c ):
+    swaps( {{std::get<DIM>( a ), std::get<DIM>( b )},
+            {std::get<DIM>( b ), std::get<DIM>( c )}} ){
+  }
+
+  void use_values( vector v1, vector v2, std::function<void( vector, vector )> fn ){
+    for( int i = 0; i < 2; ++i ){
+      std::get<DIM>( v1 ) = std::get<0>( swaps );
+      std::get<DIM>( v2 ) = std::get<1>( swaps );
+
+      fn( v1, v2 );
+
+      std::get<0>( swaps ).swap();
+      std::get<1>( swaps ).swap();
+    }
+  }
+};
+
+}
 
 template<typename T>
 using quad_tree = region_tree<T, 2>;
