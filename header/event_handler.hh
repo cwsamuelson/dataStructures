@@ -22,16 +22,19 @@ class event_channel{
 public:
   /*!
    */
-  using handler = std::function<void(const event_channel&, Args...)>;
+  using counter_t = unsigned long long;
   /*!
-   * @tparam
+   */
+  using handler = std::function<void(const event_channel&, counter_t, Args...)>;
+  /*!
+   * @tparam N
    */
   template<size_t N>
   using arg_types = tuple_element<N, tuple<Args...> >;
 
 private:
-  std::map<unsigned long long, handler> handlers;
-  unsigned long long idCounter = 0;
+  std::map<counter_t, handler> handlers;
+  counter_t idCounter = 0;
 
 public:
   /*! Register new handler
@@ -52,7 +55,7 @@ public:
    *
    * @return
    */
-  unsigned long long enlist( const handler& handler ){
+  counter_t enlist( const handler& handler ){
     handlers[idCounter] = handler;
 
     return idCounter++;
@@ -62,7 +65,7 @@ public:
    *
    * @param ref
    */
-  void delist( unsigned long long ref ){
+  void delist( counter_t ref ){
     handlers.erase( ref );
   }
 
@@ -75,12 +78,14 @@ public:
    *
    * @param args Arguments to pass on to handlers
    *
+   * parameters will not be forwarded because they cannot be moved to multiple
+   * places at once.
+   *
    * @todo find a nice way to fire handlers in parallel
-   * @todo determine if parameters should be forwarded or not. if they are, that implies trying to move an object to multiple handlers, which is an oxymoron
    */
   void fire( Args... args ){
     for( auto& handle : handlers ){
-      handle.second( *this, std::forward<Args>( args )... );
+      handle.second( *this, handle.first, args... );
     }
   }
 

@@ -25,25 +25,30 @@ TEST_CASE( "Basic event control flow", "[events]" ){
 
   gsw::event_channel<int>::handler handler0;
   gsw::event_channel<foo>::handler handler1(
-                                     [&]( gsw::event_channel<foo>, foo f ){
+                                     [&]( gsw::event_channel<foo>, unsigned long long,
+                                          foo f ){
                                        g_f = f;
                                      } );
   gsw::event_channel<int>::handler handler2(
-                                     [&]( gsw::event_channel<int>, int i ){
+                                     [&]( gsw::event_channel<int>, unsigned long long,
+                                          int i ){
                                        g_j = i;
                                      } );
   gsw::event_channel<int>::handler handler3(
-                                     [&]( gsw::event_channel<int>, int i ){
+                                     [&]( gsw::event_channel<int>, unsigned long long,
+                                          int i ){
                                        g_k = i;
                                      } );
   gsw::event_channel<int, int>::handler handler4(
-                                     [&]( gsw::event_channel<int, int>, int i, int j ){
+                                     [&]( gsw::event_channel<int, int>, unsigned long long,
+                                          int i, int j ){
                                        g_l = i;
                                        g_m = j;
                                      } );
 
   handler0 =
-    [&]( gsw::event_channel<int>, int i ){
+    [&]( gsw::event_channel<int>, unsigned long long,
+         int i ){
       g_i = i;
     };
 
@@ -89,7 +94,8 @@ TEST_CASE( "In context usage", "[events]" ){
   string response;
   serial ser;
   serial::rxHandler serialRxHandler(
-                      [&]( const serial::rxEvent&, const string& str ){
+                      [&]( const serial::rxEvent&, unsigned long long,
+                           const string& str ){
                         response = str;
                       } );
   ser.rxDataEvent += serialRxHandler;
