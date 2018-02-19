@@ -89,6 +89,12 @@ public:
     }
   }
 
+  /*!
+   */
+  void operator()( Args... args ){
+    fire( args... );
+  }
+
   /*! Remove all registered handlers
    */
   void clear(){
