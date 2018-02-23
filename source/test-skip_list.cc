@@ -8,44 +8,44 @@ using namespace std;
 
 TEST_CASE( "skip_lists are associative containers", "[skip_list]" ){
   const int nIters = 10;
-  gsw::skip_list<int, int> mp;
+  gsw::skip_list<int, int> sl;
 
   SECTION( "skip_lists initialize empty" ){
-    REQUIRE( mp.empty() );
+    REQUIRE( sl.empty() );
   }
 
   for( int i = 0; i < nIters; ++i ){
-    mp[i] = i + 1;
+    sl[i] = i + 1;
   }
 
   SECTION( "Basic value skip_listping" ){
     for( int i = 0; i < nIters; ++i ){
-      REQUIRE( mp[i] == i + 1 );
+      REQUIRE( sl[i] == i + 1 );
     }
   }
 
   SECTION( "More detailed value skip_listping, and value changing" ){
-    gsw::skip_list<string, string> m;
+    gsw::skip_list<string, string> sl;
 
-    m["test"] = "foo";
+    sl["test"] = "foo";
 
-    REQUIRE( m["test"] == "foo" );
+    REQUIRE( sl["test"] == "foo" );
 
-    m["test"] = "bar";
+    sl["test"] = "bar";
 
-    REQUIRE( m["test"] == "bar" );
+    REQUIRE( sl["test"] == "bar" );
 
-    m["test2"] = "foo";
+    sl["test2"] = "foo";
 
-    REQUIRE( m["test2"] == "foo" );
-    REQUIRE( m["test"] == "bar" );
+    REQUIRE( sl["test2"] == "foo" );
+    REQUIRE( sl["test"] == "bar" );
 
-    auto it = m.begin();
-    REQUIRE( gsw::get<0>( *it ) == "test" );
-    REQUIRE( gsw::get<1>( *it ) == "bar" );
+    auto it = sl.begin();
+    REQUIRE( std::get<0>( *it ) == "test" );
+    REQUIRE( std::get<1>( *it ) == "bar" );
     ++it;
-    REQUIRE( gsw::get<0>( *it ) == "test2" );
-    REQUIRE( gsw::get<1>( *it ) == "foo" );
+    REQUIRE( std::get<0>( *it ) == "test2" );
+    REQUIRE( std::get<1>( *it ) == "foo" );
   }
 }
 

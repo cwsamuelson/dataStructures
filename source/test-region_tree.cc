@@ -5,17 +5,6 @@
 using namespace gsw;
 
 TEST_CASE( "Region trees (such as quad tree and octree)", "[region_tree]" ){
-  SECTION( "mathematical vector" ){
-    vec<2> vec2( 1, 2 );
-    REQUIRE( std::get<0>( vec2 ) == 1 );
-    REQUIRE( std::get<1>( vec2 ) == 2 );
-
-    vec<3> vec3( 1, 2, 3 );
-    REQUIRE( std::get<0>( vec3 ) == 1 );
-    REQUIRE( std::get<1>( vec3 ) == 2 );
-    REQUIRE( std::get<2>( vec3 ) == 3 );
-  }
-
   quad_tree<double> qt( {0, 0}, {100, 100} );
 
   qt.insert( 12.0, {25, 25} );

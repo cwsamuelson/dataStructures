@@ -86,6 +86,7 @@ public:
     if( mcb( cref ) ){
       mRef = cref;
     }
+
     return mRef;
   }
 
@@ -103,6 +104,7 @@ public:
     if( mcb( other ) ){
       mRef = std::forward<U>( other );
     }
+
     return mRef;
   }
 };

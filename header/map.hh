@@ -13,6 +13,8 @@
 #include<normal_iterator.hh>
 #include<vector.hh>
 #include<tuple.hh>
+#include<allocator_traits.hh>
+#include<allocator.hh>
 
 namespace gsw{
 

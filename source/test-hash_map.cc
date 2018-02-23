@@ -39,11 +39,11 @@ TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
     REQUIRE( m["test"] == "bar" );
 
     auto it = m.begin();
-    REQUIRE( gsw::get<0>( *it ) == "test" );
-    REQUIRE( gsw::get<1>( *it ) == "bar" );
+    REQUIRE( std::get<0>( *it ) == "test" );
+    REQUIRE( std::get<1>( *it ) == "bar" );
     ++it;
-    REQUIRE( gsw::get<0>( *it ) == "test2" );
-    REQUIRE( gsw::get<1>( *it ) == "foo" );
+    REQUIRE( std::get<0>( *it ) == "test2" );
+    REQUIRE( std::get<1>( *it ) == "foo" );
   }
 }
 

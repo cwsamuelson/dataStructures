@@ -2,6 +2,11 @@
 #define __HASH_MAP_HH__
 
 #include<vector>
+#include<tuple>
+
+#include<normal_iterator.hh>
+#include<allocator_traits.hh>
+#include<allocator.hh>
 
 namespace gsw{
 
@@ -15,16 +20,17 @@ namespace gsw{
  *
  * @tparam ALLOC
  */
-template<typename KEY, typename VALUE, typename HASH = std::hash<KEY>, typename ALLOC = allocator<> >
+template<typename KEY, typename VALUE, typename HASH = std::hash<KEY>, typename ALLOC = allocator<std::tuple<KEY, VALUE> > >
 class hash_map{
 public:
   using key_type = KEY;
   using value_type = VALUE;
-  using iterator = ;
+  using storage_type = std::tuple<key_type, value_type>;
+  using iterator = normal_iterator<storage_type, hash_map>;
   using hash_fn = HASH;
 
 private:
-  using container = std::vector<value_type>;
+  using container = std::vector<storage_type>;
 
   container mValues;
   hash_fn mHashFunc;
@@ -32,13 +38,13 @@ private:
 public:
   /*!
    */
-  hash_map() default;
+  hash_map() = default;
 
   /*!
    */
   template<typename U>
   hash_map( U&& other )
-    : mValues( std::forward<container>( other.mValues ){
+    : mValues( std::forward<container>( other.mValues ) ){
   }
 
   /*!
@@ -61,7 +67,7 @@ public:
    */
   void
   insert( const key_type& key, const value_type& value ){
-    mValues[mHashFunc( key )] = value;
+    mValues[mHashFunc( key )] = {key, value};
   }
 
   /*!
@@ -78,7 +84,7 @@ public:
    */
   value_type&
   operator[]( const key_type& key ){
-    return mValues[mHashFunc( key )];
+    return mValues[mHashFunc( key )].first;
   }
 
   /*!
@@ -86,14 +92,16 @@ public:
    * @return
    */
   iterator
-  begin()
+  begin(){
+  }
 
   /*!
    *
    * @return
    */
   iterator
-  end()
+  end(){
+  }
 
   /*!
    *
