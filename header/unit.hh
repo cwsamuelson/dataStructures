@@ -83,7 +83,8 @@ public:
    *
    * @param val  Value to initialize data, defaults to default ctor
    */
-  constexpr unit( const value_type& val = value_type() ):
+  constexpr
+  unit( const value_type& val = value_type() ):
     mValue( val ){
   }
 
@@ -101,7 +102,8 @@ public:
    * based on the value in F.
    */
   template<typename D, typename F>
-  constexpr unit( const other_type<D, F>& other ):
+  constexpr
+  unit( const other_type<D, F>& other ):
     mValue( ( other.getRaw() * factor_type::denominator ) / factor_type::numerator ){
   }
 
@@ -121,7 +123,8 @@ public:
    * based on the value in F.
    */
   template<typename D, typename F>
-  constexpr unit& operator=( const other_type<D, F>& other ){
+  constexpr unit&
+  operator=( const other_type<D, F>& other ){
     mValue = other.getRaw() * typename factor_type::invert_type();
 
     return *this;
@@ -135,7 +138,8 @@ public:
    *
    * Copies value raw as this' new value.
    */
-  constexpr unit& operator=( value_type value ){
+  constexpr unit&
+  operator=( value_type value ){
     mValue = value;
 
     return *this;
@@ -155,7 +159,8 @@ public:
    * @todo Allow small error in comparison to account for floating point math.
    */
   template<typename D, typename F>
-  constexpr bool operator==( const other_type<D, F>& other ) const{
+  constexpr bool
+  operator==( const other_type<D, F>& other ) const{
     return getRaw() == other.getRaw();
   }
 
@@ -173,7 +178,8 @@ public:
    * Compares this instance with another instance for inequality.
    */
   template<typename D, typename F>
-  constexpr bool operator!=( const other_type<D, F>& other ) const{
+  constexpr bool
+  operator!=( const other_type<D, F>& other ) const{
     return !( *this == other );
   }
 
@@ -189,7 +195,8 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F>
-  constexpr bool operator<( const other_type<D, F>& other ) const{
+  constexpr bool
+  operator<( const other_type<D, F>& other ) const{
     return getRaw() < other.getRaw();
   }
 
@@ -205,7 +212,8 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F>
-  constexpr bool operator>( const other_type<D, F>& other ) const{
+  constexpr bool
+  operator>( const other_type<D, F>& other ) const{
     return getRaw() > other.getRaw();
   }
 
@@ -221,7 +229,8 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F>
-  constexpr bool operator<=( const other_type<D, F>& other ) const{
+  constexpr bool
+  operator<=( const other_type<D, F>& other ) const{
     return !( ( *this ) > other );
   }
 
@@ -237,7 +246,8 @@ public:
    * @return Result of comparison
    */
   template<typename D, typename F>
-  constexpr bool operator>=( const other_type<D, F>& other ) const{
+  constexpr bool
+  operator>=( const other_type<D, F>& other ) const{
     return !( ( *this ) < other );
   }
 
@@ -247,7 +257,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool operator==( value_type other ) const{
+  constexpr bool
+  operator==( value_type other ) const{
     return mValue == other;
   }
 
@@ -257,7 +268,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool operator<( value_type other ) const{
+  constexpr bool
+  operator<( value_type other ) const{
     return mValue < other;
   }
 
@@ -267,7 +279,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool operator>( value_type other ) const{
+  constexpr bool
+  operator>( value_type other ) const{
     return mValue > other;
   }
 
@@ -277,7 +290,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool operator<=( value_type other ) const{
+  constexpr bool
+  operator<=( value_type other ) const{
     return !( ( *this ) > other );
   }
 
@@ -287,7 +301,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool operator>=( value_type other ) const{
+  constexpr bool
+  operator>=( value_type other ) const{
     return !( ( *this ) < other );
   }
 
@@ -297,7 +312,8 @@ public:
    *
    * Increments value.
    */
-  constexpr unit& operator++(){
+  constexpr unit&
+  operator++(){
     ++mValue;
 
     return *this;
@@ -309,7 +325,8 @@ public:
    *
    * @return Value before increment
    */
-  constexpr unit operator++( int ){
+  constexpr unit
+  operator++( int ){
     unit u = *this;
  
     ++( *this );
@@ -323,7 +340,8 @@ public:
    *
    * Deccrements value.
    */
-  constexpr unit& operator--(){
+  constexpr unit&
+  operator--(){
     --mValue;
 
     return *this;
@@ -337,7 +355,8 @@ public:
    *
    * Deccrements value.
    */
-  constexpr unit operator--( int ){
+  constexpr unit
+  operator--( int ){
     unit u = *this;
 
     --( *this );
@@ -355,7 +374,8 @@ public:
    * @return Reference to lhs, but with value of the addition
    */
   template<typename D, typename F>
-  constexpr unit& operator+=( const other_type<D, F>& other ){
+  constexpr unit&
+  operator+=( const other_type<D, F>& other ){
     mValue = ( getRaw() + other.getRaw() ) / factor_type::value;
 
     return *this;
@@ -375,7 +395,8 @@ public:
    * be part of the class to be used in inheritance.
    */
   template<typename D, typename F>
-  constexpr auto operator+( const other_type<D,F>& other ) const{
+  constexpr auto
+  operator+( const other_type<D,F>& other ) const{
     return unit( *this ) += other;
   }
 
@@ -389,7 +410,8 @@ public:
    * @return Reference to lhs, but with value of the subtraction
    */
   template<typename D, typename F>
-  constexpr unit& operator-=( const other_type<D, F>& other ){
+  constexpr unit&
+  operator-=( const other_type<D, F>& other ){
     mValue = ( getRaw() - other.getRaw() ) / factor_type::value;
 
     return *this;
@@ -409,7 +431,8 @@ public:
    * be part of the class to be used in inheritance.
    */
   template<typename D, typename F>
-  constexpr auto operator-( const other_type<D,F>& other ) const{
+  constexpr auto
+  operator-( const other_type<D,F>& other ) const{
     return unit( *this ) -= other;
   }
 
@@ -421,7 +444,8 @@ public:
    *
    * Stored value is increased by other, and saved
    */
-  constexpr unit& operator+=( value_type other ){
+  constexpr unit&
+  operator+=( value_type other ){
     mValue += other;
 
     return *this;
@@ -435,7 +459,8 @@ public:
    *
    * Stored value is reduced by other, and saved
    */
-  constexpr unit& operator-=( value_type other ){
+  constexpr unit&
+  operator-=( value_type other ){
     mValue -= other;
 
     return *this;
@@ -453,7 +478,8 @@ public:
    *
    * Stored value is multiplied by val, and saved
    */
-  constexpr unit& operator*=( const value_type& val ){
+  constexpr unit&
+  operator*=( const value_type& val ){
     mValue *= val;
 
     return *this;
@@ -467,7 +493,8 @@ public:
    *
    * Stored value is divided by val, and saved
    */
-  constexpr unit& operator/=( const value_type& val ){
+  constexpr unit&
+  operator/=( const value_type& val ){
     mValue /= val;
 
     return *this;
@@ -475,16 +502,66 @@ public:
 
   /*! Get factored, stored value
    */
-  constexpr value_type getValue() const{
+  constexpr value_type
+  getValue() const{
     return mValue;
   }
 
   /*! Retrieve actual raw value (factor is taken into account)
    */
-  constexpr value_type getRaw() const{
+  constexpr value_type
+  getRaw() const{
     return ( mValue * factor_type::value );
   }
 };
+
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
+         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator*( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+
+  cp *= d;
+
+  return cp;
+}
+
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
+         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator*( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+
+  cp *= d;
+
+  return cp;
+}
+
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
+         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator/( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+
+  cp /= d;
+
+  return cp;
+}
+
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
+         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator/( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+
+  cp /= d;
+
+  return cp;
+}
 
 /*! Multiplication operator
  *
