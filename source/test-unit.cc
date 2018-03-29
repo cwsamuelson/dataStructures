@@ -5,7 +5,7 @@
 using namespace gsw;
 
 TEST_CASE( "Units participate in arithmetic", "[unit]" ){
-  using test_t = unit<1, 0, 0, 0, 0, 0, 0>;
+  using test_t = unit<1, 0, 0, 0, 0, 0, 0, 0>;
 
   SECTION( "Units of same type can be added and subtracted" ){
     using kilovolt = voltage<double, kilo>;
@@ -27,27 +27,33 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Units multiplication/division result in new unit types" ){
-    voltage<> V = 3.0;
-    current<> I = 5.0;
-    resistance<> R = 4.0;
+    SECTION( "Electricity example" ){
+      voltage<> V = 3.0;
+      current<> I = 5.0;
+      resistance<> R = 4.0;
 
-    V = I * R;
+      V = I * R;
 
-    REQUIRE( V.getValue() == I.getValue() * R.getValue() );
-    I = 3.0;
+      REQUIRE( V.getValue() == I.getValue() * R.getValue() );
+      I = 3.0;
 
-    I = V / R;
+      I = V / R;
 
-    REQUIRE( I == 5.0 );
-    REQUIRE( I.getValue() == V.getValue() / R.getValue() );
+      REQUIRE( I == 5.0 );
+      REQUIRE( I.getValue() == V.getValue() / R.getValue() );
 
-    test_t X = 2.0;
-    test_t Y = 3.0;
-    unit<2, 0, 0, 0, 0, 0, 0> Z;
+      test_t X = 2.0;
+      test_t Y = 3.0;
+      unit<2, 0, 0, 0, 0, 0, 0, 0> Z;
 
-    Z = X * Y;
+      Z = X * Y;
 
-    REQUIRE( Z.getValue() == 6.0 );
+      REQUIRE( Z.getValue() == 6.0 );
+    }
+
+    SECTION( "Kinematics example" ){
+      REQUIRE( acceleration<>( 5 ) * gsw::time<>( 2 ) * gsw::time<>( 4 ) == length<>( 40 ) );
+    }
   }
 
   SECTION( "Units of same type can be value compared" ){
@@ -152,7 +158,7 @@ TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
 
 TEST_CASE( "Scheduler test", "[unit]" ){
   using int_time = gsw::time<unsigned long long, milli>;
-  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, -1, unsigned long long, milli>;
+  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, unsigned long long, milli>;
   const tick<> t = int_time( 50 ) / sched_tick_rate( 5 );
 
   REQUIRE( t == 10 );

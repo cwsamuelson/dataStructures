@@ -27,6 +27,8 @@ namespace gsw{
  *
  * @tparam DEGREE  Degrees of angle
  *
+ * @tparam DOLLAR  
+ *
  * @tparam PERCENTAGE  Percent
  *
  * @tparam TICK  Custom user type.  A common usage may be tick, but can be used
@@ -51,15 +53,15 @@ namespace gsw{
  * special typedefs below, and using said values with other libraries, as those
  * will be using the defaults specified here.
  */
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA,
+         int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
-                                  CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
+                                  CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
                     additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
-                                  CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>,
+                                  CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>,
                     multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE,
-                                        KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
+                                        KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
 public:
   /*! Storage type
    */
@@ -73,7 +75,7 @@ public:
    */
   template<typename D_t = value_type, typename F_t = factor_type>
   using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
-                          DEGREE, PERCENTAGE, TICK, D_t, F_t>;
+                          DOLLAR, DEGREE, PERCENTAGE, TICK, D_t, F_t>;
 
 private:
   value_type mValue;
@@ -516,11 +518,11 @@ public:
 };
 
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator*( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator*( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp *= d;
 
@@ -528,11 +530,11 @@ operator*( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE
 }
 
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator*( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator*( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp *= d;
 
@@ -540,11 +542,11 @@ operator*( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, C
 }
 
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator/( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator/( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp /= d;
 
@@ -552,11 +554,11 @@ operator/( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE
 }
 
 template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator/( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
+operator/( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
+  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp /= d;
 
@@ -574,19 +576,19 @@ operator/( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, C
  *
  */
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1,
-         int CANDELA1, int DEGREE1, int PERCENTAGE1, int TICK1,
+         int CANDELA1, int DOLLAR1, int DEGREE1, int PERCENTAGE1, int TICK1,
          int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2,
-         int CANDELA2, int DEGREE2, int PERCENTAGE2, int TICK2,
+         int CANDELA2, int DOLLAR2, int DEGREE2, int PERCENTAGE2, int TICK2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
 unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2, AMPERE1 + AMPERE2,
-     KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, DEGREE1 + DEGREE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2,
+     KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, DOLLAR1 + DOLLAR2, DEGREE1 + DEGREE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2,
      D_t1, decltype( F_t1() * F_t2() )>
 operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1,
-                      CANDELA1, DEGREE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
+                      CANDELA1, DOLLAR1, DEGREE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
            const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2,
-                      CANDELA2, DEGREE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
+                      CANDELA2, DOLLAR2, DEGREE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
   return lhs.getValue() * rhs.getValue();
 }
 
@@ -601,48 +603,50 @@ operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1,
  *
  */
 template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1,
-         int CANDELA1, int DEGREE1, int PERCENTAGE1, int TICK1,
+         int CANDELA1, int DOLLAR1, int DEGREE1, int PERCENTAGE1, int TICK1,
          int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2,
-         int CANDELA2, int DEGREE2, int PERCENTAGE2, int TICK2,
+         int CANDELA2, int DOLLAR2, int DEGREE2, int PERCENTAGE2, int TICK2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
 unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2, AMPERE1 - AMPERE2,
-     KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, DEGREE1 - DEGREE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2,
+     KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, DOLLAR1 - DOLLAR2, DEGREE1 - DEGREE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2,
      D_t1, decltype( F_t1() / F_t2() )>
 operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1,
-                      CANDELA1, DEGREE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
+                      CANDELA1, DOLLAR1, DEGREE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
            const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2,
-                      CANDELA2, DEGREE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
+                      CANDELA2, DOLLAR2, DEGREE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
   return lhs.getValue() / rhs.getValue();
 }
 
-//                          m   s  kg   A   K  C  D  P  T
+//                          m   s  kg   A   K  C  $  D  P  T
 template<typename T = double, typename F = ratio<1, 1> >
-using none          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 0, T, F>;
+using none          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0, T, F>;
 
 template<typename T = double, typename F = ratio<1, 1> >
-using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, 0, T, F>;//meters
+using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, 0, 0, T, F>;//meters
 template<typename T = double, typename F = ratio<1, 1> >
-using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, 0, T, F>;//kg
+using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, 0, 0, T, F>;//kg
 template<typename T = double, typename F = ratio<1, 1> >
-using current       = unit< 0,  0,  0,  1,  0, 0, 0, 0, 0, T, F>;//amps
+using current       = unit< 0,  0,  0,  1,  0, 0, 0, 0, 0, 0, T, F>;//amps
 template<typename T = double, typename F = ratio<1, 1> >
-using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, 0, 0, T, F>;//kelvin
+using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, 0, 0, 0, T, F>;//kelvin
 template<typename T = double, typename F = ratio<1, 1> >
-using l_intensity   = unit< 0,  0,  0,  0,  0, 1, 0, 0, 0, T, F>;//luminous intensity, candela
+using l_intensity   = unit< 0,  0,  0,  0,  0, 1, 0, 0, 0, 0, T, F>;//luminous intensity, candela
 template<typename T = double, typename F = ratio<1, 1> >
-using time          = unit< 0,  1,  0,  0,  0, 0, 0, 0, 0, T, F>;//seconds
+using money         = unit< 0,  0,  0,  0,  0, 0, 1, 0, 0, 0, T, F>;//dolla dolla bills
 template<typename T = double, typename F = ratio<1, 1> >
-using tick          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 1, T, F>;
+using time          = unit< 0,  1,  0,  0,  0, 0, 0, 0, 0, 0, T, F>;//seconds
 template<typename T = double, typename F = ratio<1, 1> >
-using percent       = unit< 0,  0,  0,  0,  0, 0, 0, 1, 0, T, F>;//%
+using tick          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 0, 1, T, F>;
 template<typename T = double, typename F = ratio<1, 1> >
-using frequency     = unit< 0, -1,  0,  0,  0, 0, 0, 0, 0, T, F>;//hz
+using percent       = unit< 0,  0,  0,  0,  0, 0, 0, 0, 1, 0, T, F>;//%
 template<typename T = double, typename F = ratio<1, 1> >
-using angle         = unit< 0,  0,  0,  0,  0, 0, 1, 0, 0, T, F>;//degrees
+using frequency     = unit< 0, -1,  0,  0,  0, 0, 0, 0, 0, 0, T, F>;//hz
 template<typename T = double, typename F = ratio<1, 1> >
-using solid_angle   = unit< 0,  0,  0,  0,  0, 0, 2, 0, 0, T, F>;
+using angle         = unit< 0,  0,  0,  0,  0, 0, 0, 1, 0, 0, T, F>;//degrees
+template<typename T = double, typename F = ratio<1, 1> >
+using solid_angle   = unit< 0,  0,  0,  0,  0, 0, 0, 2, 0, 0, T, F>;
 
 template<typename T = double, typename F = ratio<1, 1> >
 using area          = decltype( length<T, F>() * length<T, F>() );
@@ -671,15 +675,15 @@ template<typename T = double, typename F = ratio<1, 1> >
 using power         = decltype( energy<T, F>() / time<T, F>() );//watts
 
 template<typename T = double, typename F = ratio<1, 1> >
-using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, 0, T, F>;//volts
+using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, 0, 0, T, F>;//volts
 template<typename T = double, typename F = ratio<1, 1> >
-using resistance    = unit< 2, -3,  1, -2,  0, 0, 0, 0, 0, T, F>;//ohms
+using resistance    = unit< 2, -3,  1, -2,  0, 0, 0, 0, 0, 0, T, F>;//ohms
 template<typename T = double, typename F = ratio<1, 1> >
-using capacitance   = unit<-2,  4, -1,  2,  0, 0, 0, 0, 0, T, F>;//farad
+using capacitance   = unit<-2,  4, -1,  2,  0, 0, 0, 0, 0, 0, T, F>;//farad
 template<typename T = double, typename F = ratio<1, 1> >
-using inductance    = unit< 2, -2,  1, -2,  0, 0, 0, 0, 0, T, F>;//henrys
+using inductance    = unit< 2, -2,  1, -2,  0, 0, 0, 0, 0, 0, T, F>;//henrys
 template<typename T = double, typename F = ratio<1, 1> >
-using charge        = unit< 0,  1,  0,  1,  0, 0, 0, 0, 0, T, F>;//coulomb
+using charge        = unit< 0,  1,  0,  1,  0, 0, 0, 0, 0, 0, T, F>;//coulomb
 template<typename T = double, typename F = ratio<1, 1> >
 using resistivity   = decltype( resistance<T, F>() * length<T, F>() );//ohm*meter
 template<typename T = double, typename F = ratio<1, 1> >
@@ -688,9 +692,9 @@ template<typename T = double, typename F = ratio<1, 1> >
 using conductance   = decltype( conductivity<T, F>() * length<T, F>() );
 
 template<typename T = double, typename F = ratio<1, 1> >
-using mag_field     = unit< 0, -2,  1,  1,  0, 0, 0, 0, 0, T, F>;//tesla
+using mag_field     = unit< 0, -2,  1,  1,  0, 0, 0, 0, 0, 0, T, F>;//tesla
 template<typename T = double, typename F = ratio<1, 1> >
-using elec_field    = unit< 1, -3,  1, -1,  0, 0, 0, 0, 0, T, F>;
+using elec_field    = unit< 1, -3,  1, -1,  0, 0, 0, 0, 0, 0, T, F>;
 
 template<typename T = double, typename F = ratio<1, 1> >
 using specificHeat  = decltype( energy<T, F>() / temperature<T, F>() );
@@ -728,6 +732,10 @@ constexpr auto operator""_R( long double val ){
   return resistance<long double>( val );
 }
 
+constexpr auto operator""_mny( long double val ){
+  return money<long double>( val );
+}
+
 /* integral literals */
 constexpr auto operator""_0( unsigned long long val ){
   return none<unsigned long long>( val );
@@ -759,6 +767,10 @@ constexpr auto operator""_V( unsigned long long val ){
 
 constexpr auto operator""_R( unsigned long long val ){
   return resistance<unsigned long long>( val );
+}
+
+constexpr auto operator""_mny( unsigned long long val ){
+  return money<unsigned long long>( val );
 }
 
 }
