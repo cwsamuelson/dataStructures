@@ -1,8 +1,11 @@
+#include<string>
+
 #include<catch.hpp>
 
 #include<hash_map.hh>
 
 using namespace gsw;
+using namespace std;
 
 TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
   const int nIters = 10;

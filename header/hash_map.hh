@@ -74,7 +74,7 @@ public:
    */
   template<typename ...ARGS>
   void
-  emplace( const key_type&, ARGS ...args )
+  emplace( const key_type&, ARGS ...args ){}
 
   /*!
    *
@@ -84,7 +84,7 @@ public:
    */
   value_type&
   operator[]( const key_type& key ){
-    return mValues[mHashFunc( key )].first;
+    return std::get<0>( mValues[mHashFunc( key )] );
   }
 
   /*!
