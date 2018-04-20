@@ -199,6 +199,7 @@ double equation::evaluate( const equation::data& variables ) const{
 /*! @todo implement equation solver */
 set<equation::data> equation::solve( const equation::data& variables ) const{
   (void) variables;
+
   return {};
 }
 
