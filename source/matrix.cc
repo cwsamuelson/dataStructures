@@ -141,3 +141,8 @@ matrix::set_size( dim_t x, dim_t y ){
   (*this) = m;
 }
 
+std::tuple<matrix::dim_t, matrix::dim_t>
+matrix::size() const{
+  return {mData.size(), mData[0].size()};
+}
+

@@ -2,6 +2,7 @@
 #define __MATRIX_HH__
 
 #include<vector>
+#include<tuple>
 
 #include<operators.hh>
 
@@ -52,6 +53,39 @@ public:
    */
   data_t&
   operator()( dim_t x, dim_t y );
+
+  /*!
+   */
+  matrix
+  operator-() const;
+
+  /*!
+   */
+  matrix
+  transpose() const;
+
+  /*!
+   */
+  matrix
+  inverse() const;
+
+  /*!
+   *
+   * @param width
+   *
+   * @param height
+   */
+  void
+  set_size( dim_t x, dim_t y );
+
+  /*!
+   *
+   * @param width
+   *
+   * @param height
+   */
+  std::tuple<dim_t, dim_t>
+  size() const;
 
   /*!
    *
@@ -132,30 +166,6 @@ public:
   friend
   matrix&
   operator-=( matrix& lhs, const matrix& rhs );
-
-  /*!
-   */
-  matrix
-  operator-() const;
-
-  /*!
-   */
-  matrix
-  transpose() const;
-
-  /*!
-   */
-  matrix
-  inverse() const;
-
-  /*!
-   *
-   * @param width
-   *
-   * @param height
-   */
-  void
-  set_size( dim_t x, dim_t y );
 };
 
 matrix&
