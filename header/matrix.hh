@@ -5,6 +5,8 @@
 
 #include<operators.hh>
 
+namespace gsw{
+
 class matrix : public gsw::multiplicative<matrix>,
                       gsw::multiplicative<matrix, double>,
                       gsw::additive<matrix>{
@@ -14,6 +16,9 @@ public:
 
 private:
   std::vector<std::vector<data_t> > mData;
+
+  void
+  validate_matrixes( const gsw::matrix& two ) const;
 
 public:
   /*!
@@ -151,10 +156,6 @@ public:
    */
   void
   set_size( dim_t x, dim_t y );
-
-  friend
-  void
-  validate_matrixes( const matrix& one, const matrix& two );
 };
 
 matrix&
@@ -180,6 +181,8 @@ operator+=( matrix& lhs, const matrix& rhs );
 
 matrix&
 operator-=( matrix& lhs, const matrix& rhs );
+
+}
 
 #endif
 

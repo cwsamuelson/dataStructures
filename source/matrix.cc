@@ -3,11 +3,12 @@
 #include<matrix.hh>
 
 using namespace std;
+using namespace gsw;
 
 void
-validate_matrixes( const matrix& one, const matrix& two ){
-  if( one.mData.size()    != two.mData.size()
-   || one.mData[0].size() != two.mData[0].size() ){
+matrix::validate_matrixes( const matrix& other ) const{
+  if( mData.size()    != other.mData.size()
+   || mData[0].size() != other.mData[0].size() ){
     throw std::invalid_argument( "mismatched dimensions" );
   }
 }
@@ -31,65 +32,75 @@ matrix::operator()( dim_t x, dim_t y ){
 }
 
 matrix&
-operator*=( matrix& lhs, const matrix& rhs ){
-  validate_matrixes( lhs, rhs.transpose() );
+gsw::operator*=( matrix& lhs, const matrix& rhs ){
+  lhs.validate_matrixes( rhs.transpose() );
 
+  return lhs;
 }
 
 matrix&
-operator/=( matrix& lhs, const matrix& rhs ){
-  validate_matrixes( lhs, rhs.transpose() );
+gsw::operator/=( matrix& lhs, const matrix& rhs ){
+  lhs.validate_matrixes( rhs.transpose() );
 
+  return lhs;
 }
 
 matrix&
-operator*=( matrix& lhs, const matrix::data_t& rhs ){
+gsw::operator*=( matrix& lhs, const matrix::data_t& rhs ){
   for( auto& row : lhs.mData ){
     for( auto& val : row ){
       val *= rhs;
     }
   }
+
+  return lhs;
 }
 
 matrix&
-operator/=( matrix& lhs, const matrix::data_t& rhs ){
+gsw::operator/=( matrix& lhs, const matrix::data_t& rhs ){
   for( auto& row : lhs.mData ){
     for( auto& val : row ){
       val /= rhs;
     }
   }
+
+  return lhs;
 }
 
 matrix
-operator*( matrix::data_t lhs, const matrix& rhs ){
+gsw::operator*( matrix::data_t lhs, const matrix& rhs ){
   return rhs * lhs;
 }
 
 matrix
-operator/( matrix::data_t lhs, const matrix& rhs ){
+gsw::operator/( matrix::data_t lhs, const matrix& rhs ){
   return lhs * rhs.transpose();
 }
 
 matrix&
-operator+=( matrix& lhs, const matrix& rhs ){
-  validate_matrixes( lhs, rhs );
+gsw::operator+=( matrix& lhs, const matrix& rhs ){
+  lhs.validate_matrixes( rhs );
 
   for( unsigned long i = 0; i < lhs.mData.size(); ++i ){
     for( unsigned long j = 0; i < lhs.mData[i].size(); ++j ){
       lhs.mData[i][j] += rhs.mData[i][j];
     }
   }
+
+  return lhs;
 }
 
 matrix&
-operator-=( matrix& lhs, const matrix& rhs ){
-  validate_matrixes( lhs, rhs );
+gsw::operator-=( matrix& lhs, const matrix& rhs ){
+  lhs.validate_matrixes( rhs );
 
   for( unsigned long i = 0; i < lhs.mData.size(); ++i ){
     for( unsigned long j = 0; j < lhs.mData[i].size(); ++j ){
       lhs.mData[i][j] -= rhs.mData[i][j];
     }
   }
+
+  return lhs;
 }
 
 matrix
@@ -120,6 +131,7 @@ matrix::transpose() const{
 
 matrix
 matrix::inverse() const{
+  return *this;
 }
 
 void
