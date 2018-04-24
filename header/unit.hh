@@ -11,6 +11,7 @@
 
 namespace gsw{
 
+//! @todo add comparitive to unit?
 /*! Unit class that differentiates between different measurements.
  *
  * @tparam METERS  Distance
@@ -59,9 +60,11 @@ template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CAND
 class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
                                   CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
                     additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
-                                  CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>,
-                    multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE,
-                                        KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>, DBL>{
+                                  CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>,
+                                  DBL>,
+                    multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
+                                        DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>,
+                                   DBL>{
 public:
   /*! Storage type
    */
@@ -76,6 +79,11 @@ public:
   template<typename D_t = value_type, typename F_t = factor_type>
   using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
                           DOLLAR, DEGREE, PERCENTAGE, TICK, D_t, F_t>;
+
+  //! @todo provide static constexpr aliases to types
+  // done something like:
+  // static constexpr int CURRENCY = DOLLAR;
+  // primary problem is to find names for these aliases that aren't the param names 
 
 private:
   value_type mValue;
