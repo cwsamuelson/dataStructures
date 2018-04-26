@@ -26,6 +26,24 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     REQUIRE( ( kilovolt( 1 ) - kilovolt( 1 ) ) == 0 );
   }
 
+  SECTION( "Constants can interact with a type" ){
+    using kilovolt = voltage<double, kilo>;
+    kilovolt kv( 12 );
+
+    REQUIRE( kv + 3 == kilovolt( 15 ) );
+    REQUIRE( 3 + kv == kilovolt( 15 ) );
+    REQUIRE( kv - 3 == kilovolt( 9 ) );
+    REQUIRE( 3 - kv == kilovolt( -9 ) );
+    REQUIRE( kv * 3 == kilovolt( 36 ) );
+    // currently this breaks the build
+    // this is a desired feature, but since similar works with addition, why
+    //   does it not work for multiplication?
+    //! @todo fix multiplying constant by unit
+    //REQUIRE( 3 * kv == kilovolt( 36 ) );
+    REQUIRE( kv / 3 == kilovolt( 4 ) );
+    //REQUIRE( 36 / kv == kilovolt( 3 ) );
+  }
+
   SECTION( "Units multiplication/division result in new unit types" ){
     SECTION( "Electricity example" ){
       voltage<> V = 3.0;
