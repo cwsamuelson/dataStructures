@@ -67,16 +67,6 @@ gsw::operator/=( matrix& lhs, const matrix::data_t& rhs ){
   return lhs;
 }
 
-matrix
-gsw::operator*( matrix::data_t lhs, const matrix& rhs ){
-  return rhs * lhs;
-}
-
-matrix
-gsw::operator/( matrix::data_t lhs, const matrix& rhs ){
-  return lhs * rhs.transpose();
-}
-
 matrix&
 gsw::operator+=( matrix& lhs, const matrix& rhs ){
   lhs.validate_matrixes( rhs );

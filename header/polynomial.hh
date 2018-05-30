@@ -30,7 +30,7 @@ private:
   /*!
    *
    * @todo instead of a vector, try a set or map of 'term' objects
-   * using a map or set may be more capable of very large polynomials
+   * using a map or set may be more capable of high order polynomial
    */
   using storage_type = std::vector<double>;
 

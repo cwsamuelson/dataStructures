@@ -68,6 +68,14 @@ public:
     , tail( nullptr ){
   }
 
+  ~skip_list(){
+    clear();
+  }
+
+  void
+  clear(){
+  }
+
   bool
   empty() const{
     return true;

@@ -61,7 +61,8 @@ public:
    *
    * @return A new proposition of the conjunction of this and conjunct
    */
-  proposition operator&&( const proposition& conjunct ) const;
+  proposition
+  operator&&( const proposition& conjunct ) const;
 
   /*! Disjunction operator
    *
@@ -69,7 +70,8 @@ public:
    *
    * @return A new proposition of the disjunction of this and disjunct
    */
-  proposition operator||( const proposition& disjunct ) const;
+  proposition
+  operator||( const proposition& disjunct ) const;
 
   /*! Xor operator
    *
@@ -77,7 +79,8 @@ public:
    *
    * @return A new proposition of the exclusive disjunction of this and operand
    */
-  proposition operator^( const proposition& operand ) const;
+  proposition
+  operator^( const proposition& operand ) const;
 
   /*! Negation operator
    *
@@ -87,7 +90,8 @@ public:
    * when a negation prop receives a negation, instead return the original
    * negation's child
    */
-  proposition operator!() const;
+  proposition
+  operator!() const;
 
   /*! Implication operation
    *
@@ -95,7 +99,8 @@ public:
    *
    * @return A new proposition of the implication of this and consequent
    */
-  proposition implies( const proposition& consequent ) const;
+  proposition
+  implies( const proposition& consequent ) const;
 
   /*! If and only if
    *
@@ -103,7 +108,8 @@ public:
    *
    * @return A new proposition of the tautology of this and equivalent
    */
-  proposition iff( const proposition& equivalent ) const;
+  proposition
+  iff( const proposition& equivalent ) const;
 
   /*! Evaluate proposition using given facts
    *
@@ -111,7 +117,8 @@ public:
    *
    * @return Whether the proposition is true given facts
    */
-  bool evaluate( const std::set<std::string>& facts ) const;
+  bool
+  evaluate( const std::set<std::string>& facts ) const;
 
   /*! Evaluation operator
    *
@@ -121,7 +128,8 @@ public:
    *
    * Alias for bool proposition::evaluate( set<string> )
    */
-  bool operator()( const std::set<std::string>& facts ) const{
+  bool
+  operator()( const std::set<std::string>& facts ) const{
     return evaluate( facts );
   }
 
@@ -135,7 +143,8 @@ public:
    * Provided solutions only consist of those that can be made up from vars
    * provided in variables.
    */
-  std::set<std::set<std::string> > solve( const std::set<std::string>& variables ) const;
+  std::set<std::set<std::string> >
+  solve( const std::set<std::string>& variables ) const;
 
   /*! Creates basic proposition that consists only of a variable named name
    *
@@ -150,10 +159,13 @@ public:
    * To create a variable proposition named bar, and assigned to a variable
    * named foo.
    */
-  friend proposition operator""_lvar( const char* name, size_t sz );
+  friend
+  proposition
+  operator""_lvar( const char* name, size_t sz );
 };
 
-proposition operator""_lvar( const char* name, size_t sz );
+proposition
+operator""_lvar( const char* name, size_t sz );
 
 }
 
