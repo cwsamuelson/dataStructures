@@ -114,6 +114,41 @@ public:
   /*! Indexing operator retrieves element at given index
    *
    * @param idx  Index at which value will be retrieved
+   *
+   * @todo a custom reference type could be used for array sub-assignment
+   *       This will enable another weird syntax similar to the array splicing
+   *       facilities. while splicing involves special splicing arrays to work,
+   *       this would look simpler:
+   *       the idea would look something like this:
+   *  array<T, N> arr1;
+   *  array<T, M> arr2;//where M<N
+   *
+   *  //do assignments/operations
+   *
+   *  arr1[X] = arr2;
+   *
+   *  REQUIRE( arr1[X] = arr2[0] );
+   *  REQUIRE( arr1[X+1] = arr2[1] );
+   *
+   *       and the idea would work something like this:
+   *  template<typename T>
+   *  class arr_ref{
+   *  private:
+   *    T& data;
+   *    int index;
+   *
+   *  public:
+   *    operator& T(){
+   *      return data;
+   *    }
+   *
+   *    array
+   *    operator=( const array<T, N>& rhs ){
+   *      for( auto elem : rhs ){
+   *        // do assignment starting at index this is a reference to
+   *      }
+   *    }
+   *  }
    */
   reference operator[]( index_t idx ){
     return mArr[idx];
