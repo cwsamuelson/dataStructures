@@ -19,12 +19,9 @@ public:
 private:
   class node{
   public:
-    node* up = nullptr;
-    node* down = nullptr;
-    node* left = nullptr;
-    node* right = nullptr;
-
     storage_type data;
+    size_type upper_index;
+    bool points_up = false;
 
     node() = default;
 
@@ -37,26 +34,24 @@ private:
   std::mt19937 rate;
   std::uniform_int_distribution<> gene;
 
-  node* head;
-  node* tail;
-  unsigned int layer_count = 0;
+  std::vector<std::vector<node> > mData;
 
-  node*
+  node&
   find( const key_type& key ){
-    if( !head ){
-      return nullptr;
+    if( mData.empty() ){
+      throw;
     }
 
-    node* result = head;
-    while( result->right->data.first < key ){
-      if( result->right ){
-        result = result->right;
-      } else {
-        result = result->down->right;
+    node& result = head;
+    for( auto& row : mData ){
+      for( auto& obj : row ){
+        if( obj.data.first == key ){
+          return obj.data;
+        }
       }
     }
 
-    return result;
+    throw;
   }
 
 public:
@@ -64,12 +59,11 @@ public:
     : rd()
     , rate( rd() )
     , gene( 0, 1 )
-    , head( nullptr )
-    , tail( nullptr ){
+    , mData(){
   }
 
   ~skip_list(){
-    clear();
+    mData.clear();
   }
 
   void
@@ -83,7 +77,7 @@ public:
 
   value_type&
   operator[]( const key_type& key ){
-    return find( key )->data.second;
+    return find( key ).second;
   }
 
   iterator

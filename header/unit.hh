@@ -11,24 +11,169 @@
 
 namespace gsw{
 
+/*!
+ * a unit_system is like metric or imperial.  a particular variable can be of
+ * any system, and the systems can convert between each other.  This is to allow
+ * syntax such as:
+ * length<metric> meters;
+ * length<english> feet;
+ *
+ * meters = 1;
+ * feet = meters;
+ *
+ * REQUIRE( feet == 3.28 );
+ */
+
+/*template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK>
+class unit_params{
+public:
+  static constexpr length = LENGTH;
+  static constexpr time = TIME;
+  static constexpr mass = MASS;
+  static constexpr current = CURRENT;
+  static constexpr temperature = TEMPERATURE;
+  static constexpr candela = CANDELA;
+  static constexpr money = MONEY;
+  static constexpr angle = ANGLE;
+  static constexpr percentage = PERCENTAGE;
+  static constexpr tick = TICK;
+};
+
+template<typename T>
+class unit_system{
+private:
+  double length;
+  double time;
+  double mass;
+  double current;
+  double temperature;
+  double candela;
+  double money;
+  double angle;
+  double percentage;
+  double tick;
+
+public:
+  using system = T;
+
+  double
+  length_factor() const{
+    return length;
+  }
+
+  double
+  time_factor() const{
+    return time;
+  }
+
+  double
+  mass_factor() const{
+    return mass;
+  }
+
+  double
+  current_factor() const{
+    return current;
+  }
+
+  double
+  temperature_factor() const{
+    return temperature;
+  }
+
+  double
+  candela_factor() const{
+    return candela;
+  }
+
+  double
+  money_factor() const{
+    return money;
+  }
+
+  double
+  angle_factor() const{
+    return angle;
+  }
+
+  double
+  percentage_factor() const{
+    return percentage;
+  }
+
+  double
+  tick_factor() const{
+    return tick;
+  }
+};
+
+class base : public unit_system<metric>{
+public:
+  base()
+    : length( 1 )//foot
+    , time( 1 )//second
+    , mass( 1 )//kg
+    , current( 1 )//amp
+    , temperature( 1 )//fahrenheit
+    , candela( 1 )
+    , money( 1 )//yen?
+    , angle( 1 )//degree?
+    , percentage( 1 )
+    , tick( 1 ){
+  }
+};
+
+class metric : public unit_system<metric>{
+  metric()
+    : length( 3.2 )
+    , time( 1 )
+    , mass( 1 )
+    , current( 1 )
+    , temperature( 1 )//non linear conversion?
+    , candela( 1 )
+    , money( 100 )
+    , angle( 120 )//radian
+    , percentage( 1 )
+    , tick( 1 ){
+  }
+};
+
+class english : public unit_system<english>{
+  english()
+    : length( 1 )
+    , time( 1 )
+    , mass( 14 )//slug
+    , current( 1 )
+    , temperature( 1 )//non linear conversion?
+    , candela( 1 )
+    , money( 100 )
+    , angle( 1)//radian
+    , percentage( 1 )
+    , tick( 1 ){
+  }
+};
+
+using default_system = metric;
+*/
 //! @todo add comparitive to unit?
 /*! Unit class that differentiates between different measurements.
  *
- * @tparam METERS  Distance
+ * @tparam LENGTH  Distance
  *
- * @tparam SECONDS  Time
+ * @tparam TIME  Time
  *
- * @tparam KILOGRAM  Mass (not lbs, pounds is a force)
+ * @tparam MASS  Mass (not lbs, pounds is a force)
  *
- * @tparam AMPERE  Electric current
+ * @tparam CURRENT  Electric current
  *
- * @tparam KELVIN  Temperature
+ * @tparam TEMPERATURE  Temperature
  *
  * @tparam CANDELA  Brightness
  *
- * @tparam DEGREE  Degrees of angle
+ * @tparam ANGLE  Degrees of angle
  *
- * @tparam DOLLAR  
+ * @tparam MONEY  
  *
  * @tparam PERCENTAGE  Percent
  *
@@ -40,10 +185,10 @@ namespace gsw{
  * @tparam FACTOR  Prefix factor.  Can be 1:1, 2:1, 1000:1, 1:1000 etc.  Allows
  *                 semantic storage of kilometers (km) and the like.
  *
- * The value of METERS...TICK describe the exponent value for that parameter.
- * For example, to describe length, METERS will be set to 1, and the rest 0,
- * but to describe area METERS will be set to 2 (m^2), and the rest 0, and to
- * describe velocity/speed METERS will be set to 1, and SECONDS to -1 (m/s).
+ * The value of LENGTH...TICK describe the exponent value for that parameter.
+ * For example, to describe length, LENGTH will be set to 1, and the rest 0,
+ * but to describe area LENGTH will be set to 2 (m^2), and the rest 0, and to
+ * describe velocity/speed LENGTH will be set to 1, and TIME to -1 (m/s).
  * Units can be multiplied by another, and this will result in a new,
  * appropriate type.  For instance if speed is multiplied by time, the result
  * will be of type distance.
@@ -53,18 +198,20 @@ namespace gsw{
  * the user pleases.  Do bear in mind that doing so precludes usage of the
  * special typedefs below, and using said values with other libraries, as those
  * will be using the defaults specified here.
+ *
+ * @todo add byte and mole?
  */
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN, int CANDELA,
-         int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename DBL = double, typename FACTOR = ratio<1, 1> >
-class unit : public additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
-                                  CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> >,
-                    additive<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN,
-                                  CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>,
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename SYSTEM, typename DBL = double, typename FACTOR = ratio<1, 1> >
+class unit : public additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
+                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> >,
+                    additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
+                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>,
                                   DBL>,
-                    multiplicative<unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
-                                        DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>,
-                                   DBL>{
+                    multiplicative<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA,
+                                        MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>,
+                                        DBL>{
 public:
   /*! Storage type
    */
@@ -77,12 +224,12 @@ public:
   /*! Convenience type used for conversion between storage and factor types
    */
   template<typename D_t = value_type, typename F_t = factor_type>
-  using other_type = unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA,
-                          DOLLAR, DEGREE, PERCENTAGE, TICK, D_t, F_t>;
+  using other_type = unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA,
+                          MONEY, ANGLE, PERCENTAGE, TICK, D_t, F_t>;
 
   //! @todo provide static constexpr aliases to types
   // done something like:
-  // static constexpr int CURRENCY = DOLLAR;
+  // static constexpr int CURRENCY = MONEY;
   // primary problem is to find names for these aliases that aren't the param names 
 
 private:
@@ -525,48 +672,48 @@ public:
   }
 };
 
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator*( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>
+operator*( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
+  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp *= d;
 
   return cp;
 }
 
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator*( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>
+operator*( const DBL& d, const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
+  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp *= d;
 
   return cp;
 }
 
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator/( const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>
+operator/( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>& u, const DBL& d ){
+  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp /= d;
 
   return cp;
 }
 
-template<int METERS, int SECONDS, int KILOGRAM, int AMPERE, int KELVIN,
-         int CANDELA, int DOLLAR = 0, int DEGREE = 0, int PERCENTAGE = 0, int TICK = 0,
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
          typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>
-operator/( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
-  unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, CANDELA, DOLLAR, DEGREE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
+unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>
+operator/( const DBL& d, const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>& u ){
+  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR> cp( u );
 
   cp /= d;
 
@@ -583,20 +730,20 @@ operator/( const DBL& d, const unit<METERS, SECONDS, KILOGRAM, AMPERE, KELVIN, C
  *         equivalent parameters of the lhs and rhs.
  *
  */
-template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1,
-         int CANDELA1, int DOLLAR1, int DEGREE1, int PERCENTAGE1, int TICK1,
-         int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2,
-         int CANDELA2, int DOLLAR2, int DEGREE2, int PERCENTAGE2, int TICK2,
+template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
+         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
+         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
+         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
-unit<METERS1 + METERS2, SECONDS1 + SECONDS2, KILOGRAM1 + KILOGRAM2, AMPERE1 + AMPERE2,
-     KELVIN1 + KELVIN2, CANDELA1 + CANDELA2, DOLLAR1 + DOLLAR2, DEGREE1 + DEGREE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2,
+unit<LENGTH1 + LENGTH2, TIME1 + TIME2, MASS1 + MASS2, CURRENT1 + CURRENT2,
+     TEMPERATURE1 + TEMPERATURE2, CANDELA1 + CANDELA2, MONEY1 + MONEY2, ANGLE1 + ANGLE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2,
      D_t1, decltype( F_t1() * F_t2() )>
-operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1,
-                      CANDELA1, DOLLAR1, DEGREE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
-           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2,
-                      CANDELA2, DOLLAR2, DEGREE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
+operator*( const unit<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
+                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
+           const unit<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
+                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
   return lhs.getValue() * rhs.getValue();
 }
 
@@ -610,20 +757,20 @@ operator*( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1,
  *         of the equivalent parameters of the lhs and rhs.
  *
  */
-template<int METERS1, int SECONDS1, int KILOGRAM1, int AMPERE1, int KELVIN1,
-         int CANDELA1, int DOLLAR1, int DEGREE1, int PERCENTAGE1, int TICK1,
-         int METERS2, int SECONDS2, int KILOGRAM2, int AMPERE2, int KELVIN2,
-         int CANDELA2, int DOLLAR2, int DEGREE2, int PERCENTAGE2, int TICK2,
+template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
+         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
+         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
+         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
-unit<METERS1 - METERS2, SECONDS1 - SECONDS2, KILOGRAM1 - KILOGRAM2, AMPERE1 - AMPERE2,
-     KELVIN1 - KELVIN2, CANDELA1 - CANDELA2, DOLLAR1 - DOLLAR2, DEGREE1 - DEGREE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2,
+unit<LENGTH1 - LENGTH2, TIME1 - TIME2, MASS1 - MASS2, CURRENT1 - CURRENT2,
+     TEMPERATURE1 - TEMPERATURE2, CANDELA1 - CANDELA2, MONEY1 - MONEY2, ANGLE1 - ANGLE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2,
      D_t1, decltype( F_t1() / F_t2() )>
-operator/( const unit<METERS1, SECONDS1, KILOGRAM1, AMPERE1, KELVIN1,
-                      CANDELA1, DOLLAR1, DEGREE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
-           const unit<METERS2, SECONDS2, KILOGRAM2, AMPERE2, KELVIN2,
-                      CANDELA2, DOLLAR2, DEGREE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
+operator/( const unit<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
+                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, D_t1, F_t1>& lhs,
+           const unit<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
+                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, D_t2, F_t2>& rhs ){
   return lhs.getValue() / rhs.getValue();
 }
 
