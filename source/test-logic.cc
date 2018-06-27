@@ -50,6 +50,8 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     REQUIRE(!( "foo"_lvar || "bar"_lvar )( {} ) );
     REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
+    REQUIRE( ( "foo"_lvar || !"foo"_lvar ).solve( {"foo"} ) ==
+             set<set<string> >( {{"foo"}, {}} ) );
   }
 
   SECTION( "Exclusive disjunction (xor)" ){

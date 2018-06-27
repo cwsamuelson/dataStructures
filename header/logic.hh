@@ -11,12 +11,33 @@
 
 namespace gsw{
 
+namespace detail{
+
+  template<typename T>
+  std::set<T>
+  merge( std::set<T> lhs, std::set<T> rhs ){
+    //lhs.merge( rhs );
+    for( auto var : lhs ){
+      rhs.insert( var );
+    }
+
+    return rhs;
+  }
+
+}
+
 /*! Logical proposition
  */
 class proposition{
 private:
   struct operation{
-    virtual bool evaluate( const std::set<std::string>& facts ) const = 0;
+    virtual
+    bool
+    evaluate( const std::set<std::string>& facts ) const = 0;
+
+    virtual
+    std::set<std::set<std::string> >
+    solve( std::set<std::string> data ) const = 0;
   };
 
   using op_ptr = std::shared_ptr<operation>;
@@ -24,30 +45,54 @@ private:
   struct variable : public operation{
     std::string name;
 
-    bool evaluate( const std::set<std::string>& facts ) const;
+    bool
+    evaluate( const std::set<std::string>& facts ) const;
+
+    std::set<std::set<std::string> >
+    solve( std::set<std::string> data ) const;
   };
+
   struct conjunction : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
-    bool evaluate( const std::set<std::string>& facts ) const;
+    bool
+    evaluate( const std::set<std::string>& facts ) const;
+
+    std::set<std::set<std::string> >
+    solve( std::set<std::string> data ) const;
   };
+
   struct disjunction : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
-    bool evaluate( const std::set<std::string>& facts ) const;
+    bool
+    evaluate( const std::set<std::string>& facts ) const;
+
+    std::set<std::set<std::string> >
+    solve( std::set<std::string> data ) const;
   };
+
   struct exDisjunction : public operation{
     op_ptr lhs;
     op_ptr rhs;
 
-    bool evaluate( const std::set<std::string>& facts ) const;
+    bool
+    evaluate( const std::set<std::string>& facts ) const;
+
+    std::set<std::set<std::string> >
+    solve( std::set<std::string> data ) const;
   };
+
   struct negation : public operation{
     op_ptr operand;
 
-    bool evaluate( const std::set<std::string>& facts ) const;
+    bool
+    evaluate( const std::set<std::string>& facts ) const;
+
+    std::set<std::set<std::string> >
+    solve( std::set<std::string> data ) const;
   };
 
   proposition( const op_ptr value );
@@ -145,6 +190,9 @@ public:
    */
   std::set<std::set<std::string> >
   solve( const std::set<std::string>& variables ) const;
+
+  std::set<std::set<std::string> >
+  solve2( std::set<std::string> variables ) const;
 
   /*! Creates basic proposition that consists only of a variable named name
    *
