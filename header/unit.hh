@@ -200,6 +200,14 @@ using default_system = metric;
  * will be using the defaults specified here.
  *
  * @todo add byte and mole?
+ * @todo put implementation into a pimpl class?
+ *        doing this may decrease increase in code space through template
+ *        insantiation. The problem stems from the fact that each instance of a
+ *        template is a unique class with a unique definition, and unique code
+ *        space. what that means for this class is that each unit and each type
+ *        will increase binary size; from volt to kilovolt, from m/s to km. this
+ *        impact might be reducable through the pimpl idiom?
+ *        
  */
 template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
          int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,

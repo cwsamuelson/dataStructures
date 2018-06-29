@@ -48,9 +48,12 @@ struct succeed{
 template<typename N>
 using increment = succeed<N, 1>;
 
+template<typename N>
+using decrement = succeed<N, -1>;
+
 // bind value to a name
 // chains of bindings constitute an environment
-template<typename name, typename value, typename environment>
+template<typename name, typename value, typename environment = empty_env>
 struct binding{};
 
 // basic lookup signature

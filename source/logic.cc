@@ -1,4 +1,5 @@
 #include<cmath>
+#include<algorithm>
 
 #include<logic.hh>
 
@@ -71,23 +72,15 @@ proposition::conjunction::evaluate( const set<string>& facts ) const{
 
 set<set<string> >
 proposition::conjunction::solve( set<string> data ) const{
-  // given:
-  // (X|Y)&(W|Z)
-  // solve as:
-  // ({X}|{Y})&({W}|{Z})
-  // {{X}, {Y}, {X, Y}}&{{W}, {Z}, {W, Z}}
-  // add each rhs solution to the lhs solution
-  //  to generate all possible solutions
-  // {{W, X}, {W, Y}, {W, X, Y},//add W to each lhs
-  //  {Z, X}, {Z, Y}, {X, Y, Z}, //add Z to each lhs
-  //  ...etc}
   auto lhs_data = lhs->solve( data );
   auto rhs_data = rhs->solve( data );
   set<set<string> > result;
 
   for( auto rhs_solution : rhs_data ){
     for( auto lhs_solution : lhs_data ){
-      result.insert( merge( lhs_solution, rhs_solution ) );
+      if( rhs_solution == lhs_solution ){
+        result.insert( lhs_solution );
+      }
     }
   }
 
@@ -106,17 +99,8 @@ set<set<string> >
 proposition::disjunction::solve( set<string> data ) const{
   auto lhs_data = lhs->solve( data );
   auto rhs_data = rhs->solve( data );
-  set<set<string> > result;
-
-  for( auto lhs_solution : lhs_data ){
-    result.insert( lhs_solution );
-    for( auto rhs_solution : rhs_data ){
-      result.insert( rhs_solution );
-      result.insert( merge( lhs_solution, rhs_solution ) );
-    }
-  }
-
-  return result;
+  
+  return merge( lhs_data, rhs_data );
 }
 
   /*************************
@@ -131,11 +115,11 @@ set<set<string> >
 proposition::exDisjunction::solve( set<string> data ) const{
   auto lhs_data = lhs->solve( data );
   auto rhs_data = rhs->solve( data );
-  set<set<string> > result( lhs_data );
+  set<set<string> > result;
 
-  for( auto rhs_solution : rhs_data ){
-    result.insert( rhs_solution );
-  }
+  set_symmetric_difference( lhs_data.begin(), lhs_data.end(),
+                            rhs_data.begin(), rhs_data.end(),
+                            inserter( result, result.begin() ) );
 
   return result;
 }
@@ -263,4 +247,3 @@ gsw::operator""_lvar( const char* name, size_t sz ){
 
   return {var};
 }
-

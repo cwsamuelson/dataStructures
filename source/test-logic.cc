@@ -6,80 +6,95 @@ using namespace std;
 using namespace gsw;
 
 TEST_CASE( "Logic operators behave as expected", "[logic]" ){
+  auto foo = "foo"_lvar;
+  auto bar = "bar"_lvar;
+  auto baz = "baz"_lvar;
+  auto qux = "qux"_lvar;
+  
   SECTION( "Basic operation" ){
-    REQUIRE( ( "foo"_lvar )( {"foo"} ) ); // trivially true
-    REQUIRE(!( "foo"_lvar )( {} ) );      // trivially false
-    REQUIRE( ( "foo"_lvar ).solve( {"foo"} ) ==
+    REQUIRE( ( foo )( {"foo"} ) ); // trivially true
+    REQUIRE(!( foo )( {} ) );      // trivially false
+    REQUIRE( ( foo ).solve( {"foo"} ) ==
              set<set<string> > {{"foo"}} );
 
-    REQUIRE( ( "foo"_lvar ).solve( {"bar"} ) ==
-             set<set<string> > {} );
+    REQUIRE( ( foo ).solve2( {"foo"} ) ==
+             set<set<string> > {{"foo"}} );
+
+    REQUIRE( ( foo ).solve2( {"bar"} ) ==
+             set<set<string> > {{"bar", "foo"}, {"foo"}} );
   }
 
   SECTION( "Negation" ){
     SECTION( "Basic negation" ){
-      REQUIRE( ( !"foo"_lvar )( {} ) );
-      REQUIRE(!( !"foo"_lvar )( {"foo"} ) );
+      REQUIRE( ( !foo )( {} ) );
+      REQUIRE(!( !foo )( {"foo"} ) );
+      
       // The only existing solution is foo being false
       // which is represented by empty set
-      REQUIRE( ( !"foo"_lvar ).solve( {"foo"} ) == 
+      REQUIRE( ( !foo ).solve( {"foo"} ) == 
                set<set<string> > {{}} );
     }
 
     SECTION( "Double negation" ){
-      REQUIRE( ( !!"foo"_lvar )( {"foo"} ) );
-      REQUIRE( ( !!"foo"_lvar ).solve( {"foo"} ) ==
+      REQUIRE( ( !!foo )( {"foo"} ) );
+      
+      REQUIRE( ( !!foo ).solve( {"foo"} ) ==
                set<set<string> > {{"foo"}} );
     }
   }
 
   SECTION( "Conjunction (and)" ){
-    REQUIRE( ( "foo"_lvar && "bar"_lvar )( {"foo", "bar"} ) );
-    REQUIRE(!( "foo"_lvar && "bar"_lvar )( {"bar"} ) );
-    REQUIRE(!( "foo"_lvar && "bar"_lvar )( {"foo"} ) );
-    REQUIRE(!( "foo"_lvar && "bar"_lvar )( {} ) );
-    REQUIRE( ( !"foo"_lvar && !"bar"_lvar )( {} ) );
-    REQUIRE( ( "foo"_lvar && "bar"_lvar ).solve( {"foo", "bar"} ) ==
+    REQUIRE( ( foo && bar )( {"foo", "bar"} ) );
+    REQUIRE(!( foo && bar )( {"bar"} ) );
+    REQUIRE(!( foo && bar )( {"foo"} ) );
+    REQUIRE(!( foo && bar )( {} ) );
+    REQUIRE( ( !foo && !bar )( {} ) );
+    
+    REQUIRE( ( foo && bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo", "bar"}} ) );
   }
 
   SECTION( "Disjunction (or)" ){
-    REQUIRE( ( "foo"_lvar || "bar"_lvar )( {"foo", "bar"} ) );
-    REQUIRE( ( "foo"_lvar || "bar"_lvar )( {"bar"} ) );
-    REQUIRE( ( "foo"_lvar || "bar"_lvar )( {"foo"} ) );
-    REQUIRE(!( "foo"_lvar || "bar"_lvar )( {} ) );
-    REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
+    REQUIRE( ( foo || bar )( {"foo", "bar"} ) );
+    REQUIRE( ( foo || bar )( {"bar"} ) );
+    REQUIRE( ( foo || bar )( {"foo"} ) );
+    REQUIRE(!( foo || bar )( {} ) );
+    
+    REQUIRE( ( foo || bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
-    REQUIRE( ( "foo"_lvar || !"foo"_lvar ).solve( {"foo"} ) ==
+    REQUIRE( ( foo || !foo ).solve( {"foo"} ) ==
              set<set<string> >( {{"foo"}, {}} ) );
   }
 
   SECTION( "Exclusive disjunction (xor)" ){
-    REQUIRE(!( "foo"_lvar ^ "bar"_lvar )( {"foo", "bar"} ) );
-    REQUIRE( ( "foo"_lvar ^ "bar"_lvar )( {"bar"} ) );
-    REQUIRE( ( "foo"_lvar ^ "bar"_lvar )( {"foo"} ) );
-    REQUIRE(!( "foo"_lvar ^ "bar"_lvar )( {} ) );
-    REQUIRE( ( "foo"_lvar ^ "bar"_lvar ).solve( {"foo", "bar"} ) ==
+    REQUIRE(!( foo ^ bar )( {"foo", "bar"} ) );
+    REQUIRE( ( foo ^ bar )( {"bar"} ) );
+    REQUIRE( ( foo ^ bar )( {"foo"} ) );
+    REQUIRE(!( foo ^ bar )( {} ) );
+    
+    REQUIRE( ( foo ^ bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo"}, {"bar"}} ) );
   }
 
   SECTION( "Implication" ){
-    REQUIRE( ( "foo"_lvar.implies( "bar"_lvar ) )( {"foo", "bar"} ) );
-    REQUIRE( ( "foo"_lvar.implies( "bar"_lvar ) )( {"bar"} ) );
-    REQUIRE(!( "foo"_lvar.implies( "bar"_lvar ) )( {"foo"} ) );
-    REQUIRE( ( "foo"_lvar.implies( "bar"_lvar ) )( {} ) );
+    REQUIRE( ( foo.implies( bar ) )( {"foo", "bar"} ) );
+    REQUIRE( ( foo.implies( bar ) )( {"bar"} ) );
+    REQUIRE(!( foo.implies( bar ) )( {"foo"} ) );
+    REQUIRE( ( foo.implies( bar ) )( {} ) );
+    
     // foo and bar both false is a valid answer, so empty set is included
-    REQUIRE( ( "foo"_lvar.implies( "bar"_lvar ) ).solve( {"foo", "bar"} ) ==
+    REQUIRE( ( foo.implies( bar ) ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo", "bar"}, {"bar"}, {}} ) );
   }
 
   SECTION( "Tautology (equivalence, iff)" ){
-    REQUIRE( ( "foo"_lvar.iff( "bar"_lvar ) )( {"foo", "bar"} ) );
-    REQUIRE(!( "foo"_lvar.iff( "bar"_lvar ) )( {"bar"} ) );
-    REQUIRE(!( "foo"_lvar.iff( "bar"_lvar ) )( {"foo"} ) );
-    REQUIRE( ( "foo"_lvar.iff( "bar"_lvar ) )( {} ) );
+    REQUIRE( ( foo.iff( bar ) )( {"foo", "bar"} ) );
+    REQUIRE(!( foo.iff( bar ) )( {"bar"} ) );
+    REQUIRE(!( foo.iff( bar ) )( {"foo"} ) );
+    REQUIRE( ( foo.iff( bar ) )( {} ) );
+    
     // foo and bar both false is a valid answer, so empty set is included
-    REQUIRE( ( "foo"_lvar.iff( "bar"_lvar ) ).solve( {"foo", "bar"} ) ==
+    REQUIRE( ( foo.iff( bar ) ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo", "bar"}, {}} ) );
   }
 
@@ -91,6 +106,14 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
       ++i;
     }
     REQUIRE( i == 3 );
+  }
+  
+  SECTION( "Can solve compound propositions" ){
+    REQUIRE( ( ( foo || bar ) && ( baz || qux ) ).solve2( {"foo", "bar", "baz", "qux"} ) ==
+             set<set<string> >( {{"bar", "qux"}, {"foo", "qux"}, {"foo", "bar", "qux"},
+                                 {"bar", "baz"}, {"bar", "baz", "qux"}, {"foo", "baz"},
+                                 {"foo", "baz", "qux"}, {"foo", "bar", "baz"},
+                                 {"foo", "bar", "baz", "qux"}} ) );
   }
 }
 
