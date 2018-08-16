@@ -20,12 +20,50 @@ namespace gsw{
 template<typename ...Args>
 class event_channel{
 public:
+  class event_handler{
+  public:
+    using counter_t = unsigned long long;
+    using handler = std::function<void( event_channel, counter_t, Args... )>;
+
+  private:
+    event_channel& mChannel;
+    handler mHandler;
+    counter_t mCounter;
+
+    event_handler( event_channel channel, counter_t counter, handler handle )
+      : mChannel( channel )
+      , mHandler( handle )
+      , mCounter( counter ){
+    }
+
+  public:
+    void
+    operator()( Args... args ){
+      mHandler( mChannel, mCounter, args );
+    }
+
+    bool
+    operator==( event_handler other ){
+      return ( mCounter == other.mCounter )
+          && ( mChannel == other.mChannel );
+    }
+
+    bool
+    operator!=( event_handler other ){
+      return !( *this == other );
+    }
+  };
+
   /*!
    */
   using counter_t = unsigned long long;
+
   /*!
+   * @todo wrap std::function into something that contains counter
+   *    this will allow operator -= to identify which handler to use
    */
-  using handler = std::function<void(const event_channel&, counter_t, Args...)>;
+  using handler = event_handler::handler;
+
   /*!
    * @tparam N
    */
@@ -33,7 +71,7 @@ public:
   using arg_types = tuple_element<N, tuple<Args...> >;
 
 private:
-  std::map<counter_t, handler> handlers;
+  std::map<counter_t, event_handler> handlers;
   counter_t idCounter = 0;
 
 public:
@@ -44,7 +82,7 @@ public:
    * @return
    */
   event_channel& operator+=( const handler& handler ){
-    handlers[idCounter++] = handler;
+    enlist( handler );
  
     return *this;
   }
@@ -55,24 +93,28 @@ public:
    *
    * @return
    */
-  counter_t enlist( const handler& handler ){
-    handlers[idCounter] = handler;
+  event_handler  enlist( const handler& handler ){
+    handlers[idCounter] = event_handler( *this, idCounter, handler );
 
-    return idCounter++;
+    return handlers[idCounter++];
   }
 
   /*! Unregister a previously registered handler
    *
    * @param ref
    */
-  void delist( counter_t ref ){
+  void delist( const event_handler& handle ){
     handlers.erase( ref );
   }
 
   /*!
    * @todo implement handler de-registration
    */
-  event_channel& operator-=( const handler& handler );
+  event_channel& operator-=( const event_handler& handler ){
+    delist( handler );
+
+    return *this;
+  }
 
   /*! Fire the event!
    *
