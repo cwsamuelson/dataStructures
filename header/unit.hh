@@ -201,12 +201,15 @@ using default_system = metric;
  *
  * @todo add byte and mole?
  * @todo put implementation into a pimpl class?
- *        doing this may decrease increase in code space through template
+ *        doing this may decrease the amount of code space increase through template
  *        insantiation. The problem stems from the fact that each instance of a
  *        template is a unique class with a unique definition, and unique code
  *        space. what that means for this class is that each unit and each type
  *        will increase binary size; from volt to kilovolt, from m/s to km. this
- *        impact might be reducable through the pimpl idiom?
+ *        impact might be reducable through the pimpl idiom? some idea of implementation:
+ *        use a base class or pointer to an implementation class.  the class will take
+ *        a storage type and ratio factor only(maybe only storage?), so that code space
+ *        only really increases when a different storage type is used.
  *        
  */
 template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
