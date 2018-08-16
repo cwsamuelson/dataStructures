@@ -6,13 +6,14 @@
 
 TEST_CASE( "Menu allows option selection and provides callbacks on selection.", "[menu]" ){
   std::stringstream ss;
-  auto pm0 = std::make_shared<gsw::menu<int>>();
-  auto pm1 = std::make_shared<gsw::menu<int>>();
+  auto pm0 = std::make_shared<gsw::menu<int>>( "pm0" );
+  auto pm1 = std::make_shared<gsw::menu<int>>( "pm1" );
   std::shared_ptr<gsw::menu<int> > current( pm0 );
 
   /*! @todo Add tests when false is returned */
   pm0->addOption( 0, "electric", pm1, [&](int){ ss << "beep" << '\n'; return true; } );
   pm0->addOption( 1, "boogaloo", pm1, [&](int){ ss << "boop" << '\n'; return true; } );
+
   pm1->addOption( 0, "foo",      pm0, [&](int){ ss << "buup" << '\n'; return true; } );
   pm1->addOption( 1, "baz",      pm0, [&](int){ ss << "biip" << '\n'; return true; } );
   pm1->addOption( 1, "bar",      pm0, [&](int){ ss << "byyp" << '\n'; return true; } );
