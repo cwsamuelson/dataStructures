@@ -11,13 +11,11 @@
 #include<initializer_list>
 
 #include<operators.hh>
+#include<named_point.hh>
 
 namespace gsw{
 
-struct point{
-  double x;
-  double y;
-};
+using point = point2;
 
 /*! Polynomial wrapper.  Stores coefficients, and calculates a result
  *
@@ -41,6 +39,8 @@ private:
    * excess 0s can be cropped off, tho it does not change the 'value' of the
    * equation, this makes it easier to use.
    */
+  /*! @todo handle mCoeff using mutexes, as dictated by proper const-correctness and mutability*/
+  /* this 'proper'-ness is dictated in https://hurbsutter.com/2013/05/24/gotw-6a-const-correctness-part-1-3/ */
   mutable storage_type mCoeff;
 
   void reduce() const{

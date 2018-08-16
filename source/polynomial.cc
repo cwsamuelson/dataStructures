@@ -161,15 +161,15 @@ bool gsw::operator==( const polynomial& lhs, const polynomial& rhs ){
 }
 
 bool gsw::operator==( const polynomial& eq, point p ){
-  return eq( p.x ) == p.y;
+  return eq( p.x() ) == p.y();
 }
 
 bool gsw::operator<( const polynomial& eq, point p ){
-  return eq( p.x ) < p.y;
+  return eq( p.x() ) < p.y();
 }
 
 bool gsw::operator>( const polynomial& eq, point p ){
-  return eq( p.x ) > p.y;
+  return eq( p.x() ) > p.y();
 }
 
 bool gsw::operator<=( const polynomial& eq, point p ){
