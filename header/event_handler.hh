@@ -39,7 +39,7 @@ public:
   public:
     void
     operator()( Args... args ){
-      mHandler( mChannel, mCounter, args );
+      mHandler( mChannel, mCounter, args... );
     }
 
     bool
@@ -62,7 +62,7 @@ public:
    * @todo wrap std::function into something that contains counter
    *    this will allow operator -= to identify which handler to use
    */
-  using handler = event_handler::handler;
+  using handler = typename event_handler::handler;
 
   /*!
    * @tparam N
@@ -83,7 +83,7 @@ public:
    */
   event_channel& operator+=( const handler& handler ){
     enlist( handler );
- 
+
     return *this;
   }
 
@@ -93,8 +93,8 @@ public:
    *
    * @return
    */
-  event_handler  enlist( const handler& handler ){
-    handlers[idCounter] = event_handler( *this, idCounter, handler );
+  event_handler enlist( const handler& handle ){
+    handlers[idCounter] = event_handler( *this, idCounter, handle );
 
     return handlers[idCounter++];
   }
@@ -104,7 +104,7 @@ public:
    * @param ref
    */
   void delist( const event_handler& handle ){
-    handlers.erase( ref );
+    handlers.erase( handle );
   }
 
   /*!
@@ -148,4 +148,3 @@ public:
 }
 
 #endif
-

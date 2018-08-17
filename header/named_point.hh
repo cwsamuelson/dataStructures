@@ -1,6 +1,12 @@
 #ifndef __NAMED_POINT_HH__
 #define __NAMED_POINT_HH__
 
+#include<array>
+
+#include<named_type.hh>
+
+namespace gsw{
+
 using coord_t = double;
 using w_type = named_type<coord_t, struct w_struct>;
 using x_type = named_type<coord_t, struct x_struct>;
@@ -13,7 +19,7 @@ public:
   using val_t = coord_t;
 
 private:
-  array<val_t, N> mData;
+  std::array<val_t, N> mData;
 
   template<unsigned long>
   friend class vec;
@@ -24,7 +30,7 @@ public:
     : mData( v.mData ){
   }
 
-  vec( const array<val_t, N>& data )
+  vec( const std::array<val_t, N>& data )
     : mData( data ){
   }
 
@@ -76,28 +82,28 @@ public:
   vec&
   operator=( const x_type& x ){
     mData[0] = x.get();
-    
+
     return *this;
   }
 
   vec&
   operator=( const y_type& y ){
     mData[1] = y.get();
-    
+
     return *this;
   }
 
   vec&
   operator=( const z_type& z ){
     mData[2] = z.get();
-    
+
     return *this;
   }
 
   vec&
   operator=( const w_type& w ){
     mData[3] = w.get();
-    
+
     return *this;
   }
 
@@ -108,7 +114,7 @@ public:
     for( unsigned int i = 0; i < v.mData.size(); ++i ){
       mData[i] = v.mData[i];
     }
-    
+
     return *this;
   }
 
@@ -119,7 +125,7 @@ public:
 
   template<unsigned long M>
   bool
-  operator==( array<val_t, M> v ) const{
+  operator==( std::array<val_t, M> v ) const{
     return mData == v;
   }
 };
@@ -129,5 +135,6 @@ using point2 = vec<2>;
 using point3 = vec<3>;
 using point4 = vec<4>;
 
-#endif
+}
 
+#endif

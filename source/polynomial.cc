@@ -185,11 +185,11 @@ bool gsw::operator==( point p, const polynomial& eq ){
 }
 
 bool gsw::operator<( point p, const polynomial& eq ){
-  return p.y < eq( p.x );
+  return p.y() < eq( p.x() );
 }
 
 bool gsw::operator>( point p, const polynomial& eq ){
-  return p.y > eq( p.x );
+  return p.y() > eq( p.x() );
 }
 
 bool gsw::operator<=( point p, const polynomial& eq ){
@@ -230,4 +230,3 @@ double gsw::integrate( const polynomial& eq, double upperBound, double lowerBoun
 
   return anti( upperBound ) - anti( lowerBound );
 }
-
