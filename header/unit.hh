@@ -902,6 +902,10 @@ constexpr auto operator""_mny( long double val ){
   return money<long double>( val );
 }
 
+constexpr auto operator""_tk( long double val ){
+  return tick<long double>( val );
+}
+
 /* integral literals */
 constexpr auto operator""_0( unsigned long long val ){
   return none<unsigned long long>( val );
@@ -937,6 +941,10 @@ constexpr auto operator""_R( unsigned long long val ){
 
 constexpr auto operator""_mny( unsigned long long val ){
   return money<unsigned long long>( val );
+}
+
+constexpr auto operator""_tk( unsigned long long val ){
+  return tick<unsigned long long>( val );
 }
 
 }
