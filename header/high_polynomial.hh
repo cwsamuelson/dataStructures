@@ -1,3 +1,4 @@
+#include<utility>
 #include<map>
 
 #include<named_point.hh>
@@ -6,16 +7,19 @@ namespace gsw{
 
 using input_point = point3;
 
+/*! Polynomial class that supports up to 3D input, and calculates output
+ *
+ */
 class high_polynomial{
 private:
   using storage_type = std::map<input_point, double>;
 
-  mutable storage_type mCoeff;
+  storage_type mCoeff;
 
 public:
   high_polynomial() = default;
 
-  hipgh_polynomial( std::initializer_list<input_point> il );
+  high_polynomial( std::initializer_list<input_point> il );
 
   template<typename inputIter>
   high_polynomial( inputIter first, inputIter last )
@@ -23,7 +27,8 @@ public:
   }
 
   template<typename U>
-  high_polynomial( U&& eq ){
+  high_polynomial( U&& eq )
+    : mCoeff( std::forward<storage_type>( eq ) ){
   }
 
   std::set<double>
@@ -32,6 +37,7 @@ public:
   template<typename U>
   high_polynomial&
   operator=(  U&& eq ){
+    mCoeff = std::forward<storage_type>( eq );
   }
 
   high_polynomial&
@@ -52,7 +58,7 @@ public:
   high_polynomial&
   operator/=( double d );
 
-  high_polynomial&
+  high_polynomial
   operator-() const;
 
   double&
