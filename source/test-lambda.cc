@@ -98,19 +98,21 @@ TEST_CASE( "lambda", "[lambda]" ){
   REQUIRE( A :: value == 5 );//?
   REQUIRE( B :: value == 7 );//?
 }
-
+/*
 TEST_CASE( "", "" ){
-  struct X{};
-  struct main{};
+  struct X;
+  struct main;
+  struct argc;
 
   using main_args = binding<argc, Zero>;
   // main returns zero
   using main_l = lambda<main, Zero>;
   using main_c = eval<main_l, main_args>;
-  using main_app = app<main_c, succeed<Zero, 5> >
+  using main_app = app<main_c, succeed<Zero, 5> >;
 
-  REQUIRE( eval<main_app, global> :: result == 0 );
-}
+  using eval_result = eval<main_app, main_args>;
+  REQUIRE( eval_result :: result == 0 );
+}*/
 
 
 /*
@@ -124,4 +126,3 @@ eval<
   ref<Y>,// editable line
 env> :: result :: value
 */
-

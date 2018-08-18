@@ -5,7 +5,7 @@
 #include<skip_list.hh>
 
 using namespace std;
-
+#if 0
 TEST_CASE( "skip_lists are associative containers", "[skip_list]" ){
   const int nIters = 10;
   gsw::skip_list<int, int> sl;
@@ -48,4 +48,4 @@ TEST_CASE( "skip_lists are associative containers", "[skip_list]" ){
     REQUIRE( std::get<1>( *it ) == "foo" );
   }
 }
-
+#endif

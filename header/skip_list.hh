@@ -8,11 +8,13 @@
 
 namespace gsw{
 
+#if 0
 template<typename KEY, typename VALUE>
 class skip_list{
 public:
   using key_type = KEY;
   using value_type = VALUE;
+  using size_type = size_t;
   using storage_type = std::pair<key_type, value_type>;
   using iterator = normal_iterator<storage_type, skip_list>;
 
@@ -87,7 +89,7 @@ public:
       layer_count = 1;
     } else {
       node* location = find( data.first );
-      node* next = new node( data ); 
+      node* next = new node( data );
 
       next->right = location->right;
       next->left = location;
@@ -116,8 +118,7 @@ public:
   end(){
   }
 };
-
+#endif
 }
 
 #endif
-
