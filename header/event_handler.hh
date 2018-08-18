@@ -23,20 +23,36 @@ public:
   class event_handler{
   public:
     using counter_t = unsigned long long;
-    using handler = std::function<void( event_channel, counter_t, Args... )>;
+    using handler = std::function<void( event_channel&, counter_t, Args... )>;
+    friend event_channel;
 
   private:
     event_channel& mChannel;
     handler mHandler;
     counter_t mCounter;
 
-    event_handler( event_channel channel, counter_t counter, handler handle )
+    event_handler( event_channel& channel, counter_t counter, handler handle )
       : mChannel( channel )
       , mHandler( handle )
       , mCounter( counter ){
     }
 
   public:
+    event_handler( const event_handler& handler )
+      : mChannel( handler.mChannel )
+      , mHandler( handler.mHandler )
+      , mCounter( handler.mCounter ){
+    }
+
+    event_handler&
+    operator=( const event_handler& handler ){
+      mChannel = handler.mChannel;
+      mHandler = handler.mHandler;
+      mCounter = handler.mCounter;
+
+      return *this;
+    }
+
     void
     operator()( Args... args ){
       mHandler( mChannel, mCounter, args... );
@@ -81,8 +97,9 @@ public:
    *
    * @return
    */
-  event_channel& operator+=( const handler& handler ){
-    enlist( handler );
+  event_channel&
+  operator+=( const handler& handle ){
+    enlist( handle );
 
     return *this;
   }
@@ -93,24 +110,27 @@ public:
    *
    * @return
    */
-  event_handler enlist( const handler& handle ){
-    handlers[idCounter] = event_handler( *this, idCounter, handle );
+  event_handler
+  enlist( const handler& handle ){
+    handlers.emplace( std::make_pair( idCounter, event_handler{*this, idCounter, handle} ) );
 
-    return handlers[idCounter++];
+    return handlers.at( idCounter++ );
   }
 
   /*! Unregister a previously registered handler
    *
    * @param ref
    */
-  void delist( const event_handler& handle ){
-    handlers.erase( handle );
+  void
+  delist( const event_handler& handle ){
+    handlers.erase( handlers.find( handle.mCounter ) );
   }
 
   /*!
    * @todo implement handler de-registration
    */
-  event_channel& operator-=( const event_handler& handler ){
+  event_channel&
+  operator-=( const event_handler& handler ){
     delist( handler );
 
     return *this;
@@ -125,21 +145,24 @@ public:
    *
    * @todo find a nice way to fire handlers in parallel
    */
-  void fire( Args... args ){
+  void
+  fire( Args... args ){
     for( auto& handle : handlers ){
-      handle.second( *this, handle.first, args... );
+      handle.second( args... );
     }
   }
 
   /*!
    */
-  void operator()( Args... args ){
+  void
+  operator()( Args... args ){
     fire( args... );
   }
 
   /*! Remove all registered handlers
    */
-  void clear(){
+  void
+  clear(){
     handlers.clear();
     idCounter = 0;
   }

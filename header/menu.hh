@@ -76,6 +76,12 @@ public:
     mMenuText( text ){
   }
 
+  /*!
+   */
+  menu( const char* arr )
+    : menu( std::string( arr ) ){
+  }
+
   /*! Copy/Move ctor
    *
    * @param other  Parameter containing menu options to copy/move
@@ -83,9 +89,9 @@ public:
    * Copies/moves menu options from other
    */
   template<typename U>
-  menu( U&& other ):
-    mMenuText( std::forward<std::string>( other.mMenuText ) ),
-    mSubMenus( std::forward<decltype( mSubMenus )>( other.mSubMenus ) ){
+  menu( U&& other )
+    : mMenuText( std::forward<std::string>( other.mMenuText ) )
+    , mSubMenus( std::forward<decltype( mSubMenus )>( other.mSubMenus ) ){
   }
 
   /*! Copy/move assignment
@@ -95,7 +101,8 @@ public:
    * Copies/moves menu options from other
    */
   template<typename U>
-  menu& operator=( U&& other ){
+  menu&
+  operator=( U&& other ){
     mMenuText = std::forward<std::string>( other.mMenuText );
     mSubMenus = std::forward<decltype( mSubMenus )>( other.mSubMenus );
   }
@@ -106,7 +113,8 @@ public:
    *
    * @return Updated menu
    */
-  menu& operator=( const std::string& newText ){
+  menu&
+  operator=( const std::string& newText ){
     mMenuText = newText;
 
     return *this;
@@ -118,14 +126,16 @@ public:
    *
    * @return The selected menu item
    */
-  menu_item& operator[]( const selector& sel ){
+  menu_item&
+  operator[]( const selector& sel ){
     return mSubMenus[sel];
   }
 
   /*!
    * @return
    */
-  std::string& prompt(){
+  std::string&
+  prompt(){
     return mMenuText;
   }
 
@@ -142,8 +152,9 @@ public:
    * Describe a new option including number, text, next menu, and action to
    * take upon selection
    */
-  void addOption( const selector& selection, const std::string& optText,
-                  pointer nextMenu, optionCallback callback = optionCallback(
+  void
+  addOption( const selector& selection, const std::string& optText,
+             pointer nextMenu, optionCallback callback = optionCallback(
                                                      []( selector ){
                                                        return true;
                                                      } ) ){
@@ -158,7 +169,8 @@ public:
    *
    * Retrieve the selection, call its callback, and return next menu
    */
-  pointer select( const selector& selection ){
+  pointer
+  select( const selector& selection ){
     auto it = mSubMenus.at( selection );
 
     // call the callback; return next menu
@@ -172,7 +184,8 @@ public:
   /*!
    */
   template<typename OSTREAM>
-  OSTREAM& print_prompt( OSTREAM& os ) const{
+  OSTREAM&
+  print_prompt( OSTREAM& os ) const{
     os << mMenuText << '\n';
 
     return os;
@@ -183,7 +196,8 @@ public:
    * @param os  Output stream to provide menu information to
    */
   template<typename OSTREAM>
-  OSTREAM& print_options( OSTREAM& os ) const{
+  OSTREAM&
+  print_options( OSTREAM& os ) const{
     for( auto it : mSubMenus ){
       os << std::get<0>( it ) << '\t' << std::get<0>( std::get<1>( it ) ) << '\n';
     }
@@ -199,7 +213,8 @@ public:
    */
   template<typename OSTREAM>
   friend
-  OSTREAM& operator<<( OSTREAM& os, const menu& m ){
+  OSTREAM&
+  operator<<( OSTREAM& os, const menu& m ){
     m.print_prompt( os );
     m.print_options( os );
 
@@ -210,4 +225,3 @@ public:
 }
 
 #endif
-

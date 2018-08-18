@@ -25,6 +25,11 @@ private:
   friend class vec;
 
 public:
+  vec(){
+    for( auto& val : mData ){
+      val = 0;
+    }
+  }
 //!@todo construct and assign from collection of x_type y_type etc?
   vec( const vec& v )
     : mData( v.mData ){
@@ -121,6 +126,18 @@ public:
   bool
   operator==( const vec& v ) const{
     return mData == v.mData;
+  }
+
+  //! @todo add tests for this function
+  bool
+  operator<( const vec& v ) const{
+    for( unsigned int i = 0; i < v.mData.size(); ++i ){
+      if( mData[i] == v.mData[i] ){
+        continue;
+      } else {
+        return mData[i] < v.mData[i];
+      }
+    }
   }
 
   template<unsigned long M>

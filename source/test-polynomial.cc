@@ -138,14 +138,14 @@ TEST_CASE( "polynomial can be compared to points", "[poly]" ){
     gsw::point p2;
     gsw::point p3;
 
-    p1.y = 0;
-    p2.y = 2;
-    p3.y = 1;
+    p1.y() = 0;
+    p2.y() = 2;
+    p3.y() = 1;
 
     for( int i = -5; i < 5; ++i ){
-      p1.x = i;
-      p2.x = i;
-      p3.x = i;
+      p1.x() = i;
+      p2.x() = i;
+      p3.x() = i;
 
       REQUIRE( p1 <  e1 );
       REQUIRE( e1 >  p1 );
@@ -174,12 +174,12 @@ TEST_CASE( "polynomial can be compared to points", "[poly]" ){
     gsw::point p3;
 
     for( int i = -5; i < 5; ++i ){
-      p1.x = i;
-      p2.x = i;
-      p3.x = i;
-      p1.y = 2 * i - 1;
-      p2.y = 2 * i + 1;
-      p3.y = 2 * i;
+      p1.x() = i;
+      p2.x() = i;
+      p3.x() = i;
+      p1.y() = 2 * i - 1;
+      p2.y() = 2 * i + 1;
+      p3.y() = 2 * i;
 
       REQUIRE( p1 <  e1 );
       REQUIRE( e1 >  p1 );
@@ -222,4 +222,3 @@ TEST_CASE( "Polynomial can find its roots", "[poly]" ){
     CHECK( answers == set<double>( {5, 2} ) );
   }
 }
-
