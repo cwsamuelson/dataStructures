@@ -38,33 +38,32 @@ high_polynomial::operator-() const{
   high_polynomial hp( *this );
 
   for( auto& d : hp.mCoeff ){
-    d = -d;
+    d.second = -d.second;
   }
 
   return *this;
 }
 
 double&
-high_polynomial::operator[]( input_point point ){
+high_polynomial::operator[]( const input_point& point ){
   return mCoeff[point];
 }
 
 const double&
-high_polynomial::operator[]( input_point point ) const{
-  return mCoeff[point];
+high_polynomial::operator[]( const input_point& point ) const{
+  return mCoeff.at( point );
 }
 
 double
-high_polynomial::operator()( input_point point ) const{
+high_polynomial::operator()( const input_point& point ) const{
   double total = 0.0;
 
   for( auto coeff_data : mCoeff ){
-    auto X = pow( point.x, coeff_data.first.x );
-    auto Y = pow( point.y, coeff_data.first.y );
+    auto X = pow( point.x(), coeff_data.first.x() );
+    auto Y = pow( point.y(), coeff_data.first.y() );
 
     total += X * Y * coeff_data.second;
   }
 
   return total;
 }
-

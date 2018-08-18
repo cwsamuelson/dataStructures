@@ -1,5 +1,9 @@
+#ifndef __HIGH_POLY_HH__
+#define __HIGH_POLY_HH__
+
 #include<utility>
 #include<map>
+#include<set>
 
 #include<named_point.hh>
 
@@ -32,12 +36,14 @@ public:
   }
 
   std::set<double>
-  solve( input_point hint = {1, 1}, unsigned int iterations = 6 ) const;
+  solve( input_point hint = input_point( std::array<coord_t, 3>{1, 1}), unsigned int iterations = 6 ) const;
 
   template<typename U>
   high_polynomial&
   operator=(  U&& eq ){
     mCoeff = std::forward<storage_type>( eq );
+
+    return *this;
   }
 
   high_polynomial&
@@ -62,13 +68,13 @@ public:
   operator-() const;
 
   double&
-  operator[]( input_point point );
+  operator[]( const input_point& point );
 
   const double&
-  operator[]( input_point point ) const;
+  operator[]( const input_point& point ) const;
 
   double
-  operator()( input_point point ) const;
+  operator()( const input_point& point ) const;
 
   friend
   bool
@@ -80,3 +86,4 @@ operator==( const high_polynomial& lhs, const high_polynomial& rhs );
 
 }
 
+#endif
