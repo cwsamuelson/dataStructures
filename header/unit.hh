@@ -173,7 +173,7 @@ using default_system = metric;
  *
  * @tparam ANGLE  Degrees of angle
  *
- * @tparam MONEY  
+ * @tparam MONEY
  *
  * @tparam PERCENTAGE  Percent
  *
@@ -210,18 +210,18 @@ using default_system = metric;
  *        use a base class or pointer to an implementation class.  the class will take
  *        a storage type and ratio factor only(maybe only storage?), so that code space
  *        only really increases when a different storage type is used.
- *        
+ *
  */
 template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
          int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM, typename DBL = double, typename FACTOR = ratio<1, 1> >
+         /*typename SYSTEM,*/ typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit : public additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
-                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> >,
+                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, /*SYSTEM,*/ DBL, FACTOR> >,
                     additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
-                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>,
+                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, /*SYSTEM,*/ DBL, FACTOR>,
                                   DBL>,
                     multiplicative<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA,
-                                        MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>,
+                                        MONEY, ANGLE, PERCENTAGE, TICK, /*SYSTEM,*/ DBL, FACTOR>,
                                         DBL>{
 public:
   /*! Storage type
@@ -241,7 +241,7 @@ public:
   //! @todo provide static constexpr aliases to types
   // done something like:
   // static constexpr int CURRENCY = MONEY;
-  // primary problem is to find names for these aliases that aren't the param names 
+  // primary problem is to find names for these aliases that aren't the param names
 
 private:
   value_type mValue;
@@ -496,7 +496,7 @@ public:
   constexpr unit
   operator++( int ){
     unit u = *this;
- 
+
     ++( *this );
 
     return u;
@@ -950,4 +950,3 @@ constexpr auto operator""_tk( unsigned long long val ){
 }
 
 #endif
-
