@@ -66,10 +66,13 @@ public:
   using edge = std::pair<value_type, value_type>;
 
 private:
+  //TODO:investigate multimap?
   std::map<value_type, std::set<value_type> > mNodes;
   //TODO:store a set of all known edges?
-  // doing this will assist in removal of edges and nodes.
-  std::set<edge> mEdges;
+  // doing this may assist in removal of edges and nodes.
+  std::map<value_type, std::set<value_type> > mInEdges;
+  std::map<value_type, std::set<value_type> > mOutEdges;
+  //TODO:a list of in edges and out edges may make a list of nodes obsolete.
 
 public:
   void
@@ -78,26 +81,52 @@ public:
   }
 
   void
-  remove_node( const reference ref );
+  remove_node( const reference ref ){
+    mNodes.erase( mNodes.find( ref ) );
+
+    auto incoming = mInEdges.at( ref );
+    auto outgoing = mOutEdges.at( ref );
+
+    for( auto in : incoming ){
+      mOutEdges.erase( mOutEdges.find( in ) );
+    }
+    for( auto out : outgoing ){
+      mInEdges.erase( mInEdges.find( out ) );
+    }
+
+    mInEdges.erase( mInEdges.find( ref ) );
+    mOutEdges.erase( mOutEdges.find( ref ) );
+  }
 
   void
   add_edge( const reference refA, const reference refB, bool is_directed = false ){
     mNodes.at( refA ).emplace( refB );
+    mOutEdges[refA] = refB;
+    mInEdges[refB] = refA;
 
     if( !is_directed ){
       mNodes.at( refB ).emplace( refA );
+      mOutEdges[refB] = refA;
+      mInEdges[refA] = refB;
     }
   }
 
   void
-  remove_edge( const reference refA, const reference refB );
+  remove_edge( const reference refA, const reference refB ){
+    auto& edges = mNodes.at( refA );
+    edges.erase( edges.find( refB ) );
+  }
 
   void
   emplace_edge( const reference refA, const reference refB, bool is_directed = false ) {
     mNodes[refA].emplace( refB );
+    mOutEdges[refA] = refB;
+    mInEdges[refB] = refA;
 
     if( !is_directed ){
       mNodes[refB].emplace( refA );
+      mOutEdges[refB] = refA;
+      mInEdges[refA] = refB;
     }
   }
 
@@ -114,23 +143,22 @@ public:
 
   std::set<edge>
   get_edges() const{
-    return mEdges;
-  }
+    auto result = mInEdges;
 
-  std::set<edge>
-  get_out_edges( const reference ref ) const{
-    std::set<edge> result;
-    auto edgs = mNodes.at( ref );
-
-    for( auto edg : edgs ){
-      result.emplace( ref, edg );
-    }
+    result.insert( mOutEdges.begin(), mOutEdges.end() );
 
     return result;
   }
 
   std::set<edge>
-  get_in_edges( const reference ref ) const;
+  get_out_edges( const reference ref ) const{
+    return mOutEdges;
+  }
+
+  std::set<edge>
+  get_in_edges( const reference ref ) const{
+    return mInEdges;
+  }
 
   bool
   adjacent( const reference refA, const reference refB ) const{
@@ -150,12 +178,14 @@ public:
 
   size_t
   edge_count() const{
-    return mEdges.size();
+    return mInEdges.size() + mOutEdges.size();
   }
 
   void
   clear() const{
     mNodes.clear();
+    mInEdges.clear();
+    mOutEdges.clear();
   }
 };
 
