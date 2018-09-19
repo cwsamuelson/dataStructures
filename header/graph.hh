@@ -70,9 +70,8 @@ private:
   std::map<value_type, std::set<value_type> > mNodes;
   //TODO:store a set of all known edges?
   // doing this may assist in removal of edges and nodes.
+  // the mNodes map is effectively mOutEdges
   std::map<value_type, std::set<value_type> > mInEdges;
-  std::map<value_type, std::set<value_type> > mOutEdges;
-  //TODO:a list of in edges and out edges may make a list of nodes obsolete.
 
 public:
   void
@@ -85,28 +84,24 @@ public:
     mNodes.erase( mNodes.find( ref ) );
 
     auto incoming = mInEdges.at( ref );
-    auto outgoing = mOutEdges.at( ref );
 
-    for( auto in : incoming ){
-      mOutEdges.erase( mOutEdges.find( in ) );
-    }
     for( auto out : outgoing ){
       mInEdges.erase( mInEdges.find( out ) );
     }
 
     mInEdges.erase( mInEdges.find( ref ) );
-    mOutEdges.erase( mOutEdges.find( ref ) );
   }
 
   void
   add_edge( const reference refA, const reference refB, bool is_directed = false ){
+    // test for existence of refB
+    mNodes.at( refB );
+
     mNodes.at( refA ).emplace( refB );
-    mOutEdges[refA] = refB;
     mInEdges[refB] = refA;
 
     if( !is_directed ){
       mNodes.at( refB ).emplace( refA );
-      mOutEdges[refB] = refA;
       mInEdges[refA] = refB;
     }
   }
@@ -120,12 +115,10 @@ public:
   void
   emplace_edge( const reference refA, const reference refB, bool is_directed = false ) {
     mNodes[refA].emplace( refB );
-    mOutEdges[refA] = refB;
     mInEdges[refB] = refA;
 
     if( !is_directed ){
       mNodes[refB].emplace( refA );
-      mOutEdges[refB] = refA;
       mInEdges[refA] = refB;
     }
   }
@@ -143,21 +136,42 @@ public:
 
   std::set<edge>
   get_edges() const{
-    auto result = mInEdges;
+    std::set<edge> edges;
 
-    result.insert( mOutEdges.begin(), mOutEdges.end() );
+    for( auto node : mInEdges ){
+      for( auto edg : node.second ){
+        edges.emplace( node.first, edg );
+      }
+    }
+
+    for( auto node : mNodes ){
+      for( auto edg : node.second ){
+        edges.emplace( node.first, edg );
+      }
+    }
+
+    return result;
+  }
+
+  std::set<edge>
+  get_edges( const reference ref ) const{
+    auto result = get_out_edges( ref );
+
+    auto in = get_in_edges( ref );
+
+    result.insert( in.begin(), in.end() );
 
     return result;
   }
 
   std::set<edge>
   get_out_edges( const reference ref ) const{
-    return mOutEdges;
+    return mNodes.at( ref );
   }
 
   std::set<edge>
   get_in_edges( const reference ref ) const{
-    return mInEdges;
+    return mInEdges.at( ref );
   }
 
   bool
@@ -178,14 +192,19 @@ public:
 
   size_t
   edge_count() const{
-    return mInEdges.size() + mOutEdges.size();
+    unsigned int count = mInEdges.size();
+
+    for( auto pr : mNodes ){
+      count += pr.second.size();
+    }
+
+    return count;
   }
 
   void
   clear() const{
     mNodes.clear();
     mInEdges.clear();
-    mOutEdges.clear();
   }
 };
 
