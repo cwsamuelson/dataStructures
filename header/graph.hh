@@ -74,11 +74,23 @@ private:
   std::map<value_type, std::set<value_type> > mInEdges;
 
 public:
+  /*!
+   */
+  graph() = default;
+
+  /*!
+   *
+   * @param ref
+   */
   void
   add_node( const reference ref ){
     mNodes[ref];
   }
 
+  /*!
+   *
+   * @param ref
+   */
   void
   remove_node( const reference ref ){
     mNodes.erase( mNodes.find( ref ) );
@@ -92,6 +104,12 @@ public:
     mInEdges.erase( mInEdges.find( ref ) );
   }
 
+  /*!
+   *
+   * @param refA
+   * @param refB
+   * @param is_directed
+   */
   void
   add_edge( const reference refA, const reference refB, bool is_directed = false ){
     // test for existence of refB
@@ -106,12 +124,23 @@ public:
     }
   }
 
+  /*!
+   *
+   * @param refA
+   * @param refB
+   */
   void
   remove_edge( const reference refA, const reference refB ){
     auto& edges = mNodes.at( refA );
     edges.erase( edges.find( refB ) );
   }
 
+  /*!
+   *
+   * @param refA
+   * @param refB
+   * @param is_directed
+   */
   void
   emplace_edge( const reference refA, const reference refB, bool is_directed = false ) {
     mNodes[refA].emplace( refB );
@@ -123,6 +152,8 @@ public:
     }
   }
 
+  /*!
+   */
   std::set<value_type>
   get_nodes() const{
     std::set<value_type> result;
@@ -134,6 +165,8 @@ public:
     return result;
   }
 
+  /*!
+   */
   std::set<edge>
   get_edges() const{
     std::set<edge> edges;
@@ -153,6 +186,10 @@ public:
     return result;
   }
 
+  /*!
+   *
+   * @param ref
+   */
   std::set<edge>
   get_edges( const reference ref ) const{
     auto result = get_out_edges( ref );
@@ -164,32 +201,53 @@ public:
     return result;
   }
 
+  /*!
+   *
+   * @param ref
+   */
   std::set<edge>
   get_out_edges( const reference ref ) const{
     return mNodes.at( ref );
   }
 
+  /*!
+   *
+   * @param ref
+   */
   std::set<edge>
   get_in_edges( const reference ref ) const{
     return mInEdges.at( ref );
   }
 
+  /*!
+   *
+   * @param refA
+   * @param refB
+   */
   bool
   adjacent( const reference refA, const reference refB ) const{
     //return mNodes.at( refA ).contains( refB );//contains is c++20
     return mNodes.at( refA ).count( refB ) > 0;
   }
 
+  /*!
+   *
+   * @param ref
+   */
   std::set<value_type>
   neighbors( const reference ref ) const{
     return mNodes.at( ref );
   }
 
+  /*!
+   */
   size_t
   node_count() const{
     return mNodes.size();
   }
 
+  /*!
+   */
   size_t
   edge_count() const{
     unsigned int count = mInEdges.size();
@@ -201,10 +259,19 @@ public:
     return count;
   }
 
+  /*!
+   */
   void
   clear() const{
     mNodes.clear();
     mInEdges.clear();
+  }
+
+  /*!
+   */
+  void
+  empty() {
+    return mNodes.empty();
   }
 };
 
