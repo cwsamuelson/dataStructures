@@ -74,22 +74,22 @@ private:
   std::map<value_type, std::set<value_type> > mInEdges;
 
 public:
-  /*!
+  /*! Default ctor
    */
   graph() = default;
 
-  /*!
+  /*! Add a node to the graph, with no connections
    *
-   * @param ref
+   * @param ref value to refer to the new node by.
    */
   void
   add_node( const reference ref ){
     mNodes[ref];
   }
 
-  /*!
+  /*! Remove a node and all connections from the graph
    *
-   * @param ref
+   * @param ref node to remove
    */
   void
   remove_node( const reference ref ){
@@ -104,11 +104,11 @@ public:
     mInEdges.erase( mInEdges.find( ref ) );
   }
 
-  /*!
+  /*! Create a new edge between 2 nodes
    *
-   * @param refA
-   * @param refB
-   * @param is_directed
+   * @param refA node to create edge from
+   * @param refB node to create edge to
+   * @param is_directed whether the edge should be directed or not
    */
   void
   add_edge( const reference refA, const reference refB, bool is_directed = false ){
@@ -124,10 +124,12 @@ public:
     }
   }
 
-  /*!
+  /*! Remove edge between 2 nodes from graph
    *
-   * @param refA
-   * @param refB
+   * @param refA node edge is from
+   * @param refB node edge is to
+   *
+   * TODO: remove directed and undirected?
    */
   void
   remove_edge( const reference refA, const reference refB ){
@@ -152,7 +154,11 @@ public:
     }
   }
 
-  /*!
+  /*! Get all nodes in graph
+   *
+   * @return a set of all node names
+   *
+   * TODO:should a type be returned containing information such as adjacent nodes?
    */
   std::set<value_type>
   get_nodes() const{
@@ -165,7 +171,9 @@ public:
     return result;
   }
 
-  /*!
+  /*! Get all edges in graph
+   *
+   * @return set of all edges, expressed as a pair of node names {node_from, node_to}
    */
   std::set<edge>
   get_edges() const{
@@ -186,9 +194,11 @@ public:
     return result;
   }
 
-  /*!
+  /*! Get all edges to and from a particular node
    *
-   * @param ref
+   * @param ref node to get edges to/from
+   *
+   * @return set of edges to and from ref
    */
   std::set<edge>
   get_edges( const reference ref ) const{
@@ -201,52 +211,65 @@ public:
     return result;
   }
 
-  /*!
+  /*! Get all edges from a particular node
    *
-   * @param ref
+   * @param ref node to get edges from
+   *
+   * @return set of edges from ref
    */
   std::set<edge>
   get_out_edges( const reference ref ) const{
     return mNodes.at( ref );
   }
 
-  /*!
+  /*! Get all edges to a particular node
    *
-   * @param ref
+   * @param ref node to get edges to
+   *
+   * @return set of edges to ref
    */
   std::set<edge>
   get_in_edges( const reference ref ) const{
     return mInEdges.at( ref );
   }
 
-  /*!
+  /*! Test whether 2 nodes are connected
    *
    * @param refA
    * @param refB
+   *
+   * @return whether the refA and refB are adjacent
    */
   bool
   adjacent( const reference refA, const reference refB ) const{
     //return mNodes.at( refA ).contains( refB );//contains is c++20
     return mNodes.at( refA ).count( refB ) > 0;
+    //should direction be accounted for here? guess is no
   }
 
-  /*!
+  /*! Get a set of nodes adjacent to a particular node
    *
-   * @param ref
+   * @param ref result is relative to
+   *
+   * @return set of neighbors to ref
    */
   std::set<value_type>
   neighbors( const reference ref ) const{
     return mNodes.at( ref );
   }
 
-  /*!
+  /*! Get the number of nodes in the graph
+   *
+   * @return the number of nodes in graph
    */
   size_t
   node_count() const{
     return mNodes.size();
   }
 
-  /*!
+  /*! Get the number of edges in the graph
+   *
+   * @return the number of edges in graph
    */
   size_t
   edge_count() const{
@@ -259,7 +282,7 @@ public:
     return count;
   }
 
-  /*!
+  /*! Empty the graph of all nodes and edges
    */
   void
   clear() const{
@@ -267,9 +290,9 @@ public:
     mInEdges.clear();
   }
 
-  /*!
+  /*! Test whether the graph is empty
    */
-  void
+  bool
   empty() {
     return mNodes.empty();
   }
