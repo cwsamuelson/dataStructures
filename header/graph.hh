@@ -9,7 +9,7 @@
 //associating data with a node is meaningless for this data structure; this
 //  information is more appropriately stored at the client.  However the data of
 //  existing edges is intrinsically stored and tracked in this class, and could
-//  be useful to obtain.
+//  be useful to obtain.  Data could be things like edge weight (or cost)
 /*!Type to store/track/interact with graphs.
  *
  * @tparam T data type to track nodes.  This can be an comparable type, but is
@@ -62,7 +62,7 @@ class graph{
 public:
   using value_type = T;
   using reference = T&;
-  using iterator = /**/;
+  using const_reference = const T&;
   using edge = std::pair<value_type, value_type>;
 
 private:
@@ -83,7 +83,7 @@ public:
    * @param ref value to refer to the new node by.
    */
   void
-  add_node( const reference ref ){
+  add_node( const_reference ref ){
     mNodes[ref];
   }
 
@@ -92,16 +92,22 @@ public:
    * @param ref node to remove
    */
   void
-  remove_node( const reference ref ){
-    mNodes.erase( mNodes.find( ref ) );
-
+  remove_node( const_reference ref ){
+    auto outgoing = mNodes.at( ref );
     auto incoming = mInEdges.at( ref );
 
     for( auto out : outgoing ){
-      mInEdges.erase( mInEdges.find( out ) );
+      auto& local = mInEdges.at( out );
+      local.erase( local.find( ref ) );
+    }
+
+    for( auto in : incoming ){
+      auto& local = mNodes.at( in );
+      local.erase( local.find( ref ) );
     }
 
     mInEdges.erase( mInEdges.find( ref ) );
+    mNodes.erase( mNodes.find( ref ) );
   }
 
   /*! Create a new edge between 2 nodes
@@ -111,16 +117,16 @@ public:
    * @param is_directed whether the edge should be directed or not
    */
   void
-  add_edge( const reference refA, const reference refB, bool is_directed = false ){
+  add_edge( const_reference refA, const_reference refB, bool is_directed = false ){
     // test for existence of refB
     mNodes.at( refB );
 
     mNodes.at( refA ).emplace( refB );
-    mInEdges[refB] = refA;
+    mInEdges[refB].emplace( refA );
 
     if( !is_directed ){
       mNodes.at( refB ).emplace( refA );
-      mInEdges[refA] = refB;
+      mInEdges[refA].emplace( refB );
     }
   }
 
@@ -132,7 +138,7 @@ public:
    * TODO: remove directed and undirected?
    */
   void
-  remove_edge( const reference refA, const reference refB ){
+  remove_edge( const_reference refA, const_reference refB ){
     auto& edges = mNodes.at( refA );
     edges.erase( edges.find( refB ) );
   }
@@ -144,7 +150,7 @@ public:
    * @param is_directed
    */
   void
-  emplace_edge( const reference refA, const reference refB, bool is_directed = false ) {
+  emplace_edge( const_reference refA, const_reference refB, bool is_directed = false ) {
     mNodes[refA].emplace( refB );
     mInEdges[refB] = refA;
 
@@ -191,7 +197,7 @@ public:
       }
     }
 
-    return result;
+    return edges;
   }
 
   /*! Get all edges to and from a particular node
@@ -201,7 +207,7 @@ public:
    * @return set of edges to and from ref
    */
   std::set<edge>
-  get_edges( const reference ref ) const{
+  get_edges( const_reference ref ) const{
     auto result = get_out_edges( ref );
 
     auto in = get_in_edges( ref );
@@ -218,8 +224,14 @@ public:
    * @return set of edges from ref
    */
   std::set<edge>
-  get_out_edges( const reference ref ) const{
-    return mNodes.at( ref );
+  get_out_edges( const_reference ref ) const{
+    std::set<edge> result;
+
+    for( auto node : mNodes.at( ref ) ){
+      result.emplace( ref, node );
+    }
+
+    return result;
   }
 
   /*! Get all edges to a particular node
@@ -229,8 +241,19 @@ public:
    * @return set of edges to ref
    */
   std::set<edge>
-  get_in_edges( const reference ref ) const{
-    return mInEdges.at( ref );
+  get_in_edges( const_reference ref ) const{
+    std::set<edge> result;
+
+    // verify node exists
+    mNodes.at( ref );
+
+    if( mInEdges.count( ref ) ){
+      for( auto node : mInEdges.at( ref ) ){
+        result.emplace( node, ref );
+      }
+    }
+
+    return result;
   }
 
   /*! Test whether 2 nodes are connected
@@ -241,7 +264,7 @@ public:
    * @return whether the refA and refB are adjacent
    */
   bool
-  adjacent( const reference refA, const reference refB ) const{
+  adjacent( const_reference refA, const_reference refB ) const{
     //return mNodes.at( refA ).contains( refB );//contains is c++20
     return mNodes.at( refA ).count( refB ) > 0;
     //should direction be accounted for here? guess is no
@@ -254,7 +277,7 @@ public:
    * @return set of neighbors to ref
    */
   std::set<value_type>
-  neighbors( const reference ref ) const{
+  neighbors( const_reference ref ) const{
     return mNodes.at( ref );
   }
 
@@ -273,7 +296,7 @@ public:
    */
   size_t
   edge_count() const{
-    unsigned int count = mInEdges.size();
+    unsigned int count = 0;
 
     for( auto pr : mNodes ){
       count += pr.second.size();
@@ -285,7 +308,7 @@ public:
   /*! Empty the graph of all nodes and edges
    */
   void
-  clear() const{
+  clear(){
     mNodes.clear();
     mInEdges.clear();
   }
@@ -293,7 +316,7 @@ public:
   /*! Test whether the graph is empty
    */
   bool
-  empty() {
+  empty() const{
     return mNodes.empty();
   }
 };
