@@ -96,7 +96,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Unit prefixes can be used" ){
-    using kiloVolt = voltage<double, kilo>;
+    using kiloVolt = voltage<double, metric, kilo>;
     resistance<> r( 500 );
     kiloVolt kv( 3 );
 
@@ -162,10 +162,10 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
 }
 
 TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
-  using kilo_amp = current<long, kilo>;
+  using kilo_amp = current<long, metric, kilo>;
 
-  voltage<long, kilo> kv( 12 );
-  current<long, milli> a;
+  voltage<long, metric, kilo> kv( 12 );
+  current<long, metric, milli> a;
   resistance<long> o( 3 );
   a = kv / o;
 
@@ -175,8 +175,8 @@ TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
 }
 
 TEST_CASE( "Scheduler test", "[unit]" ){
-  using int_time = gsw::time<unsigned long long, milli>;
-  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, unsigned long long, milli>;
+  using int_time = gsw::time<unsigned long long, metric, milli>;
+  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, metric, unsigned long long, milli>;
   const tick<> t = int_time( 50 ) / sched_tick_rate( 5 );
 
   REQUIRE( t == 10 );
@@ -197,4 +197,3 @@ TEST_CASE( "Some units provide literal suffixes", "[unit]" ){
   REQUIRE( ( 0_t    + gsw::time<unsigned long long>( 3 ) )   == 3 );
   REQUIRE( 3_A * 4_R == 12_V );
 }
-
