@@ -23,9 +23,36 @@ namespace gsw{
  *
  * REQUIRE( feet == 3.28 );
  */
-
 class metric{};
 class english{};
+
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
+         typename SYSTEM, typename DBL, typename FACTOR>
+class unit;
+
+
+template<typename So, int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
+         typename SYSTEM, typename DBL, typename FACTOR, typename Si>
+constexpr
+unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
+     TICK, So, DBL, FACTOR>
+convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
+                    ANGLE, PERCENTAGE, TICK, Si, DBL, FACTOR>& val ){
+  //throw unimplemented?
+}
+
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+        int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
+        typename SYSTEM, typename DBL, typename FACTOR>
+constexpr
+unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
+     TICK, SYSTEM, DBL, FACTOR>
+convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
+                    ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>& val ){
+  return val;
+}
 
 //! @todo add comparitive to unit?
 /*! Unit class that differentiates between different measurements.
@@ -144,6 +171,12 @@ public:
   constexpr
   unit( const other_type<S, D, F>& other )
     : mValue( ( other.getRaw() * factor_type::denominator ) / factor_type::numerator ){
+  }
+
+  template<typename So, typename D, typename F, typename S>
+  constexpr
+  unit( const other_type<S, D, F>& other )
+    : mValue( convert<So>( other ).getValue() ){
   }
 
   /*! Copy-assignment operator
@@ -738,6 +771,41 @@ using elec_field    = unit< 1, -3,  1, -1,  0, 0, 0, 0, 0, 0, S, T, F>;
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using specificHeat  = decltype( energy<T, S, F>() / temperature<T, S, F>() );
+
+/* measurement system specific */
+/* metric */
+template<typename T = double, typename F = ratio<1, 1> >
+using meters = length<T, metric, F>;
+
+template<typename T = double, typename F = ratio<1, 1> >
+using gram = mass<T, metric, F>;
+
+template<typename T = double, typename F = ratio<1, 1> >
+using celsius = temperature<T, metric, F>;
+
+/* english */
+template<typename T = double, typename F = ratio<1, 1> >
+using feet = length<T, english, F>;
+
+template<typename T = double, typename F = ratio<1, 1> >
+using slug = mass<T, english, F>;
+
+template<typename T = double, typename F = ratio<1, 1> >
+using fahrenheit = temperature<T, english, F>;
+
+template<typename T1, typename T2, typename F1, typename F2>
+constexpr
+meters<T1, F1>
+convert( const feet<T2, F2>& val ){
+  return val.getValue() * 0.30481;
+}
+
+template<typename T1, typename T2, typename F1, typename F2>
+constexpr
+feet<T1, F1>
+convert( const meters<T2, F2>& val ){
+  return val.getValue() * 3.28084;
+}
 
 /* floating point literals */
 constexpr auto operator""_0( long double val ){
