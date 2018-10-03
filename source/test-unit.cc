@@ -177,7 +177,7 @@ TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
 TEST_CASE( "Scheduler test", "[unit]" ){
   using int_time = gsw::time<unsigned long long, metric, milli>;
   using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, metric, unsigned long long, milli>;
-  const tick<> t = int_time( 50 ) / sched_tick_rate( 5 );
+  const tick<unsigned long long, metric> t = int_time( 50 ) / sched_tick_rate( 5 );
 
   REQUIRE( t == 10 );
 }

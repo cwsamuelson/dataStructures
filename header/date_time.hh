@@ -15,15 +15,15 @@ typedef unsigned long long under_type;
 
 /*! Type that operates like the unit class
  *
- * @tparam F  
+ * @tparam F
  *
  * Type that operates like the unit class, and can inter-op with it, but
  * is simultaneously a different type.
  */
 template<size_t F>
-class time_type : public time<under_type, ratio<F, 1> >{
+class time_type : public time<under_type, metric, ratio<F, 1> >{
 public:
-  typedef time<under_type, ratio<F, 1> > base;
+  typedef time<under_type, metric, ratio<F, 1> > base;
 
   constexpr time_type():
     base(){
@@ -32,7 +32,7 @@ public:
     base( ut ){
   }
   template<typename D, typename F_t>
-  constexpr time_type( const typename base::template other_type<D, F_t>& other ):
+  constexpr time_type( const typename base::template other_type<metric, D, F_t>& other ):
     base( other ){
   }
 };
@@ -79,7 +79,7 @@ constexpr year operator""_y( under_type val ){
  *
  * @param os  Output stream object that data will be inserted into
  *
- * @param t  
+ * @param t
  *
  * @param type  Name of units being output to os
  *
@@ -98,7 +98,7 @@ auto& output( OSTREAM& os, under_type t, const std::string& type ){
  *
  * @param os  Output stream object that data will be inserted into
  *
- * @param tt  
+ * @param tt
  *
  * @return
  *
@@ -319,13 +319,13 @@ private:
 public:
   /*! Time-centric ctor
    *
-   * @param h  
+   * @param h
    *
-   * @param m  
+   * @param m
    *
-   * @param s  
+   * @param s
    *
-   * @param d  
+   * @param d
    */
   date_time( const hour& h, const minute& m, const second& s, const date& d = date( day( 0 ), 0, year( 0 ) ) ):
     mDate( d ),
@@ -336,13 +336,13 @@ public:
 
   /*! Date-centric ctor
    *
-   * @param d  
+   * @param d
    *
-   * @param h  
+   * @param h
    *
-   * @param m  
+   * @param m
    *
-   * @param s  
+   * @param s
    */
   date_time( const date& d, const hour& h = hour( 0 ), const minute& m = minute( 0 ), const second& s = second( 0 ) ):
     mDate( d ),
@@ -355,7 +355,7 @@ public:
    *
    * @tparam F  Factor for value prefix
    *
-   * @param tu  
+   * @param tu
    *
    * @return
    */
@@ -372,7 +372,7 @@ public:
    *
    * @tparam F  Factor for value prefix
    *
-   * @param tu  
+   * @param tu
    *
    * @return
    */
@@ -395,7 +395,7 @@ public:
       ++mMinute;
       tu -= 60 / F;
     }
-    
+
     mSecond += tu;
 
     return *this;
@@ -423,4 +423,3 @@ public:
 }
 
 #endif
-

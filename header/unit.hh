@@ -9,7 +9,18 @@
 #include<ratio.hh>
 #include<operators.hh>
 
+#include<exception>
+
 namespace gsw{
+
+
+class NotImplementedException : public std::logic_error
+{
+public:
+  NotImplementedException()
+    : std::logic_error( "Function not yet implemented." ){
+  }
+};
 
 /*!
  * a unit_system is like metric or imperial.  a particular variable can be of
@@ -31,20 +42,19 @@ template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
          typename SYSTEM, typename DBL, typename FACTOR>
 class unit;
 
-
-template<typename So, int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM, typename DBL, typename FACTOR, typename Si>
+template<typename So, typename Si, int LENGTH, int TIME, int MASS, int CURRENT,
+         int TEMPERATURE, int CANDELA, int MONEY, int ANGLE, int PERCENTAGE,
+         int TICK, typename DBL, typename FACTOR>
 constexpr
 unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
      TICK, So, DBL, FACTOR>
 convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
-                    ANGLE, PERCENTAGE, TICK, Si, DBL, FACTOR>& val ){
-  //throw unimplemented?
+                    ANGLE, PERCENTAGE, TICK, Si, DBL, FACTOR>& ){
+  throw NotImplementedException();
 }
 
 template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-        int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
+        int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
         typename SYSTEM, typename DBL, typename FACTOR>
 constexpr
 unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
@@ -170,13 +180,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr
   unit( const other_type<S, D, F>& other )
-    : mValue( ( other.getRaw() * factor_type::denominator ) / factor_type::numerator ){
-  }
-
-  template<typename So, typename D, typename F, typename S>
-  constexpr
-  unit( const other_type<S, D, F>& other )
-    : mValue( convert<So>( other ).getValue() ){
+    : mValue( ( convert<SYSTEM>( other ).getRaw() * factor_type::denominator ) / factor_type::numerator ){
   }
 
   /*! Copy-assignment operator
