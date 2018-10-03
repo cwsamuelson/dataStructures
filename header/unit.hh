@@ -9,18 +9,7 @@
 #include<ratio.hh>
 #include<operators.hh>
 
-#include<exception>
-
 namespace gsw{
-
-
-class NotImplementedException : public std::logic_error
-{
-public:
-  NotImplementedException()
-    : std::logic_error( "Function not yet implemented." ){
-  }
-};
 
 /*!
  * a unit_system is like metric or imperial.  a particular variable can be of
@@ -49,9 +38,7 @@ constexpr
 unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
      TICK, So, DBL, FACTOR>
 convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
-                    ANGLE, PERCENTAGE, TICK, Si, DBL, FACTOR>& ){
-  throw NotImplementedException();
-}
+                    ANGLE, PERCENTAGE, TICK, Si, DBL, FACTOR>& );
 
 template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
         int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
@@ -797,18 +784,32 @@ using slug = mass<T, english, F>;
 template<typename T = double, typename F = ratio<1, 1> >
 using fahrenheit = temperature<T, english, F>;
 
-template<typename T1, typename T2, typename F1, typename F2>
+template<typename T, typename F>
 constexpr
-meters<T1, F1>
-convert( const feet<T2, F2>& val ){
+meters<T, F>
+convert( const feet<T, F>& val ){
   return val.getValue() * 0.30481;
 }
 
-template<typename T1, typename T2, typename F1, typename F2>
+template<typename T, typename F>
 constexpr
-feet<T1, F1>
-convert( const meters<T2, F2>& val ){
-  return val.getValue() * 3.28084;
+feet<T, F>
+convert( const meters<T, F>& val ){
+  return feet<T, F>( val.getRaw() * 3.28084 );
+}
+
+template<typename So, typename T, typename Si, typename F>
+constexpr
+tick<T, So, F>
+convert( const tick<T, Si, F>& val ){
+  return tick<T, So, F>( val.getRaw() );
+}
+
+template<typename So, typename T, typename Si, typename F>
+constexpr
+time<T, So, F>
+convert( const time<T, Si, F>& val ){
+  return time<T, So, F>( val.getRaw() );
 }
 
 /* floating point literals */
