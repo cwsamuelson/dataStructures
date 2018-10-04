@@ -5,7 +5,7 @@
 using namespace gsw;
 
 TEST_CASE( "Units participate in arithmetic", "[unit]" ){
-  using test_t = unit<1, 0, 0, 0, 0, 0, 0, 0>;
+  using test_t = unit<length_msr>;
 
   SECTION( "Units of same type can be added and subtracted" ){
     using kilovolt = voltage<double, kilo>;
@@ -62,7 +62,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
       test_t X = 2.0;
       test_t Y = 3.0;
-      unit<2, 0, 0, 0, 0, 0, 0, 0> Z;
+      unit<meas<2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0> > Z;
 
       Z = X * Y;
 
@@ -176,7 +176,8 @@ TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
 
 TEST_CASE( "Scheduler test", "[unit]" ){
   using int_time = gsw::time<unsigned long long, metric, milli>;
-  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, metric, unsigned long long, milli>;
+  using tick_rate = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0>;
+  using sched_tick_rate = unit<tick_rate, metric, unsigned long long, milli>;
   const tick<unsigned long long, metric> t = int_time( 50 ) / sched_tick_rate( 5 );
 
   REQUIRE( t == 10 );

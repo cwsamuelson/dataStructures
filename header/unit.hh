@@ -12,48 +12,6 @@
 namespace gsw{
 
 /*!
- * a unit_system is like metric or imperial.  a particular variable can be of
- * any system, and the systems can convert between each other.  This is to allow
- * syntax such as:
- * length<metric> meters;
- * length<english> feet;
- *
- * meters = 1;
- * feet = meters;
- *
- * REQUIRE( feet == 3.28 );
- */
-class metric{};
-class english{};
-
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
-         typename SYSTEM, typename DBL, typename FACTOR>
-class unit;
-
-template<typename So, typename Si, int LENGTH, int TIME, int MASS, int CURRENT,
-         int TEMPERATURE, int CANDELA, int MONEY, int ANGLE, int PERCENTAGE,
-         int TICK, typename DBL, typename FACTOR>
-constexpr
-unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
-     TICK, So, DBL, FACTOR>
-convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
-                    ANGLE, PERCENTAGE, TICK, Si, DBL, FACTOR>& );
-
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-        int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
-        typename SYSTEM, typename DBL, typename FACTOR>
-constexpr
-unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE,
-     TICK, SYSTEM, DBL, FACTOR>
-convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
-                    ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>& val ){
-  return val;
-}
-
-//! @todo add comparitive to unit?
-/*! Unit class that differentiates between different measurements.
- *
  * @tparam LENGTH  Distance
  *
  * @tparam TIME  Time
@@ -75,12 +33,11 @@ convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
  * @tparam TICK  Custom user type.  A common usage may be tick, but can be used
  *               for anything
  *
- * @tparam DBL  Internal storage type.
+ * @tparam MOLE Number of things.  1 mole is 6.02214*10^23
  *
- * @tparam FACTOR  Prefix factor.  Can be 1:1, 2:1, 1000:1, 1:1000 etc.  Allows
- *                 semantic storage of kilometers (km) and the like.
+ * @tparam BYTE Smallest addressable unit of data
  *
- * The value of LENGTH...TICK describe the exponent value for that parameter.
+ * The value of LENGTH...BYTE describe the exponent value for that parameter.
  * For example, to describe length, LENGTH will be set to 1, and the rest 0,
  * but to describe area LENGTH will be set to 2 (m^2), and the rest 0, and to
  * describe velocity/speed LENGTH will be set to 1, and TIME to -1 (m/s).
@@ -94,9 +51,126 @@ convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
  * special typedefs below, and using said values with other libraries, as those
  * will be using the defaults specified here.
  *
- * @todo add byte and mole?
+ */
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
+         int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
+         int MOLE, int BYTE>
+class meas{
+public:
+  static constexpr int length = LENGTH;
+  static constexpr int time = TIME;
+  static constexpr int mass = MASS;
+  static constexpr int current = CURRENT;
+  static constexpr int temperature = TEMPERATURE;
+  static constexpr int candela = CANDELA;
+  static constexpr int money = MONEY;
+  static constexpr int angle = ANGLE;
+  static constexpr int percentage = PERCENTAGE;
+  static constexpr int tick = TICK;
+  static constexpr int mole = MOLE;
+  static constexpr int byte = BYTE;
+};
+
+/*!
+ */
+template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
+         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
+         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
+         int MOLE1, int BYTE1,
+         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
+         int MOLE2, int BYTE2>
+meas<LENGTH1 + LENGTH2, TIME1 + TIME2, MASS1 + MASS2, CURRENT1 + CURRENT2,
+     TEMPERATURE1 + TEMPERATURE2, CANDELA1 + CANDELA2, MONEY1 + MONEY2,
+     ANGLE1 + ANGLE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2, MOLE1 + MOLE2,
+     BYTE1 + BYTE2>
+operator*( const meas<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
+                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, MOLE1, BYTE1>& lhs,
+           const meas<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
+                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, MOLE2, BYTE2>& rhs );
+
+/*!
+ */
+template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
+         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
+         int MOLE1, int BYTE1,
+         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
+         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
+         int MOLE2, int BYTE2>
+meas<LENGTH1 - LENGTH2, TIME1 - TIME2, MASS1 - MASS2, CURRENT1 - CURRENT2,
+     TEMPERATURE1 - TEMPERATURE2, CANDELA1 - CANDELA2, MONEY1 - MONEY2,
+     ANGLE1 - ANGLE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2, MOLE1 - MOLE2,
+     BYTE1 - BYTE2>
+operator/( const meas<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
+                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, MOLE1, BYTE1>& lhs,
+           const meas<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
+                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, MOLE2, BYTE2>& rhs );
+
+//                              d   t   m   c   T  l  M  a  p  k, ml, B
+using none_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
+using length_msr        = meas< 1,  0,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
+using mass_msr          = meas< 0,  0,  1,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
+using current_msr       = meas< 0,  0,  0,  1,  0, 0, 0, 0, 0, 0,  0, 0>;
+using temperature_msr   = meas< 0,  0,  0,  0,  1, 0, 0, 0, 0, 0,  0, 0>;
+using l_intensity_msr   = meas< 0,  0,  0,  0,  0, 1, 0, 0, 0, 0,  0, 0>;
+using money_msr         = meas< 0,  0,  0,  0,  0, 0, 1, 0, 0, 0,  0, 0>;
+using time_msr          = meas< 0,  1,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
+using tick_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 1,  0, 0>;
+using percent_msr       = meas< 0,  0,  0,  0,  0, 0, 0, 0, 1, 0,  0, 0>;
+using frequency_msr     = meas< 0, -1,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
+using angle_msr         = meas< 0,  0,  0,  0,  0, 0, 0, 1, 0, 0,  0, 0>;
+using solid_angle_msr   = meas< 0,  0,  0,  0,  0, 0, 0, 2, 0, 0,  0, 0>;
+using mole_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0,  1, 0>;
+using byte_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0,  0, 1>;
+using voltage_msr       = meas< 2, -3,  1, -1,  0, 0, 0, 0, 0, 0,  0, 0>;
+using resistance_msr    = meas< 2, -3,  1, -2,  0, 0, 0, 0, 0, 0,  0, 0>;
+using capacitance_msr   = meas<-2,  4, -1,  2,  0, 0, 0, 0, 0, 0,  0, 0>;
+using inductance_msr    = meas< 2, -2,  1, -2,  0, 0, 0, 0, 0, 0,  0, 0>;
+using charge_msr        = meas< 0,  1,  0,  1,  0, 0, 0, 0, 0, 0,  0, 0>;
+using mag_field_msr     = meas< 0, -2,  1,  1,  0, 0, 0, 0, 0, 0,  0, 0>;
+using elec_field_msr    = meas< 1, -3,  1, -1,  0, 0, 0, 0, 0, 0,  0, 0>;
+
+/*!
+ * a unit_system is like metric or imperial.  a particular variable can be of
+ * any system, and the systems can convert between each other.  This is to allow
+ * syntax such as:
+ * length<metric> meters;
+ * length<english> feet;
+ *
+ * meters = 1;
+ * feet = meters;
+ *
+ * REQUIRE( feet == 3.28 );
+ */
+class metric{};
+class english{};
+
+template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
+class unit;
+
+template<typename So, typename Si, typename MEAS, typename DBL, typename FACTOR>
+constexpr
+unit<MEAS, So, DBL, FACTOR>
+convert( const unit<MEAS, Si, DBL, FACTOR>& );
+
+template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
+constexpr
+unit<MEAS, SYSTEM, DBL, FACTOR>
+convert( const unit<MEAS, SYSTEM, DBL, FACTOR>& val ){
+  return val;
+}
+
+//! @todo add comparitive to unit?
+/*! Unit class that differentiates between different measurements.
+ *
+ * @tparam MEAS Unit of measurement in terms of length, time, mass etc.
+ *
+ * @tparam DBL  Internal storage type.
+ *
+ * @tparam FACTOR  Prefix factor.  Can be 1:1, 2:1, 1000:1, 1:1000 etc.  Allows
+ *                 semantic storage of kilometers (km) and the like.
+ *
  * @todo put implementation into a pimpl class?
- *        doing this may decrease the amount of code space increase through template
+ *        doing this may decrease the amount of code space increase per template
  *        insantiation. The problem stems from the fact that each instance of a
  *        template is a unique class with a unique definition, and unique code
  *        space. what that means for this class is that each unit and each type
@@ -107,17 +181,10 @@ convert( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY,
  *        only really increases when a different storage type is used.
  *
  */
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-class unit : public additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
-                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> >,
-                    additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
-                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>,
-                                  DBL>,
-                    multiplicative<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA,
-                                        MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>,
-                                        DBL>{
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
+class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR> >,
+                    additive<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>,
+                    multiplicative<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>{
 public:
   /*! Storage type
    */
@@ -130,13 +197,7 @@ public:
   /*! Convenience type used for conversion between storage and factor types
    */
   template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type>
-  using other_type = unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA,
-                          MONEY, ANGLE, PERCENTAGE, TICK, S_t, D_t, F_t>;
-
-  //! @todo provide static constexpr aliases to types
-  // done something like:
-  // static constexpr int CURRENCY = MONEY;
-  // primary problem is to find names for these aliases that aren't the param names
+  using other_type = unit<MEAS, S_t, D_t, F_t>;
 
 private:
   value_type mValue;
@@ -578,48 +639,56 @@ public:
   }
 };
 
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>
-operator*( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
-  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> cp( u );
+/*!
+ * @param u
+ * @param d
+ */
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<MEAS, SYSTEM, DBL, FACTOR>
+operator*( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
 
   cp *= d;
 
   return cp;
 }
 
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, DBL, FACTOR>
-operator*( const DBL& d, const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>& u ){
-  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> cp( u );
+/*!
+ * @param d
+ * @param u
+ */
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<MEAS, SYSTEM, DBL, FACTOR>
+operator*( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
 
   cp *= d;
 
   return cp;
 }
 
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>
-operator/( const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
-  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> cp( u );
+/*!
+ * @param u
+ * @param d
+ */
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<MEAS, SYSTEM, DBL, FACTOR>
+operator/( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
 
   cp /= d;
 
   return cp;
 }
 
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>
-operator/( const DBL& d, const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR>& u ){
-  unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, SYSTEM, DBL, FACTOR> cp( u );
+/*!
+ * @param d
+ * @param u
+ */
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
+unit<MEAS, SYSTEM, DBL, FACTOR>
+operator/( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
 
   cp /= d;
 
@@ -634,23 +703,15 @@ operator/( const DBL& d, const unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CA
  *
  * @return Returns a 3rd type, where each template parameter is the sum of the
  *         equivalent parameters of the lhs and rhs.
- *
  */
-template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
-         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
-         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
-         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
+template<typename MEAS1, typename MEAS2,
          typename S_t1, typename S_t2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
-unit<LENGTH1 + LENGTH2, TIME1 + TIME2, MASS1 + MASS2, CURRENT1 + CURRENT2,
-     TEMPERATURE1 + TEMPERATURE2, CANDELA1 + CANDELA2, MONEY1 + MONEY2, ANGLE1 + ANGLE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2,
-     S_t1, D_t1, decltype( F_t1() * F_t2() )>
-operator*( const unit<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
-                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, S_t1, D_t1, F_t1>& lhs,
-           const unit<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
-                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, S_t2, D_t2, F_t2>& rhs ){
+unit<decltype( MEAS1() * MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
+operator*( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
+           const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
   return lhs.getValue() * rhs.getValue();
 }
 
@@ -662,54 +723,49 @@ operator*( const unit<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
  *
  * @return Returns a 3rd type, where each template parameter is the difference
  *         of the equivalent parameters of the lhs and rhs.
- *
  */
-template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
-         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
-         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
-         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
+template<typename MEAS1, typename MEAS2,
          typename S_t1, typename S_t2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
-unit<LENGTH1 - LENGTH2, TIME1 - TIME2, MASS1 - MASS2, CURRENT1 - CURRENT2,
-     TEMPERATURE1 - TEMPERATURE2, CANDELA1 - CANDELA2, MONEY1 - MONEY2, ANGLE1 - ANGLE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2,
-     S_t1, D_t1, decltype( F_t1() / F_t2() )>
-operator/( const unit<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
-                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, S_t1, D_t1, F_t1>& lhs,
-           const unit<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
-                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, S_t2, D_t2, F_t2>& rhs ){
+unit<decltype( MEAS1() / MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
+operator/( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
+           const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
   return lhs.getValue() / rhs.getValue();
 }
 
-//                          d   t   m   c   T  l  M  a  p  k
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using none          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0, S, T, F>;
+using none          = unit<none_msr, S, T, F>;
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using length        = unit< 1,  0,  0,  0,  0, 0, 0, 0, 0, 0, S, T, F>;//meters
+using length        = unit<length_msr, S, T, F>;//meters
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using mass          = unit< 0,  0,  1,  0,  0, 0, 0, 0, 0, 0, S, T, F>;//kg
+using mass          = unit<mass_msr, S, T, F>;//kg
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using current       = unit< 0,  0,  0,  1,  0, 0, 0, 0, 0, 0, S, T, F>;//amps
+using current       = unit<current_msr, S, T, F>;//amps
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using temperature   = unit< 0,  0,  0,  0,  1, 0, 0, 0, 0, 0, S, T, F>;//kelvin
+using temperature   = unit<temperature_msr, S, T, F>;//kelvin
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using l_intensity   = unit< 0,  0,  0,  0,  0, 1, 0, 0, 0, 0, S, T, F>;//luminous intensity, candela
+using l_intensity   = unit<l_intensity_msr, S, T, F>;//luminous intensity, candela
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using money         = unit< 0,  0,  0,  0,  0, 0, 1, 0, 0, 0, S, T, F>;//dolla dolla bills
+using money         = unit<money_msr, S, T, F>;//dolla dolla bills
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using time          = unit< 0,  1,  0,  0,  0, 0, 0, 0, 0, 0, S, T, F>;//seconds
+using time          = unit<time_msr, S, T, F>;//seconds
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using tick          = unit< 0,  0,  0,  0,  0, 0, 0, 0, 0, 1, S, T, F>;
+using tick          = unit<tick_msr, S, T, F>;
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using percent       = unit< 0,  0,  0,  0,  0, 0, 0, 0, 1, 0, S, T, F>;//%
+using percent       = unit<percent_msr, S, T, F>;//%
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using frequency     = unit< 0, -1,  0,  0,  0, 0, 0, 0, 0, 0, S, T, F>;//hz
+using frequency     = unit<frequency_msr, S, T, F>;//hz
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using angle         = unit< 0,  0,  0,  0,  0, 0, 0, 1, 0, 0, S, T, F>;//degrees
+using angle         = unit<angle_msr, S, T, F>;//degrees
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using solid_angle   = unit< 0,  0,  0,  0,  0, 0, 0, 2, 0, 0, S, T, F>;
+using solid_angle   = unit<solid_angle_msr, S, T, F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
+using mole          = unit<mole_msr, S, T, F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
+using byte          = unit<byte_msr, S, T, F>;
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using area          = decltype( length<T, S, F>() * length<T, S, F>() );
@@ -739,15 +795,15 @@ template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using power         = decltype( energy<T, S, F>() / time<T, S, F>() );//watts
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, 0, 0, S, T, F>;//volts
+using voltage       = unit<voltage_msr, S, T, F>;//volts
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using resistance    = unit< 2, -3,  1, -2,  0, 0, 0, 0, 0, 0, S, T, F>;//ohms
+using resistance    = unit<resistance_msr, S, T, F>;//ohms
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using capacitance   = unit<-2,  4, -1,  2,  0, 0, 0, 0, 0, 0, S, T, F>;//farad
+using capacitance   = unit<capacitance_msr, S, T, F>;//farad
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using inductance    = unit< 2, -2,  1, -2,  0, 0, 0, 0, 0, 0, S, T, F>;//henrys
+using inductance    = unit<inductance_msr, S, T, F>;//henrys
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using charge        = unit< 0,  1,  0,  1,  0, 0, 0, 0, 0, 0, S, T, F>;//coulomb
+using charge        = unit<charge_msr, S, T, F>;//coulomb
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using resistivity   = decltype( resistance<T, S, F>() * length<T, S, F>() );//ohm*meter
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
@@ -756,9 +812,9 @@ template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using conductance   = decltype( conductivity<T, S, F>() * length<T, S, F>() );
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using mag_field     = unit< 0, -2,  1,  1,  0, 0, 0, 0, 0, 0, S, T, F>;//tesla
+using mag_field     = unit<mag_field_msr, S, T, F>;//tesla
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using elec_field    = unit< 1, -3,  1, -1,  0, 0, 0, 0, 0, 0, S, T, F>;
+using elec_field    = unit<elec_field_msr, S, T, F>;
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using specificHeat  = decltype( energy<T, S, F>() / temperature<T, S, F>() );
