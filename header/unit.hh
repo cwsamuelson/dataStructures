@@ -75,8 +75,8 @@ public:
  */
 template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
          int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
-         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
          int MOLE1, int BYTE1,
+         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
          int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
          int MOLE2, int BYTE2>
 meas<LENGTH1 + LENGTH2, TIME1 + TIME2, MASS1 + MASS2, CURRENT1 + CURRENT2,
@@ -106,28 +106,28 @@ operator/( const meas<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
                       CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, MOLE2, BYTE2>& rhs );
 
 //                              d   t   m   c   T  l  M  a  p  k, ml, B
-using none_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
-using length_msr        = meas< 1,  0,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
-using mass_msr          = meas< 0,  0,  1,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
-using current_msr       = meas< 0,  0,  0,  1,  0, 0, 0, 0, 0, 0,  0, 0>;
-using temperature_msr   = meas< 0,  0,  0,  0,  1, 0, 0, 0, 0, 0,  0, 0>;
-using l_intensity_msr   = meas< 0,  0,  0,  0,  0, 1, 0, 0, 0, 0,  0, 0>;
-using money_msr         = meas< 0,  0,  0,  0,  0, 0, 1, 0, 0, 0,  0, 0>;
-using time_msr          = meas< 0,  1,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
-using tick_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 1,  0, 0>;
-using percent_msr       = meas< 0,  0,  0,  0,  0, 0, 0, 0, 1, 0,  0, 0>;
-using frequency_msr     = meas< 0, -1,  0,  0,  0, 0, 0, 0, 0, 0,  0, 0>;
-using angle_msr         = meas< 0,  0,  0,  0,  0, 0, 0, 1, 0, 0,  0, 0>;
-using solid_angle_msr   = meas< 0,  0,  0,  0,  0, 0, 0, 2, 0, 0,  0, 0>;
-using mole_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0,  1, 0>;
-using byte_msr          = meas< 0,  0,  0,  0,  0, 0, 0, 0, 0, 0,  0, 1>;
-using voltage_msr       = meas< 2, -3,  1, -1,  0, 0, 0, 0, 0, 0,  0, 0>;
-using resistance_msr    = meas< 2, -3,  1, -2,  0, 0, 0, 0, 0, 0,  0, 0>;
-using capacitance_msr   = meas<-2,  4, -1,  2,  0, 0, 0, 0, 0, 0,  0, 0>;
-using inductance_msr    = meas< 2, -2,  1, -2,  0, 0, 0, 0, 0, 0,  0, 0>;
-using charge_msr        = meas< 0,  1,  0,  1,  0, 0, 0, 0, 0, 0,  0, 0>;
-using mag_field_msr     = meas< 0, -2,  1,  1,  0, 0, 0, 0, 0, 0,  0, 0>;
-using elec_field_msr    = meas< 1, -3,  1, -1,  0, 0, 0, 0, 0, 0,  0, 0>;
+using none_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
+using length_msr      = meas< 1,  0,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
+using mass_msr        = meas< 0,  0,  1,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
+using current_msr     = meas< 0,  0,  0,  1, 0, 0, 0, 0, 0, 0,  0, 0>;
+using temperature_msr = meas< 0,  0,  0,  0, 1, 0, 0, 0, 0, 0,  0, 0>;
+using l_intensity_msr = meas< 0,  0,  0,  0, 0, 1, 0, 0, 0, 0,  0, 0>;
+using money_msr       = meas< 0,  0,  0,  0, 0, 0, 1, 0, 0, 0,  0, 0>;
+using time_msr        = meas< 0,  1,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
+using tick_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 1,  0, 0>;
+using percent_msr     = meas< 0,  0,  0,  0, 0, 0, 0, 0, 1, 0,  0, 0>;
+using frequency_msr   = meas< 0, -1,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
+using angle_msr       = meas< 0,  0,  0,  0, 0, 0, 0, 1, 0, 0,  0, 0>;
+using solid_angle_msr = meas< 0,  0,  0,  0, 0, 0, 0, 2, 0, 0,  0, 0>;
+using mole_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 0,  1, 0>;
+using byte_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 0,  0, 1>;
+using voltage_msr     = meas< 2, -3,  1, -1, 0, 0, 0, 0, 0, 0,  0, 0>;
+using resistance_msr  = meas< 2, -3,  1, -2, 0, 0, 0, 0, 0, 0,  0, 0>;
+using capacitance_msr = meas<-2,  4, -1,  2, 0, 0, 0, 0, 0, 0,  0, 0>;
+using inductance_msr  = meas< 2, -2,  1, -2, 0, 0, 0, 0, 0, 0,  0, 0>;
+using charge_msr      = meas< 0,  1,  0,  1, 0, 0, 0, 0, 0, 0,  0, 0>;
+using mag_field_msr   = meas< 0, -2,  1,  1, 0, 0, 0, 0, 0, 0,  0, 0>;
+using elec_field_msr  = meas< 1, -3,  1, -1, 0, 0, 0, 0, 0, 0,  0, 0>;
 
 /*!
  * a unit_system is like metric or imperial.  a particular variable can be of
@@ -164,6 +164,8 @@ convert( const unit<MEAS, SYSTEM, DBL, FACTOR>& val ){
  *
  * @tparam MEAS Unit of measurement in terms of length, time, mass etc.
  *
+ * @tparam SYSTEM System of measurement, (i.e. metric or english)
+ *
  * @tparam DBL  Internal storage type.
  *
  * @tparam FACTOR  Prefix factor.  Can be 1:1, 2:1, 1000:1, 1:1000 etc.  Allows
@@ -179,7 +181,6 @@ convert( const unit<MEAS, SYSTEM, DBL, FACTOR>& val ){
  *        use a base class or pointer to an implementation class.  the class will take
  *        a storage type and ratio factor only(maybe only storage?), so that code space
  *        only really increases when a different storage type is used.
- *
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR> >,
@@ -807,7 +808,7 @@ using charge        = unit<charge_msr, S, T, F>;//coulomb
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using resistivity   = decltype( resistance<T, S, F>() * length<T, S, F>() );//ohm*meter
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using conductivity  = decltype( none<T, S, F>( 1 ) / resistivity<T, S, F>() );//siemens/meter
+using conductivity  = decltype( none<T, S, F>() / resistivity<T, S, F>() );//siemens/meter
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
 using conductance   = decltype( conductivity<T, S, F>() * length<T, S, F>() );
 
@@ -840,13 +841,15 @@ using slug = mass<T, english, F>;
 template<typename T = double, typename F = ratio<1, 1> >
 using fahrenheit = temperature<T, english, F>;
 
+/* english->metric */
 template<typename T, typename F>
 constexpr
 meters<T, F>
 convert( const feet<T, F>& val ){
-  return val.getValue() * 0.30481;
+  return meters<T, F>( val.getRaw() * 0.30481 );
 }
 
+/* metric->english */
 template<typename T, typename F>
 constexpr
 feet<T, F>
@@ -854,6 +857,7 @@ convert( const meters<T, F>& val ){
   return feet<T, F>( val.getRaw() * 3.28084 );
 }
 
+/* unity conversions */
 template<typename So, typename T, typename Si, typename F>
 constexpr
 tick<T, So, F>
