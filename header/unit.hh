@@ -849,12 +849,40 @@ convert( const feet<T, F>& val ){
   return meters<T, F>( val.getRaw() * 0.30481 );
 }
 
+template<typename T, typename F>
+constexpr
+celsius<T, F>
+convert( const fahrenheit<T, F>& val ){
+  return celsius<T, F>( ( val.getRaw() - 32 ) * ( 5 / 9 ) );
+}
+
+template<typename T, typename F>
+constexpr
+gram<T, F>
+convert( const slug<T, F>& val ){
+  return gram<T, F>( val.getRaw() * 14593.9 );
+}
+
 /* metric->english */
 template<typename T, typename F>
 constexpr
 feet<T, F>
 convert( const meters<T, F>& val ){
   return feet<T, F>( val.getRaw() * 3.28084 );
+}
+
+template<typename T, typename F>
+constexpr
+fahrenheit<T, F>
+convert( const celsius<T, F>& val ){
+  return fahrenheit<T, F>( ( val.getRaw() * ( 9 / 5 ) ) + 32 );
+}
+
+template<typename T, typename F>
+constexpr
+slug<T, F>
+convert( const gram<T, F>& val ){
+  return slug<T, F>( val.getRaw() / 14593.9 );
 }
 
 /* unity conversions */
@@ -870,6 +898,27 @@ constexpr
 time<T, So, F>
 convert( const time<T, Si, F>& val ){
   return time<T, So, F>( val.getRaw() );
+}
+
+template<typename So, typename T, typename Si, typename F>
+constexpr
+percent<T, So, F>
+convert( const percent<T, Si, F>& val ){
+  return percent<T, So, F>( val.getRaw() );
+}
+
+template<typename So, typename T, typename Si, typename F>
+constexpr
+frequency<T, So, F>
+convert( const frequency<T, Si, F>& val ){
+  return frequency<T, So, F>( val.getRaw() );
+}
+
+template<typename So, typename T, typename Si, typename F>
+constexpr
+current<T, So, F>
+convert( const current<T, Si, F>& val ){
+  return current<T, So, F>( val.getRaw() );
 }
 
 /* floating point literals */
