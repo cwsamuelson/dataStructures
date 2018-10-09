@@ -107,6 +107,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     REQUIRE( I == 6.0 );
     REQUIRE( kv == 3.0 );
     REQUIRE( kv.getRaw() == 3000.0 );
+    REQUIRE( kv.getValue() == 3.0 );
     REQUIRE( kv == voltage<double>( 3000 ) );
   }
 
@@ -197,4 +198,20 @@ TEST_CASE( "Some units provide literal suffixes", "[unit]" ){
   REQUIRE( ( 0_temp + temperature<unsigned long long>( 3 ) ) == 3 );
   REQUIRE( ( 0_t    + gsw::time<unsigned long long>( 3 ) )   == 3 );
   REQUIRE( 3_A * 4_R == 12_V );
+}
+
+TEST_CASE( "Handles different unit systems", "[unit]" ){
+  SECTION( "Can convert between unit systems" ){
+    celsius<> c( 0 );
+    fahrenheit<> f( c );
+
+    REQUIRE( f.getRaw() == 32 );
+    f = -40;
+    c = f;
+    REQUIRE( c.getRaw() == -40 );
+  }
+
+  SECTION( "Handles custom unit systems" ){
+
+  }
 }
