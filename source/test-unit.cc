@@ -27,7 +27,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Constants can interact with a type" ){
-    using kilovolt = voltage<double, kilo>;
+    using kilovolt = voltage<double, metric, kilo>;
     kilovolt kv( 12 );
 
     REQUIRE( kv + 3 == kilovolt( 15 ) );
@@ -214,4 +214,41 @@ TEST_CASE( "Handles different unit systems", "[unit]" ){
   SECTION( "Handles custom unit systems" ){
 
   }
+}
+
+TEST_CASE( "Converts between systems, and types and factors" , "[unit]" ){
+  feet<> f1( 3 );
+  meters<> m1( 3 );
+
+  feet<> f2( f1 );
+  meters<> m2( f1 );
+
+  feet<> f3( m1 );
+  meters<> m3( m1 );
+
+  feet<int> f4( f1 );
+  meters<int> m4( f1 );
+
+  feet<int> f5( m1 );
+  meters<int> m5( m1 );
+
+  feet<double, ratio<5280, 1> > f6( f1 );
+  meters<double, ratio<1000, 1> > m6( f1 );
+
+  feet<double, ratio<5280, 1> > f7( m1 );
+  meters<double, ratio<1000, 1> > m7( m1 );
+
+  feet<int, ratio<5280, 1> > f8( f1 );
+  meters<int, ratio<1000, 1> > m8( f1 );
+
+  feet<int, ratio<5280, 1> > f9( m1 );
+  meters<int, ratio<1000, 1> > m9( m1 );
+
+  REQUIRE( f1 == f2 );
+  REQUIRE( m1 == m2 );
+
+  REQUIRE( f1 == f4 );
+  REQUIRE( m1 == m4 );
+
+  //@todo add more tests for this
 }

@@ -9,6 +9,8 @@
 #include<ratio.hh>
 #include<operators.hh>
 
+#include<type_traits>
+
 namespace gsw{
 
 /*!
@@ -147,17 +149,59 @@ class english{};
 template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
 class unit;
 
-template<typename So, typename Si, typename MEAS, typename DBL, typename FACTOR>
-constexpr
-unit<MEAS, So, DBL, FACTOR>
-convert( const unit<MEAS, Si, DBL, FACTOR>& );
+template<typename M, typename Si, typename So, typename Ti, typename To, typename Fi, typename Fo>
+class converter_base{
+public:
+  using measure = M;
+  using sys_in = Si;
+  using sys_out = So;
+  using T_in = Ti;
+  using T_out = To;
+  using factor_in = Fi;
+  using factor_out = Fo;
+  using conversion_factor = decltype( factor_in() * factor_out().invert() );
+  using input = unit<measure, sys_in, T_in, factor_in>;
+  using result = unit<measure, sys_out, T_out, factor_out>;
 
-template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
-constexpr
-unit<MEAS, SYSTEM, DBL, FACTOR>
-convert( const unit<MEAS, SYSTEM, DBL, FACTOR>& val ){
-  return val;
-}
+  auto
+  conversion_ratio(){
+    return conversion_factor();
+  }
+};
+
+template<typename M, typename Si, typename So, typename Ti, typename To, typename Fi, typename Fo, typename Enable = void>
+class converter
+      : public converter_base<M, Si, So, Ti, To, Fi, Fo>{
+public:
+  using base = converter_base<M, Si, So, Ti, To, Fi, Fo>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return unit<typename base::measure, typename base::sys_in,
+                typename base::T_out, typename base::factor_out>
+                  ( val.getRaw() * base::conversion_ratio() );
+  }
+};
+
+template<typename M, typename S, typename T, typename F>
+class converter<M, S, S, T, T, F, F>
+      : public converter_base<M, S, S, T, T, F, F>{
+public:
+  using base = converter_base<M, S, S, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return val;
+  }
+};
 
 //! @todo add comparitive to unit?
 /*! Unit class that differentiates between different measurements.
@@ -203,6 +247,11 @@ public:
 private:
   value_type mValue;
 
+  /*!
+   */
+  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type>
+  using convert_type = converter<MEAS, S_t, SYSTEM, D_t, DBL, F_t, FACTOR>;
+
 public:
   /*! Ctor sets initial internal value
    *
@@ -229,7 +278,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr
   unit( const other_type<S, D, F>& other )
-    : mValue( ( convert<SYSTEM>( other ).getRaw() * factor_type::denominator ) / factor_type::numerator ){
+    : mValue( convert_type<S, D, F>()( other ).getRaw() ){
   }
 
   /*! Copy-assignment operator
@@ -250,7 +299,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr unit&
   operator=( const other_type<S, D, F>& other ){
-    mValue = other.getRaw() * typename factor_type::invert_type();
+    mValue = convert_type<S, D, F>()( other ).getRaw() * typename factor_type::invert_type();
 
     return *this;
   }
@@ -286,7 +335,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr bool
   operator==( const other_type<S, D, F>& other ) const{
-    return getRaw() == other.getRaw();
+    return getRaw() == convert_type<S, D, F>()( other ).getRaw();
   }
 
   /*! Inequality comparison operator
@@ -322,7 +371,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr bool
   operator<( const other_type<S, D, F>& other ) const{
-    return getRaw() < other.getRaw();
+    return getRaw() < convert_type<S, D, F>()( other ).getRaw();
   }
 
   /*! Greater than comparison operator
@@ -339,7 +388,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr bool
   operator>( const other_type<S, D, F>& other ) const{
-    return getRaw() > other.getRaw();
+    return getRaw() > convert_type<S, D, F>()( other ).getRaw();
   }
 
   /*! LE comparison operator
@@ -501,7 +550,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr unit&
   operator+=( const other_type<S, D, F>& other ){
-    mValue = ( getRaw() + other.getRaw() ) / factor_type::value;
+    mValue = ( getRaw() + convert_type<S, D, F>()( other ).getRaw() ) / factor_type::value;
 
     return *this;
   }
@@ -522,7 +571,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr auto
   operator+( const other_type<S, D, F>& other ) const{
-    return unit( *this ) += other;
+    return unit( *this ) += convert_type<S, D, F>()( other );
   }
 
   /*! Subtraction-assignment operator
@@ -537,7 +586,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr unit&
   operator-=( const other_type<S, D, F>& other ){
-    mValue = ( getRaw() - other.getRaw() ) / factor_type::value;
+    mValue = ( getRaw() - convert_type<S, D, F>()( other ).getRaw() ) / factor_type::value;
 
     return *this;
   }
@@ -558,7 +607,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr auto
   operator-( const other_type<S, D, F>& other ) const{
-    return unit( *this ) -= other;
+    return unit( *this ) -= convert_type<S, D, F>()( other );
   }
 
   /*! Add-assignment operator
@@ -713,7 +762,7 @@ constexpr
 unit<decltype( MEAS1() * MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
 operator*( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
            const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
-  return lhs.getValue() * rhs.getValue();
+  return lhs.getValue() * converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t1, F_t1>()( rhs ).getValue();
 }
 
 /*! Division operator
@@ -733,7 +782,7 @@ constexpr
 unit<decltype( MEAS1() / MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
 operator/( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
            const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
-  return lhs.getValue() / rhs.getValue();
+  return lhs.getValue() / converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t1, F_t1>()( rhs ).getValue();
 }
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
@@ -843,83 +892,189 @@ using fahrenheit = temperature<T, english, F>;
 
 /* english->metric */
 template<typename T, typename F>
-constexpr
-meters<T, F>
-convert( const feet<T, F>& val ){
-  return meters<T, F>( val.getRaw() * 0.30481 );
-}
+class converter<length_msr, english, metric, T, T, F, F>
+      : public converter_base<length_msr, english, metric, T, T, F, F>{
+public:
+  using base = converter_base<length_msr, english, metric, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() * 0.30481 );
+  }
+};
 
 template<typename T, typename F>
-constexpr
-celsius<T, F>
-convert( const fahrenheit<T, F>& val ){
-  return celsius<T, F>( ( val.getRaw() - 32 ) * ( 5 / 9 ) );
-}
+class converter<temperature_msr, english, metric, T, T, F, F>
+      : public converter_base<temperature_msr, english, metric, T, T, F, F>{
+public:
+  using base = converter_base<temperature_msr, english, metric, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( ( val.getRaw() - 32 ) * ( 5 / 9 ) );
+  }
+};
 
 template<typename T, typename F>
-constexpr
-gram<T, F>
-convert( const slug<T, F>& val ){
-  return gram<T, F>( val.getRaw() * 14593.9 );
-}
+class converter<mass_msr, english, metric, T, T, F, F>
+      : public converter_base<mass_msr, english, metric, T, T, F, F>{
+public:
+  using base = converter_base<mass_msr, english, metric, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() * 14593.9 );
+  }
+};
 
 /* metric->english */
 template<typename T, typename F>
-constexpr
-feet<T, F>
-convert( const meters<T, F>& val ){
-  return feet<T, F>( val.getRaw() * 3.28084 );
-}
+class converter<length_msr, metric, english, T, T, F, F>
+      : public converter_base<length_msr, metric, english, T, T, F, F>{
+public:
+  using base = converter_base<length_msr, metric, english, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() * 3.28084 );
+  }
+};
 
 template<typename T, typename F>
-constexpr
-fahrenheit<T, F>
-convert( const celsius<T, F>& val ){
-  return fahrenheit<T, F>( ( val.getRaw() * ( 9 / 5 ) ) + 32 );
-}
+class converter<temperature_msr, metric, english, T, T, F, F>
+      : public converter_base<temperature_msr, metric, english, T, T, F, F>{
+public:
+  using base = converter_base<temperature_msr, metric, english, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( ( val.getRaw() * ( 9 / 5 ) ) + 32 );
+  }
+};
 
 template<typename T, typename F>
-constexpr
-slug<T, F>
-convert( const gram<T, F>& val ){
-  return slug<T, F>( val.getRaw() / 14593.9 );
-}
+class converter<mass_msr, metric, english, T, T, F, F>
+      : public converter_base<mass_msr, metric, english, T, T, F, F>{
+public:
+  using base = converter_base<mass_msr, metric, english, T, T, F, F>;
 
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() / 14593.9 );
+  }
+};
+
+//@todo should the unity conversions be /ANY/ system?
+// probably not
 /* unity conversions */
-template<typename So, typename T, typename Si, typename F>
-constexpr
-tick<T, So, F>
-convert( const tick<T, Si, F>& val ){
-  return tick<T, So, F>( val.getRaw() );
-}
+template<typename Si, typename So, typename T, typename F>
+class converter<tick_msr, Si, So, T, T, F, F,
+                typename std::enable_if<!std::is_same<Si, So>::value>::type>
+      : public converter_base<tick_msr, Si, So, T, T, F, F>{
+public:
+  using base = converter_base<tick_msr, Si, So, T, T, F, F>;
 
-template<typename So, typename T, typename Si, typename F>
-constexpr
-time<T, So, F>
-convert( const time<T, Si, F>& val ){
-  return time<T, So, F>( val.getRaw() );
-}
+  constexpr
+  converter() = default;
 
-template<typename So, typename T, typename Si, typename F>
-constexpr
-percent<T, So, F>
-convert( const percent<T, Si, F>& val ){
-  return percent<T, So, F>( val.getRaw() );
-}
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() );
+  }
+};
 
-template<typename So, typename T, typename Si, typename F>
-constexpr
-frequency<T, So, F>
-convert( const frequency<T, Si, F>& val ){
-  return frequency<T, So, F>( val.getRaw() );
-}
+template<typename Si, typename So, typename T, typename F>
+class converter<time_msr, Si, So, T, T, F, F,
+                typename std::enable_if<!std::is_same<Si, So>::value>::type>
+      : public converter_base<time_msr, Si, So, T, T, F, F>{
+public:
+  using base = converter_base<time_msr, Si, So, T, T, F, F>;
 
-template<typename So, typename T, typename Si, typename F>
-constexpr
-current<T, So, F>
-convert( const current<T, Si, F>& val ){
-  return current<T, So, F>( val.getRaw() );
-}
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() );
+  }
+};
+
+template<typename Si, typename So, typename T, typename F>
+class converter<percent_msr, Si, So, T, T, F, F,
+                typename std::enable_if<!std::is_same<Si, So>::value>::type>
+      : public converter_base<percent_msr, Si, So, T, T, F, F>{
+public:
+  using base = converter_base<percent_msr, Si, So, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() );
+  }
+};
+
+template<typename Si, typename So, typename T, typename F>
+class converter<frequency_msr, Si, So, T, T, F, F,
+                typename std::enable_if<!std::is_same<Si, So>::value>::type>
+      : public converter_base<frequency_msr, Si, So, T, T, F, F>{
+public:
+  using base = converter_base<frequency_msr, Si, So, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() );
+  }
+};
+
+template<typename Si, typename So, typename T, typename F>
+class converter<current_msr, Si, So, T, T, F, F,
+                typename std::enable_if<!std::is_same<Si, So>::value>::type>
+      : public converter_base<current_msr, Si, So, T, T, F, F>{
+public:
+  using base = converter_base<current_msr, Si, So, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() );
+  }
+};
 
 /* floating point literals */
 constexpr auto operator""_0( long double val ){
