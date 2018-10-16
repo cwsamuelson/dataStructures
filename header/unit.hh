@@ -6,10 +6,10 @@
  * @example test-unit.cc
  */
 
+#include<type_traits>
+
 #include<ratio.hh>
 #include<operators.hh>
-
-#include<type_traits>
 
 namespace gsw{
 
@@ -149,7 +149,9 @@ class english{};
 template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
 class unit;
 
-template<typename M, typename Si, typename So, typename Ti, typename To, typename Fi, typename Fo>
+template<typename M, typename Si, typename So,
+                     typename Ti, typename To,
+                     typename Fi, typename Fo>
 class converter_base{
 public:
   using measure = M;
@@ -169,7 +171,9 @@ public:
   }
 };
 
-template<typename M, typename Si, typename So, typename Ti, typename To, typename Fi, typename Fo, typename Enable = void>
+template<typename M, typename Si, typename So,
+                     typename Ti, typename To,
+                     typename Fi, typename Fo, typename Enable = void>
 class converter
       : public converter_base<M, Si, So, Ti, To, Fi, Fo>{
 public:
@@ -208,7 +212,7 @@ public:
  *
  * @tparam MEAS Unit of measurement in terms of length, time, mass etc.
  *
- * @tparam SYSTEM System of measurement, (i.e. metric or english)
+ * @tparam SYSTEM System of measurement, (i.e. metric, english, etc)
  *
  * @tparam DBL  Internal storage type.
  *
