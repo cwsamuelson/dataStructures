@@ -200,6 +200,44 @@ TEST_CASE( "Some units provide literal suffixes", "[unit]" ){
   REQUIRE( 3_A * 4_R == 12_V );
 }
 
+class custom_system1{};
+class custom_system2{};
+
+using custom_unit1 = unit<length_msr, custom_system1, double, unity>;
+using custom_unit2 = unit<length_msr, custom_system2, double, unity>;
+
+template<typename T, typename F>
+class converter<length_msr, custom_system1, custom_system2, T, T, F, F>
+      : public converter_base<length_msr, custom_system1, custom_system2, T, T, F, F>{
+public:
+  using base = converter_base<length_msr, custom_system1, custom_system2, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() / 5 );
+  }
+};
+
+template<typename T, typename F>
+class converter<length_msr, custom_system2, custom_system1, T, T, F, F>
+      : public converter_base<length_msr, custom_system2, custom_system1, T, T, F, F>{
+public:
+  using base = converter_base<length_msr, custom_system2, custom_system1, T, T, F, F>;
+
+  constexpr
+  converter() = default;
+
+  constexpr
+  typename base::result
+  operator()( const typename base::input& val ){
+    return typename base::result( val.getRaw() * 5 );
+  }
+};
+
 TEST_CASE( "Handles different unit systems", "[unit]" ){
   SECTION( "Can convert between unit systems" ){
     celsius<> c( 0 );
@@ -212,7 +250,10 @@ TEST_CASE( "Handles different unit systems", "[unit]" ){
   }
 
   SECTION( "Handles custom unit systems" ){
+    custom_unit1 cu1( 5 );
+    custom_unit2 cu2( 1 );
 
+    REQUIRE( cu1 == cu2 );
   }
 }
 
