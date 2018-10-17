@@ -266,6 +266,13 @@ public:
     : mValue( val ){
   }
 
+  /*!
+   */
+  constexpr explicit
+  operator value_type() const{
+    return mValue;
+  }
+
   /*! Copy ctor
    *
    * @tparam D  Storage type for other.  Can be anything that can convert into
