@@ -5,7 +5,7 @@
 using namespace gsw;
 
 TEST_CASE( "Units participate in arithmetic", "[unit]" ){
-  using test_t = unit<1, 0, 0, 0, 0, 0, 0, 0>;
+  using test_t = unit<length_msr>;
 
   SECTION( "Units of same type can be added and subtracted" ){
     using kilovolt = voltage<double, kilo>;
@@ -27,7 +27,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Constants can interact with a type" ){
-    using kilovolt = voltage<double, kilo>;
+    using kilovolt = voltage<double, metric, kilo>;
     kilovolt kv( 12 );
 
     REQUIRE( kv + 3 == kilovolt( 15 ) );
@@ -62,7 +62,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
       test_t X = 2.0;
       test_t Y = 3.0;
-      unit<2, 0, 0, 0, 0, 0, 0, 0> Z;
+      unit<meas<2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0> > Z;
 
       Z = X * Y;
 
@@ -96,7 +96,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
   }
 
   SECTION( "Unit prefixes can be used" ){
-    using kiloVolt = voltage<double, kilo>;
+    using kiloVolt = voltage<double, metric, kilo>;
     resistance<> r( 500 );
     kiloVolt kv( 3 );
 
@@ -107,6 +107,7 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     REQUIRE( I == 6.0 );
     REQUIRE( kv == 3.0 );
     REQUIRE( kv.getRaw() == 3000.0 );
+    REQUIRE( kv.getValue() == 3.0 );
     REQUIRE( kv == voltage<double>( 3000 ) );
   }
 
@@ -162,10 +163,10 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
 }
 
 TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
-  using kilo_amp = current<long, kilo>;
+  using kilo_amp = current<long, metric, kilo>;
 
-  voltage<long, kilo> kv( 12 );
-  current<long, milli> a;
+  voltage<long, metric, kilo> kv( 12 );
+  current<long, metric, milli> a;
   resistance<long> o( 3 );
   a = kv / o;
 
@@ -175,9 +176,10 @@ TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
 }
 
 TEST_CASE( "Scheduler test", "[unit]" ){
-  using int_time = gsw::time<unsigned long long, milli>;
-  using sched_tick_rate = unit<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, unsigned long long, milli>;
-  const tick<> t = int_time( 50 ) / sched_tick_rate( 5 );
+  using int_time = gsw::time<unsigned long long, metric, milli>;
+  using tick_rate = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0>;
+  using sched_tick_rate = unit<tick_rate, metric, unsigned long long, milli>;
+  const tick<unsigned long long, metric> t = int_time( 50 ) / sched_tick_rate( 5 );
 
   REQUIRE( t == 10 );
 }
@@ -198,3 +200,63 @@ TEST_CASE( "Some units provide literal suffixes", "[unit]" ){
   REQUIRE( 3_A * 4_R == 12_V );
 }
 
+TEST_CASE( "Handles different unit systems", "[unit]" ){
+  SECTION( "Can convert between unit systems" ){
+    celsius<> c( 0 );
+    fahrenheit<> f( c );
+
+    REQUIRE( f.getRaw() == 32 );
+    f = -40;
+    c = f;
+    REQUIRE( c.getRaw() == -40 );
+  }
+
+  SECTION( "Handles custom unit systems" ){
+
+  }
+}
+
+TEST_CASE( "Converts between systems, and types and factors" , "[unit]" ){
+  feet<> f1( 3 );
+  meters<> m1( 3 );
+
+  feet<> f2( f1 );
+  meters<> m2( f1 );
+
+  feet<> f3( m1 );
+  meters<> m3( m1 );
+
+  feet<int> f4( f1 );
+  meters<int> m4( f1 );
+
+  feet<int> f5( m1 );
+  meters<int> m5( m1 );
+
+  feet<double, ratio<5280, 1> > f6( f1 );
+  meters<double, ratio<1000, 1> > m6( f1 );
+
+  feet<double, ratio<5280, 1> > f7( m1 );
+  meters<double, ratio<1000, 1> > m7( m1 );
+
+  feet<int, ratio<5280, 1> > f8( f1 );
+  meters<int, ratio<1000, 1> > m8( f1 );
+
+  feet<int, ratio<5280, 1> > f9( m1 );
+  meters<int, ratio<1000, 1> > m9( m1 );
+
+  REQUIRE( f1 == f2 );
+  REQUIRE( m1 == m3 );
+
+  REQUIRE( f1 == f4 );
+  REQUIRE( m1 == m5 );
+
+  REQUIRE( ( f1 - m2 ) < .1 );
+  REQUIRE( ( m1 - f3 ) < .1 );
+
+  REQUIRE( f8 == 0.0 );
+  REQUIRE( m8 == 0.0 );
+
+  REQUIRE( f9 == 0.0 );
+  REQUIRE( m9 == 0.0 );
+  //@todo add more tests for this
+}
