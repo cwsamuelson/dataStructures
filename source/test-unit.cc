@@ -245,10 +245,10 @@ TEST_CASE( "Converts between systems, and types and factors" , "[unit]" ){
   meters<int, ratio<1000, 1> > m9( m1 );
 
   REQUIRE( f1 == f2 );
-  REQUIRE( m1 == m2 );
+  REQUIRE( m1 == m3 );
 
   REQUIRE( f1 == f4 );
-  REQUIRE( m1 == m4 );
+  REQUIRE( m1 == m5 );
 
   //@todo add more tests for this
 }
