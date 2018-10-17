@@ -250,5 +250,13 @@ TEST_CASE( "Converts between systems, and types and factors" , "[unit]" ){
   REQUIRE( f1 == f4 );
   REQUIRE( m1 == m5 );
 
+  REQUIRE( ( f1 - m2 ) < .1 );
+  REQUIRE( ( m1 - f3 ) < .1 );
+
+  REQUIRE( f8 == 0.0 );
+  REQUIRE( m8 == 0.0 );
+
+  REQUIRE( f9 == 0.0 );
+  REQUIRE( m9 == 0.0 );
   //@todo add more tests for this
 }
