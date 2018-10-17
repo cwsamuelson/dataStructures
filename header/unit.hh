@@ -187,7 +187,7 @@ public:
   operator()( const typename base::input& val ){
     return unit<typename base::measure, typename base::sys_in,
                 typename base::T_out, typename base::factor_out>
-                  ( val.getRaw() * base::conversion_ratio() );
+                  ( val.getValue() * base::conversion_ratio() );
   }
 };
 
@@ -339,7 +339,7 @@ public:
   template<typename D, typename F, typename S>
   constexpr bool
   operator==( const other_type<S, D, F>& other ) const{
-    return getRaw() == convert_type<S, D, F>()( other ).getRaw();
+    return getRaw() == converter<MEAS, S, SYSTEM, D, D, F, FACTOR>()( other ).getRaw();
   }
 
   /*! Inequality comparison operator
@@ -766,7 +766,7 @@ constexpr
 unit<decltype( MEAS1() * MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
 operator*( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
            const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
-  return lhs.getValue() * converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t1, F_t1>()( rhs ).getValue();
+  return lhs.getValue() * converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t2, F_t2>()( rhs ).getValue();
 }
 
 /*! Division operator
@@ -783,10 +783,10 @@ template<typename MEAS1, typename MEAS2,
          typename D_t1, typename D_t2,
          typename F_t1, typename F_t2>
 constexpr
-unit<decltype( MEAS1() / MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
+unit<decltype( MEAS1() / MEAS2() ), S_t1, D_t1, decltype( F_t1() / F_t2() )>
 operator/( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
            const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
-  return lhs.getValue() / converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t1, F_t1>()( rhs ).getValue();
+  return lhs.getValue() / converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t2, F_t2>()( rhs ).getValue();
 }
 
 template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
