@@ -39,8 +39,8 @@ public:
    *
    * @param ref Reference to be 'stored'
    */
-  reference_wrapper( reference ref ):
-    mRef( ref ){
+  reference_wrapper( reference ref )
+    : mRef( ref ){
   }
 
   /*! Get wrapped reference
@@ -57,13 +57,15 @@ public:
 
   /*! Get wrapped reference
    */
-  reference get(){
+  reference
+  get(){
     return mRef;
   }
 
   /*! Get const version of wrapped reference
    */
-  const reference cget() const{
+  const reference
+  cget() const{
     return mRef;
   }
 };
@@ -71,4 +73,3 @@ public:
 }
 
 #endif
-

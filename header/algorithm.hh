@@ -27,12 +27,22 @@ namespace gsw{
  * must be utilized.
  */
 template<typename T>
-static bool are_equal( T f1, T f2 ){
+static
+bool
+are_equal( T f1, T f2 ){
   return ( std::fabs( f1 - f2 ) <= std::numeric_limits<T>::epsilon() * std::max( {1.0, std::fabs( f1 ), std::fabs( f2 )} ) );
 }
 
+/*!
+ * @param f1
+ *
+ * @param f2
+ *
+ * @return
+ */
 template<>
-bool are_equal<float>( float f1, float f2 ){
+bool
+are_equal<float>( float f1, float f2 ){
   return ( std::fabs( f1 - f2 ) <= std::numeric_limits<float>::epsilon() * std::max( {1.0f, std::fabs( f1 ), std::fabs( f2 )} ) );
 }
 
@@ -59,7 +69,8 @@ bool are_equal<float>( float f1, float f2 ){
  * };
  */
 template<typename OBJ, typename MEMBER_FN, typename ...Args>
-auto invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
+auto
+invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
   return ( obj.*memfun )( args... );
 }
 
@@ -71,13 +82,25 @@ template<typename T>
 struct less{
   /*!
    */
-  bool operator()( const T& lhs, const T& rhs ){
+  bool
+  operator()( const T& lhs, const T& rhs ){
     return lhs < rhs;
   }
 };
 
+/*!
+ *
+ * @tparam iter
+ *
+ * @param first
+ *
+ * @param last
+ *
+ * @return
+ */
 template<typename iter>
-unsigned long distance( iter first, iter last ){
+unsigned long
+distance( iter first, iter last ){
   unsigned long ret = 0;
 
   while( first++ != last ){
@@ -87,15 +110,39 @@ unsigned long distance( iter first, iter last ){
   return ret;
 }
 
+/*!
+ *
+ * @tparam iter
+ *
+ * @param x
+ *
+ * @param y
+ */
 template<typename iter>
-void swap( iter x, iter y ){
+void
+swap( iter x, iter y ){
   auto z = *x;
   *x = *y;
   *y = z;
 }
 
+/*!
+ *
+ * @tparam iter
+ *
+ * @tparam compare
+ *
+ * @param first
+ *
+ * @param mid
+ *
+ * @param last
+ *
+ * @param comp
+ */
 template<typename iter, typename compare>
-void merge( iter first, iter mid, iter last, compare comp ){
+void
+merge( iter first, iter mid, iter last, compare comp ){
   vector<typename iter::value_type> vec;
   auto middle = mid;
   auto start = first;
@@ -123,8 +170,21 @@ void merge( iter first, iter mid, iter last, compare comp ){
   }
 }
 
+/*!
+ *
+ * @tparam iter
+ *
+ * @tparam compare
+ *
+ * @param first
+ *
+ * @param last
+ *
+ * @param comp
+ */
 template<typename iter, typename compare = less<typename iter::value_type> >
-void sort( iter first, iter last, compare comp = compare() ){
+void
+sort( iter first, iter last, compare comp = compare() ){
   auto length = distance( first, last );
 
   if( length < 2 ){
@@ -141,4 +201,3 @@ void sort( iter first, iter last, compare comp = compare() ){
 }
 
 #endif
-

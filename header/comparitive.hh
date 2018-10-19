@@ -48,7 +48,9 @@ public:
    *
    * @return Whether lhs != rhs
    */
-  constexpr friend bool operator!=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend
+  bool
+  operator!=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
     return !( lhs == rhs );
   }
 
@@ -60,7 +62,9 @@ public:
    *
    * @return Whether lhs > rhs
    */
-  constexpr friend bool operator>( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend
+  bool
+  operator>( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
     return !( lhs <= rhs );
   }
 
@@ -72,7 +76,9 @@ public:
    *
    * @return Whether lhs >= rhs
    */
-  constexpr friend bool operator>=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend
+  bool
+  operator>=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
     return !( lhs < rhs );
   }
 
@@ -84,7 +90,9 @@ public:
    *
    * @return whether lhs is <= rhs
    */
-  constexpr friend bool operator<=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend
+  bool
+  operator<=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
     return ( lhs < rhs ) || ( lhs == rhs );
   }
 };
@@ -92,4 +100,3 @@ public:
 }
 
 #endif
-

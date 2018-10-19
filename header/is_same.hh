@@ -7,6 +7,8 @@
 
 namespace gsw{
 
+namespace detail{
+
 /*! 'Stores' a type, and checks equality with another type
  *
  * @tparam T 'stored' type
@@ -17,15 +19,21 @@ namespace gsw{
 template<typename T>
 class is_same_helper{
 public:
-  constexpr bool operator==( is_same_helper<T> ){
+  constexpr
+  bool
+  operator==( is_same_helper<T> ){
     return true;
   }
-    
+
   template<typename U>
-  constexpr bool operator==( is_same_helper<U> ){
+  constexpr
+  bool
+  operator==( is_same_helper<U> ){
     return false;
   }
 };
+
+}
 
 /*! Type trait to determine if 2 types are equivalent
  *
@@ -38,7 +46,8 @@ public:
 template<typename T, typename U>
 class is_same{
 public:
-  static constexpr bool value = is_same_helper<T>() == is_same_helper<U>();
+  static constexpr bool value = detail::is_same_helper<T>() ==
+                                detail::is_same_helper<U>();
 };
 
 }

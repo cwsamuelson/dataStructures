@@ -19,11 +19,15 @@ public:
   using type = integral_constant;
   static const T value = v;
 
-  constexpr operator value_type() const noexcept{
+  constexpr
+  operator
+  value_type() const noexcept{
     return value;
   }
 
-  constexpr T operator()() const noexcept{
+  constexpr
+  T
+  operator()() const noexcept{
     return value;
   }
 };
@@ -34,4 +38,3 @@ using bool_constant = integral_constant<bool, B>;
 }
 
 #endif
-

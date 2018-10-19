@@ -20,7 +20,8 @@ private:
   std::tuple<vector, vector> mBounds;
   const unsigned int mMaxObjects;
 
-  bool check_bounds( vector position ){
+  bool
+  check_bounds( vector position ){
     for( unsigned int i = 0; i < DIM; ++i ){
       if( !( ( position[i] >  std::get<0>( mBounds )[i] ) &&
              ( position[i] <= std::get<1>( mBounds )[i] ) ) ){
@@ -31,7 +32,8 @@ private:
     return true;
   }
 
-  void sub_insert( const value_type& vt, vector position ){
+  void
+  sub_insert( const value_type& vt, vector position ){
     for( auto region : mSubRegions ){
       if( region.check_bounds( position ) ){
         region.insert( vt, position );
@@ -40,7 +42,8 @@ private:
     }
   }
 
-  void split_helper( vector min, vector max, const vector& split_bounds, int depth = DIM ){
+  void
+  split_helper( vector min, vector max, const vector& split_bounds, int depth = DIM ){
     if( depth == 0 ){
       mSubRegions.emplace( min, max, mMaxObjects );
       return;
@@ -54,7 +57,8 @@ private:
     split_helper( min, max, split_bounds, depth - 1 );
   }
 
-  void split(){
+  void
+  split(){
     vector split_bounds;
 
     for( unsigned int i = 0; i < DIM; ++i ){
@@ -70,7 +74,8 @@ private:
     mObjects.clear();
   }
 
-  void get_groups( std::set<std::set<value_type> >& groups ){
+  void
+  get_groups( std::set<std::set<value_type> >& groups ){
     if( !mObjects.empty() ){
       std::set<value_type> sub_set;
 
@@ -92,7 +97,8 @@ public:
     mMaxObjects( max ){
   }
 
-  void insert( const value_type& obj, vector location ){
+  void
+  insert( const value_type& obj, vector location ){
     // validate bounds
     if( check_bounds( location ) ){
       return;//! @todo should throw?
@@ -109,7 +115,8 @@ public:
     }
   }
 
-  std::set<std::set<value_type> > get_groups(){
+  std::set<std::set<value_type> >
+  get_groups(){
     std::set<std::set<value_type> > ret;
 
     get_groups( ret );
@@ -117,7 +124,8 @@ public:
     return ret;
   }
 
-  bool operator<( const region_tree& rt ) const{
+  bool
+  operator<( const region_tree& rt ) const{
     return mBounds < rt.mBounds;
   }
 };
@@ -132,4 +140,3 @@ using octree = oct_tree<T>;
 }
 
 #endif
-

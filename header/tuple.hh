@@ -38,16 +38,16 @@ public:
 
   /*! Default ctor
    */
-  tuple_impl():
-    data( value_type() ){
+  tuple_impl()
+    : data( value_type() ){
   }
 
   /*! Basic init ctor
    *
    * @param vt Value of data to store in this unit
    */
-  tuple_impl( value_type vt ):
-    data( vt ){
+  tuple_impl( value_type vt )
+    : data( vt ){
   }
 };
 
@@ -75,8 +75,8 @@ public:
 
   /*! Default ctor
    */
-  tuple_impl():
-    data( value_type() ){
+  tuple_impl()
+    : data( value_type() ){
   }
 
   /*! Basic init ctor
@@ -88,9 +88,9 @@ public:
    * @param args Arguments for future chain elements
    */
   template<typename ...ARGS>
-  tuple_impl( value_type vt, ARGS... args ):
-    base( std::forward<ARGS>( args )... ),
-    data( vt ){
+  tuple_impl( value_type vt, ARGS... args )
+    : base( std::forward<ARGS>( args )... )
+    , data( vt ){
   }
 };
 
@@ -115,7 +115,9 @@ public:
    *
    * Crawl the tuple until the result is found
    */
-  static auto& get( tuple_impl<N, T, Args...>& tup ){
+  static
+  auto&
+  get( tuple_impl<N, T, Args...>& tup ){
     return get_impl<M - 1, N + 1, Args...>::get( static_cast<tuple_impl<N + 1, Args...>& >( tup ) );
   }
 
@@ -125,7 +127,9 @@ public:
    *
    * @return Const reference to requested value
    */
-  static const auto& get( const tuple_impl<N, T, Args...>& tup ){
+  static
+  const auto&
+  get( const tuple_impl<N, T, Args...>& tup ){
     return get_impl<M - 1, N + 1, Args...>::get( static_cast<const tuple_impl<N + 1, Args...>& >( tup ) );
   }
 };
@@ -136,7 +140,7 @@ public:
  *
  * @tparam T Type of current link
  *
- * @tparam ...Args Remaining types in tuple 
+ * @tparam ...Args Remaining types in tuple
  *
  * If a tuple is thought of as a linked list, this is the final node from a get
  * operation.
@@ -152,7 +156,9 @@ public:
    *
    * Final location; where the requested value is stored.
    */
-  static auto& get( tuple_impl<N, T, Args...>& tup ){
+  static
+  auto&
+  get( tuple_impl<N, T, Args...>& tup ){
     return tup.data;
   }
 
@@ -164,7 +170,9 @@ public:
    *
    * Final location; where the requested value is stored.
    */
-  static const auto& get( const tuple_impl<N, T, Args...>& tup ){
+  static
+  const auto&
+  get( const tuple_impl<N, T, Args...>& tup ){
     return tup.data;
   }
 };
@@ -187,8 +195,8 @@ private:
 public:
   /*! Default ctor
    */
-  tuple():
-    base(){
+  tuple()
+    : base(){
   }
 
   /*! Basic init ctor
@@ -198,8 +206,8 @@ public:
    * @param args List af arguments to be passed into tuple implementation
    */
   template<typename ...ARGS>
-  tuple( ARGS... args ):
-    base( std::forward<ARGS>( args )... ){
+  tuple( ARGS... args )
+    : base( std::forward<ARGS>( args )... ){
   }
 };
 
@@ -214,7 +222,8 @@ public:
  * @return Reference to the data at M in tup
  */
 template<size_t M, typename ...Args>
-auto& get( tuple<Args...>& tup ){
+auto&
+get( tuple<Args...>& tup ){
   return detail::get_impl<M, 0, Args...>::get( static_cast<detail::tuple_impl<0, Args...>& >( tup ) );
 }
 
@@ -229,7 +238,8 @@ auto& get( tuple<Args...>& tup ){
  * @return Const reference to the data at M in tup
  */
 template<size_t M, typename ...Args>
-const auto& get( const tuple<Args...>& tup ){
+const auto&
+get( const tuple<Args...>& tup ){
   return detail::get_impl<M, 0, Args...>::get( static_cast<const detail::tuple_impl<0, Args...>& >( tup ) );
 }
 
@@ -244,7 +254,8 @@ const auto& get( const tuple<Args...>& tup ){
  * all of them.
  */
 template<typename ...Args>
-tuple<Args...> make_tuple( Args... args ){
+tuple<Args...>
+make_tuple( Args... args ){
   return tuple<Args...>( std::forward<Args>( args )... );
 }
 
@@ -281,4 +292,3 @@ class tuple_element<N, tuple<HEAD, TAIL...> > : public tuple_element<N - 1, tupl
 }
 
 #endif
-

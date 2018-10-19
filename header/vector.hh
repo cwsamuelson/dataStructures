@@ -81,7 +81,8 @@ private:
   static const unsigned int datasize = sizeof( value_type );
   const float goldenRatio = 1.4;
 
-  void reallocateTo( size_type size ){
+  void
+  reallocateTo( size_type size ){
     value_type* bfr;
 
     bfr = alloc_traits::allocate( mAlloc, size );
@@ -103,11 +104,11 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( size_type capacity = 1, const alloc& alc = alloc() ):
-    mAlloc( alc ),
-    mSize( 0 ),
-    mCapacity( capacity ),
-    mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
+  vector( size_type capacity = 1, const alloc& alc = alloc() )
+    : mAlloc( alc )
+    , mSize( 0 )
+    , mCapacity( capacity )
+    , mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
   }
 
   /*! ctor, initialize with count copies of val
@@ -118,8 +119,8 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( const_reference val, size_type count, const alloc& alc = alloc() ):
-    vector( count, alc ){
+  vector( const_reference val, size_type count, const alloc& alc = alloc() )
+    : vector( count, alc ){
 
     while( count-- ){
       push_back( val );
@@ -132,11 +133,11 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( const vector& other, const alloc& alc = alloc() ):
-    mAlloc( alc ),
-    mSize( other.mSize ),
-    mCapacity( mSize + 5 ),
-    mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
+  vector( const vector& other, const alloc& alc = alloc() )
+    : mAlloc( alc )
+    , mSize( other.mSize )
+    , mCapacity( mSize + 5 )
+    , mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
 
     for( size_type i = 0; i < mSize; ++i ){
       mData[i] = other.mData[i];
@@ -149,11 +150,11 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( vector&& other, const alloc& alc = alloc() ):
-    mAlloc( alc ),
-    mSize( other.mSize ),
-    mCapacity( other.mCapacity ),
-    mData( other.mData ){
+  vector( vector&& other, const alloc& alc = alloc() )
+    : mAlloc( alc )
+    , mSize( other.mSize )
+    , mCapacity( other.mCapacity )
+    , mData( other.mData ){
 
     other.mSize = 0;
     other.mCapacity = 0;
@@ -168,11 +169,11 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( pointer other, size_type size, const alloc& alc = alloc() ):
-    mAlloc( alc ),
-    mSize( size ),
-    mCapacity( mSize + 5 ),
-    mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
+  vector( pointer other, size_type size, const alloc& alc = alloc() )
+    : mAlloc( alc )
+    , mSize( size )
+    , mCapacity( mSize + 5 )
+    , mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
 
     for( size_type i = 0; i < mSize; ++i ){
       mData[i] = other[i];
@@ -190,8 +191,8 @@ public:
    * @param alc Allocator object to allocate data
    */
   template<typename inputIter, typename = requireInputIter<inputIter> >
-  vector( inputIter first, inputIter last, const alloc& alc = alloc() ):
-    mAlloc( alc ){
+  vector( inputIter first, inputIter last, const alloc& alc = alloc() )
+    : mAlloc( alc ){
 
     for( ; first != last; ++first ){
       push_back( *first );
@@ -202,7 +203,8 @@ public:
    *
    * all data is cleared, destructors ran, and memory freed
    */
-  virtual ~vector(){
+  virtual
+  ~vector(){
     clear();
     alloc_traits::deallocate( mAlloc, mData, mCapacity );
   }
@@ -215,7 +217,8 @@ public:
    *
    * @todo make this exception safe (i.e. don't delete mData until copy is safely complete)
    */
-  vector& operator=( const vector& other ){
+  vector&
+  operator=( const vector& other ){
     if( mData == other.mData ){
       return *this;
     }
@@ -241,7 +244,8 @@ public:
    *
    * @return reference to this container
    */
-  vector& operator=( vector&& other ){
+  vector&
+  operator=( vector&& other ){
     alloc_traits::deallocate( mAlloc, mData, mCapacity );
 
     mSize = other.mSize;
@@ -261,7 +265,8 @@ public:
    *
    * @return reference to data located at index idx
    */
-  reference operator[]( size_type idx ){
+  reference
+  operator[]( size_type idx ){
     using namespace std::string_literals;
 
     if( idx >= mSize ){
@@ -277,7 +282,8 @@ public:
    *
    * @return const reference to data located at index idx
    */
-  const_reference operator[]( size_type idx ) const{
+  const_reference
+  operator[]( size_type idx ) const{
     return ( *this )[idx];
   }
 
@@ -285,7 +291,8 @@ public:
    *
    * @return reference to first element
    */
-  reference front(){
+  reference
+  front(){
     return ( *this )[0];
   }
 
@@ -293,7 +300,8 @@ public:
    *
    * @return reference to last element
    */
-  reference back(){
+  reference
+  back(){
     return ( *this )[mSize - 1];
   }
 
@@ -303,7 +311,8 @@ public:
    *
    * Uses the copy constructor to copy data parameter into container
    */
-  void push_back( const_reference data ){
+  void
+  push_back( const_reference data ){
     if( mSize + 1 > mCapacity ){
       reallocateTo( std::ceil( mCapacity * goldenRatio ) );
     }
@@ -321,7 +330,8 @@ public:
    * Forwards args to value_type constructor.
    */
   template<typename ...Args>
-  void emplace_back( Args&&... args ){
+  void
+  emplace_back( Args&&... args ){
     if( mSize + 1 > mCapacity ){
       reallocateTo( std::ceil( mCapacity * goldenRatio ) );
     }
@@ -333,7 +343,8 @@ public:
 
   /*! removes and destructs element at end of container
    */
-  void pop_back(){
+  void
+  pop_back(){
     --mSize;
     //call dtor
     alloc_traits::destroy( mAlloc, mData + mSize );
@@ -341,7 +352,8 @@ public:
 
   /*! removes and destructs all elements in container
    */
-  void clear(){
+  void
+  clear(){
     while( mSize > 0 ){
       pop_back();
     }
@@ -351,7 +363,8 @@ public:
    *
    * @return container size equal to zero
    */
-  bool empty() const{
+  bool
+  empty() const{
     return mSize == 0;
   }
 
@@ -359,7 +372,8 @@ public:
    *
    * @return count of currently stored elements
    */
-  size_type size() const{
+  size_type
+  size() const{
     return mSize;
   }
 
@@ -367,7 +381,8 @@ public:
    *
    * @return number of elements that can be stored before a resize is necessary
    */
-  size_type capacity() const{
+  size_type
+  capacity() const{
     return mCapacity;
   }
 
@@ -377,7 +392,8 @@ public:
    *
    * @param value  the value to use in filling additional elements
    */
-  void resize( size_type count, value_type value = value_type() ){
+  void
+  resize( size_type count, value_type value = value_type() ){
     while( mSize < count ){
       push_back( value );
     }
@@ -390,7 +406,8 @@ public:
    *
    * @param cap  new capacity
    */
-  void reserve( size_type cap ){
+  void
+  reserve( size_type cap ){
     if( ( cap > mCapacity ) && ( cap > 0 ) ){
       reallocateTo( cap );
     }
@@ -400,7 +417,8 @@ public:
    *
    * @return iterator to the first element of the container
    */
-  iterator begin(){
+  iterator
+  begin(){
     return Iterator( 0 );
   }
 
@@ -408,7 +426,8 @@ public:
    *
    * @return const iterator to the first element of the container
    */
-  const iterator cbegin() const{
+  const iterator
+  cbegin() const{
     return begin();
   }
 
@@ -416,7 +435,8 @@ public:
    *
    * @return iterator to the last element of the container
    */
-  iterator end(){
+  iterator
+  end(){
     return Iterator( mSize );
   }
 
@@ -424,7 +444,8 @@ public:
    *
    * @return const iterator to the last element of the container
    */
-  const iterator cend() const{
+  const
+  iterator cend() const{
     return end();
   }
 
@@ -434,7 +455,8 @@ public:
    *
    * @return iterator pointing to element at index idx
    */
-  iterator Iterator( size_type idx ){
+  iterator
+  Iterator( size_type idx ){
     return iterator( pointer( mData + idx ) );
   }
 };
@@ -442,4 +464,3 @@ public:
 }
 
 #endif
-

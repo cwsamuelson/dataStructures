@@ -30,23 +30,24 @@ private:
   storage_ptr mStorageEnd;
   std::vector<bool> mSlots;
   std::vector<size_type> mSizes;
- 
+
 public:
   /*!
    * @param size
    */
-  memoryPool( size_type size ):
-    mSize( size ),
-    mInUse( 0 ),
-    mStorageStart( new storage_type[mSize * ptrdiff] ),
-    mStorageEnd( mStorageStart + ( mSize * ptrdiff ) - ptrdiff ),
-    mSlots( mSize, false ),
-    mSizes( mSize, 0 ){
+  memoryPool( size_type size )
+    : mSize( size )
+    , mInUse( 0 )
+    , mStorageStart( new storage_type[mSize * ptrdiff] )
+    , mStorageEnd( mStorageStart + ( mSize * ptrdiff ) - ptrdiff )
+    , mSlots( mSize, false )
+    , mSizes( mSize, 0 ){
   }
 
   /*! Dtor
    */
-  virtual ~memoryPool(){
+  virtual
+  ~memoryPool(){
     delete[] mStorageStart;
   }
 
@@ -60,7 +61,8 @@ public:
    * @return
    */
   template<typename ...Args>
-  pointer allocate( size_type amt, Args... args ){
+  pointer
+  allocate( size_type amt, Args... args ){
     size_type caveSize = 0;
     bool caveFound = false;
     size_type caveOpening = 0;
@@ -93,7 +95,8 @@ public:
   /*!
    * @param ptr
    */
-  void deallocate( pointer ptr ){
+  void
+  deallocate( pointer ptr ){
     if( ptr < ( pointer )mStorageStart || ptr > ( pointer )mStorageEnd ){
       return;
     }
@@ -110,14 +113,16 @@ public:
   /*!
    * @return
    */
-  size_type in_use_count(){
+  size_type
+  in_use_count(){
     return mInUse;
   }
 
   /*!
    * @return
    */
-  size_type available_space(){
+  size_type
+  available_space(){
     return mSize - mInUse;
   }
 };
@@ -125,4 +130,3 @@ public:
 }
 
 #endif
-

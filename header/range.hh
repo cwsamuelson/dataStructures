@@ -42,45 +42,50 @@ private:
 public:
   /*!
    */
-  range_iterator( const range<container>* rang, iterator iter ):
-    mRange( rang ),
-    mIterator( iter ){
+  range_iterator( const range<container>* rang, iterator iter )
+    : mRange( rang )
+    , mIterator( iter ){
   }
 
   /*!
    */
-  range_iterator( const range_iterator& iter ):
-    mRange( iter.mRange ),
-    mIterator( iter.mIterator ){
+  range_iterator( const range_iterator& iter )
+    : mRange( iter.mRange )
+    , mIterator( iter.mIterator ){
   }
 
   /*!
    */
-  bool operator==( const range_iterator& other ) const{
+  bool
+  operator==( const range_iterator& other ) const{
     return mIterator == other.mIterator;
   }
 
   /*!
    */
-  bool operator==( const iterator& other ) const{
+  bool
+  operator==( const iterator& other ) const{
     return mIterator == other;
   }
 
   /*!
    */
-  bool operator!=( const range_iterator& other ) const{
+  bool
+  operator!=( const range_iterator& other ) const{
     return !( ( *this ) == other );
   }
 
   /*!
    */
-  bool operator!=( const iterator& other ) const{
+  bool
+  operator!=( const iterator& other ) const{
     return !( mIterator == other );
   }
 
   /*!
    */
-  value_type operator*() const{
+  value_type
+  operator*() const{
     while( !mRange->mFilter( *mIterator ) && ( mRange->end() != mIterator ) ){
       ++mIterator;
     }
@@ -89,13 +94,15 @@ public:
 
   /*!
    */
-  pointer operator->() const{
+  pointer
+  operator->() const{
     return mIterator.operator->();
   }
 
   /*!
    */
-  range_iterator& operator++(){
+  range_iterator&
+  operator++(){
     while( ( !mRange->mFilter( *++mIterator ) ) && ( mRange->end() != mIterator ) ){
       ;
     }
@@ -104,7 +111,8 @@ public:
 
   /*!
    */
-  range_iterator operator++( int ){
+  range_iterator
+  operator++( int ){
     range_iterator ret( *this );
     ++( *this );
     return ret;
@@ -112,7 +120,8 @@ public:
 
   /*!
    */
-  range_iterator& operator--(){
+  range_iterator&
+  operator--(){
     while( !mRange->mFilter( *--mIterator ) && ( mRange->begin() != mIterator ) ){
       ;
     }
@@ -121,7 +130,8 @@ public:
 
   /*!
    */
-  range_iterator operator--( int ){
+  range_iterator
+  operator--( int ){
     range_iterator ret( *this );
     --( *this );
     return ret;
@@ -172,11 +182,11 @@ public:
    */
   range( contIter begin, contIter end,
          filter filFN = []( const reference ){ return true; },
-         modifier modFN = []( const reference t ){ return t; } ):
-    mBegin( begin ),
-    mEnd( end ),
-    mFilter( filFN ),
-    mModifier( modFN ){
+         modifier modFN = []( const reference t ){ return t; } )
+    : mBegin( begin )
+    , mEnd( end )
+    , mFilter( filFN )
+    , mModifier( modFN ){
   }
 
   /*! Takes a container, and stores its beginning and ending iterators, and filtering callback, and modification callback
@@ -192,15 +202,16 @@ public:
    */
   range( container& cont,
          filter filFN = []( const reference ){ return true; },
-         modifier modFN = []( const reference t ){ return t; } ):
-    range( cont.begin(), cont.end(), filFN, modFN ){
+         modifier modFN = []( const reference t ){ return t; } )
+    : range( cont.begin(), cont.end(), filFN, modFN ){
   }
 
   /*! Get beginning iterator
    *
    * @return Iterator pointing to beginning of container
    */
-  iterator begin() const{
+  iterator
+  begin() const{
     return iterator( this, mBegin );
   }
 
@@ -208,7 +219,8 @@ public:
    *
    * @return Iterator pointing to past end of container
    */
-  iterator end() const{
+  iterator
+  end() const{
     return iterator( this, mEnd );
   }
 };
@@ -216,4 +228,3 @@ public:
 }
 
 #endif
-

@@ -22,7 +22,9 @@ public:
    *
    * @param number
    */
-  static pointer allocate( allocator_type& alloc, size_type number ){
+  static
+  pointer
+  allocate( allocator_type& alloc, size_type number ){
     return alloc.allocate( number );
   }
 
@@ -33,7 +35,9 @@ public:
    *
    * @param number
    */
-  static void deallocate( allocator_type& alloc, pointer ptr, size_type number ){
+  static
+  void
+  deallocate( allocator_type& alloc, pointer ptr, size_type number ){
     alloc.deallocate( ptr, number );
   }
 
@@ -49,7 +53,9 @@ public:
    * @param args
    */
   template<typename T, class ...Args>
-  static void construct( allocator_type& alloc, T* ptr, Args&&... args ){
+  static
+  void
+  construct( allocator_type& alloc, T* ptr, Args&&... args ){
     ( void )alloc;
     ::new ( ptr ) value_type( std::forward<Args>( args )... );
   }
@@ -59,7 +65,9 @@ public:
    *
    * @param ptr
    */
-  static void destroy( allocator_type& alloc, pointer ptr ){
+  static
+  void
+  destroy( allocator_type& alloc, pointer ptr ){
     ( void )alloc;
     ptr->~value_type();
   }
@@ -68,4 +76,3 @@ public:
 }
 
 #endif
-

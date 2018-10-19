@@ -13,16 +13,16 @@ namespace gsw{
 
 namespace detail{
 
-  template<typename T>
-  std::set<T>
-  merge( std::set<T> lhs, std::set<T> rhs ){
-    //lhs.merge( rhs );
-    for( auto var : lhs ){
-      rhs.insert( var );
-    }
-
-    return rhs;
+template<typename T>
+std::set<T>
+merge( std::set<T> lhs, std::set<T> rhs ){
+  //lhs.merge( rhs );
+  for( auto var : lhs ){
+    rhs.insert( var );
   }
+
+  return rhs;
+}
 
 }
 
@@ -218,4 +218,3 @@ operator""_lvar( const char* name, size_t sz );
 }
 
 #endif
-

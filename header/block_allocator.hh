@@ -32,7 +32,8 @@ private:
     block_node* next = nullptr;
   };
 
-  void clear( block_node* node ){
+  void
+  clear( block_node* node ){
     if( node->next != nullptr ){
       clear( node->next );
     }
@@ -68,7 +69,8 @@ public:
    *
    * @param number
    */
-  pointer allocate( size_type number ){
+  pointer
+  allocate( size_type number ){
     if( number > alloc_size ){
       throw std::bad_alloc();
     }
@@ -103,7 +105,8 @@ public:
    *
    * @param number
    */
-  void deallocate( pointer ptr, size_type number ){
+  void
+  deallocate( pointer ptr, size_type number ){
     if( mStart == nullptr ){
       throw std::bad_alloc();
     }
@@ -128,4 +131,3 @@ public:
 }
 
 #endif
-

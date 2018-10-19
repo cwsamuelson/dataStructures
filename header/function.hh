@@ -37,10 +37,10 @@ public:
    *
    * Store provided function pointer
    */
-  function( func parm = nullptr ):
-    f( parm ){
+  function( func parm = nullptr )
+    : f( parm ){
   }
-  
+
   /*! Function call operator
    *
    * @param args  Parameter pack of arguments to stored function
@@ -50,14 +50,15 @@ public:
   R operator()( Args... args ){
     return f( args... );
   }
-  
+
   /*! Copy assignment operator
    *
    * @param rhs  Function object to be copied
    *
    * Store the function pointer stored in rhs
    */
-  function& operator=( const function& rhs ){
+  function&
+  operator=( const function& rhs ){
     f = rhs.f;
     return *this;
   }
@@ -68,7 +69,8 @@ public:
    *
    * Store function pointer F
    */
-  function& operator=( func F ){
+  function&
+  operator=( func F ){
     f = F;
     return *this;
   }
@@ -77,4 +79,3 @@ public:
 }
 
 #endif
-

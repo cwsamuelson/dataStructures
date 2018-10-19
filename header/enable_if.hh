@@ -17,8 +17,7 @@ namespace gsw{
  * enable_if template.
  */
 template<bool B, typename T = void>
-class enable_if{
-};
+class enable_if{ };
 
 /*! SFINAE enabled utility
  *
@@ -38,4 +37,3 @@ public:
 }
 
 #endif
-

@@ -40,10 +40,10 @@ private:
     node* prev;
 
     template<typename ...Args>
-    node( Args... args ):
-      data( std::forward<Args>( args )... ),
-      next( nullptr ),
-      prev( nullptr ){
+    node( Args... args )
+      : data( std::forward<Args>( args )... )
+      , next( nullptr )
+      , prev( nullptr ){
     }
   };
   using node_type = node<value_type>;
@@ -54,52 +54,60 @@ private:
     node_type* mCurrent;
 
   public:
-    node_iter( node_type* ptr ):
-      mCurrent( ptr ){
+    node_iter( node_type* ptr )
+      : mCurrent( ptr ){
     }
 
-    node_iter( const node_iter& other ):
-      mCurrent( other.mCurrent ){
+    node_iter( const node_iter& other )
+      : mCurrent( other.mCurrent ){
     }
 
-    node_iter& operator+=( long long mod ){
+    node_iter&
+    operator+=( long long mod ){
       while( mod-- && mCurrent->next ){
         mCurrent = mCurrent->next;
       }
       return *this;
     }
 
-    node_iter& operator-=( long long mod ){
+    node_iter&
+    operator-=( long long mod ){
       while( mod-- && mCurrent->prev ){
         mCurrent = mCurrent->prev;
       }
       return *this;
     }
 
-    bool operator==( const node_iter& other ) const{
+    bool
+    operator==( const node_iter& other ) const{
       return mCurrent == other.mCurrent;
     }
 
-    bool operator!=( const node_iter& other ) const{
+    bool
+    operator!=( const node_iter& other ) const{
       return !( *this == other );
     }
 
-    reference operator*() const{
+    reference
+    operator*() const{
       return mCurrent->data;
     }
 
-    pointer operator->() const{
+    pointer
+    operator->() const{
       return &mCurrent->data;
     }
 
-    node_iter& operator++(){
+    node_iter&
+    operator++(){
       if( mCurrent ){
         mCurrent = mCurrent->next;
       }
       return *this;
     }
 
-    node_iter operator++( int ){
+    node_iter
+    operator++( int ){
       node_iter ret( *this );
 
       if( mCurrent ){
@@ -108,14 +116,16 @@ private:
       return ret;
     }
 
-    node_iter& operator--(){
+    node_iter&
+    operator--(){
       if( mCurrent ){
         mCurrent = mCurrent->prev;
       }
       return *this;
     }
 
-    node_iter operator--( int ){
+    node_iter
+    operator--( int ){
       node_iter ret( *this );
 
       if( mCurrent ){
@@ -133,20 +143,21 @@ public:
 
   /*! Default ctor
    */
-  list():
-    head( nullptr ),
-    tail( nullptr ){
+  list()
+    : head( nullptr )
+    , tail( nullptr ){
   }
 
   /*! Insert new element at pos
    *
-   * @param pos Iterator to location to place new element 
+   * @param pos Iterator to location to place new element
    *
    * @param value New value to place in list
    *
    * @return iterator to new value
    */
-  iterator insert( iterator pos, const value_type& value ){
+  iterator
+  insert( iterator pos, const value_type& value ){
     node_type* next = new node_type( value );
     node_type* current = pos.mCurrent;
     node_type* last = current.next;
@@ -166,7 +177,8 @@ public:
    *
    * @return Iterator to element now at same position
    */
-  iterator erase( iterator pos ){
+  iterator
+  erase( iterator pos ){
     iterator ret = pos.next;
     node_type* one = pos.mCurrent.prev;
     node_type* two = pos.mCurrent.next;
@@ -183,7 +195,8 @@ public:
    *
    * @return Copy of element that was at the front
    */
-  value_type pop_front(){
+  value_type
+  pop_front(){
     value_type ret = front();
     node_type* rem = head;
 
@@ -202,10 +215,11 @@ public:
    *
    * @return Copy of element that was at the back
    */
-  value_type pop_back(){
+  value_type
+  pop_back(){
     value_type ret = back();
     node_type* rem = tail;
- 
+
     tail = tail->prev;
 
     if( tail == nullptr ){
@@ -221,7 +235,8 @@ public:
    *
    * @param value
    */
-  void push_front( const value_type& value ){
+  void
+  push_front( const value_type& value ){
     if( head != nullptr ){
       node_type* first = head;
 
@@ -237,7 +252,8 @@ public:
    *
    * @param value
    */
-  void push_back( const value_type& value ){
+  void
+  push_back( const value_type& value ){
     if( tail != nullptr ){
       node_type* last = tail;
 
@@ -256,7 +272,8 @@ public:
    * @param args Arguments to be passed to constructor of new object
    */
   template<typename ...Args>
-  void emplace_front( Args... args ){
+  void
+  emplace_front( Args... args ){
     if( head != nullptr ){
       node_type* first = head;
 
@@ -275,7 +292,8 @@ public:
    * @param args Arguments to be passed to constructor of new object
    */
   template<typename ...Args>
-  void emplace_back( Args... args ){
+  void
+  emplace_back( Args... args ){
     if( tail != nullptr ){
       node_type* last = tail;
 
@@ -291,7 +309,8 @@ public:
    *
    * @return Reference to the first object in the list
    */
-  reference front(){
+  reference
+  front(){
     return head->data;
   }
 
@@ -299,19 +318,22 @@ public:
    *
    * @return Reference to the last object in the list
    */
-  reference back(){
+  reference
+  back(){
     return tail->data;
   }
 
   /*!
    */
-  const reference front() const{
+  const reference
+  front() const{
     return front();
   }
 
   /*!
    */
-  const reference back() const{
+  const reference
+  back() const{
     return back();
   }
 
@@ -321,7 +343,8 @@ public:
    *
    * @return Object sitting at position idx
    */
-  reference operator[]( size_t idx ){
+  reference
+  operator[]( size_t idx ){
     node_type* cur = head;
 
     while( idx-- != 0 ){
@@ -335,7 +358,8 @@ public:
    *
    * @return Iterator to the beginning of the list
    */
-  iterator begin(){
+  iterator
+  begin(){
     return iterator( node_iter( head ) );
   }
 
@@ -343,7 +367,8 @@ public:
    *
    * @return Iterator to the end of the list
    */
-  iterator end(){
+  iterator
+  end(){
     return iterator( nullptr );
   }
 
@@ -351,7 +376,8 @@ public:
    *
    * @return const iterator to the beginning of the list
    */
-  const iterator cbegin() const{
+  const iterator
+  cbegin() const{
     return begin();
   }
 
@@ -359,21 +385,24 @@ public:
    *
    * @return const iterator to the end of the list
    */
-  const iterator cend() const{
+  const iterator
+  cend() const{
     return end();
   }
 
   /*!
    * @return
    */
-  list& merge( list&& other ){
+  list&
+  merge( list&& other ){
   }
 
   /*! Determine whether list is empty
    *
    * @return Empty-ness of list
    */
-  bool empty(){
+  bool
+  empty(){
     return head == nullptr;
   }
 
@@ -381,7 +410,8 @@ public:
    *
    * @return Current size of the list
    */
-  unsigned long size(){
+  unsigned long
+  size(){
     if( head == nullptr ){
       return 0;
     }
@@ -401,4 +431,3 @@ public:
 }
 
 #endif
-

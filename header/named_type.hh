@@ -3,58 +3,62 @@
 
 template<typename T, typename parameter>
 class named_type{
+public:
+  using value_type = T;
+  using reference = T&;
+  using const_ref = T const &;
+
 private:
-  T mValue;
+  value_type mValue;
 
 public:
   explicit
-  named_type( T const & value )
+  named_type( const_ref value )
     : mValue( value ){
   }
-  
+
   explicit
   named_type( T&& value )
     : mValue( std::move( value ) ){
   }
-  
-  T&
+
+  reference
   get(){
     return mValue;
   }
-  
-  const T&
+
+  const_ref
   get() const{
     return mValue;
   }
-  
+
   operator T() const{
     return mValue;
   }
-  
+
   named_type&
   operator=( const named_type& name_t ){
     mValue = name_t;
 
     return *this;
   }
-  
+
   named_type&
-  operator=( const T& value ){
+  operator=( const_ref value ){
     mValue = value;
 
     return *this;
   }
-  
+
   bool
   operator==( const named_type& name_t ) const{
     return mValue == name_t.mValue;
   }
-  
+
   bool
-  operator==( const T& value ) const{
+  operator==( const_ref value ) const{
     return mValue == value;
   }
 };
 
 #endif
-

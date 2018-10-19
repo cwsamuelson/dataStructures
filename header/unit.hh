@@ -225,10 +225,14 @@ public:
  *        template is a unique class with a unique definition, and unique code
  *        space. what that means for this class is that each unit and each type
  *        will increase binary size; from volt to kilovolt, from m/s to km. this
- *        impact might be reducable through the pimpl idiom? some idea of implementation:
- *        use a base class or pointer to an implementation class.  the class will take
- *        a storage type and ratio factor only(maybe only storage?), so that code space
- *        only really increases when a different storage type is used.
+ *        impact might be reducable through the pimpl idiom? some idea of
+ *        implementation:
+ *        use a base class or pointer to an implementation class.  the class
+ *        will take a storage type and ratio factor only(maybe only storage?)
+ *        so that code space only really increases when a different storage
+ *        type is used.
+ *        Using the pimpl idiom also separates concerns of exception safety per
+ *        http://www.gotw.ca/gotw/059.htm
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR> >,

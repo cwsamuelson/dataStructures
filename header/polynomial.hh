@@ -43,17 +43,20 @@ private:
   /* this 'proper'-ness is dictated in https://hurbsutter.com/2013/05/24/gotw-6a-const-correctness-part-1-3/ */
   mutable storage_type mCoeff;
 
-  void reduce() const{
+  void
+  reduce() const{
     while( !mCoeff.empty() && ( mCoeff.back() == 0 ) ){
       mCoeff.pop_back();
     }
   }
 
-  void mv( const polynomial& eq ){
+  void
+  mv( const polynomial& eq ){
     mCoeff = eq.mCoeff;
   }
 
-  void mv( polynomial&& eq ){
+  void
+  mv( polynomial&& eq ){
     mCoeff = std::move( eq.mCoeff );
   }
 
@@ -110,13 +113,15 @@ public:
    *
    * 6 iterations is chosen arbitrarily to provide 'sufficient' default accuracy
    */
-  std::set<double> solve( double hint = 1.0, unsigned int iterations = 6 ) const;
+  std::set<double>
+  solve( double hint = 1.0, unsigned int iterations = 6 ) const;
 
   /*!
    *
    * @return the order of the polynomial (X^2+x+1 has order 2)
    */
-  unsigned int order() const;
+  unsigned int
+  order() const;
 
   /*! copy/move assignment
    *
@@ -126,11 +131,12 @@ public:
    *
    * @return Resulting polynomial after assignment
    *
-   * This enables copy and move operations. eq is forwarded appropriately for 
+   * This enables copy and move operations. eq is forwarded appropriately for
    * either copy or move
    */
   template<typename U>
-  polynomial& operator=( U&& eq ){
+  polynomial&
+  operator=( U&& eq ){
     mv( std::forward<U>( eq ) );
 
     return *this;
@@ -144,7 +150,8 @@ public:
    *
    * Adds the coefficients from this polynomial to those of rhs
    */
-  polynomial& operator+=( const polynomial& rhs );
+  polynomial&
+  operator+=( const polynomial& rhs );
 
   /*! Subtract-assign operator
    *
@@ -154,7 +161,8 @@ public:
    *
    * Subtracts the coefficients from rhs from those of this polynomial
    */
-  polynomial& operator-=( const polynomial& rhs );
+  polynomial&
+  operator-=( const polynomial& rhs );
 
   /*! Multiply-assign operator
    *
@@ -164,7 +172,8 @@ public:
    *
    * Multiplies rhs with this polynomial
    */
-  polynomial& operator*=( const polynomial& rhs );
+  polynomial&
+  operator*=( const polynomial& rhs );
 
   /*! Multiply-assign operator
    *
@@ -174,7 +183,8 @@ public:
    *
    * Multiplies each coefficient in this polynomial by d
    */
-  polynomial& operator*=( double d );
+  polynomial&
+  operator*=( double d );
 
   /*! Divide-assign operator
    *
@@ -184,7 +194,8 @@ public:
    *
    * Divides this polynomial by rhs
    */
-  polynomial& operator/=( const polynomial& divisor );
+  polynomial&
+  operator/=( const polynomial& divisor );
 
   /*! Divide-assign operator
    *
@@ -194,13 +205,15 @@ public:
    *
    * Divides each coefficient in this polynomial by d
    */
-  polynomial& operator/=( double d );
+  polynomial&
+  operator/=( double d );
 
   /*! Negation operator
    *
-   * @return This 
+   * @return This
    */
-  polynomial operator-() const;
+  polynomial
+  operator-() const;
 
   /*!
    *
@@ -208,7 +221,8 @@ public:
    *
    * @return
    */
-  double& operator[]( size_t idx );
+  double&
+  operator[]( size_t idx );
 
   /*!
    *
@@ -216,7 +230,8 @@ public:
    *
    * @return
    */
-  const double& operator[]( size_t idx ) const;
+  const double&
+  operator[]( size_t idx ) const;
 
   /*! Find the value of the polynomial at a particular value
    *
@@ -226,7 +241,8 @@ public:
    *
    * Calculate a y-value for the given x-value
    */
-  double operator()( double X ) const;
+  double
+  operator()( double X ) const;
 
   /*!
    *
@@ -236,7 +252,9 @@ public:
    *
    * @return
    */
-  friend bool operator==( const polynomial& lhs, const polynomial& rhs );
+  friend
+  bool
+  operator==( const polynomial& lhs, const polynomial& rhs );
 
   /*!
    *
@@ -246,7 +264,9 @@ public:
    *
    * @return
    */
-  friend bool operator==( const polynomial& eq, point p );
+  friend
+  bool
+  operator==( const polynomial& eq, point p );
 
   /*!
    *
@@ -256,7 +276,9 @@ public:
    *
    * @return
    */
-  friend bool operator<( const polynomial& eq, point p );
+  friend
+  bool
+  operator<( const polynomial& eq, point p );
 
   /*!
    *
@@ -266,7 +288,9 @@ public:
    *
    * @return
    */
-  friend bool operator<=( const polynomial& eq, point p );
+  friend
+  bool
+  operator<=( const polynomial& eq, point p );
 
   /*!
    *
@@ -276,7 +300,9 @@ public:
    *
    * @return
    */
-  friend bool operator>( const polynomial& eq, point p );
+  friend
+  bool
+  operator>( const polynomial& eq, point p );
 
   /*!
    *
@@ -286,7 +312,9 @@ public:
    *
    * @return
    */
-  friend bool operator>=( const polynomial& eq, point p );
+  friend
+  bool
+  operator>=( const polynomial& eq, point p );
 
   /*!
    *
@@ -296,7 +324,9 @@ public:
    *
    * @return
    */
-  friend bool operator==( point p, const polynomial& eq );
+  friend
+  bool
+  operator==( point p, const polynomial& eq );
 
   /*!
    *
@@ -306,7 +336,9 @@ public:
    *
    * @return
    */
-  friend bool operator<( point p, const polynomial& eq );
+  friend
+  bool
+  operator<( point p, const polynomial& eq );
 
   /*!
    *
@@ -316,7 +348,9 @@ public:
    *
    * @return
    */
-  friend bool operator<=( point p, const polynomial& eq );
+  friend
+  bool
+  operator<=( point p, const polynomial& eq );
 
   /*!
    *
@@ -326,7 +360,9 @@ public:
    *
    * @return
    */
-  friend bool operator>( point p, const polynomial& eq );
+  friend
+  bool
+  operator>( point p, const polynomial& eq );
 
   /*!
    *
@@ -336,39 +372,60 @@ public:
    *
    * @return
    */
-  friend bool operator>=( point p, const polynomial& eq );
+  friend
+  bool
+  operator>=( point p, const polynomial& eq );
 
   /*!
    */
-  friend polynomial derive( const polynomial& eq, unsigned int order );
+  friend
+  polynomial
+  derive( const polynomial& eq, unsigned int order );
 
   /*!
    */
-  friend polynomial antiderive( const polynomial& eq );
+  friend
+  polynomial
+  antiderive( const polynomial& eq );
 
   /*!
    */
-  friend double integrate( const polynomial& eq, double upperBound, double lowerBound );
+  friend
+  double
+  integrate( const polynomial& eq, double upperBound, double lowerBound );
 };
 
-bool operator==( const polynomial& lhs, const polynomial& rhs );
-bool operator==( const polynomial& eq, point p );
-bool operator<(  const polynomial& eq, point p );
-bool operator<=( const polynomial& eq, point p );
-bool operator>(  const polynomial& eq, point p );
-bool operator>=( const polynomial& eq, point p );
+bool
+operator==( const polynomial& lhs, const polynomial& rhs );
+bool
+operator==( const polynomial& eq, point p );
+bool
+operator<(  const polynomial& eq, point p );
+bool
+operator<=( const polynomial& eq, point p );
+bool
+operator>(  const polynomial& eq, point p );
+bool
+operator>=( const polynomial& eq, point p );
 
-bool operator==( point p, const polynomial& eq );
-bool operator<(  point p, const polynomial& eq );
-bool operator<=( point p, const polynomial& eq );
-bool operator>(  point p, const polynomial& eq );
-bool operator>=( point p, const polynomial& eq );
+bool
+operator==( point p, const polynomial& eq );
+bool
+operator<(  point p, const polynomial& eq );
+bool
+operator<=( point p, const polynomial& eq );
+bool
+operator>(  point p, const polynomial& eq );
+bool
+operator>=( point p, const polynomial& eq );
 
-polynomial derive( const polynomial& eq, unsigned int order = 1 );
-polynomial antiderive( const polynomial& eq );
-double integrate( const polynomial& eq, double upperBound, double lowerBound );
+polynomial
+derive( const polynomial& eq, unsigned int order = 1 );
+polynomial
+antiderive( const polynomial& eq );
+double
+integrate( const polynomial& eq, double upperBound, double lowerBound );
 
 }
 
 #endif
-

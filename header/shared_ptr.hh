@@ -31,9 +31,9 @@ private:
 public:
   /*! basic ctor
    */
-  shared_ptr():
-    mData( nullptr ),
-    mCount( nullptr ){
+  shared_ptr()
+    : mData( nullptr )
+    , mCount( nullptr ){
   }
 
   /*! Ownership ctor
@@ -42,8 +42,8 @@ public:
    *
    * This constructor takes initial ownership of a provided pointer
    */
-  shared_ptr( pointer ptr ):
-    mData( ptr ){
+  shared_ptr( pointer ptr )
+    : mData( ptr ){
     if( mData != nullptr ){
       mCount = new count_t( 1 );
     } else {
@@ -57,9 +57,9 @@ public:
    *
    * The provided shared_ptr is copied, increasing the owner count
    */
-  shared_ptr( const shared_ptr& other ):
-    mData( other.mData ),
-    mCount( other.mCount ){
+  shared_ptr( const shared_ptr& other )
+    : mData( other.mData )
+    , mCount( other.mCount ){
     ++( *mCount );
   }
 
@@ -69,9 +69,9 @@ public:
    *
    * Takes ownership of pointer from other.
    */
-  shared_ptr( shared_ptr&& other ):
-    mData( other.mData ),
-    mCount( other.mCount ){
+  shared_ptr( shared_ptr&& other )
+    : mData( other.mData )
+    , mCount( other.mCount ){
 
     other.mData = nullptr;
     other.mCount = nullptr;
@@ -79,7 +79,8 @@ public:
 
   /*! destructor
    */
-  virtual ~shared_ptr(){
+  virtual
+  ~shared_ptr(){
     if( ( mCount != nullptr ) &&
         ( --( *mCount ) == 0 ) ){
       delete mData;
@@ -93,7 +94,8 @@ public:
    *
    * This constructor takes initial ownership of a provided pointer
    */
-  shared_ptr& operator=( pointer other ){
+  shared_ptr&
+  operator=( pointer other ){
     if( mData != other ){
       if( ( mCount != nullptr ) &&
           ( --( *mCount ) == 0 ) ){
@@ -112,7 +114,8 @@ public:
    *
    * The provided shared_ptr is copied, increasing the owner count
    */
-  shared_ptr& operator=( shared_ptr& other ){
+  shared_ptr&
+  operator=( shared_ptr& other ){
     if( mData != other.mData ){
       if( --( *mCount ) == 0 ){
         delete mData;
@@ -131,7 +134,8 @@ public:
    *
    * Takes ownership of pointer from other.
    */
-  shared_ptr& operator=( shared_ptr&& other ){
+  shared_ptr&
+  operator=( shared_ptr&& other ){
     // cleanup current storage
     if( mCount != nullptr ){
       --( *mCount );
@@ -158,7 +162,8 @@ public:
    *
    * Compares provided pointer against stored pointer
    */
-  bool operator==( pointer other ) const{
+  bool
+  operator==( pointer other ) const{
     return mData == other;
   }
 
@@ -168,18 +173,20 @@ public:
    *
    * Compares shared_ptrs
    */
-  bool operator==( const shared_ptr& other ) const{
+  bool
+  operator==( const shared_ptr& other ) const{
     return ( mData == other.mData ) && ( mCount == other.mCount );
   }
-  
+
   /*! Dereference operator
    *
    * Returns reference to stored object
    */
-  reference operator*(){
+  reference
+  operator*(){
     return *mData;
   }
-  
+
   /*! Class member access operator
    *
    * Enables member access of stored object
@@ -192,7 +199,8 @@ public:
    *
    * sp->i = 3;
    */
-  pointer operator->(){
+  pointer
+  operator->(){
     return mData;
   }
 };
@@ -206,11 +214,11 @@ public:
  * @param ...args Arguments to be forwarded to objects constructor
  */
 template<typename T, typename ...Args>
-shared_ptr<T> make_shared( Args&&... args ){
+shared_ptr<T>
+make_shared( Args&&... args ){
   return shared_ptr<T>( new T( std::forward<Args>( args )... ) );
 }
 
 }
 
 #endif
-

@@ -20,8 +20,8 @@ namespace gsw{
 
 class keyNotFoundException : public std::out_of_range{
 public:
-  keyNotFoundException():
-    std::out_of_range( "Requested key not found!" ){
+  keyNotFoundException()
+    : std::out_of_range( "Requested key not found!" ){
   }
 };
 
@@ -70,7 +70,8 @@ private:
   vector<storage_type, alloc> mData;
   compare comparator;
 
-  void normalize(){
+  void
+  normalize(){
     std::sort( mData.begin(), mData.end(),
       [&]( const storage_type& x, const storage_type& y )->bool{
         return comparator( get<0>( x ), get<0>( y ) );
@@ -78,7 +79,8 @@ private:
     );
   }
 
-  size_type seek_index( const key_type& key ){
+  size_type
+  seek_index( const key_type& key ){
     size_type min = 0;
     size_type max = mData.size() - 1;
     size_type idx = ( max + min ) / 2.0;
@@ -105,8 +107,8 @@ public:
    *
    * No data stored.
    */
-  map( const alloc& alc = alloc() ):
-    mData( 1, alc ){
+  map( const alloc& alc = alloc() )
+    : mData( 1, alc ){
   }
 
   /*! Copy ctor
@@ -120,8 +122,8 @@ public:
    * @param alc Allocator object to allocate data
    */
   template<typename inputIter>
-  map( inputIter first, inputIter last, const alloc& alc = alloc() ):
-    mData( first, last, alc ){
+  map( inputIter first, inputIter last, const alloc& alc = alloc() )
+    : mData( first, last, alc ){
     normalize();
   }
 
@@ -130,8 +132,8 @@ public:
    * @param other map to be copied/moved
    */
   template<typename U>
-  map( U&& other, const alloc& alc = alloc() ):
-    mData( alc ){
+  map( U&& other, const alloc& alc = alloc() )
+    : mData( alc ){
     mData = std::forward<U>( other.mData );
     comparator = other.comparator;
   }
@@ -145,7 +147,8 @@ public:
    * Finds data associated with given key.  If no such exists, throws a
    * keyNotFoundException exception.
    */
-  map_type& at( key_type key ){
+  map_type&
+  at( key_type key ){
     if( mData.empty() ){
       throw keyNotFoundException();
     }
@@ -162,7 +165,8 @@ public:
    * Finds data associated with given key.  If no such exists, new data is
    * created.
    */
-  map_type& operator[]( const key_type& key ){
+  map_type&
+  operator[]( const key_type& key ){
     try{
       return at( key );
     } catch ( keyNotFoundException& ex ){
@@ -181,7 +185,8 @@ public:
    * Finds data associated with given key.  If no such exists, new data is
    * created.
    */
-  const map_type& operator[]( const key_type& key ) const{
+  const map_type&
+  operator[]( const key_type& key ) const{
     return ( *this )[key];
   }
 
@@ -194,7 +199,8 @@ public:
    * @param last  one past the end of the range of elements to be copied
    */
   template<typename inputIter>
-  void insert( inputIter first, inputIter last ){
+  void
+  insert( inputIter first, inputIter last ){
     for( ; first != last; ++first ){
       mData.push_back( *first );
     }
@@ -215,7 +221,8 @@ public:
    * @todo return correct iterator
    */
   template<typename ...Args>
-  iterator emplace( const key_type& key, Args ...args ){
+  iterator
+  emplace( const key_type& key, Args ...args ){
     mData.emplace_back( key, map_type( std::forward<Args>( args )... ) );
 
     normalize();
@@ -227,7 +234,8 @@ public:
    *
    * @return Iterator to beginning of container
    */
-  iterator begin(){
+  iterator
+  begin(){
     return mData.begin();
   }
 
@@ -235,7 +243,8 @@ public:
    *
    * @return Iterator to beginning of container
    */
-  const iterator cbegin() const{
+  const iterator
+  cbegin() const{
     return begin();
   }
 
@@ -243,7 +252,8 @@ public:
    *
    * @return Iterator past end of container
    */
-  iterator end(){
+  iterator
+  end(){
     return mData.end();
   }
 
@@ -251,13 +261,15 @@ public:
    *
    * @return Iterator past end of container
    */
-  const iterator cend() const{
+  const iterator
+  cend() const{
     return end();
   }
 
   /*! Empty container of all data
    */
-  void clear(){
+  void
+  clear(){
     mData.clear();
   }
 
@@ -265,7 +277,8 @@ public:
    *
    * @return Whether the container is empty
    */
-  bool empty() const{
+  bool
+  empty() const{
     return mData.empty();
   }
 
@@ -273,7 +286,8 @@ public:
    *
    * @return The number of elements in the container
    */
-  size_type size() const{
+  size_type
+  size() const{
     return mData.size();
   }
 };
@@ -281,4 +295,3 @@ public:
 }
 
 #endif
-

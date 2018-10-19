@@ -26,8 +26,8 @@ public:
    *
    * @param ptr  pointer to be stored
    */
-  unique_ptr( pointer ptr = nullptr ):
-    mData( ptr ){
+  unique_ptr( pointer ptr = nullptr )
+    : mData( ptr ){
   }
 
   /*! Move ctor
@@ -36,14 +36,14 @@ public:
    *
    * Performs a move operation
    */
-  unique_ptr( unique_ptr&& other ):
-    mData( other.mData ){
+  unique_ptr( unique_ptr&& other )
+    : mData( other.mData ){
     other.mData = nullptr;
   }
 
   template<typename U>
-  unique_ptr( unique_ptr<U>&& other ):
-    mData( other.mData ){
+  unique_ptr( unique_ptr<U>&& other )
+    : mData( other.mData ){
     other.mData = nullptr;
   }
 
@@ -51,7 +51,8 @@ public:
    *
    * Delete data, if any still exists
    */
-  virtual ~unique_ptr(){
+  virtual
+  ~unique_ptr(){
     if( mData ){
       delete mData;
     }
@@ -61,7 +62,8 @@ public:
    *
    * @param other pointer to take ownership of
    */
-  unique_ptr& operator=( pointer other ){
+  unique_ptr&
+  operator=( pointer other ){
     if( mData ){
       delete mData;
     }
@@ -74,7 +76,8 @@ public:
    *
    * @param other unique_ptr to transfer ownership from
    */
-  unique_ptr& operator=( unique_ptr&& other ){
+  unique_ptr&
+  operator=( unique_ptr&& other ){
     if( mData != other.mData && mData ){
       delete mData;
 
@@ -91,7 +94,8 @@ public:
    *
    * @return whether other is equal to the stored pointer
    */
-  bool operator==( pointer other ) const{
+  bool
+  operator==( pointer other ) const{
     return ( mData == other );
   }
 
@@ -106,7 +110,8 @@ public:
    * store a unique instance to a pointer, another instance of the same pointer
    * is a contradiction.
    */
-  bool operator==( const unique_ptr& other ) const{
+  bool
+  operator==( const unique_ptr& other ) const{
     return ( mData == other.mData );
   }
 
@@ -116,13 +121,15 @@ public:
    *
    * Dereference stored pointer, and return reference to stored object
    */
-  reference operator*(){
+  reference
+  operator*(){
     return *mData;
   }
 
   /*!
    */
-  pointer operator->(){
+  pointer
+  operator->(){
     return mData;
   }
 
@@ -130,7 +137,8 @@ public:
    *
    * @return raw stored pointer/resource
    */
-  pointer get(){
+  pointer
+  get(){
     return mData;
   }
 
@@ -142,9 +150,10 @@ public:
    * is done; so if the return value is not captured, and subsequently deleted
    * a memory leak will occur.
    */
-  pointer release(){
+  pointer
+  release(){
     pointer ret = mData;
-    mData = nullptr; 
+    mData = nullptr;
 
     return ret;
   }
@@ -158,4 +167,3 @@ unique_ptr<T> make_unique( Args&&... args ){
 }
 
 #endif
-

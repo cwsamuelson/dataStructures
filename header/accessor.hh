@@ -56,9 +56,9 @@ public:
    * assigned to.  The callback dictates whether assignment will actually occur
    * based upon the value that was to be assigned.
    */
-  accessor( reference ref, callback cb ):
-    mRef( ref ),
-    mcb( cb ){
+  accessor( reference ref, callback cb )
+    : mRef( ref )
+    , mcb( cb ){
   }
 
   /*! Value_type operator allowing usage as raw stored type

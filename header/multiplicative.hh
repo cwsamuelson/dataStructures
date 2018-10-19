@@ -54,7 +54,9 @@ public:
    *
    * Multiplies together lhs and rhs using the *= operator of the derived class.
    */
-  constexpr friend auto operator*( lhs_type lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend
+  auto
+  operator*( lhs_type lhs, const rhs_type& rhs ) noexcept{
     return ( lhs *= rhs );
   }
 
@@ -68,7 +70,9 @@ public:
    *
    * Divides lhs by rhs using the /= operator of the derived class.
    */
-  constexpr friend auto operator/( lhs_type lhs, const rhs_type& rhs ) noexcept{
+  constexpr friend
+  auto
+  operator/( lhs_type lhs, const rhs_type& rhs ) noexcept{
     return ( lhs /= rhs );
   }
 };
@@ -76,4 +80,3 @@ public:
 }
 
 #endif
-

@@ -3,11 +3,12 @@
 using namespace std;
 using namespace gsw;
 
-polynomial::polynomial( std::initializer_list<double> il ):
-  mCoeff( il ){
+polynomial::polynomial( std::initializer_list<double> il )
+  : mCoeff( il ){
 }
 
-set<double> polynomial::solve( double hint, unsigned int iterations ) const{
+set<double>
+polynomial::solve( double hint, unsigned int iterations ) const{
   // should find (size - 1) roots
   std::set<double> roots;
   double root = hint;
@@ -28,7 +29,8 @@ set<double> polynomial::solve( double hint, unsigned int iterations ) const{
   return roots;
 }
 
-unsigned int polynomial::order() const{
+unsigned int
+polynomial::order() const{
   reduce();
 
   if( mCoeff.size() > 0 ){
@@ -38,7 +40,8 @@ unsigned int polynomial::order() const{
   }
 }
 
-polynomial& polynomial::operator+=( const polynomial& rhs ){
+polynomial&
+polynomial::operator+=( const polynomial& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
     mCoeff[i] += rhs.mCoeff[i];
@@ -51,7 +54,8 @@ polynomial& polynomial::operator+=( const polynomial& rhs ){
   return *this;
 }
 
-polynomial& polynomial::operator-=( const polynomial& rhs ){
+polynomial&
+polynomial::operator-=( const polynomial& rhs ){
   unsigned int i;
   for( i = 0; i < std::min( mCoeff.size(), rhs.mCoeff.size() ); ++i ){
     mCoeff[i] -= rhs.mCoeff[i];
@@ -64,7 +68,8 @@ polynomial& polynomial::operator-=( const polynomial& rhs ){
   return *this;
 }
 
-polynomial& polynomial::operator*=( const polynomial& rhs ){
+polynomial&
+polynomial::operator*=( const polynomial& rhs ){
   storage_type vec( mCoeff.size() + rhs.mCoeff.size() - 1 );
 
   for( unsigned int i = 0; i < mCoeff.size(); ++i ){
@@ -82,7 +87,8 @@ polynomial& polynomial::operator*=( const polynomial& rhs ){
   return *this;
 }
 
-polynomial& polynomial::operator*=( double d ){
+polynomial&
+polynomial::operator*=( double d ){
   for( double& it : mCoeff ){
     it *= d;
   }
@@ -90,7 +96,8 @@ polynomial& polynomial::operator*=( double d ){
   return *this;
 }
 
-polynomial& polynomial::operator/=( const polynomial& rhs ){
+polynomial&
+polynomial::operator/=( const polynomial& rhs ){
   storage_type quotient( mCoeff.size() + rhs.mCoeff.size() - 1 );
   polynomial remainder = *this;
 
@@ -113,7 +120,8 @@ polynomial& polynomial::operator/=( const polynomial& rhs ){
   return *this;
 }
 
-polynomial& polynomial::operator/=( double d ){
+polynomial&
+polynomial::operator/=( double d ){
   for( double& it : mCoeff ){
     it /= d;
   }
@@ -121,7 +129,8 @@ polynomial& polynomial::operator/=( double d ){
   return *this;
 }
 
-polynomial polynomial::operator-() const{
+polynomial
+polynomial::operator-() const{
   polynomial p( *this );
 
   for( auto& coeff : p.mCoeff ){
@@ -131,7 +140,8 @@ polynomial polynomial::operator-() const{
   return p;
 }
 
-double& polynomial::operator[]( size_t idx ){
+double&
+polynomial::operator[]( size_t idx ){
   while( idx >= mCoeff.size() ){
     mCoeff.push_back( 0.0 );
   }
@@ -139,11 +149,13 @@ double& polynomial::operator[]( size_t idx ){
   return mCoeff[idx];
 }
 
-const double& polynomial::operator[]( size_t idx ) const{
+const double&
+polynomial::operator[]( size_t idx ) const{
   return mCoeff.at( idx );
 }
 
-double polynomial::operator()( double X ) const{
+double
+polynomial::operator()( double X ) const{
   double val = mCoeff.back();
 
   for( int i = mCoeff.size() - 2; i >= 0; --i ){
@@ -154,53 +166,65 @@ double polynomial::operator()( double X ) const{
   return val;
 }
 
-bool gsw::operator==( const polynomial& lhs, const polynomial& rhs ){
+bool
+gsw::operator==( const polynomial& lhs, const polynomial& rhs ){
   lhs.reduce();
   rhs.reduce();
   return lhs.mCoeff == rhs.mCoeff;
 }
 
-bool gsw::operator==( const polynomial& eq, point p ){
+bool
+gsw::operator==( const polynomial& eq, point p ){
   return eq( p.x() ) == p.y();
 }
 
-bool gsw::operator<( const polynomial& eq, point p ){
+bool
+gsw::operator<( const polynomial& eq, point p ){
   return eq( p.x() ) < p.y();
 }
 
-bool gsw::operator>( const polynomial& eq, point p ){
+bool
+gsw::operator>( const polynomial& eq, point p ){
   return eq( p.x() ) > p.y();
 }
 
-bool gsw::operator<=( const polynomial& eq, point p ){
+bool
+gsw::operator<=( const polynomial& eq, point p ){
   return !( eq > p );
 }
 
-bool gsw::operator>=( const polynomial& eq, point p ){
+bool
+gsw::operator>=( const polynomial& eq, point p ){
   return !( eq < p );
 }
 
-bool gsw::operator==( point p, const polynomial& eq ){
+bool
+gsw::operator==( point p, const polynomial& eq ){
   return eq == p;
 }
 
-bool gsw::operator<( point p, const polynomial& eq ){
+bool
+gsw::operator<( point p, const polynomial& eq ){
   return p.y() < eq( p.x() );
 }
 
-bool gsw::operator>( point p, const polynomial& eq ){
+bool
+gsw::operator>( point p, const polynomial& eq ){
   return p.y() > eq( p.x() );
 }
 
-bool gsw::operator<=( point p, const polynomial& eq ){
+bool
+gsw::operator<=( point p, const polynomial& eq ){
   return !( p > eq );
 }
 
-bool gsw::operator>=( point p, const polynomial& eq ){
+bool
+gsw::operator>=( point p, const polynomial& eq ){
   return !( p < eq );
 }
 
-polynomial gsw::derive( const polynomial& eq, unsigned int order ){
+polynomial
+gsw::derive( const polynomial& eq, unsigned int order ){
   if( order == 0 ){
     return eq;
   }
@@ -214,7 +238,8 @@ polynomial gsw::derive( const polynomial& eq, unsigned int order ){
   return ret;
 }
 
-polynomial gsw::antiderive( const polynomial& eq ){
+polynomial
+gsw::antiderive( const polynomial& eq ){
   polynomial ret;
   ret.mCoeff.push_back( 0 );
 
@@ -225,7 +250,8 @@ polynomial gsw::antiderive( const polynomial& eq ){
   return ret;
 }
 
-double gsw::integrate( const polynomial& eq, double upperBound, double lowerBound ){
+double
+gsw::integrate( const polynomial& eq, double upperBound, double lowerBound ){
   polynomial anti( antiderive( eq ) );
 
   return anti( upperBound ) - anti( lowerBound );

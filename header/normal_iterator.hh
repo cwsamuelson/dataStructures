@@ -9,9 +9,9 @@ namespace gsw{
 
 /*! Normalized iterator
  *
- * @tparam TYPE  
+ * @tparam TYPE
  *
- * @tparam CONTAINER  
+ * @tparam CONTAINER
  */
 template<typename TYPE, typename CONTAINER, typename PTR_T = TYPE*>
 class normal_iterator : public additive<normal_iterator<TYPE, CONTAINER>, long long>{
@@ -29,15 +29,21 @@ protected:
 
 public:
   /*!
-   * @param ptr  
+   * @param ptr
    *
    */
-  normal_iterator( pointer ptr ):
-    mCurrent( ptr ){
+  normal_iterator( pointer ptr )
+    : mCurrent( ptr ){
   }
 
   /*!
-   * @param iter  
+   * @tparam T1
+   *
+   * @tparam C1
+   *
+   * @tparam P1
+   *
+   * @param iter
    *
    * @todo verify if making this ctor a template could cause issues
    * this was made a template for use in map, allowing a vector (actual storage
@@ -46,79 +52,89 @@ public:
    * issue, and is probably something to be guarded against.
    */
   template<typename T1, typename C1, typename P1>
-  normal_iterator( const normal_iterator<T1, C1, P1>& iter ):
-    mCurrent( iter.mCurrent ){
+  normal_iterator( const normal_iterator<T1, C1, P1>& iter )
+    : mCurrent( iter.mCurrent ){
   }
 
   /*!
    * @param other
    */
-  unsigned int operator-( const normal_iterator& other ) const{
+  unsigned int
+  operator-( const normal_iterator& other ) const{
     return mCurrent - other.mCurrent;
   }
 
   /*!
-   * @param mod  
+   * @param mod
    */
-  normal_iterator& operator+=( long long mod ){
+  normal_iterator&
+  operator+=( long long mod ){
     mCurrent += mod;
     return *this;
   }
 
   /*!
-   * @param mod  
+   * @param mod
    */
-  normal_iterator& operator-=( long long mod ){
+  normal_iterator&
+  operator-=( long long mod ){
     mCurrent -= mod;
     return *this;
   }
 
   /*!
-   * @param iter  
+   * @param iter
    */
-  bool operator==( const normal_iterator& iter ) const{
+  bool
+  operator==( const normal_iterator& iter ) const{
     return mCurrent == iter.mCurrent;
   }
 
   /*!
-   * @param iter  
+   * @param iter
    */
-  bool operator!=( const normal_iterator& iter ) const{
+  bool
+  operator!=( const normal_iterator& iter ) const{
     return !( ( *this ) == iter );
   }
 
   /*!
-   * @param other  
+   * @param other
    */
-  bool operator<( const normal_iterator& other ) const{
+  bool
+  operator<( const normal_iterator& other ) const{
     return mCurrent < other.mCurrent;
   }
 
   /*!
    * @param other
    */
-  bool operator>( const normal_iterator& other )const{
+  bool
+  operator>( const normal_iterator& other )const{
     return mCurrent > other.mCurrent;
   }
 
   /*!
    *
    */
-  reference operator*() const{
+  reference
+  operator*() const{
     return *mCurrent;
   }
 
   /*!
    *
    */
-  pointer operator->() const{
+  pointer
+  operator->() const{
     return mCurrent;
   }
 
   /*!
    *
    */
-  normal_iterator& operator++(){
+  normal_iterator&
+  operator++(){
     ++mCurrent;
     return *this;
   }
@@ -126,14 +142,16 @@ public:
   /*!
    *
    */
-  normal_iterator operator++( int ){
+  normal_iterator
+  operator++( int ){
     return normal_iterator( mCurrent++ );
   }
-  
+
   /*!
    *
    */
-  normal_iterator& operator--(){
+  normal_iterator&
+  operator--(){
     --mCurrent;
     return *this;
   }
@@ -141,7 +159,8 @@ public:
   /*!
    *
    */
-  normal_iterator operator--( int ){
+  normal_iterator
+  operator--( int ){
     return normal_iterator( mCurrent-- );
   }
 };
@@ -161,4 +180,3 @@ public:
 }
 
 #endif
-

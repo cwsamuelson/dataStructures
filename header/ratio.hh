@@ -18,7 +18,9 @@ namespace gsw{
  * @param t  Integral argument
  */
 template<typename T>
-constexpr signed int sign( T t ){
+constexpr
+signed int
+sign( T t ){
   if( std::signbit( t ) ){
     return -1;
   } else {
@@ -33,7 +35,9 @@ constexpr signed int sign( T t ){
  * @param t  Numeric argument
  */
 template<typename T>
-constexpr T myAbs( T t ){
+constexpr
+T
+myAbs( T t ){
   if( t < 0 ){
     return -t;
   } else {
@@ -48,7 +52,9 @@ constexpr T myAbs( T t ){
  * @tparam U  Type of 'rhs'
  */
 template<typename T, typename U>
-constexpr std::common_type_t<T, U> gcd( T t, U u ){
+constexpr
+std::common_type_t<T, U>
+gcd( T t, U u ){
   //return std::gcd( t, u );
   while ( u != 0 ){
     unsigned r = t % u;
@@ -83,7 +89,8 @@ public:
    * This allows the number to be easily used at runtime, converting the ratio
    * to a double value
    */
-  constexpr operator double() const{
+  constexpr
+  operator double() const{
     return value;
   }
 
@@ -95,12 +102,14 @@ public:
    *
    * @param other  Ratio to multiply with
    *
-   * @return Ratio of the result of ratio multiplication  
+   * @return Ratio of the result of ratio multiplication
    *
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
-  constexpr auto operator*( ratio<NUM, DEN> other ) const{
+  constexpr
+  auto
+  operator*( ratio<NUM, DEN> other ) const{
     typedef decltype( other ) OTHER;
 
     return ratio<numerator * OTHER::numerator, denominator * OTHER::denominator>();
@@ -119,7 +128,9 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
-  constexpr auto operator/( ratio<NUM, DEN> other ) const{
+  constexpr
+  auto
+  operator/( ratio<NUM, DEN> other ) const{
     typedef decltype( other ) OTHER;
 
     return (*this) * typename OTHER::invert_type();
@@ -128,7 +139,9 @@ public:
   /*!
    * @return
    */
-  constexpr auto invert() const{
+  constexpr
+  auto
+  invert() const{
     return invert_type();
   }
 };
@@ -148,7 +161,9 @@ public:
  * @return Number of type T, containing multiplication result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
-constexpr T operator*( T t, ratio<N, D> r ){
+constexpr
+T
+operator*( T t, ratio<N, D> r ){
   return ( t * N ) / D;
 }
 
@@ -167,7 +182,9 @@ constexpr T operator*( T t, ratio<N, D> r ){
  * @return Number of type T, containing multiplication result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
-constexpr T operator*( ratio<N, D> r, T t ){
+constexpr
+T
+operator*( ratio<N, D> r, T t ){
   return ( t * N ) / D;
 }
 
@@ -186,7 +203,9 @@ constexpr T operator*( ratio<N, D> r, T t ){
  * @return Number of type T, containing division result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
-constexpr T operator/( T t, ratio<N, D> r ){
+constexpr
+T
+operator/( T t, ratio<N, D> r ){
   using R = decltype( r );
 
   return ( t * typename R::invert_type() );
@@ -207,7 +226,9 @@ constexpr T operator/( T t, ratio<N, D> r ){
  * @return Number of type T, containing division result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
-constexpr T operator/( ratio<N, D> r, T t ){
+constexpr
+T
+operator/( ratio<N, D> r, T t ){
   using R = decltype( r );
 
   return ( R::numerator / ( t * R::denominator ) );
@@ -227,7 +248,9 @@ constexpr T operator/( ratio<N, D> r, T t ){
  */
 template<size_t N1, size_t D1,
          size_t N2, size_t D2>
-constexpr bool operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
+constexpr
+bool
+operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
   typedef decltype( r1 ) R1;
   typedef decltype( r2 ) R2;
 
@@ -248,7 +271,9 @@ constexpr bool operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
  */
 template<size_t N1, size_t D1,
          size_t N2, size_t D2>
-constexpr bool operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
+constexpr
+bool
+operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
   return !( r1 == r2 );
 }
 
@@ -277,4 +302,3 @@ using gibi  = ratio<1073741824,    1>;
 }
 
 #endif
-

@@ -28,10 +28,10 @@ public:
   /*!
    * @param count
    */
-  pool_allocator( size_type count = 0 ):
-    mIndicators( 0 ),
-    mMax( count ),
-    mSize( 0 ){
+  pool_allocator( size_type count = 0 )
+    : mIndicators( 0 )
+    , mMax( count )
+    , mSize( 0 ){
 
     if( count <= sizeof( mIndicators ) * 8 ){
       mPool = new unsigned char[count * ptrdiff];
@@ -60,7 +60,8 @@ public:
   /*!
    * @param number
    */
-  pointer allocate( size_type number ){
+  pointer
+  allocate( size_type number ){
     size_type caveStart = 0;
     size_type caveSize = 0;
     size_type index = 0;
@@ -93,7 +94,8 @@ public:
    *
    * @param number
    */
-  void deallocate( pointer ptr, size_type number ){
+  void
+  deallocate( pointer ptr, size_type number ){
     unsigned long start = ( ( unsigned char* )ptr - mPool ) / ptrdiff;
 
     for( unsigned int i = 0; i < number; ++i ){
@@ -107,4 +109,3 @@ public:
 }
 
 #endif
-
