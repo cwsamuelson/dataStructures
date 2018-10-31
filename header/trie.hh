@@ -28,7 +28,9 @@ private:
     // unordered_map might give both
     // the irony here is using a map to implement what is to be a type of map
     std::map<typename key_type::value_type, node> mChildren;
-    std::unique_ptr<value_type> mData;
+    // a pointer is used because the value may not exist
+    // a more idiomatic approach may be std::optional
+    std::shared_ptr<value_type> mData;
   };
 
   node const*
@@ -79,7 +81,7 @@ public:
       curr = &curr->mChildren[ch];
     }
 
-    curr->mData = std::make_unique<value_type>( value );
+    curr->mData = std::make_shared<value_type>( value );
   }
 
   bool
@@ -139,7 +141,10 @@ public:
 
   void
   clear(){
+    std::unique_ptr<value_type> delet;
+
     mRoot.mChildren.clear();
+    delet.swap( mRoot.mdata );
   }
 };
 
