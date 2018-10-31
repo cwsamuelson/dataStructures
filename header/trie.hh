@@ -48,6 +48,24 @@ private:
     return curr;
   }
 
+  void explore( const key_type& key, std::function<void(node const*)> callback ) const{
+    std::queue<node const*> node_que;
+
+    node_que.push( seek_node( key ) );
+
+    while( !node_que.empty() ){
+      node const* ptr = node_que.front();
+      node_que.pop();
+
+      callback( ptr );
+
+      std::for_each( ptr->mChildren.begin(), ptr->mChildren.end(),
+                     [&]( const auto& pair ){
+                       node_que.push( &pair.second );
+                     } );
+    }
+  }
+
   node mRoot;
 
 public:
@@ -84,49 +102,29 @@ public:
   std::set<value_type>
   find( const key_type& key ) const{
     std::set<value_type> results;
-    std::queue<node*> node_que;
 
-    node_que.push( seek_node( key ) );
-
-    while( !node_que.empty() ){
-      node* ptr = node_que.front();
-      node_que.pop();
-
-      if( ptr->mData ){
-        results.insert( ptr->mData );
-      }
-
-      std::transform( nod->mChildren.begin(), nod->mChildren.end(),
-                      std::inserter( node_que, node_que.begin() ),
-                      []( auto pair ){
-                        return pair.second;
-                      } );
-    }
+    explore( key,
+      [&]( node const* ptr ){
+        if( ptr && ptr->mData ){
+          results.insert( *ptr->mData );
+        }
+      } );
 
     return results;
   }
 
   size_t
   count( const key_type& key = key_type() ) const{
-    std::queue<node*> node_que;
-    size_type count = 0;
+    size_t count = 0;
 
-    node_que.push( seek_node( key ) );
+    explore( key,
+      [&]( node const* ptr ){
+        if( ptr && ptr->mData ){
+          ++count;
+        }
+      } );
 
-    while( !node_que.empty() ){
-      node* ptr = node_que.front();
-      node_que.pop();
-
-      if( ptr->mData ){
-        ++count;
-      }
-
-      std::transform( nod->mChildren.begin(), nod->mChildren.end(),
-                      std::inserter( node_que, node_que.begin() ),
-                      []( auto pair ){
-                        return pair.second;
-                      } );
-    }
+    return count;
   }
 
 /*value_type get
