@@ -31,8 +31,25 @@ private:
     std::optional<value_type> mData;
   };
 
+  node*
+  seek_node( const key_type& key ){
+    node* curr = &mRoot;
+
+    for( auto ch : key ){
+      //c++20 provides a contains facility
+      //if( curr->mChildren.contains( ch ) ){
+      if( curr->mChildren.count( ch ) > 0 ){
+        curr = &curr->mChildren.at( ch );
+      } else {
+        return nullptr;
+      }
+    }
+
+    return curr;
+  }
+
   node const*
-  seek_node( const key_type& key ) const{
+  c_seek_node( const key_type& key ) const{
     node const* curr = &mRoot;
 
     for( auto ch : key ){
@@ -50,8 +67,13 @@ private:
 
   void explore( const key_type& key, std::function<void(node const*)> callback ) const{
     std::queue<node const*> node_que;
+    node const* n = c_seek_node( key );
 
-    node_que.push( seek_node( key ) );
+    if( !n ){
+      return;
+    }
+
+    node_que.push( n );
 
     while( !node_que.empty() ){
       node const* ptr = node_que.front();
@@ -84,7 +106,7 @@ public:
 
   bool
   contains( const key_type& key ) const{
-    auto nod = seek_node( key );
+    auto nod = c_seek_node( key );
 
     return nod ? nod->mData.has_value() : false;
   }
@@ -139,7 +161,7 @@ public:
   void
   clear(){
     mRoot.mChildren.clear();
-    mRoot.mData.resut();
+    mRoot.mData.reset();
   }
 };
 
