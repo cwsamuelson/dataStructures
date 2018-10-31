@@ -2,10 +2,10 @@
 #define __TRIE_HH__
 
 #include<set>
-#include<memory>
 #include<queue>
 #include<map>
 #include<functional>
+#include<optional>
 
 namespace gsw{
 
@@ -28,9 +28,7 @@ private:
     // unordered_map might give both
     // the irony here is using a map to implement what is to be a type of map
     std::map<typename key_type::value_type, node> mChildren;
-    // a pointer is used because the value may not exist
-    // a more idiomatic approach may be std::optional
-    std::shared_ptr<value_type> mData;
+    std::optional<value_type> mData;
   };
 
   node const*
@@ -81,23 +79,22 @@ public:
       curr = &curr->mChildren[ch];
     }
 
-    curr->mData = std::make_shared<value_type>( value );
+    curr->mData = std::make_optional<value_type>( value );
   }
 
   bool
   contains( const key_type& key ) const{
     auto nod = seek_node( key );
 
-    return nod ? bool( nod->mData ) : false;
+    return nod ? nod->mData.has_value() : false;
   }
 
   void
   erase( const key_type& key ){
     node* nod = seek_node( key );
 
-    if( nod && nod->mData ){
-      std::unique_ptr<value_type> ptr;
-      ptr.swap( nod->mData );
+    if( nod ){
+      nod->mData.reset();
     }
   }
 
@@ -107,8 +104,8 @@ public:
 
     explore( key,
       [&]( node const* ptr ){
-        if( ptr && ptr->mData ){
-          results.insert( *ptr->mData );
+        if( ptr && ptr->mData.has_value() ){
+          results.insert( ptr->mData.value() );
         }
       } );
 
@@ -121,7 +118,7 @@ public:
 
     explore( key,
       [&]( node const* ptr ){
-        if( ptr && ptr->mData ){
+        if( ptr && ptr->mData.has_value() ){
           ++count;
         }
       } );
@@ -141,10 +138,8 @@ public:
 
   void
   clear(){
-    std::unique_ptr<value_type> delet;
-
     mRoot.mChildren.clear();
-    delet.swap( mRoot.mdata );
+    mRoot.mData.resut();
   }
 };
 
