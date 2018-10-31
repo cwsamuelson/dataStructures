@@ -4,6 +4,10 @@
 #include<set>
 #include<memory>
 #include<queue>
+#include<map>
+#include<functional>
+
+namespace gsw{
 
 /*!
  * @tparam key
@@ -14,7 +18,7 @@ class prefix_tree{
 public:
   using key_type = KEY;
   using value_type = VALUE;
-  using iterator = iter;
+  //using iterator = iter;
 
 private:
   struct node{
@@ -23,13 +27,13 @@ private:
     // maybe should provide facilities to do either?
     // unordered_map might give both
     // the irony here is using a map to implement what is to be a type of map
-    std::map<key_type::value_type, node> mChildren;
+    std::map<typename key_type::value_type, node> mChildren;
     std::unique_ptr<value_type> mData;
   };
 
-  node*
-  seek_node( const key_type& key ){
-    node* curr = &mRoot;
+  node const*
+  seek_node( const key_type& key ) const{
+    node const* curr = &mRoot;
 
     for( auto ch : key ){
       //c++20 provides a contains facility
@@ -57,14 +61,14 @@ public:
       curr = &curr->mChildren[ch];
     }
 
-    curr->mData = make_unique( value );
+    curr->mData = std::make_unique<value_type>( value );
   }
 
   bool
-  contains( const key_type& kt ) const{
-    auto nod = seek_node( kt );
+  contains( const key_type& key ) const{
+    auto nod = seek_node( key );
 
-    return nod ? nod->mData : false;
+    return nod ? bool( nod->mData ) : false;
   }
 
   void
@@ -75,8 +79,6 @@ public:
       std::unique_ptr<value_type> ptr;
       ptr.swap( nod->mData );
     }
-
-    curr->mEndOfWord = false;
   }
 
   std::set<value_type>
@@ -104,7 +106,7 @@ public:
     return results;
   }
 
-  size_type
+  size_t
   count( const key_type& key = key_type() ) const{
     std::queue<node*> node_que;
     size_type count = 0;
@@ -142,5 +144,7 @@ public:
     mRoot.mChildren.clear();
   }
 };
+
+}
 
 #endif
