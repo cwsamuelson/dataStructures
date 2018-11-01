@@ -934,7 +934,7 @@ public:
   constexpr
   typename base::result
   operator()( const typename base::input& val ){
-    return typename base::result( ( val.getRaw() - 32 ) * ( 5 / 9 ) );
+    return typename base::result( ( val.getRaw() - 32.0 ) * ( 5.0 / 9.0 ) );
   }
 };
 
@@ -983,7 +983,7 @@ public:
   constexpr
   typename base::result
   operator()( const typename base::input& val ){
-    return typename base::result( ( val.getRaw() * ( 9 / 5 ) ) + 32 );
+    return typename base::result( ( val.getRaw() * ( 9.0 / 5.0 ) ) + 32.0 );
   }
 };
 
