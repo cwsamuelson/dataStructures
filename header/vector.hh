@@ -10,6 +10,7 @@
 #include<string>
 #include<utility>
 #include<type_traits>
+#include<memory>
 
 #include<normal_iterator.hh>
 #include<allocator_traits.hh>
@@ -83,7 +84,7 @@ private:
 
   void
   reallocateTo( size_type size ){
-    value_type* bfr;
+    std::unique_ptr<value_type[]> bfr;
 
     bfr = alloc_traits::allocate( mAlloc, size );
 
@@ -94,7 +95,7 @@ private:
 
     alloc_traits::deallocate( mAlloc, mData, mCapacity );
     mCapacity = size;
-    mData = bfr;
+    mData = bfr.release();
   }
 
 public:

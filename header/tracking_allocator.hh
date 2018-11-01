@@ -7,6 +7,13 @@
 
 namespace gsw{
 
+/*!
+ * @tparam T
+ *
+ * @tparam A
+ *
+ * @todo add custom logging facility? (through callback)
+ */
 template<typename T, typename A = allocator<T> >
 class tracking_allocator : public A{
 public:

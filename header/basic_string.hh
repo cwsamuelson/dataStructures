@@ -80,11 +80,23 @@ public:
 
   /*!
    */
-  template<typename U>
-  basic_string( U&& other )
-    : mSize( 0 )
-    , mString( nullptr ){
-    *this = std::forward<U>( other );
+  basic_string( const basic_string& other )
+    : mSize( other.mSize ){
+
+    mString = alloc_traits::allocate( mAlloc, mSize + 1 );
+
+    for( unsigned int i = 0; i <= mSize; ++i ){
+      mString[i] = other.mString[i];
+    }
+  }
+
+  /*!
+   */
+  basic_string( basic_string&& other )
+    : mSize( other.mSize )
+    , mString( other.mString ){
+    other.mString = nullptr;
+    other.mSize = 0;
   }
 
   /*! Default ctor
@@ -122,18 +134,13 @@ public:
    */
   basic_string&
   operator=( const basic_string& other ){
+    basic_string tmp = other;
+
     if( mString ){
       alloc_traits::deallocate( mAlloc, mString, mSize + 1 );
     }
 
-    mSize = other.mSize;
-
-    mString = alloc_traits::allocate( mAlloc, mSize + 1 );
-
-    // be sure to include terminator (so use <= )
-    for( unsigned int i = 0; i <= mSize; ++i ){
-      mString[i] = other.mString[i];
-    }
+    *this = std::move( tmp );
 
     return *this;
   }
@@ -142,6 +149,10 @@ public:
    */
   basic_string&
   operator=( basic_string&& other ){
+    if( mString ){
+      alloc_traits::deallocate( mAlloc, mString, mSize + 1 );
+    }
+
     mSize = other.mSize;
     mString = other.mString;
     other.mSize = 0;
@@ -179,7 +190,7 @@ public:
    *
    * Append other to this
    */
-  basic_string
+  basic_string&
   operator+=( const basic_string& other ){
     size_type new_size = size() + other.size();
     pointer temp_string = alloc_traits::allocate( mAlloc, new_size + 1 );
@@ -192,6 +203,15 @@ public:
     for( ; i <= new_size; ++i ){
       temp_string[i] = other.mString[i - size()];
     }
+
+    if( mString ){
+      alloc_traits::deallocate( mAlloc, mString, mSize + 1 );
+    }
+
+    mString = temp_string;
+    mSize = new_size;
+
+    return *this;
   }
 
   /*! Add-assign array of value_type
@@ -200,7 +220,7 @@ public:
    *
    * Append to this
    */
-  basic_string
+  basic_string&
   operator+=( const_pointer& vt ){
     basic_string str( vt );
 

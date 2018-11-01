@@ -14,7 +14,7 @@ namespace gsw{
 template<>
 const char basic_string<char>::terminal = '\0';
 
-typedef basic_string<char> string;
+using string = basic_string<char>;
 
 /*!
  */
@@ -27,14 +27,17 @@ public:
   /*!
    */
   template<size_t N>
-  constexpr test_ct_string( const char( &arr )[N] ):
-    mString( arr ),
-    mSize( N - 1 ){
+  constexpr
+  test_ct_string( const char( &arr )[N] )
+    : mString( arr )
+    , mSize( N - 1 ){
   }
 
   /*!
    */
-  constexpr char operator[]( size_t n ) const{
+  constexpr
+  char
+  operator[]( size_t n ) const{
     if( n < mSize ){
       return mString[n];
     } else {
@@ -44,13 +47,17 @@ public:
 
   /*!
    */
-  constexpr size_t size() const{
+  constexpr
+  size_t
+  size() const{
     return mSize;
   }
 
   /*!
    */
-  constexpr bool operator==( const test_ct_string& other ) const{
+  constexpr
+  bool
+  operator==( const test_ct_string& other ) const{
     if( mSize != other.mSize ){
       return false;
     }
@@ -66,7 +73,9 @@ public:
 
   /*!
    */
-  constexpr bool operator!=( const test_ct_string& other ) const{
+  constexpr
+  bool
+  operator!=( const test_ct_string& other ) const{
     return !( *this == other );
   }
 };
@@ -78,27 +87,35 @@ template<char ...STRING>
 struct ct_string{
   /*!
    */
-  static basic_string<char> string(){
+  static
+  basic_string<char>
+  string(){
     return basic_string<char>{ STRING... };
   }
 
   /*!
    */
-  constexpr bool operator==( const ct_string& ) const{
+  constexpr
+  bool
+  operator==( const ct_string& ) const{
     return true;
   }
 
   /*!
    */
   template<char ...OTHER_STRING>
-  constexpr bool operator==( const ct_string<OTHER_STRING...>& ) const{
+  constexpr
+  bool
+  operator==( const ct_string<OTHER_STRING...>& ) const{
     return false;
   }
 
   /*!
    */
   template<char ...OTHER_STRING>
-  constexpr bool operator!=( const ct_string<OTHER_STRING...>& other ) const{
+  constexpr
+  bool
+  operator!=( const ct_string<OTHER_STRING...>& other ) const{
     return !( *this == other );
   }
 };
@@ -129,4 +146,3 @@ struct concatenate<ct_string<Ls...>, ct_string<Rs...> >{
 }
 
 #endif
-

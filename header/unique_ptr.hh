@@ -30,6 +30,10 @@ public:
     : mData( ptr ){
   }
 
+  /*!
+   */
+  unique_ptr( const unique_ptr& ) = delete;
+
   /*! Move ctor
    *
    * @param other
@@ -41,6 +45,8 @@ public:
     other.mData = nullptr;
   }
 
+  /*!
+   */
   template<typename U>
   unique_ptr( unique_ptr<U>&& other )
     : mData( other.mData ){
@@ -71,6 +77,11 @@ public:
 
     return *this;
   }
+
+  /*!
+   */
+  unique_ptr&
+  operator=( const unique_ptr& ) = delete;
 
   /*! Move assignment operator
    *
