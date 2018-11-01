@@ -292,7 +292,7 @@ public:
   date&
   operator-=( const time_type<F>& tu ){
     mDay -= tu;
-    if( mDay <= 0ll ){
+    while( mDay <= 0ll ){
       --mYear;
       mDay += 365;
     }
