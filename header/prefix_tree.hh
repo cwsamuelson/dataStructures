@@ -65,7 +65,8 @@ private:
     return curr;
   }
 
-  void explore( const key_type& key, std::function<void(node const*)> callback ) const{
+  void
+  explore( const key_type& key, std::function<void(node const*)> callback ) const{
     std::queue<node const*> node_que;
     node const* n = c_seek_node( key );
 

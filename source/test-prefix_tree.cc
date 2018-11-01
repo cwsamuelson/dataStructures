@@ -16,7 +16,11 @@ TEST_CASE( "", "[trie]" ){
   REQUIRE( !tree.empty() );
   REQUIRE( tree.count() == 1 );
   REQUIRE( tree.count( "1" ) == 1 );
+  REQUIRE( tree.count( "12" ) == 0 );
+  REQUIRE( tree.count( "123" ) == 0 );
   REQUIRE( tree.contains( "1" ) );
+  REQUIRE( !tree.contains( "12" ) );
+  REQUIRE( !tree.contains( "123" ) );
   REQUIRE( tree.find( "1" ).size() == 1 );
   REQUIRE( tree.find( "1" ) == set<int>{2} );
 
@@ -24,10 +28,13 @@ TEST_CASE( "", "[trie]" ){
   REQUIRE( !tree.empty() );
   REQUIRE( tree.count() == 2 );
   REQUIRE( tree.count( "1" ) == 2 );
+  REQUIRE( tree.count( "12" ) == 1 );
+  REQUIRE( tree.count( "123" ) == 0 );
   REQUIRE( tree.find( "1" ).size() == 2 );
   REQUIRE( tree.find( "1" ) == set<int>{2, 3} );
   REQUIRE( tree.contains( "1" ) );
   REQUIRE( tree.contains( "12" ) );
+  REQUIRE( !tree.contains( "123" ) );
 
   tree.erase( "1" );
   REQUIRE( !tree.empty() );
