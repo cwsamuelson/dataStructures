@@ -2,7 +2,7 @@
 
 #include<catch.hpp>
 
-#include<trie.hh>
+#include<prefix_tree.hh>
 
 using namespace std;
 using namespace gsw;

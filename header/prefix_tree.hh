@@ -1,5 +1,5 @@
-#ifndef __TRIE_HH__
-#define __TRIE_HH__
+#ifndef __PREFIX_TREE_HH__
+#define __PREFIX_TREE_HH__
 
 #include<set>
 #include<queue>
