@@ -53,9 +53,8 @@ public:
    */
   block_allocator( const block_allocator& other ) = delete;
 
-  block_allocator( block_allocator&& other ){
-    mStart = other.mStart;
-
+  block_allocator( block_allocator&& other )
+    : mStart( other.mStart ){
     other.mStart = nullptr;
   }
 

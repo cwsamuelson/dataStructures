@@ -9,7 +9,7 @@
 
 namespace gsw{
 
-/*! Accessor to allow access to internal members
+/*! Accessor to allow controlled access to internal members
  *
  * @tparam T  Type of reference to be stored
  *
@@ -82,7 +82,8 @@ public:
    * Conditionally assigns new value to stored reference, based upon the result
    * of the callback function provided at construction.
    */
-  reference operator=( const_reference cref ){
+  reference
+  operator=( const_reference cref ){
     if( mcb( cref ) ){
       mRef = cref;
     }
@@ -100,7 +101,8 @@ public:
    * of the callback function provided at construction.
    */
   template<typename U>
-  reference operator=( U&& other ){
+  reference
+  operator=( U&& other ){
     if( mcb( other ) ){
       mRef = std::forward<U>( other );
     }

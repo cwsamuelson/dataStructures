@@ -36,6 +36,10 @@ TEST_CASE( "Allocator allocates memory", "[base_allocator][allocator]" ){
   vals = traits::allocate( alloc, 3 );
   REQUIRE( vals != nullptr );
 
+  REQUIRE( !bools[0] );
+  REQUIRE( !bools[1] );
+  REQUIRE( !bools[2] );
+
   traits::construct( alloc, &vals[0], bools[0] );
   REQUIRE( bools[0] );
   REQUIRE( !bools[1] );
@@ -93,7 +97,7 @@ TEST_CASE( "pool", "[pool_allocator][allocator]" ){
   REQUIRE( ( baz + 2 ) == bar );
 
   type* quux = traits::allocate( alloc, 2 );
-  
+
   REQUIRE( ( bar + 2 ) == quux );
 
   traits::deallocate( alloc, foo, 2 );
@@ -185,6 +189,10 @@ TEST_CASE( "tracking", "[tracking_allocator][allocator]" ){
   REQUIRE( alloc.usage() == 3 );
   REQUIRE( alloc.max_usage() == 3 );
 
+  REQUIRE( !bools[0] );
+  REQUIRE( !bools[1] );
+  REQUIRE( !bools[2] );
+
   traits::construct( alloc, &vals[0], bools[0] );
   REQUIRE( bools[0] );
   REQUIRE( !bools[1] );
@@ -219,4 +227,3 @@ TEST_CASE( "tracking", "[tracking_allocator][allocator]" ){
   REQUIRE( alloc.usage() == 0 );
   REQUIRE( alloc.max_usage() == 3 );
 }
-

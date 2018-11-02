@@ -71,7 +71,7 @@ are_equal<float>( float f1, float f2 ){
 template<typename OBJ, typename MEMBER_FN, typename ...Args>
 auto
 invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
-  return ( obj.*memfun )( args... );
+  return ( obj.*memfun )( std::forward( args... ) );
 }
 
 /*! Less than operator functor

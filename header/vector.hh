@@ -84,7 +84,7 @@ private:
 
   void
   reallocateTo( size_type size ){
-    std::unique_ptr<value_type[]> bfr;
+    value_type* bfr;
 
     bfr = alloc_traits::allocate( mAlloc, size );
 
@@ -95,7 +95,7 @@ private:
 
     alloc_traits::deallocate( mAlloc, mData, mCapacity );
     mCapacity = size;
-    mData = bfr.release();
+    mData = bfr;
   }
 
 public:

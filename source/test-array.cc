@@ -4,11 +4,11 @@
 
 TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
   gsw::array<char[3]> arr;
-  
+
   arr[0] = 'a';
   arr[1] = 'b';
   arr[2] = 'c';
-  
+
   SECTION( "Array basics." ){
     REQUIRE( arr[0] == 'a' );
     REQUIRE( arr[1] == 'b' );
@@ -20,6 +20,23 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
     for( auto it : arr ){
       REQUIRE( it == arr[i++] );
     }
+  }
+
+  SECTION( "Assignment" ){
+    arr[0] = 'd';
+    REQUIRE( arr[0] == 'd' );
+    REQUIRE( arr[1] == 'b' );
+    REQUIRE( arr[2] == 'c' );
+
+    arr[1] = 'e';
+    REQUIRE( arr[0] == 'd' );
+    REQUIRE( arr[1] == 'e' );
+    REQUIRE( arr[2] == 'c' );
+
+    arr[2] = 'f';
+    REQUIRE( arr[0] == 'd' );
+    REQUIRE( arr[1] == 'e' );
+    REQUIRE( arr[2] == 'f' );
   }
 }
 
@@ -44,7 +61,7 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
     arr[arr >= 6] = 'x';
     arr[arr <= 4] = 'w';
 
-    for( unsigned int i = 0; i < 4; ++i ){
+    for( unsigned int i = 0; i <= 4; ++i ){
       REQUIRE( arr[i] == 'w' );
     }
     for( unsigned int i = 6; i < 10; ++i ){
@@ -86,4 +103,3 @@ TEST_CASE( "Brace initialization", "[array]" ){
   REQUIRE( i == 1 );
   REQUIRE( arr.size() == 5 );
 }
-

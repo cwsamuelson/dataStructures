@@ -8,7 +8,8 @@ using namespace gsw;
 TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
   SECTION( "Basic operation" ){
     REQUIRE( ( "X"_evar ).evaluate( {{"X", 1}} ) == 1 );
-    //REQUIRE( ( "foo"_lvar ).solve( {"foo"} ) ==
+    REQUIRE( ( "X"_evar ).evaluate( {{"X", 5}} ) == 5 );
+    //REQUIRE( ( "x"_evar ).solve( {"x"} ) ==
     //         set<set<string> > {{"foo"}} );
   }
 
@@ -21,19 +22,25 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
   SECTION( "Negation" ){
     REQUIRE( ( -"X"_evar ).evaluate( {{"X", 1}} ) == -1 );
     REQUIRE( ( - -"X"_evar ).evaluate( {{"X", 1}} ) == 1 );
+    REQUIRE( ( "-X"_evar ).evaluate( {{"X", 1}} ) == -1 );
+    REQUIRE( ( -"-X"_evar ).evaluate( {{"X", 1}} ) == 1 );
+
     REQUIRE( ( -"5"_evar ).evaluate( {{"X", 1}} ) == -5 );
+    REQUIRE( ( - -"5"_evar ).evaluate( {{"X", 1}} ) == 5 );
     REQUIRE( ( "-5"_evar ).evaluate( {{"X", 1}} ) == -5 );
-    //REQUIRE( ( !"foo"_lvar ).solve( {"foo"} ) == 
+    REQUIRE( ( - "-5"_evar ).evaluate( {{"X", 1}} ) == 5 );
+    //REQUIRE( ( !"foo"_lvar ).solve( {"foo"} ) ==
     //         set<set<string> > {{}} );
   }
 
   SECTION( "Multiplication (*)" ){
     REQUIRE( ( "X"_evar * "Y"_evar ).evaluate( {{"X", 2}, {"Y", 3}} ) == 6 );
     REQUIRE( ( "X"_evar * "Y"_evar ).evaluate( {{"X", 3}, {"Y", -3}} ) == -9 );
-    REQUIRE( ( "X"_evar * "Y"_evar ).evaluate( {{"X", 4}, {"Y", 3}} ) == 12 );
+    REQUIRE( ( "X"_evar * "Y"_evar ).evaluate( {{"X", -4}, {"Y", -3}} ) == 12 );
     REQUIRE( ( "X"_evar * "X"_evar ).evaluate( {{"X", 3}} ) == 9 );
     REQUIRE( ( "X"_evar * "5"_evar ).evaluate( {{"X", 3}} ) == 15 );
     REQUIRE( ( "4.2"_evar * "X"_evar ).evaluate( {{"X", 2}} ) == 8.4 );
+    REQUIRE( ( "3"_evar * "5"_evar ).evaluate({}) == 15 );
     //REQUIRE( ( "foo"_lvar && "bar"_lvar ).solve( {"foo", "bar"} ) ==
     //         set<set<string> >( {{"foo", "bar"}} ) );
   }
@@ -44,6 +51,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     REQUIRE( ( "X"_evar / "X"_evar ).evaluate( {{"X", 12}} ) == 1 );
     REQUIRE( ( "X"_evar / "3"_evar ).evaluate( {{"X", 12}} ) == 4 );
     REQUIRE( ( "4.2"_evar / "X"_evar ).evaluate( {{"X", 2}} ) == 2.1 );
+    REQUIRE( ( "15"_evar / "3"_evar ).evaluate( {} ) == 5 );
   }
 
   SECTION( "Addition (+)" ){
@@ -52,7 +60,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     REQUIRE( ( "X"_evar + "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == -2 );
     REQUIRE( ( "X"_evar + "3"_evar ).evaluate( {{"X", 3}} ) == 6 );
     REQUIRE( ( "5"_evar + "3"_evar ).evaluate( {} ) == 8 );
-    //REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
+    //REQUIRE( ( "x"_evar || "y"_evar ).solve( {"x", "y"} ) ==
     //         set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
   }
 
@@ -62,7 +70,7 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     REQUIRE( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == 12 );
     REQUIRE( ( "X"_evar - "3"_evar ).evaluate( {{"X", 5}} ) == 2 );
     REQUIRE( ( "5"_evar - "3"_evar ).evaluate( {} ) == 2 );
-    //REQUIRE( ( "foo"_lvar || "bar"_lvar ).solve( {"foo", "bar"} ) ==
+    //REQUIRE( ( "x"_evar || "y"_lvar ).solve( {"x", "y"} ) ==
     //         set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
   }
 
@@ -107,4 +115,3 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     }*/
   }
 }
-

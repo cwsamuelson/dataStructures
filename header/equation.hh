@@ -258,8 +258,16 @@ public:
   /*!
    *
    * @param variables
+   *
+   * @todo determine what it 'means' to solve an equation?
+   * does it mean to solve a particular variable for zero?
+   * does it mean find valid values [the domain] of a variable?
+   * or should solve be implemented as an operator, resulting a relation between
+   *    variables? (i.e. (("x"_evar + "y"_evar) = 0).solve({{"x", 1}} == map<string, double>{{"y", -1}}) )
+   *    (("x"_evar + "y"_evar.pow(2)) = 0).solve({{"x", -1}} == map<string, double>{{"y", -1}, {"y", 1}}) )
    */
-  std::set<data> solve( const data& variables ) const;
+  std::set<data>
+  solve( const data& variables ) const;
 
   friend equation operator""_evar( const char* name, size_t sz );
   friend const_eq operator""_cvar( long double value );
