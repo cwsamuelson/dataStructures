@@ -134,13 +134,14 @@ public:
    *
    * @param refA node edge is from
    * @param refB node edge is to
-   *
-   * TODO: remove directed and undirected?
    */
   void
   remove_edge( const_reference refA, const_reference refB ){
-    auto& edges = mNodes.at( refA );
-    edges.erase( edges.find( refB ) );
+    auto& outedges = mNodes.at( refA );
+    outedges.erase( outedges.find( refB ) );
+
+    auto& inedges = mInEdges.at( refB );
+    inedges.erase( inedges.find( refA ) );
   }
 
   /*!
