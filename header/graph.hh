@@ -164,8 +164,6 @@ public:
   /*! Get all nodes in graph
    *
    * @return a set of all node names
-   *
-   * TODO:should a type be returned containing information such as adjacent nodes?
    */
   std::set<value_type>
   get_nodes() const{
@@ -185,12 +183,6 @@ public:
   std::set<edge>
   get_edges() const{
     std::set<edge> edges;
-
-    for( auto node : mInEdges ){
-      for( auto edg : node.second ){
-        edges.emplace( node.first, edg );
-      }
-    }
 
     for( auto node : mNodes ){
       for( auto edg : node.second ){
