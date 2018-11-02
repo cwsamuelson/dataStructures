@@ -78,6 +78,21 @@ TEST_CASE( "", "[graph]" ){
     REQUIRE( g.get_edges() == set<graph<int>::edge>{{1, 2}} );
   }
 
+  SECTION( "Circular ref" ){
+    g.add_edge( 1, 1 );
+
+    REQUIRE( !g.empty() );
+    REQUIRE( g.node_count() == 2 );
+    REQUIRE( g.edge_count() == 1 );
+
+    REQUIRE( g.adjacent( 1, 1 ) );
+    REQUIRE( g.neighbors( 1 ) == set<int>{1} );
+    REQUIRE( g.get_out_edges( 1 ) == set<graph<int>::edge>{{1, 1}} );
+    REQUIRE( g.get_in_edges( 1 ) == set<graph<int>::edge>{{1, 1}} );
+
+    REQUIRE( g.get_edges() == set<graph<int>::edge>{{1, 1}} );
+  }
+
   SECTION( "Several nodes" ){
     g.add_node( 3 );
 
@@ -121,7 +136,7 @@ TEST_CASE( "", "[graph]" ){
     REQUIRE( g.node_count() == 2 );
     REQUIRE( g.edge_count() == 0 );
 
-    REQUIRE( g.get_nodes() == set<int>{1, 2} );
+    REQUIRE( g.get_nodes() == set<int>{1, 3} );
     REQUIRE( g.get_edges() == set<graph<int>::edge>{} );
 
     REQUIRE( g.get_out_edges( 1 ) == set<graph<int>::edge>{} );
