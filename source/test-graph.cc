@@ -1,10 +1,23 @@
 #include<set>
 
+#define CATCH_CONFIG_ENABLE_ALL_STRINGMAKERS
 #include<catch.hpp>
 
 #include<graph.hh>
 
 using namespace std;
+
+// define how to stringify a set for catch error printing
+namespace Catch{
+
+template<typename T, typename compare, typename Allocator>
+struct StringMaker<std::set<T, compare, Allocator> > {
+    static std::string convert( std::set<T, compare, Allocator> const& s ) {
+        return ::Catch::Detail::rangeToString( s.begin(), s.end() );
+    }
+};
+
+}
 
 TEST_CASE( "", "[graph]" ){
   graph<int> g;
