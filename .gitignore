@@ -8,4 +8,5 @@ depend/*
 *.swp
 *.stackdump
 documentation/*
-
+.idea/*
+cmake-build-debug/*
