@@ -839,6 +839,8 @@ template<typename T = double, typename F = ratio<1, 1> >
 using energy        = decltype( force<T, F>() * length<T, F>() );//joules
 template<typename T = double, typename F = ratio<1, 1> >
 using power         = decltype( energy<T, F>() / time<T, F>() );//watts
+template<typename T = double, typename F = ratio<1, 1> >
+using rad           = decltype( energy<T, F>() / mass<T, F>() );//rads
 
 template<typename T = double, typename F = ratio<1, 1> >
 using voltage       = unit< 2, -3,  1, -1,  0, 0, 0, 0, 0, 0, T, F>;//volts
