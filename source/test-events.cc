@@ -85,8 +85,9 @@ public:
 
   rxEvent rxDataEvent;
 
-  void send( const string& ){
-    rxDataEvent.fire( "response!" );
+  void
+  send( const string& d ){
+    rxDataEvent.fire( d + "response!" );
   }
 };
 
@@ -102,6 +103,5 @@ TEST_CASE( "In context usage", "[events]" ){
 
   ser.send( "data!" );
 
-  REQUIRE( response == "response!" );
+  REQUIRE( response == "data!response!" );
 }
-
