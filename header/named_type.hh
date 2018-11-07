@@ -12,12 +12,10 @@ private:
   value_type mValue;
 
 public:
-  explicit
   named_type( const_ref value )
     : mValue( value ){
   }
 
-  explicit
   named_type( T&& value )
     : mValue( std::move( value ) ){
   }
