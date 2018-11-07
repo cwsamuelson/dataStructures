@@ -56,7 +56,7 @@ high_polynomial::operator/=( const high_polynomial& ){
 }
 
 high_polynomial&
-high_polynomial::operator/=( double ){
+high_polynomial::operator/=( double d ){
   for( auto& it : mCoeff ){
     it.second /= d;
   }
