@@ -3,21 +3,23 @@
 
 #include<functional>
 #include<thread>
+#include<future>
 
 class timer{
 private:
   bool mCancel = false;
 
 public:
-  using callback = std::function<void()>;
+  template<typename T>
+  using callback = std::function<T()>;
 
-  template<typename Rep, typename Period>
+  template<typename Rep, typename Period, typename T>
   void
-  interval( callback fn, const std::chrono::duration<Rep, Period>& duration ){
+  interval( callback<T> fn, const std::chrono::duration<Rep, Period>& duration ){
     mCancel = false;
 
     std::thread t( [=](){
-      while( mCancel ){
+      while( true ){
         std::this_thread::sleep_for( duration );
         if( mCancel ){
           break;
@@ -28,28 +30,30 @@ public:
     t.detach();
   }
 
-  template<typename Rep, typename Period>
-  void
-  delayed( callback fn, const std::chrono::duration<Rep, Period>& duration ){
-    std::thread t( [=](){
+  template<typename Rep, typename Period, typename T>
+  std::future<T>
+  delayed( callback<T> fn, const std::chrono::duration<Rep, Period>& duration ){
+    mCancel = false;
+
+    return std::async( std::launch::async, [=](){
       std::this_thread::sleep_for( duration );
       if( !mCancel ){
-        fn();
+        return fn();
       }
     } );
-    t.detach();
   }
 
-  template<typename clock, typename duration>
-  void
-  schedule( callback fn, const std::chrono::time_point<clock, duration>& time ){
-    std::thread t( [=](){
+  template<typename clock, typename duration, typename T>
+  std::future<T>
+  schedule( callback<T> fn, const std::chrono::time_point<clock, duration>& time ){
+    mCancel = false;
+
+    return std::async( std::launch::async, [=](){
       std::this_thread::sleep_until( time );
       if( !mCancel ){
-        fn();
+        return fn();
       }
     });
-    t.detach();
   }
 };
 
