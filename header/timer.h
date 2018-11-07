@@ -56,7 +56,7 @@ public:
       if( !mCancel ){
         return fn();
       }
-    });
+    } );
   }
 };
 
