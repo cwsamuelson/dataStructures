@@ -36,7 +36,7 @@ public:
   }
 
   std::set<double>
-  solve( input_point hint = input_point( std::array<coord_t, 3>{1, 1}), unsigned int iterations = 6 ) const;
+  solve( input_point hint, unsigned int iterations = 6 ) const;
 
   template<typename U>
   high_polynomial&

@@ -1,4 +1,5 @@
 #include<cmath>
+#include<utility>
 
 #include<high_polynomial.hh>
 
@@ -10,27 +11,57 @@ gsw::operator==( const high_polynomial& lhs, const high_polynomial& rhs ){
 }
 
 high_polynomial&
-high_polynomial::operator+=( const high_polynomial& hp ){
+high_polynomial::operator+=( const high_polynomial& rhs ){
+  high_polynomial hp( *this );
+
+  for( const auto& it : rhs.mCoeff ){
+    hp.mCoeff[it.first] += it.second;
+  }
+
+  *this = std::move( hp );
+
+  return *this;
 }
 
 high_polynomial&
-high_polynomial::operator-=( const high_polynomial& hp ){
+high_polynomial::operator-=( const high_polynomial& rhs ){
+  high_polynomial hp( *this );
+
+  for( const auto& it : rhs.mCoeff ){
+    hp.mCoeff[it.first] -= it.second;
+  }
+
+  *this = std::move( hp );
+
+  return *this;
 }
 
 high_polynomial&
-high_polynomial::operator*=( const high_polynomial& hp ){
+high_polynomial::operator*=( const high_polynomial& ){
+  return *this;
 }
 
 high_polynomial&
 high_polynomial::operator*=( double d ){
+  for( auto& it : mCoeff ){
+    it.second *= d;
+  }
+
+  return *this;
 }
 
 high_polynomial&
-high_polynomial::operator/=( const high_polynomial& hp ){
+high_polynomial::operator/=( const high_polynomial& ){
+  return *this;
 }
 
 high_polynomial&
-high_polynomial::operator/=( double d ){
+high_polynomial::operator/=( double ){
+  for( auto& it : mCoeff ){
+    it.second /= d;
+  }
+
+  return *this;
 }
 
 high_polynomial
@@ -61,8 +92,9 @@ high_polynomial::operator()( const input_point& point ) const{
   for( auto coeff_data : mCoeff ){
     auto X = pow( point.x(), coeff_data.first.x() );
     auto Y = pow( point.y(), coeff_data.first.y() );
+    auto Z = pow( point.z(), coeff_data.first.z() );
 
-    total += X * Y * coeff_data.second;
+    total += X * Y * Z * coeff_data.second;
   }
 
   return total;
