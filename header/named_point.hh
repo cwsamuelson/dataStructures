@@ -2,6 +2,7 @@
 #define __NAMED_POINT_HH__
 
 #include<array>
+#include<type_traits>
 
 #include<named_type.hh>
 
@@ -25,9 +26,18 @@ private:
   friend class vec;
 
 public:
-  vec(){
-    for( auto& val : mData ){
-      val = 0;
+  vec( const x_type& x = 0.0, const y_type& y = 0.0, const z_type& z = 0.0, const w_type& w = 0.0 ){
+    if( N >= 1 ){
+      mData[0] = x;
+      if( N>= 2 ){
+        mData[1] = y;
+        if( N >= 3 ){
+          mData[2] = z;
+          if( N >= 4 ){
+            mData[3] = w;
+          }
+        }
+      }
     }
   }
 //!@todo construct and assign from collection of x_type y_type etc?
@@ -46,42 +56,54 @@ public:
 
   val_t&
   x(){
-    return mData[0];
+    return mData.at( 0 );
   }
 
   val_t&
   y(){
-    return mData[1];
+    return mData.at( 1 );
   }
 
   val_t&
   z(){
-    return mData[2];
+    return mData.at( 2 );
   }
 
   val_t&
   w(){
-    return mData[3];
+    return mData.at( 3 );
+  }
+
+  template<size_t M>
+  val_t&
+  get(){
+    return mData.at( M );
   }
 
   const val_t&
   x() const{
-    return mData[0];
+    return mData.at( 0 );
   }
 
   const val_t&
   y() const{
-    return mData[1];
+    return mData.at( 1 );
   }
 
   const val_t&
   z() const{
-    return mData[2];
+    return mData.at( 2 );
   }
 
   const val_t&
   w() const{
-    return mData[3];
+    return mData.at( 3 );
+  }
+
+  template<size_t M>
+  const val_t&
+  get() const{
+    return mData.at( M );
   }
 
   vec&
@@ -132,17 +154,16 @@ public:
   bool
   operator<( const vec& v ) const{
     for( unsigned int i = 0; i < v.mData.size(); ++i ){
-      if( mData[i] == v.mData[i] ){
-        continue;
-      } else {
+      if( mData[i] != v.mData[i] ){
         return mData[i] < v.mData[i];
       }
     }
+
+    return false;
   }
 
-  template<unsigned long M>
   bool
-  operator==( std::array<val_t, M> v ) const{
+  operator==( std::array<val_t, N> v ) const{
     return mData == v;
   }
 };
