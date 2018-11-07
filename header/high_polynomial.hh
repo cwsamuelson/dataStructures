@@ -30,30 +30,18 @@ public:
     : mCoeff( first, last ){
   }
 
-  high_polynomial( const high_polynomial& other )
-    : mCoeff( other.mCoeff ){
-  }
+  high_polynomial( const high_polynomial& other );
 
-  high_polynomial( high_polynomial&& other )
-    : mCoeff( std::move( other.mCoeff ) ){
-  }
+  high_polynomial( high_polynomial&& other );
 
   std::set<double>
   solve( input_point hint, unsigned int iterations = 6 ) const;
 
   high_polynomial&
-  operator=( const high_polynomial& other ){
-    mCoeff = other.mCoeff;
-
-    return *this;
-  }
+  operator=( const high_polynomial& other );
 
   high_polynomial&
-  operator=( high_polynomial&& eq ){
-    mCoeff = std::move( eq.mCoeff );
-
-    return *this;
-  }
+  operator=( high_polynomial&& eq );
 
   high_polynomial&
   operator+=( const high_polynomial& hp );

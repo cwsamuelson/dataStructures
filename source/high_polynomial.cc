@@ -5,6 +5,28 @@
 
 using namespace gsw;
 
+high_polynomial::high_polynomial( const high_polynomial& other )
+  : mCoeff( other.mCoeff ){
+}
+
+high_polynomial::high_polynomial( high_polynomial&& other )
+  : mCoeff( std::move( other.mCoeff ) ){
+}
+
+high_polynomial&
+high_polynomial::operator=( const high_polynomial& other ){
+  mCoeff = other.mCoeff;
+
+  return *this;
+}
+
+high_polynomial&
+high_polynomial::operator=( high_polynomial&& eq ){
+  mCoeff = std::move( eq.mCoeff );
+
+  return *this;
+}
+
 bool
 gsw::operator==( const high_polynomial& lhs, const high_polynomial& rhs ){
   return lhs.mCoeff == rhs.mCoeff;
