@@ -30,18 +30,27 @@ public:
     : mCoeff( first, last ){
   }
 
-  template<typename U>
-  high_polynomial( U&& eq )
-    : mCoeff( std::forward<storage_type>( eq ) ){
+  high_polynomial( const high_polynomial& other )
+    : mCoeff( other.mCoeff ){
+  }
+
+  high_polynomial( high_polynomial&& other )
+    : mCoeff( std::move( other.mCoeff ) ){
   }
 
   std::set<double>
   solve( input_point hint, unsigned int iterations = 6 ) const;
 
-  template<typename U>
   high_polynomial&
-  operator=(  U&& eq ){
-    mCoeff = std::forward<storage_type>( eq );
+  operator=( const high_polynomial& other ){
+    mCoeff = other.mCoeff;
+
+    return *this;
+  }
+
+  high_polynomial&
+  operator=( high_polynomial&& eq ){
+    mCoeff = std::move( eq.mCoeff );
 
     return *this;
   }
