@@ -19,6 +19,8 @@ TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
     mp[i] = i + 1;
   }
 
+  REQUIRE( mp.size() == 10 );
+
   SECTION( "Basic value hash_mapping" ){
     for( int i = 0; i < nIters; ++i ){
       REQUIRE( mp[i] == i + 1 );
@@ -30,14 +32,17 @@ TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
 
     m["test"] = "foo";
 
+    REQUIRE( m.size() == 1 );
     REQUIRE( m["test"] == "foo" );
 
     m["test"] = "bar";
 
+    REQUIRE( m.size() == 1 );
     REQUIRE( m["test"] == "bar" );
 
     m["test2"] = "foo";
 
+    REQUIRE( m.size() == 2 );
     REQUIRE( m["test2"] == "foo" );
     REQUIRE( m["test"] == "bar" );
 
@@ -49,4 +54,3 @@ TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
     REQUIRE( std::get<1>( *it ) == "foo" );
   }
 }
-

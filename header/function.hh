@@ -4,6 +4,8 @@
 /*!
  * @example test-functional.cc
  */
+#include<memory>
+#include<utility>
 
 #include<tuple.hh>
 
@@ -28,17 +30,44 @@ public:
   typedef tuple<Args...> args;
 
 private:
-  func f;
+  class interface{
+  public:
+      virtual
+      result
+      operator()( Args... ) = 0;
+  };
+
+  template<typename T>
+  class wrapper : public interface{
+  private:
+    T mUnder;
+  public:
+    wrapper( const T& t )
+      : mUnder( t ){
+    }
+
+    result
+    operator()( Args... args ){
+      return mUnder( std::forward<Args>( args )... );
+    }
+  };
+
+  std::shared_ptr<interface> f;
 
 public:
+  /*!
+   */
+  function() = default;
+
   /*! Ctor
    *
    * @param parm  function pointer to bo stored
    *
    * Store provided function pointer
    */
-  function( func parm = nullptr )
-    : f( parm ){
+  template<typename T>
+  function( const T& t )
+    : f( t ){
   }
 
   /*! Function call operator
@@ -47,8 +76,9 @@ public:
    *
    * Call stored function with provided arguments
    */
-  R operator()( Args... args ){
-    return f( args... );
+  result
+  operator()( Args... args ){
+    return f->operator()( std::forward<Args>( args )... );
   }
 
   /*! Copy assignment operator
@@ -69,9 +99,19 @@ public:
    *
    * Store function pointer F
    */
+  template<typename T>
   function&
-  operator=( func F ){
-    f = F;
+  operator=( const T& t ){
+    f = std::make_shared<wrapper<T> >( t );
+
+    return *this;
+  }
+
+  template<typename R1, typename ...Args1>
+  function&
+  operator=( R1(*t)(Args...) ){
+    f = std::make_shared<wrapper<R1(*)(Args...)> >( t );
+
     return *this;
   }
 };

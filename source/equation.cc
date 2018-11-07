@@ -238,17 +238,24 @@ equation
 gsw::operator""_evar( const char* name, size_t sz ){
   string str_name( name, sz );
   stringstream ss( str_name );
-  double val;
+  double value;
 
-  if( ss >> val ){
+  if( ss >> value ){
     auto var = make_shared<equation::constant>();
-    var->value = val;
+    var->value = value;
     return {var};
   } else {
     auto var = make_shared<equation::variable>();
     var->name = str_name;
     return {var};
   }
+}
+
+equation
+gsw::operator""_evar( long double value ){
+  auto var = make_shared<equation::constant>();
+  var->value = value;
+  return {var};
 }
 
 equation::const_eq

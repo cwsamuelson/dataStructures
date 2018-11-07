@@ -270,6 +270,7 @@ public:
   solve( const data& variables ) const;
 
   friend equation operator""_evar( const char* name, size_t sz );
+  friend equation operator""_evar( long double value );
   friend const_eq operator""_cvar( long double value );
   friend equation log( const equation& b, const equation& eq );
 };
@@ -284,6 +285,15 @@ public:
  */
 equation
 operator""_evar( const char* name, size_t sz );
+
+/*! Constant value equation
+ *
+ * @param value Literal value
+ *
+ * @return Constant value wrapper
+ */
+equation
+operator""_evar( long double value );
 
 /*! Constant value equation
  *

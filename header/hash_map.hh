@@ -3,6 +3,7 @@
 
 #include<vector>
 #include<tuple>
+#include<optional>
 
 #include<normal_iterator.hh>
 #include<allocator_traits.hh>
@@ -30,21 +31,26 @@ public:
   using hash_fn = HASH;
 
 private:
-  using container = std::vector<storage_type>;
+  using container = std::vector<std::optional<storage_type> >;
 
   container mValues;
   hash_fn mHashFunc;
+  size_t mMaxSize;
 
 public:
   /*!
    */
-  hash_map() = default;
+  hash_map( size_t map_max = 16 )
+    : mValues( map_max )
+    , mMaxSize( map_max ){
+  }
 
   /*!
    */
   template<typename U>
   hash_map( U&& other )
-    : mValues( std::forward<container>( other.mValues ) ){
+    : hash_map( other.mMaxSize ){
+    mValues = std::forward<container>( other.mValues );
   }
 
   /*!
@@ -58,6 +64,7 @@ public:
   template<typename U>
   hash_map&
   operator=( U&& other ){
+    mMaxSize = other.mMaxSize;
     mValues = std::forward<container>( other.mValues );
 
     return *this;
@@ -67,7 +74,12 @@ public:
    */
   void
   insert( const key_type& key, const value_type& value ){
-    mValues[mHashFunc( key )] = {key, value};
+    mValues.at( mHashFunc( key ) % mMaxSize ) = {key, value};
+  }
+
+  void
+  erase( const key_type& key ){
+    mValues.at( mHashFunc( key ) % mMaxSize ).reset();
   }
 
   /*!
@@ -84,7 +96,14 @@ public:
    */
   value_type&
   operator[]( const key_type& key ){
-    return std::get<0>( mValues[mHashFunc( key )] );
+    auto hash = mHashFunc( key );
+    auto idx = hash % mMaxSize;
+
+    if( !mValues.at( idx ) ){
+      mValues.at( idx ) = {key, value_type{}};
+    }
+
+    return std::get<0>( mValues.at( idx ).value() );
   }
 
   /*!
@@ -109,7 +128,13 @@ public:
    */
   bool
   empty() const{
-    return mValues.empty();
+    for( const auto& it : mValues ){
+      if( it ){
+        return false;
+      }
+    }
+
+    return true;
   }
 
   /*!
@@ -118,11 +143,18 @@ public:
    */
   size_t
   size() const{
-    return mValues.size();
+    size_t count = 0;
+
+    for( const auto& it : mValues ){
+      if( it ){
+        ++count;
+      }
+    }
+
+    return count;
   }
 };
 
 }
 
 #endif
-
