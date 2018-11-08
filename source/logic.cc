@@ -99,7 +99,7 @@ set<set<string> >
 proposition::disjunction::solve( set<string> data ) const{
   auto lhs_data = lhs->solve( data );
   auto rhs_data = rhs->solve( data );
-  
+
   return merge( lhs_data, rhs_data );
 }
 
