@@ -117,6 +117,20 @@ proposition::exDisjunction::solve( set<string> data ) const{
   auto rhs_data = rhs->solve( data );
   set<set<string> > result;
 
+  // set_symmetric_difference is insufficient.  by way of example:
+  // truth table for A^(A||B):
+  // | A | B || A^(A||B)|
+  // |---|---||---------|
+  // | 0 | 0 ||    0    |
+  // | 0 | 1 ||    1    |
+  // | 1 | 0 ||    0    |
+  // | 1 | 1 ||    0    |
+  // using set_symmetric_difference this is solved as:
+  // solve( lhs ) == A
+  // solve( rhs ) == A, B, AB
+  // set_symmetric_difference( lhs, rhs ) == B, AB
+  // this leaves AB as a solution, but this is an invalid solution, as A cannot
+  //  be part of a solution, and is in fact ignored in this equation
   set_symmetric_difference( lhs_data.begin(), lhs_data.end(),
                             rhs_data.begin(), rhs_data.end(),
                             inserter( result, result.begin() ) );
