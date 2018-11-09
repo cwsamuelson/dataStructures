@@ -50,16 +50,6 @@ private:
     }
   }
 
-  void
-  mv( const polynomial& eq ){
-    mCoeff = eq.mCoeff;
-  }
-
-  void
-  mv( polynomial&& eq ){
-    mCoeff = std::move( eq.mCoeff );
-  }
-
 public:
   /*! default ctor
    */
@@ -91,18 +81,20 @@ public:
     mCoeff( first, last ){
   }
 
-  /*! copy/move ctor
+  /*! Copy a polynomial
    *
-   * @tparam U
-   *
-   * @param eq polynomial to copy/move from
-   *
-   * This ctor enables copy and move construction. eq is forwarded appropriately
-   * for either copy or move
+   * @param p
    */
-  template<typename U>
-  polynomial( U&& eq ){
-    mv( std::forward<U>( eq ) );
+  polynomial( const polynomial& p )
+    : mCoeff( p.mCoeff ){
+  }
+
+  /*! Move from polynomial
+   *
+   * @param p polynomial to move from
+   */
+  polynomial( polynomial&& p ) noexcept
+    : mCoeff( std::move( p.mCoeff ) ){
   }
 
   /*! Solve for the zeroes of this polynomial
@@ -120,7 +112,7 @@ public:
    *
    * @return the order of the polynomial (X^2+x+1 has order 2)
    */
-  unsigned int
+  unsigned long
   order() const;
 
   /*! copy/move assignment
@@ -243,6 +235,14 @@ public:
    */
   double
   operator()( double X ) const;
+
+  /*!
+   *
+   * @param X
+   * @return
+   */
+  y_type
+  operator()( x_type X ) const;
 
   /*!
    *

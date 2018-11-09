@@ -29,11 +29,11 @@ polynomial::solve( double hint, unsigned int iterations ) const{
   return roots;
 }
 
-unsigned int
+unsigned long
 polynomial::order() const{
   reduce();
 
-  if( mCoeff.size() > 0 ){
+  if( !mCoeff.empty() ){
     return mCoeff.size() - 1;
   } else {
     return 0;
@@ -103,7 +103,7 @@ polynomial::operator/=( const polynomial& rhs ){
 
   // perform long division
   while( remainder.order() > 0 ){
-    unsigned int term_order = remainder.order() - rhs.order();
+    auto term_order = remainder.order() - rhs.order();
     double term_value = ( quotient[term_order] = remainder.mCoeff.back() / rhs.mCoeff.back() );
     storage_type term_vec( term_order );
     term_vec.push_back( term_value );
@@ -158,12 +158,17 @@ double
 polynomial::operator()( double X ) const{
   double val = mCoeff.back();
 
-  for( int i = mCoeff.size() - 2; i >= 0; --i ){
+  for( signed long i = mCoeff.size() - 2; i >= 0; --i ){
     val *= X;
     val += mCoeff[i];
   }
 
   return val;
+}
+
+y_type
+polynomial::operator()( x_type X ) const{
+  return operator()( X.get() );
 }
 
 bool
