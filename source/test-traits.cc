@@ -18,31 +18,31 @@ fortyTwo(){
 }
 
 TEST_CASE( "is_void", "[traits]" ){
-  REQUIRE( fortyTwo<void>() == 42 );
-  REQUIRE( fortyTwo<int>()  == 0 );
+  CHECK( fortyTwo<void>() == 42 );
+  CHECK( fortyTwo<int>()  == 0 );
 }
 
 TEST_CASE( "remove_cv", "[traits]" ){
   gsw::remove_cv<const int>::type G = 5;
 
-  REQUIRE( ( G += 5 ) == 10 );
+  CHECK( ( G += 5 ) == 10 );
 
-  REQUIRE( gsw::is_same<gsw::remove_cv<const int>::type, int>::value );
-  REQUIRE( gsw::is_same<gsw::remove_cv<int>::type,       int>::value );
+  CHECK( gsw::is_same<gsw::remove_cv<const int>::type, int>::value );
+  CHECK( gsw::is_same<gsw::remove_cv<int>::type,       int>::value );
 
-  REQUIRE( gsw::is_same<gsw::remove_reference<int&&>::type, int>::value );
-  REQUIRE( gsw::is_same<gsw::remove_reference<int&>::type,  int>::value );
-  REQUIRE( gsw::is_same<gsw::remove_reference<int>::type,   int>::value );
+  CHECK( gsw::is_same<gsw::remove_reference<int&&>::type, int>::value );
+  CHECK( gsw::is_same<gsw::remove_reference<int&>::type,  int>::value );
+  CHECK( gsw::is_same<gsw::remove_reference<int>::type,   int>::value );
 
-  REQUIRE( gsw::is_same<gsw::remove_extent<int[12]>::type, int*>::value );
-  REQUIRE( gsw::is_same<gsw::remove_extent<int>::type,     int>::value );
+  CHECK( gsw::is_same<gsw::remove_extent<int[12]>::type, int*>::value );
+  CHECK( gsw::is_same<gsw::remove_extent<int>::type,     int>::value );
 
-  REQUIRE( gsw::is_same<gsw::remove_pointer<int*>::type, int>::value );
-  REQUIRE( gsw::is_same<gsw::remove_pointer<int>::type,  int>::value );
+  CHECK( gsw::is_same<gsw::remove_pointer<int*>::type, int>::value );
+  CHECK( gsw::is_same<gsw::remove_pointer<int>::type,  int>::value );
 
-  REQUIRE( gsw::is_same<gsw::remove_pointer<int*[12]>::type, int*[12]>::value );
-  REQUIRE( gsw::is_same<gsw::remove_extent<int*[12]>::type, int**>::value );
-  REQUIRE( gsw::is_same<gsw::remove_pointer<
+  CHECK( gsw::is_same<gsw::remove_pointer<int*[12]>::type, int*[12]>::value );
+  CHECK( gsw::is_same<gsw::remove_extent<int*[12]>::type, int**>::value );
+  CHECK( gsw::is_same<gsw::remove_pointer<
                           gsw::remove_pointer<
                             gsw::remove_extent<
                               int*[12]>::type>
@@ -62,9 +62,9 @@ class d3 : public base{
 
 TEST_CASE( "common_type", "[traits]" ){
   SECTION( "Built-in types" ){
-    REQUIRE( gsw::is_same<gsw::common_type<double, int     >::type, double>::value );
-    REQUIRE( gsw::is_same<gsw::common_type<double, int, int>::type, double>::value );
-    REQUIRE( gsw::is_same<gsw::common_type<long,      short>::type, long>::value );
+    CHECK( gsw::is_same<gsw::common_type<double, int     >::type, double>::value );
+    CHECK( gsw::is_same<gsw::common_type<double, int, int>::type, double>::value );
+    CHECK( gsw::is_same<gsw::common_type<long,      short>::type, long>::value );
   }
 
   SECTION( "Class and it's base" ){
@@ -82,4 +82,3 @@ TEST_CASE( "common_type", "[traits]" ){
     //CHECK( gsw::is_same<gsw::common_type<d1, d2          >::type, base>::value );
   }
 }
-

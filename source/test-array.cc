@@ -10,33 +10,33 @@ TEST_CASE( "Arrays can be used as builtin arrays.", "[array]" ){
   arr[2] = 'c';
 
   SECTION( "Array basics." ){
-    REQUIRE( arr[0] == 'a' );
-    REQUIRE( arr[1] == 'b' );
-    REQUIRE( arr[2] == 'c' );
+    CHECK( arr[0] == 'a' );
+    CHECK( arr[1] == 'b' );
+    CHECK( arr[2] == 'c' );
   }
 
   SECTION( "Array range-based for." ){
     unsigned int i = 0;
     for( auto it : arr ){
-      REQUIRE( it == arr[i++] );
+      CHECK( it == arr[i++] );
     }
   }
 
   SECTION( "Assignment" ){
     arr[0] = 'd';
-    REQUIRE( arr[0] == 'd' );
-    REQUIRE( arr[1] == 'b' );
-    REQUIRE( arr[2] == 'c' );
+    CHECK( arr[0] == 'd' );
+    CHECK( arr[1] == 'b' );
+    CHECK( arr[2] == 'c' );
 
     arr[1] = 'e';
-    REQUIRE( arr[0] == 'd' );
-    REQUIRE( arr[1] == 'e' );
-    REQUIRE( arr[2] == 'c' );
+    CHECK( arr[0] == 'd' );
+    CHECK( arr[1] == 'e' );
+    CHECK( arr[2] == 'c' );
 
     arr[2] = 'f';
-    REQUIRE( arr[0] == 'd' );
-    REQUIRE( arr[1] == 'e' );
-    REQUIRE( arr[2] == 'f' );
+    CHECK( arr[0] == 'd' );
+    CHECK( arr[1] == 'e' );
+    CHECK( arr[2] == 'f' );
   }
 }
 
@@ -52,20 +52,20 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
     arr[arr < 2] = 'y';
 
     for( unsigned int i = 0; i < 2; ++i ){
-      REQUIRE( arr[i] == 'y' );
+      CHECK( arr[i] == 'y' );
     }
     for( unsigned int i = 9; i < 10; ++i ){
-      REQUIRE( arr[i] == 'z' );
+      CHECK( arr[i] == 'z' );
     }
 
     arr[arr >= 6] = 'x';
     arr[arr <= 4] = 'w';
 
     for( unsigned int i = 0; i <= 4; ++i ){
-      REQUIRE( arr[i] == 'w' );
+      CHECK( arr[i] == 'w' );
     }
     for( unsigned int i = 6; i < 10; ++i ){
-      REQUIRE( arr[i] == 'x' );
+      CHECK( arr[i] == 'x' );
     }
   }
 
@@ -79,11 +79,11 @@ TEST_CASE( "Arrays can be 'spliced'.", "[array]" ){
     arr[ids] = 'z';
 
     for( auto it : ids ){
-      REQUIRE( arr[it] == 'z' );
+      CHECK( arr[it] == 'z' );
     }
 
     for( unsigned int i = 6; i < 10; ++i ){
-      REQUIRE( arr[i] == ( 'a' + i ) );
+      CHECK( arr[i] == ( 'a' + i ) );
     }
   }
 }
@@ -99,7 +99,7 @@ TEST_CASE( "Brace initialization", "[array]" ){
   const gsw::array<int[5]> arr{ 1, 2, 3, 4, 5 };
   const int i = arr[0];
 
-  REQUIRE( arr[0] == 1 );
-  REQUIRE( i == 1 );
-  REQUIRE( arr.size() == 5 );
+  CHECK( arr[0] == 1 );
+  CHECK( i == 1 );
+  CHECK( arr.size() == 5 );
 }

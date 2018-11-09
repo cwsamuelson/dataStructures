@@ -39,18 +39,18 @@ public:
 TEST_CASE( "Accessor can be assigned to, but only if permitted by callback", "[accessor]" ){
   bar b;
 
-  REQUIRE( b.getInternal() == 0 );
+  CHECK( b.getInternal() == 0 );
 
   b.getInternal() = 13;
-  REQUIRE( b.getInternal() == 0 );
+  CHECK( b.getInternal() == 0 );
 
   b.getInternal() = 12;
-  REQUIRE( b.getInternal() == 12 );
-  REQUIRE( b.getj() == 1 );
+  CHECK( b.getInternal() == 12 );
+  CHECK( b.getj() == 1 );
 
   b.getInternal() = 11;
-  REQUIRE( b.getInternal() == 12 );
-  REQUIRE( b.getj() == 1 );
+  CHECK( b.getInternal() == 12 );
+  CHECK( b.getj() == 1 );
 }
 
 TEST_CASE( "Accessor can be used as a reference proxy", "[accessor]" ){
@@ -58,18 +58,18 @@ TEST_CASE( "Accessor can be used as a reference proxy", "[accessor]" ){
   auto a = b.getInternal();
   const auto c = b.getInternal();
 
-  REQUIRE( a == 0 );
-  REQUIRE( c == 0 );
+  CHECK( a == 0 );
+  CHECK( c == 0 );
 
   a = 11;
-  REQUIRE( a == 0 );
-  REQUIRE( c == 0 );
+  CHECK( a == 0 );
+  CHECK( c == 0 );
 
   a = 12;
-  REQUIRE( a == 12 );
-  REQUIRE( c == 12 );
+  CHECK( a == 12 );
+  CHECK( c == 12 );
 
   a = 13;
-  REQUIRE( a == 12 );
-  REQUIRE( c == 12 );
+  CHECK( a == 12 );
+  CHECK( c == 12 );
 }

@@ -18,30 +18,30 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     test_t z = x + y;
     test_t w = y - x;
 
-    REQUIRE( x == valX );
-    REQUIRE( y == valY );
-    REQUIRE( z == valX + valY );
-    REQUIRE( w == valY - valX );
-    REQUIRE( ( kilovolt( 1 ) + kilovolt( 1 ) ) == 2 );
-    REQUIRE( ( kilovolt( 1 ) - kilovolt( 1 ) ) == 0 );
+    CHECK( x == valX );
+    CHECK( y == valY );
+    CHECK( z == valX + valY );
+    CHECK( w == valY - valX );
+    CHECK( ( kilovolt( 1 ) + kilovolt( 1 ) ) == 2 );
+    CHECK( ( kilovolt( 1 ) - kilovolt( 1 ) ) == 0 );
   }
 
   SECTION( "Constants can interact with a type" ){
     using kilovolt = voltage<double, metric, kilo>;
     kilovolt kv( 12 );
 
-    REQUIRE( kv + 3 == kilovolt( 15 ) );
-    REQUIRE( 3 + kv == kilovolt( 15 ) );
-    REQUIRE( kv - 3 == kilovolt( 9 ) );
-    REQUIRE( 3 - kv == kilovolt( -9 ) );
-    REQUIRE( kv * 3 == kilovolt( 36 ) );
+    CHECK( kv + 3 == kilovolt( 15 ) );
+    CHECK( 3 + kv == kilovolt( 15 ) );
+    CHECK( kv - 3 == kilovolt( 9 ) );
+    CHECK( 3 - kv == kilovolt( -9 ) );
+    CHECK( kv * 3 == kilovolt( 36 ) );
     // currently this breaks the build
     // this is a desired feature, but since similar works with addition, why
     //   does it not work for multiplication?
     //! @todo fix multiplying constant by unit
-    //REQUIRE( 3 * kv == kilovolt( 36 ) );
-    REQUIRE( kv / 3 == kilovolt( 4 ) );
-    //REQUIRE( 36 / kv == kilovolt( 3 ) );
+    //CHECK( 3 * kv == kilovolt( 36 ) );
+    CHECK( kv / 3 == kilovolt( 4 ) );
+    //CHECK( 36 / kv == kilovolt( 3 ) );
   }
 
   SECTION( "Units multiplication/division result in new unit types" ){
@@ -52,13 +52,13 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
       V = I * R;
 
-      REQUIRE( V.getValue() == I.getValue() * R.getValue() );
+      CHECK( V.getValue() == I.getValue() * R.getValue() );
       I = 3.0;
 
       I = V / R;
 
-      REQUIRE( I == 5.0 );
-      REQUIRE( I.getValue() == V.getValue() / R.getValue() );
+      CHECK( I == 5.0 );
+      CHECK( I.getValue() == V.getValue() / R.getValue() );
 
       test_t X = 2.0;
       test_t Y = 3.0;
@@ -66,11 +66,11 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
       Z = X * Y;
 
-      REQUIRE( Z.getValue() == 6.0 );
+      CHECK( Z.getValue() == 6.0 );
     }
 
     SECTION( "Kinematics example" ){
-      REQUIRE( acceleration<>( 5 ) * gsw::time<>( 2 ) * gsw::time<>( 4 ) == length<>( 40 ) );
+      CHECK( acceleration<>( 5 ) * gsw::time<>( 2 ) * gsw::time<>( 4 ) == length<>( 40 ) );
     }
   }
 
@@ -79,20 +79,20 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     test_t Y = 1.0;
     test_t Z = 3.0;
 
-    REQUIRE( X == Y );
-    REQUIRE( X < Z );
-    REQUIRE( Z > Y );
-    REQUIRE( X < 3.0 );
+    CHECK( X == Y );
+    CHECK( X < Z );
+    CHECK( Z > Y );
+    CHECK( X < 3.0 );
   }
 
   SECTION( "Units can use compound operators" ){
     test_t X = 0.0;
 
     X += 3.0;
-    REQUIRE( X == 3.0 );
+    CHECK( X == 3.0 );
 
     X -= 1.0;
-    REQUIRE( X == 2.0 );
+    CHECK( X == 2.0 );
   }
 
   SECTION( "Unit prefixes can be used" ){
@@ -104,11 +104,11 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
     I = kv / r;
 
-    REQUIRE( I == 6.0 );
-    REQUIRE( kv == 3.0 );
-    REQUIRE( kv.getRaw() == 3000.0 );
-    REQUIRE( kv.getValue() == 3.0 );
-    REQUIRE( kv == voltage<double>( 3000 ) );
+    CHECK( I == 6.0 );
+    CHECK( kv == 3.0 );
+    CHECK( kv.getRaw() == 3000.0 );
+    CHECK( kv.getValue() == 3.0 );
+    CHECK( kv == voltage<double>( 3000 ) );
   }
 
   SECTION( "Compatible storage classes can be used together" ){
@@ -117,8 +117,8 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
 
     v1 = v2;
 
-    REQUIRE( v1 != v2 );
-    REQUIRE( v1 == 3 );
+    CHECK( v1 != v2 );
+    CHECK( v1 == 3 );
   }
 }
 
@@ -152,14 +152,14 @@ TEST_CASE( "Unit can be used as a constant expression.", "[unit]" ){
   static_assert( voltage<>( 3 ) >= voltage<>( 3 ) );
   static_assert( ( voltage<>( 5 ) = 6.0 ) == 6 );
 
-  REQUIRE( d1 == 3 );
-  REQUIRE( d2 == 3 );
-  REQUIRE( d3 == 7 );
-  REQUIRE( v2 == v1 );
-  REQUIRE( v1 < v3 );
-  REQUIRE( v3 > v1 );
-  REQUIRE( v1 <= v2 );
-  REQUIRE( v1 >= v2 );
+  CHECK( d1 == 3 );
+  CHECK( d2 == 3 );
+  CHECK( d3 == 7 );
+  CHECK( v2 == v1 );
+  CHECK( v1 < v3 );
+  CHECK( v3 > v1 );
+  CHECK( v1 <= v2 );
+  CHECK( v1 >= v2 );
 }
 
 TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
@@ -170,9 +170,9 @@ TEST_CASE( "Arithmetic doesn't confuse prefixes.", "[unit]" ){
   resistance<long> o( 3 );
   a = kv / o;
 
-  REQUIRE( a == 4000000 );
-  REQUIRE( a == kilo_amp( 4 ) );
-  REQUIRE( a.getValue() == 4000000 );
+  CHECK( a == 4000000 );
+  CHECK( a == kilo_amp( 4 ) );
+  CHECK( a.getValue() == 4000000 );
 }
 
 TEST_CASE( "Scheduler test", "[unit]" ){
@@ -181,23 +181,23 @@ TEST_CASE( "Scheduler test", "[unit]" ){
   using sched_tick_rate = unit<tick_rate, metric, unsigned long long, milli>;
   const tick<unsigned long long, metric> t = int_time( 50 ) / sched_tick_rate( 5 );
 
-  REQUIRE( t == 10 );
+  CHECK( t == 10 );
 }
 
 TEST_CASE( "Some units provide literal suffixes", "[unit]" ){
-  REQUIRE( ( 0.0_0    + none<long double>( 3 ) )        == 3 );
-  REQUIRE( ( 0.0_len  + length<long double>( 3 ) )      == 3 );
-  REQUIRE( ( 0.0_mass + mass<long double>( 3 ) )        == 3 );
-  REQUIRE( ( 0.0_temp + temperature<long double>( 3 ) ) == 3 );
-  REQUIRE( ( 0.0_t    + gsw::time<long double>( 3 ) )   == 3 );
-  REQUIRE( 3.0_A * 4.0_R == 12.0_V );
+  CHECK( ( 0.0_0    + none<long double>( 3 ) )        == 3 );
+  CHECK( ( 0.0_len  + length<long double>( 3 ) )      == 3 );
+  CHECK( ( 0.0_mass + mass<long double>( 3 ) )        == 3 );
+  CHECK( ( 0.0_temp + temperature<long double>( 3 ) ) == 3 );
+  CHECK( ( 0.0_t    + gsw::time<long double>( 3 ) )   == 3 );
+  CHECK( 3.0_A * 4.0_R == 12.0_V );
 
-  REQUIRE( ( 0_0    + none<unsigned long long>( 3 ) )        == 3 );
-  REQUIRE( ( 0_len  + length<unsigned long long>( 3 ) )      == 3 );
-  REQUIRE( ( 0_mass + mass<unsigned long long>( 3 ) )        == 3 );
-  REQUIRE( ( 0_temp + temperature<unsigned long long>( 3 ) ) == 3 );
-  REQUIRE( ( 0_t    + gsw::time<unsigned long long>( 3 ) )   == 3 );
-  REQUIRE( 3_A * 4_R == 12_V );
+  CHECK( ( 0_0    + none<unsigned long long>( 3 ) )        == 3 );
+  CHECK( ( 0_len  + length<unsigned long long>( 3 ) )      == 3 );
+  CHECK( ( 0_mass + mass<unsigned long long>( 3 ) )        == 3 );
+  CHECK( ( 0_temp + temperature<unsigned long long>( 3 ) ) == 3 );
+  CHECK( ( 0_t    + gsw::time<unsigned long long>( 3 ) )   == 3 );
+  CHECK( 3_A * 4_R == 12_V );
 }
 
 class custom_system1{};
@@ -243,17 +243,17 @@ TEST_CASE( "Handles different unit systems", "[unit]" ){
     celsius<> c( 0 );
     fahrenheit<> f( c );
 
-    REQUIRE( f.getRaw() == 32 );
+    CHECK( f.getRaw() == 32 );
     f = -40;
     c = f;
-    REQUIRE( c.getRaw() == -40 );
+    CHECK( c.getRaw() == -40 );
   }
 
   SECTION( "Handles custom unit systems" ){
     custom_unit1 cu1( 5 );
     custom_unit2 cu2( 1 );
 
-    REQUIRE( cu1 == cu2 );
+    CHECK( cu1 == cu2 );
   }
 }
 
@@ -285,19 +285,19 @@ TEST_CASE( "Converts between systems, and types and factors" , "[unit]" ){
   feet<int, ratio<5280, 1> > f9( m1 );
   meters<int, ratio<1000, 1> > m9( m1 );
 
-  REQUIRE( f1 == f2 );
-  REQUIRE( m1 == m3 );
+  CHECK( f1 == f2 );
+  CHECK( m1 == m3 );
 
-  REQUIRE( f1 == f4 );
-  REQUIRE( m1 == m5 );
+  CHECK( f1 == f4 );
+  CHECK( m1 == m5 );
 
-  REQUIRE( ( f1 - m2 ) < .1 );
-  REQUIRE( ( m1 - f3 ) < .1 );
+  CHECK( ( f1 - m2 ) < .1 );
+  CHECK( ( m1 - f3 ) < .1 );
 
-  REQUIRE( f8 == 0.0 );
-  REQUIRE( m8 == 0.0 );
+  CHECK( f8 == 0.0 );
+  CHECK( m8 == 0.0 );
 
-  REQUIRE( f9 == 0.0 );
-  REQUIRE( m9 == 0.0 );
+  CHECK( f9 == 0.0 );
+  CHECK( m9 == 0.0 );
   //@todo add more tests for this
 }

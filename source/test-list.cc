@@ -36,15 +36,15 @@ TEST_CASE( "Runs constructors/destructors when appropriate", "[list]" ){
   SECTION( "Constructor is run on emplace calls" ){
     l.emplace_back( &test );
 
-    REQUIRE( !test );
-    REQUIRE( l.back() == wrapper( &test ) );
-    REQUIRE( l.size() == 1 );
+    CHECK( !test );
+    CHECK( l.back() == wrapper( &test ) );
+    CHECK( l.size() == 1 );
 
     l.emplace_front( &test );
 
-    REQUIRE( !test );
-    REQUIRE( l.front() == wrapper( &test ) );
-    REQUIRE( l.size() == 2 );
+    CHECK( !test );
+    CHECK( l.front() == wrapper( &test ) );
+    CHECK( l.size() == 2 );
   }
 
   SECTION( "Destructor is run on pop calls )" ){
@@ -53,11 +53,11 @@ TEST_CASE( "Runs constructors/destructors when appropriate", "[list]" ){
     l.emplace_front( &test );
 
     l.pop_back();
-    REQUIRE( test );
+    CHECK( test );
 
     test = false;
     l.pop_front();
-    REQUIRE( test );
+    CHECK( test );
   }
 }
 
@@ -73,15 +73,15 @@ TEST_CASE( "Lists can be iterated across using standard mechanisms", "[list]" ){
     int i = 0;
 
     for( auto it : lst ){
-      REQUIRE( it == lst[i] );
+      CHECK( it == lst[i] );
       ++i;
     }
-    REQUIRE( i == lst.size() );
+    CHECK( i == lst.size() );
   }
 
   SECTION( "Lists can be iterated like arrays" ){
     for( unsigned int i = 0; i < lst.size(); ++i ){
-      REQUIRE( lst[i] == i + 1 );
+      CHECK( lst[i] == i + 1 );
     }
   }
 
@@ -89,9 +89,7 @@ TEST_CASE( "Lists can be iterated across using standard mechanisms", "[list]" ){
     int i = 1;
 
     for( auto it = lst.begin(); it != lst.end(); ++it ){
-      REQUIRE( *it == i++ );
+      CHECK( *it == i++ );
     }
   }
 }
-
-

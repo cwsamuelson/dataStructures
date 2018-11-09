@@ -36,8 +36,8 @@ TEST_CASE( "Vectors will run constructors/destructors when appropriate", "[vecto
   SECTION( "Constructor is run on emplace_back call" ){
     v.emplace_back( &test );
 
-    REQUIRE( !test );
-    REQUIRE( v.back() == wrapper( &test ) );
+    CHECK( !test );
+    CHECK( v.back() == wrapper( &test ) );
     REQUIRE( v.size() == 1 );
     REQUIRE( v.capacity() >= 1 );
   }
@@ -52,7 +52,7 @@ TEST_CASE( "Vectors will run constructors/destructors when appropriate", "[vecto
 
     REQUIRE( v.size() == 0 );
 
-    REQUIRE( test );
+    CHECK( test );
   }
 }
 
@@ -70,7 +70,7 @@ TEST_CASE( "Vectors can be resized", "[vector]" ){
 
     v.push_back( i );
 
-    REQUIRE( v.back() == i );
+    CHECK( v.back() == i );
   }
 
   SECTION( "Vector size increases with additions" ){
@@ -132,7 +132,7 @@ TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]
     int i = 0;
 
     for( auto it : vec ){
-      REQUIRE( it == vec[i] );
+      CHECK( it == vec[i] );
       ++i;
     }
     REQUIRE( i == vec.size() );
@@ -140,7 +140,7 @@ TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]
 
   SECTION( "Vectors can be iterated like arrays" ){
     for( unsigned int i = 0; i < vec.size(); ++i ){
-      REQUIRE( vec[i] == i + 1 );
+      CHECK( vec[i] == i + 1 );
     }
   }
 
@@ -148,7 +148,7 @@ TEST_CASE( "Vectors can be iterated across using standard mechanisms", "[vector]
     int i = 1;
 
     for( auto it = vec.begin(); it != vec.end(); ++it ){
-      REQUIRE( *it == i++ );
+      CHECK( *it == i++ );
     }
   }
 }
@@ -159,8 +159,7 @@ TEST_CASE( "Constructors", "[vector]" ){
 
     REQUIRE( vec.size() == 12 );
     for( auto it : vec ){
-      REQUIRE( it == 42 );
+      CHECK( it == 42 );
     }
   }
 }
-

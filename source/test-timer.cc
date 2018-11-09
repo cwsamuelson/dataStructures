@@ -19,10 +19,10 @@ TEST_CASE( "", "[timer]" ){
       return 1;
     }, 5ms );
 
-    REQUIRE( f.get() == 1 );
+    CHECK( f.get() == 1 );
 
-    REQUIRE( end - start <= 7ms );
-    REQUIRE( end - start >= 3ms );
+    CHECK( end - start <= 7ms );
+    CHECK( end - start >= 3ms );
   }
 
   SECTION( "Scheduled execution" ){
@@ -37,9 +37,9 @@ TEST_CASE( "", "[timer]" ){
       return 2;
     }, start_time );
 
-    REQUIRE( f.get() == 2 );
+    CHECK( f.get() == 2 );
 
-    REQUIRE( end_time - start_time <= 12ms );
-    REQUIRE( end_time - start_time >= 8ms );
+    CHECK( end_time - start_time <= 12ms );
+    CHECK( end_time - start_time >= 8ms );
   }
 }

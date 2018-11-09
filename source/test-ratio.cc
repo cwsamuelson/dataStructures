@@ -11,21 +11,21 @@ TEST_CASE( "Ratio equivalence.", "[ratio]" ){
   S s;
   T t;
 
-  REQUIRE( r == .5 );
-  REQUIRE( s == .5 );
-  REQUIRE( t == .5 );
-  REQUIRE( r == s );
-  REQUIRE( r == t );
-  REQUIRE( t == s );
-  REQUIRE( R::value       == S::value );
-  REQUIRE( T::value       == S::value );
-  REQUIRE( R::value       == T::value );
-  REQUIRE( R::numerator   == S::numerator );
-  REQUIRE( T::numerator   == S::numerator );
-  REQUIRE( R::numerator   == T::numerator );
-  REQUIRE( R::denominator == S::denominator );
-  REQUIRE( T::denominator == S::denominator );
-  REQUIRE( R::denominator == T::denominator );
+  CHECK( r == .5 );
+  CHECK( s == .5 );
+  CHECK( t == .5 );
+  CHECK( r == s );
+  CHECK( r == t );
+  CHECK( t == s );
+  CHECK( R::value       == S::value );
+  CHECK( T::value       == S::value );
+  CHECK( R::value       == T::value );
+  CHECK( R::numerator   == S::numerator );
+  CHECK( T::numerator   == S::numerator );
+  CHECK( R::numerator   == T::numerator );
+  CHECK( R::denominator == S::denominator );
+  CHECK( T::denominator == S::denominator );
+  CHECK( R::denominator == T::denominator );
 }
 
 TEST_CASE( "Ratio arithmetic.", "[ratio]" ){
@@ -37,13 +37,12 @@ TEST_CASE( "Ratio arithmetic.", "[ratio]" ){
   S s;
   T t;
 
-  REQUIRE( decltype( r * s )::value == 2 );
-  REQUIRE( r * s == 2 );
-  REQUIRE( ( r   * 4 ) == 2 );
-  REQUIRE( ( R() * 4 ) == 2 );
-  REQUIRE( ( r * s ) == ( R() * 4 ) );
-  REQUIRE( r.invert() == 2 );
-  REQUIRE( s.invert() == T() );
-  REQUIRE( s.invert() == t );
+  CHECK( decltype( r * s )::value == 2 );
+  CHECK( r * s == 2 );
+  CHECK( ( r   * 4 ) == 2 );
+  CHECK( ( R() * 4 ) == 2 );
+  CHECK( ( r * s ) == ( R() * 4 ) );
+  CHECK( r.invert() == 2 );
+  CHECK( s.invert() == T() );
+  CHECK( s.invert() == t );
 }
-

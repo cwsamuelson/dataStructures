@@ -12,16 +12,16 @@ TEST_CASE( "Reference wrappers can be used similar to regular references", "[ref
   gsw::reference_wrapper<int> refs[2]{ i, j };
 
   i = 3;
-  REQUIRE( ref == 3 );
-  REQUIRE( refs[0] == 3 );
-  REQUIRE( refs[1] == 2 );
-  REQUIRE( ref.get() == 3 );
+  CHECK( ref == 3 );
+  CHECK( refs[0] == 3 );
+  CHECK( refs[1] == 2 );
+  CHECK( ref.get() == 3 );
 
   ref.get() = 5;
-  REQUIRE( ref == 5 );
-  REQUIRE( refs[0] == 5 );
-  REQUIRE( refs[1] == 2 );
-  REQUIRE( ref.get() == 5 );
+  CHECK( ref == 5 );
+  CHECK( refs[0] == 5 );
+  CHECK( refs[1] == 2 );
+  CHECK( ref.get() == 5 );
 }
 
 TEST_CASE( "Reference wrappers can be stored in containers", "[reference_wrapper]" ){
@@ -30,6 +30,5 @@ TEST_CASE( "Reference wrappers can be stored in containers", "[reference_wrapper
 
   vec.emplace_back( i );
   i = 5;
-  REQUIRE( vec[0] == 5 );
+  CHECK( vec[0] == 5 );
 }
-

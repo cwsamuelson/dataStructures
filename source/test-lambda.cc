@@ -7,11 +7,11 @@ using namespace gsw;
 TEST_CASE( "literals", "[lambda]" ){
   using X = Zero;
 
-  REQUIRE( X :: value == 0 );
-  REQUIRE( increment<X>  :: value == 1 );
-  REQUIRE( succeed<X, 5> :: value == 5 );
+  CHECK( X :: value == 0 );
+  CHECK( increment<X>  :: value == 1 );
+  CHECK( succeed<X, 5> :: value == 5 );
 
-  REQUIRE( eval<literal<succeed<X, 5> >, empty_env> :: result :: value == 5 );
+  CHECK( eval<literal<succeed<X, 5> >, empty_env> :: result :: value == 5 );
 }
 
 TEST_CASE( "variables", "[lambda]" ){
@@ -27,20 +27,20 @@ TEST_CASE( "variables", "[lambda]" ){
   using L3 = lookup<Y, env1> :: result;
   using L4 = lookup<Y, env2> :: result;
 
-  REQUIRE( L1 :: value == 5 );
-  REQUIRE( L2 :: value == 7 );
-  REQUIRE( L3 :: value == 12 );
-  REQUIRE( L4 :: value == 15 );
+  CHECK( L1 :: value == 5 );
+  CHECK( L2 :: value == 7 );
+  CHECK( L3 :: value == 12 );
+  CHECK( L4 :: value == 15 );
 
   using E1 = eval<ref<X>, env1> :: result;
   using E2 = eval<ref<X>, env2> :: result;
   using E3 = eval<ref<Y>, env1> :: result;
   using E4 = eval<ref<Y>, env2> :: result;
 
-  REQUIRE( E1 :: value == 5 );
-  REQUIRE( E2 :: value == 7 );
-  REQUIRE( E3 :: value == 12 );
-  REQUIRE( E4 :: value == 15 );
+  CHECK( E1 :: value == 5 );
+  CHECK( E2 :: value == 7 );
+  CHECK( E3 :: value == 12 );
+  CHECK( E4 :: value == 15 );
 }
 
 TEST_CASE( "conditionals", "[lambda]" ){
@@ -64,8 +64,8 @@ TEST_CASE( "conditionals", "[lambda]" ){
                   :: result, env1>
              :: result;
 
-  REQUIRE( E1 :: value == 5 );
-  REQUIRE( E2 :: value == 12 );
+  CHECK( E1 :: value == 5 );
+  CHECK( E2 :: value == 12 );
 
   using E3 = eval<eval<If<literal<True>,
                           ref<X>,
@@ -80,8 +80,8 @@ TEST_CASE( "conditionals", "[lambda]" ){
                   :: result, env2>
              :: result;
 
-  REQUIRE( E3 :: value == 7 );
-  REQUIRE( E4 :: value == 15 );
+  CHECK( E3 :: value == 7 );
+  CHECK( E4 :: value == 15 );
 }
 
 TEST_CASE( "lambda", "[lambda]" ){
@@ -95,8 +95,8 @@ TEST_CASE( "lambda", "[lambda]" ){
 
   using A = eval<apply<eval<lambda<L, literal<ref<X> > >, env1> :: result, Zero> :: result, env1> :: result;
   using B = eval<apply<eval<lambda<L, literal<ref<X> > >, env2> :: result, Zero> :: result, env1> :: result;
-  REQUIRE( A :: value == 5 );//?
-  REQUIRE( B :: value == 7 );//?
+  CHECK( A :: value == 5 );//?
+  CHECK( B :: value == 7 );//?
 }
 /*
 TEST_CASE( "", "" ){
@@ -111,7 +111,7 @@ TEST_CASE( "", "" ){
   using main_app = app<main_c, succeed<Zero, 5> >;
 
   using eval_result = eval<main_app, main_args>;
-  REQUIRE( eval_result :: result == 0 );
+  CHECK( eval_result :: result == 0 );
 }*/
 
 

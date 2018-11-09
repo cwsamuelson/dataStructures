@@ -92,13 +92,12 @@ TEST_CASE( "Operator usage", "[operators]" ){
   bar c( 3 );
   bar d( 3 );
 
-  REQUIRE( ( c + d ).getVal() == 6 );
-  REQUIRE( ( d + c ).getVal() == 6 );
+  CHECK( ( c + d ).getVal() == 6 );
+  CHECK( ( d + c ).getVal() == 6 );
 
-  REQUIRE( ( a + 5 ).getVal() == 8 );
-  REQUIRE( ( 5 + a ) == 8 );
+  CHECK( ( a + 5 ).getVal() == 8 );
+  CHECK( ( 5 + a ) == 8 );
 
-  REQUIRE( ( b * 5 ).getVal() == 15 );
-  REQUIRE( ( 5 * b ) == 15 );
+  CHECK( ( b * 5 ).getVal() == 15 );
+  CHECK( ( 5 * b ) == 15 );
 }
-

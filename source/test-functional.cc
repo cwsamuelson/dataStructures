@@ -26,9 +26,9 @@ TEST_CASE( "Function objects are used as normal functions.", "[function]" ){
   fn2 = functor();
 
   SECTION( "Calling functions produce expected results." ){
-    REQUIRE( fn( 3 ) == 4 );
-    REQUIRE( nf( 1, 2 ) == 3 );
-    REQUIRE( tst() == 5 );
-    REQUIRE( fn2( 5 ) == 10 );
+    CHECK( fn( 3 ) == 4 );
+    CHECK( nf( 1, 2 ) == 3 );
+    CHECK( tst() == 5 );
+    CHECK( fn2( 5 ) == 10 );
   }
 }

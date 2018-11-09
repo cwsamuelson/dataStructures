@@ -19,37 +19,37 @@ TEST_CASE( "polynomial can be used in basic arithmetic", "[poly]" ){
   gsw::polynomial eq1( vec1.begin(), vec1.end() );
   gsw::polynomial eq2( vec2.begin(), vec2.end() );
 
-  REQUIRE( eq1( 2 ) == 7 );
-  REQUIRE( eq2( 2 ) == 14 );
+  CHECK( eq1( 2 ) == 7 );
+  CHECK( eq2( 2 ) == 14 );
 
   SECTION( "Addition" ){
-    REQUIRE( ( eq1 + eq2 )( 2 ) == 21 );
+    CHECK( ( eq1 + eq2 )( 2 ) == 21 );
   }
 
   SECTION( "Subtraction" ){
-    REQUIRE( ( eq2 - eq1 )( 2 ) == 7 );
-    REQUIRE( ( eq1 - eq2 )( 2 ) == -7 );
+    CHECK( ( eq2 - eq1 )( 2 ) == 7 );
+    CHECK( ( eq1 - eq2 )( 2 ) == -7 );
   }
 
   SECTION( "Multiplication" ){
-    REQUIRE( ( eq1 * 2 )( 2 ) == 2 * eq1( 2 ) );
+    CHECK( ( eq1 * 2 )( 2 ) == 2 * eq1( 2 ) );
 
     vector<double> vec3 {1, 1};
     gsw::polynomial eq3( vec3.begin(), vec3.end() );
     vec3[0] = 2;
     gsw::polynomial eq4( vec3.begin(), vec3.end() );
-    REQUIRE( ( eq3 * eq4 )( 2 ) == 12 );
+    CHECK( ( eq3 * eq4 )( 2 ) == 12 );
 
     vector<double> vec4 {1, 1};
     gsw::polynomial eq5( vec4.begin(), vec4.end() );
     vec4.push_back( 1 );
     gsw::polynomial eq6( vec4.begin(), vec4.end() );
-    REQUIRE( ( eq5 * eq6 )( 2 ) == 21 );
+    CHECK( ( eq5 * eq6 )( 2 ) == 21 );
   }
 
   /*! @todo test dividing polynomial by another polynomial */
   SECTION( "Division" ){
-    REQUIRE( ( eq2 / 2 )( 2 ) == eq2( 2 ) / 2 );
+    CHECK( ( eq2 / 2 )( 2 ) == eq2( 2 ) / 2 );
 
     vector<double> vec1{-5, 1};
     vector<double> vec2{-2, 1};
@@ -58,8 +58,8 @@ TEST_CASE( "polynomial can be used in basic arithmetic", "[poly]" ){
     gsw::polynomial eq2( vec2.begin(), vec2.end() );
     gsw::polynomial eq3( vec3.begin(), vec3.end() );
 
-    REQUIRE( ( eq1 * eq2 ) == eq3 );
-    REQUIRE( ( eq3 / eq2 ) == eq1 );
+    CHECK( ( eq1 * eq2 ) == eq3 );
+    CHECK( ( eq3 / eq2 ) == eq1 );
   }
 }
 
@@ -70,8 +70,8 @@ TEST_CASE( "polynomial", "[poly]" ){
   gsw::polynomial eq2( vec2.begin(), vec2.end() );
 
   SECTION( "polynomial can be evaluated" ){
-    REQUIRE( eq1( 2 ) == 7 );
-    REQUIRE( eq2( 2 ) == 14 );
+    CHECK( eq1( 2 ) == 7 );
+    CHECK( eq2( 2 ) == 14 );
   }
 
   SECTION( "convenient poly creation" ){
@@ -81,51 +81,51 @@ TEST_CASE( "polynomial", "[poly]" ){
     p[1] = 2;
     p[2] = 3;
 
-    REQUIRE( p( 2 ) == 17 );
+    CHECK( p( 2 ) == 17 );
   }
 
   SECTION( "Inline poly creation" ){
     gsw::polynomial p( {1, 2, 3} );
 
-    REQUIRE( p( 2 ) == 17 );
+    CHECK( p( 2 ) == 17 );
 
     p[0] = 2;
 
-    REQUIRE( p( 2 ) == 18 );
+    CHECK( p( 2 ) == 18 );
   }
 
   SECTION( "polynomial with different number of terms" ){
     vec1.push_back( 1 );
     gsw::polynomial eq3( vec1.begin(), vec1.end() );
 
-    REQUIRE( eq3( 2 ) == 15 );
-    REQUIRE( ( eq3 + eq1 )( 2 ) == 22 );
-    REQUIRE( ( eq3 - eq1 )( 2 ) == 8 );
+    CHECK( eq3( 2 ) == 15 );
+    CHECK( ( eq3 + eq1 )( 2 ) == 22 );
+    CHECK( ( eq3 - eq1 )( 2 ) == 8 );
   }
 
   SECTION( "Derivative" ){
     gsw::polynomial eq3 = derive( eq2 );
 
-    REQUIRE( eq3( 2 ) == 10 );
+    CHECK( eq3( 2 ) == 10 );
   }
 
   SECTION( "Integral" ){
-    REQUIRE( integrate( eq2, 3, 1 ) == ( 29.0 + ( 1.0 / 3.0 ) ) );
+    CHECK( integrate( eq2, 3, 1 ) == ( 29.0 + ( 1.0 / 3.0 ) ) );
 
     vector<double> v1 {1};
     gsw::polynomial e1( v1.begin(), v1.end() );
 
-    REQUIRE( integrate( e1, 3, 0 ) == 3 );
+    CHECK( integrate( e1, 3, 0 ) == 3 );
 
     vector<double> v2 {1, 2, 3};
     gsw::polynomial e2( v2.begin(), v2.end() );
 
-    REQUIRE( integrate( e2, 3, 0 ) == 39 );
+    CHECK( integrate( e2, 3, 0 ) == 39 );
 
     vector<double> v3 {3, 2, 1};
     gsw::polynomial e3( v3.begin(), v3.end() );
 
-    REQUIRE( integrate( e3, 3, 0 ) == 27 );
+    CHECK( integrate( e3, 3, 0 ) == 27 );
   }
 }
 
@@ -147,22 +147,22 @@ TEST_CASE( "polynomial can be compared to points", "[poly]" ){
       p2.x() = i;
       p3.x() = i;
 
-      REQUIRE( p1 <  e1 );
-      REQUIRE( e1 >  p1 );
-      REQUIRE( p1 <= e1 );
-      REQUIRE( e1 >= p1 );
+      CHECK( p1 <  e1 );
+      CHECK( e1 >  p1 );
+      CHECK( p1 <= e1 );
+      CHECK( e1 >= p1 );
 
-      REQUIRE( p2 >  e1 );
-      REQUIRE( e1 <  p2 );
-      REQUIRE( p2 >= e1 );
-      REQUIRE( e1 <= p2 );
+      CHECK( p2 >  e1 );
+      CHECK( e1 <  p2 );
+      CHECK( p2 >= e1 );
+      CHECK( e1 <= p2 );
 
-      REQUIRE( e1 == p3 );
-      REQUIRE( p3 == e1 );
-      REQUIRE( e1 >= p3 );
-      REQUIRE( p3 >= e1 );
-      REQUIRE( e1 <= p3 );
-      REQUIRE( p3 <= e1 );
+      CHECK( e1 == p3 );
+      CHECK( p3 == e1 );
+      CHECK( e1 >= p3 );
+      CHECK( p3 >= e1 );
+      CHECK( e1 <= p3 );
+      CHECK( p3 <= e1 );
     }
   }
 
@@ -181,22 +181,22 @@ TEST_CASE( "polynomial can be compared to points", "[poly]" ){
       p2.y() = 2 * i + 1;
       p3.y() = 2 * i;
 
-      REQUIRE( p1 <  e1 );
-      REQUIRE( e1 >  p1 );
-      REQUIRE( p1 <= e1 );
-      REQUIRE( e1 >= p1 );
+      CHECK( p1 <  e1 );
+      CHECK( e1 >  p1 );
+      CHECK( p1 <= e1 );
+      CHECK( e1 >= p1 );
 
-      REQUIRE( p2 >  e1 );
-      REQUIRE( e1 <  p2 );
-      REQUIRE( p2 >= e1 );
-      REQUIRE( e1 <= p2 );
+      CHECK( p2 >  e1 );
+      CHECK( e1 <  p2 );
+      CHECK( p2 >= e1 );
+      CHECK( e1 <= p2 );
 
-      REQUIRE( e1 == p3 );
-      REQUIRE( p3 == e1 );
-      REQUIRE( e1 >= p3 );
-      REQUIRE( p3 >= e1 );
-      REQUIRE( e1 <= p3 );
-      REQUIRE( p3 <= e1 );
+      CHECK( e1 == p3 );
+      CHECK( p3 == e1 );
+      CHECK( e1 >= p3 );
+      CHECK( p3 >= e1 );
+      CHECK( e1 <= p3 );
+      CHECK( p3 <= e1 );
     }
   }
 }
@@ -207,9 +207,9 @@ TEST_CASE( "Polynomial can find its roots", "[poly]" ){
     gsw::polynomial e1( v1.begin(), v1.end() );
     auto answers = e1.solve();
 
-    REQUIRE( answers.size() == 1 );
+    CHECK( answers.size() == 1 );
     for( auto solution : answers ){
-      REQUIRE( gsw::are_equal( solution, 5.0 / 3.0 ) );
+      CHECK( gsw::are_equal( solution, 5.0 / 3.0 ) );
     }
   }
 

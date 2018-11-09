@@ -59,23 +59,23 @@ TEST_CASE( "Basic event control flow", "[events]" ){
   auto idx = chan0.enlist( handler3 );
   chan0.delist( idx );
 
-  REQUIRE( g_i   == 0 );
-  REQUIRE( g_j   == 0 );
-  REQUIRE( g_k   == 0 );
-  REQUIRE( g_l   == 0 );
-  REQUIRE( g_m   == 0 );
-  REQUIRE( g_f.x == 0 );
+  CHECK( g_i   == 0 );
+  CHECK( g_j   == 0 );
+  CHECK( g_k   == 0 );
+  CHECK( g_l   == 0 );
+  CHECK( g_m   == 0 );
+  CHECK( g_f.x == 0 );
 
   chan0.fire(     42 );
   chan1.fire( foo{69} );
   chan2.fire( 6, 9 );
 
-  REQUIRE( g_i   == 42 );
-  REQUIRE( g_j   == 42 );
-  REQUIRE( g_k   == 0 );
-  REQUIRE( g_l   == 6 );
-  REQUIRE( g_m   == 9 );
-  REQUIRE( g_f.x == 69 );
+  CHECK( g_i   == 42 );
+  CHECK( g_j   == 42 );
+  CHECK( g_k   == 0 );
+  CHECK( g_l   == 6 );
+  CHECK( g_m   == 9 );
+  CHECK( g_f.x == 69 );
 }
 
 class serial{
@@ -103,5 +103,5 @@ TEST_CASE( "In context usage", "[events]" ){
 
   ser.send( "data!" );
 
-  REQUIRE( response == "data!response!" );
+  CHECK( response == "data!response!" );
 }

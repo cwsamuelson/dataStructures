@@ -20,7 +20,7 @@ TEST_CASE( "skip_lists are associative containers", "[skip_list]" ){
 
   SECTION( "Basic value skip_listping" ){
     for( int i = 0; i < nIters; ++i ){
-      REQUIRE( sl[i] == i + 1 );
+      CHECK( sl[i] == i + 1 );
     }
   }
 
@@ -29,23 +29,23 @@ TEST_CASE( "skip_lists are associative containers", "[skip_list]" ){
 
     sl["test"] = "foo";
 
-    REQUIRE( sl["test"] == "foo" );
+    CHECK( sl["test"] == "foo" );
 
     sl["test"] = "bar";
 
-    REQUIRE( sl["test"] == "bar" );
+    CHECK( sl["test"] == "bar" );
 
     sl["test2"] = "foo";
 
-    REQUIRE( sl["test2"] == "foo" );
-    REQUIRE( sl["test"] == "bar" );
+    CHECK( sl["test2"] == "foo" );
+    CHECK( sl["test"] == "bar" );
 
     auto it = sl.begin();
-    REQUIRE( std::get<0>( *it ) == "test" );
-    REQUIRE( std::get<1>( *it ) == "bar" );
+    CHECK( std::get<0>( *it ) == "test" );
+    CHECK( std::get<1>( *it ) == "bar" );
     ++it;
-    REQUIRE( std::get<0>( *it ) == "test2" );
-    REQUIRE( std::get<1>( *it ) == "foo" );
+    CHECK( std::get<0>( *it ) == "test2" );
+    CHECK( std::get<1>( *it ) == "foo" );
   }
 }
 #endif

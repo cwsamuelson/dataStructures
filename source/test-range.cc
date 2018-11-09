@@ -9,29 +9,29 @@ TEST_CASE( "A range iterator can act as a standard iterator", "[range]" ){
   gsw::range<decltype( source )> rng( source );
 
   SECTION( "Initial basic range iterators reference source." ){
-    REQUIRE( *rng.begin() == source[0] );
-    REQUIRE( *++rng.begin() == source[1] );
-    REQUIRE( *--rng.end() == source[source.size() - 1] );
+    CHECK( *rng.begin() == source[0] );
+    CHECK( *++rng.begin() == source[1] );
+    CHECK( *--rng.end() == source[source.size() - 1] );
   }
 
   SECTION( "Ranges can participate in range-based for loops" ){
     int idx = 0;
 
     for( auto it:rng ){
-      REQUIRE( it == source[idx++] );
+      CHECK( it == source[idx++] );
     }
   }
 
   SECTION( "Range iterators can be equality compared" ){
     gsw::range<decltype( source )> test( source );
 
-    REQUIRE( rng.begin() == test.begin() );
-    REQUIRE( rng.end() == test.end() );
+    CHECK( rng.begin() == test.begin() );
+    CHECK( rng.end() == test.end() );
   }
 
   SECTION( "Range iterators can be equality compared with standard iterators" ){
-    REQUIRE( rng.begin() == source.begin() );
-    REQUIRE( rng.end() == source.end() );
+    CHECK( rng.begin() == source.begin() );
+    CHECK( rng.end() == source.end() );
   }
 }
 
@@ -61,10 +61,10 @@ TEST_CASE( "Ranges can filter values from a container", "[range]" ){
 
   int count = 0;
   for( auto it:rng ){
-    REQUIRE( it == result[count++] );
+    CHECK( it == result[count++] );
   }
 
-  REQUIRE( count == result.size() );
+  CHECK( count == result.size() );
 }
 
 TEST_CASE( "Ranges can modify the values from a container before returning them", "[range]" ){
@@ -96,7 +96,6 @@ TEST_CASE( "Ranges can modify the values from a container before returning them"
   auto it = rng.begin();
   auto jt = result.begin();
   for( ;it != rng.end(); ++it, ++jt ){
-    REQUIRE( *it == *jt );
+    CHECK( *it == *jt );
   }
 }
-

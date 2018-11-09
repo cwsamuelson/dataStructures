@@ -20,7 +20,7 @@ TEST_CASE( "Maps are associative containers", "[map]" ){
 
   SECTION( "Basic value mapping" ){
     for( int i = 0; i < nIters; ++i ){
-      REQUIRE( mp[i] == i + 1 );
+      CHECK( mp[i] == i + 1 );
     }
   }
 
@@ -29,23 +29,22 @@ TEST_CASE( "Maps are associative containers", "[map]" ){
 
     m["test"] = "foo";
 
-    REQUIRE( m["test"] == "foo" );
+    CHECK( m["test"] == "foo" );
 
     m["test"] = "bar";
 
-    REQUIRE( m["test"] == "bar" );
+    CHECK( m["test"] == "bar" );
 
     m["test2"] = "foo";
 
-    REQUIRE( m["test2"] == "foo" );
-    REQUIRE( m["test"] == "bar" );
+    CHECK( m["test2"] == "foo" );
+    CHECK( m["test"] == "bar" );
 
     auto it = m.begin();
-    REQUIRE( gsw::get<0>( *it ) == "test" );
-    REQUIRE( gsw::get<1>( *it ) == "bar" );
+    CHECK( gsw::get<0>( *it ) == "test" );
+    CHECK( gsw::get<1>( *it ) == "bar" );
     ++it;
-    REQUIRE( gsw::get<0>( *it ) == "test2" );
-    REQUIRE( gsw::get<1>( *it ) == "foo" );
+    CHECK( gsw::get<0>( *it ) == "test2" );
+    CHECK( gsw::get<1>( *it ) == "foo" );
   }
 }
-

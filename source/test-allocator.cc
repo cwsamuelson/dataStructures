@@ -36,39 +36,39 @@ TEST_CASE( "Allocator allocates memory", "[base_allocator][allocator]" ){
   vals = traits::allocate( alloc, 3 );
   REQUIRE( vals != nullptr );
 
-  REQUIRE( !bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( !bools[0] );
+  CHECK( !bools[1] );
+  CHECK( !bools[2] );
 
   traits::construct( alloc, &vals[0], bools[0] );
-  REQUIRE( bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( bools[0] );
+  CHECK( !bools[1] );
+  CHECK( !bools[2] );
 
   traits::construct( alloc, &vals[1], bools[1] );
-  REQUIRE( bools[0] );
-  REQUIRE( bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( bools[0] );
+  CHECK( bools[1] );
+  CHECK( !bools[2] );
 
   traits::construct( alloc, &vals[2], bools[2] );
-  REQUIRE( bools[0] );
-  REQUIRE( bools[1] );
-  REQUIRE( bools[2] );
+  CHECK( bools[0] );
+  CHECK( bools[1] );
+  CHECK( bools[2] );
 
   traits::destroy( alloc, &vals[0] );
-  REQUIRE( !bools[0] );
-  REQUIRE( bools[1] );
-  REQUIRE( bools[2] );
+  CHECK( !bools[0] );
+  CHECK( bools[1] );
+  CHECK( bools[2] );
 
   traits::destroy( alloc, &vals[1] );
-  REQUIRE( !bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( bools[2] );
+  CHECK( !bools[0] );
+  CHECK( !bools[1] );
+  CHECK( bools[2] );
 
   traits::destroy( alloc, &vals[2] );
-  REQUIRE( !bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( !bools[0] );
+  CHECK( !bools[1] );
+  CHECK( !bools[2] );
 
   traits::deallocate( alloc, vals, 3 );
 }
@@ -93,12 +93,12 @@ TEST_CASE( "pool", "[pool_allocator][allocator]" ){
   traits::deallocate( alloc, bar, 1 );
   bar = traits::allocate( alloc, 2 );
 
-  REQUIRE( bar != last );
-  REQUIRE( ( baz + 2 ) == bar );
+  CHECK( bar != last );
+  CHECK( ( baz + 2 ) == bar );
 
   type* quux = traits::allocate( alloc, 2 );
 
-  REQUIRE( ( bar + 2 ) == quux );
+  CHECK( ( bar + 2 ) == quux );
 
   traits::deallocate( alloc, foo, 2 );
   traits::deallocate( alloc, bar, 2 );
@@ -123,12 +123,12 @@ TEST_CASE( "static", "[static_allocator][allocator]" ){
   traits::deallocate( alloc, bar, 1 );
 
   bar = traits::allocate( alloc, 1 );
-  REQUIRE( bar == last );
+  CHECK( bar == last );
 
   traits::deallocate( alloc, bar, 1 );
   bar = traits::allocate( alloc, 2 );
 
-  REQUIRE( bar != last );
+  CHECK( bar != last );
 
   traits::deallocate( alloc, foo, 2 );
   traits::deallocate( alloc, bar, 2 );
@@ -153,17 +153,17 @@ TEST_CASE( "block", "[block_allocator][allocator]" ){
   traits::deallocate( alloc, bar, 1 );
 
   bar = traits::allocate( alloc, 1 );
-  REQUIRE( bar == last );
+  CHECK( bar == last );
 
   traits::deallocate( alloc, bar, 1 );
   bar = traits::allocate( alloc, 2 );
 
-  REQUIRE( bar != last );
-  REQUIRE( bar == ( baz + 2 ) );
+  CHECK( bar != last );
+  CHECK( bar == ( baz + 2 ) );
 
   // create new block
   type* quux = traits::allocate( alloc, 2 );
-  REQUIRE( quux != ( bar + 2 ) );
+  CHECK( quux != ( bar + 2 ) );
 
   traits::deallocate( alloc, foo, 2 );
   traits::deallocate( alloc, bar, 2 );
@@ -189,41 +189,41 @@ TEST_CASE( "tracking", "[tracking_allocator][allocator]" ){
   REQUIRE( alloc.usage() == 3 );
   REQUIRE( alloc.max_usage() == 3 );
 
-  REQUIRE( !bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( !bools[0] );
+  CHECK( !bools[1] );
+  CHECK( !bools[2] );
 
   traits::construct( alloc, &vals[0], bools[0] );
-  REQUIRE( bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( bools[0] );
+  CHECK( !bools[1] );
+  CHECK( !bools[2] );
 
   traits::construct( alloc, &vals[1], bools[1] );
-  REQUIRE( bools[0] );
-  REQUIRE( bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( bools[0] );
+  CHECK( bools[1] );
+  CHECK( !bools[2] );
 
   traits::construct( alloc, &vals[2], bools[2] );
-  REQUIRE( bools[0] );
-  REQUIRE( bools[1] );
-  REQUIRE( bools[2] );
+  CHECK( bools[0] );
+  CHECK( bools[1] );
+  CHECK( bools[2] );
 
   traits::destroy( alloc, &vals[0] );
-  REQUIRE( !bools[0] );
-  REQUIRE( bools[1] );
-  REQUIRE( bools[2] );
+  CHECK( !bools[0] );
+  CHECK( bools[1] );
+  CHECK( bools[2] );
 
   traits::destroy( alloc, &vals[1] );
-  REQUIRE( !bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( bools[2] );
+  CHECK( !bools[0] );
+  CHECK( !bools[1] );
+  CHECK( bools[2] );
 
   traits::destroy( alloc, &vals[2] );
-  REQUIRE( !bools[0] );
-  REQUIRE( !bools[1] );
-  REQUIRE( !bools[2] );
+  CHECK( !bools[0] );
+  CHECK( !bools[1] );
+  CHECK( !bools[2] );
 
   traits::deallocate( alloc, vals, 3 );
-  REQUIRE( alloc.usage() == 0 );
-  REQUIRE( alloc.max_usage() == 3 );
+  CHECK( alloc.usage() == 0 );
+  CHECK( alloc.max_usage() == 3 );
 }

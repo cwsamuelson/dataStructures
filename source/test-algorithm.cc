@@ -20,10 +20,10 @@ TEST_CASE( "Sort algorithm", "[algorithm]" ){
 
   sort( vec.begin(), vec.end() );
 
-  REQUIRE( vec.size() == count );
+  CHECK( vec.size() == count );
 
   for( unsigned int i = 1; i < vec.size(); ++i ){
-    REQUIRE( vec[i] >= vec[i - 1] );
+    CHECK( vec[i] >= vec[i - 1] );
   }
 }
 
@@ -37,13 +37,13 @@ TEST_CASE( "Floating point comparison", "[algorithm]" ){
   float product = f * 100;
 
   SECTION( "Negative testing" ){
-    REQUIRE( !are_equal( 1, 5 ) );
-    REQUIRE( !are_equal( 1, 2 ) );
-    REQUIRE( !are_equal( 1, 100 ) );
+    CHECK( !are_equal( 1, 5 ) );
+    CHECK( !are_equal( 1, 2 ) );
+    CHECK( !are_equal( 1, 100 ) );
   }
 
-  REQUIRE(            1.0 * ( 0.5 - 0.4 - 0.1 ) != 0.0 );
-  REQUIRE( are_equal( 1.0 * ( 0.5 - 0.4 - 0.1 ),   0.0 ) );
+  CHECK(            1.0 * ( 0.5 - 0.4 - 0.1 ) != 0.0 );
+  CHECK( are_equal( 1.0 * ( 0.5 - 0.4 - 0.1 ),   0.0 ) );
 
   CHECK(            1.0 / 3.0 != 0.333333333333333333333 );
   CHECK( are_equal( 1.0 / 3.0,   0.333333333333333333333 ) );
@@ -67,7 +67,6 @@ TEST_CASE( "Floating point comparison", "[algorithm]" ){
   CHECK( are_equal( product,   10.0f ) );
 
   // atan(1)*4 == pi
-  REQUIRE(            std::sin( std::atan( 1 ) * 4 ) != 0.0 );
-  REQUIRE( are_equal( std::sin( std::atan( 1 ) * 4 ),   0.0 ) );
+  CHECK(            std::sin( std::atan( 1 ) * 4 ) != 0.0 );
+  CHECK( are_equal( std::sin( std::atan( 1 ) * 4 ),   0.0 ) );
 }
-

@@ -12,18 +12,18 @@ TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
   gsw::hash_map<int, int> mp;
 
   SECTION( "hash_Maps initialize empty" ){
-    REQUIRE( mp.empty() );
+    CHECK( mp.empty() );
   }
 
   for( int i = 0; i < nIters; ++i ){
     mp[i] = i + 1;
   }
 
-  REQUIRE( mp.size() == 10 );
+  CHECK( mp.size() == 10 );
 
   SECTION( "Basic value hash_mapping" ){
     for( int i = 0; i < nIters; ++i ){
-      REQUIRE( mp[i] == i + 1 );
+      CHECK( mp[i] == i + 1 );
     }
   }
 
@@ -32,25 +32,25 @@ TEST_CASE( "hash_Maps are associative containers", "[hash_map]" ){
 
     m["test"] = "foo";
 
-    REQUIRE( m.size() == 1 );
-    REQUIRE( m["test"] == "foo" );
+    CHECK( m.size() == 1 );
+    CHECK( m["test"] == "foo" );
 
     m["test"] = "bar";
 
-    REQUIRE( m.size() == 1 );
-    REQUIRE( m["test"] == "bar" );
+    CHECK( m.size() == 1 );
+    CHECK( m["test"] == "bar" );
 
     m["test2"] = "foo";
 
-    REQUIRE( m.size() == 2 );
-    REQUIRE( m["test2"] == "foo" );
-    REQUIRE( m["test"] == "bar" );
+    CHECK( m.size() == 2 );
+    CHECK( m["test2"] == "foo" );
+    CHECK( m["test"] == "bar" );
 
     auto it = m.begin();
-    REQUIRE( std::get<0>( *it ) == "test" );
-    REQUIRE( std::get<1>( *it ) == "bar" );
+    CHECK( std::get<0>( *it ) == "test" );
+    CHECK( std::get<1>( *it ) == "bar" );
     ++it;
-    REQUIRE( std::get<0>( *it ) == "test2" );
-    REQUIRE( std::get<1>( *it ) == "foo" );
+    CHECK( std::get<0>( *it ) == "test2" );
+    CHECK( std::get<1>( *it ) == "foo" );
   }
 }

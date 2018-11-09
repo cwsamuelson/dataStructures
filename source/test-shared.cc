@@ -26,30 +26,30 @@ TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_
   sPtr0 = iPtr0;
 
   SECTION( "Initial equality checks." ){
-    REQUIRE( sPtr0 == iPtr0 );
-    REQUIRE( *sPtr0 == *iPtr0 );
+    CHECK( sPtr0 == iPtr0 );
+    CHECK( *sPtr0 == *iPtr0 );
 
     *iPtr0 = 5;
-    REQUIRE( *sPtr0 == 5 );
+    CHECK( *sPtr0 == 5 );
     *sPtr0 = 4;
-    REQUIRE( *iPtr0 == 4 );
+    CHECK( *iPtr0 == 4 );
   }
 
   SECTION( "Dereferenced shared_ptrs can be assigned" ){
     *sPtr0 = 4;
 
-    REQUIRE( *sPtr0 == 4 );
-    REQUIRE( *iPtr0 == 4 );
+    CHECK( *sPtr0 == 4 );
+    CHECK( *iPtr0 == 4 );
   }
 
   SECTION( "There can be multiple valid instances of a shared_ptr" ){
     shared_ptr<int> sPtr1 = sPtr0;
     shared_ptr<int> sPtr2( sPtr0 );
 
-    REQUIRE( sPtr0 == sPtr1 );
-    REQUIRE( *sPtr0 == *sPtr1 );
-    REQUIRE( sPtr0 == sPtr2 );
-    REQUIRE( *sPtr0 == *sPtr2 );
+    CHECK( sPtr0 == sPtr1 );
+    CHECK( *sPtr0 == *sPtr1 );
+    CHECK( sPtr0 == sPtr2 );
+    CHECK( *sPtr0 == *sPtr2 );
   }
 
   SECTION( "Copies of a shared pointer are not invalidated when others go out of scope" ){
@@ -57,7 +57,7 @@ TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_
       shared_ptr<int> sPtr1 = sPtr0;
     }
 
-    REQUIRE( *sPtr0 == 3 );
+    CHECK( *sPtr0 == 3 );
   }
 
   SECTION( "Destructors run appropriately" ){
@@ -68,7 +68,7 @@ TEST_CASE( "Shared_ptrs have a similar interface to regular pointers", "[shared_
       auto dc = make_shared<deathcry>( &b1 );
       dc = sp;
     }
-    REQUIRE( b1 == false );
+    CHECK( b1 == false );
   }
 }
 
@@ -82,7 +82,6 @@ TEST_CASE( "Shared_ptrs obey move semantics", "[shared_ptr]" ){
       auto dc = make_shared<deathcry>( &b1 );
       dc = std::move( sp );
     }
-    REQUIRE( b1 == false );
+    CHECK( b1 == false );
   }
 }
-

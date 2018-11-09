@@ -37,38 +37,37 @@ TEST_CASE( "Menu allows option selection and provides callbacks on selection.", 
     ss >> i;
     ss >> str;
 
-    REQUIRE( i == 0 );
-    REQUIRE( str == "electric" );
+    CHECK( i == 0 );
+    CHECK( str == "electric" );
 
     ss >> i;
     ss >> str;
 
-    REQUIRE( i == 1 );
-    REQUIRE( str == "boogaloo" );
+    CHECK( i == 1 );
+    CHECK( str == "boogaloo" );
 
     ss >> str;
 
-    REQUIRE( str == "beep" );
+    CHECK( str == "beep" );
 
     ss >> i;
     ss >> str;
 
-    REQUIRE( i == 0 );
-    REQUIRE( str == "foo" );
+    CHECK( i == 0 );
+    CHECK( str == "foo" );
 
     ss >> i;
     ss >> str;
 
-    REQUIRE( i == 1 );
-    REQUIRE( str == "bar" );
+    CHECK( i == 1 );
+    CHECK( str == "bar" );
 
     ss >> str;
 
-    REQUIRE( str == "byyp" );
+    CHECK( str == "byyp" );
   }
 
   SECTION( "Forwards out of range exception when accessing an invalid menu option." ){
-    REQUIRE_THROWS_AS( pm0->select( 3 ), std::out_of_range );
+    CHECK_THROWS_AS( pm0->select( 3 ), std::out_of_range );
   }
 }
-

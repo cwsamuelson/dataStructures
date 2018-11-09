@@ -24,11 +24,10 @@ public:
 };
 
 TEST_CASE( "Same-ness checks", "[is_same]"){
-  REQUIRE( is_same<int, signed int>::value );
-  REQUIRE( is_same<bar, bar>::value );
-  REQUIRE( !is_same<int, volatile int>::value );
-  REQUIRE( !is_same<int, const int>::value );
-  REQUIRE( !is_same<int, float>::value );
-  REQUIRE( !is_same<int, bar>::value );
+  CHECK( is_same<int, signed int>::value );
+  CHECK( is_same<bar, bar>::value );
+  CHECK( !is_same<int, volatile int>::value );
+  CHECK( !is_same<int, const int>::value );
+  CHECK( !is_same<int, float>::value );
+  CHECK( !is_same<int, bar>::value );
 }
-
