@@ -5,7 +5,6 @@
 
 using namespace std;
 using namespace gsw;
-using namespace gsw::detail;
 
 /**************
  * operations *
@@ -76,13 +75,9 @@ proposition::conjunction::solve( set<string> data ) const{
   auto rhs_data = rhs->solve( data );
   set<set<string> > result;
 
-  for( auto rhs_solution : rhs_data ){
-    for( auto lhs_solution : lhs_data ){
-      if( rhs_solution == lhs_solution ){
-        result.insert( lhs_solution );
-      }
-    }
-  }
+  set_intersection( lhs_data.begin(), lhs_data.end(),
+                    rhs_data.begin(), rhs_data.end(),
+                    inserter( result, result.begin() ) );
 
   return result;
 }
@@ -99,8 +94,13 @@ set<set<string> >
 proposition::disjunction::solve( set<string> data ) const{
   auto lhs_data = lhs->solve( data );
   auto rhs_data = rhs->solve( data );
+  set<set<string> > result;
 
-  return merge( lhs_data, rhs_data );
+  set_union( lhs_data.begin(), lhs_data.end(),
+             rhs_data.begin(), rhs_data.end(),
+             inserter( result, result.begin() ) );
+
+  return result;
 }
 
   /*************************
