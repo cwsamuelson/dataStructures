@@ -5,11 +5,7 @@
 
 using namespace gsw;
 
-high_polynomial::high_polynomial( const high_polynomial& other )
-  : mCoeff( other.mCoeff ){
-}
-
-high_polynomial::high_polynomial( high_polynomial&& other )
+high_polynomial::high_polynomial( high_polynomial&& other ) noexcept
   : mCoeff( std::move( other.mCoeff ) ){
 }
 
@@ -21,7 +17,7 @@ high_polynomial::operator=( const high_polynomial& other ){
 }
 
 high_polynomial&
-high_polynomial::operator=( high_polynomial&& eq ){
+high_polynomial::operator=( high_polynomial&& eq ) noexcept{
   mCoeff = std::move( eq.mCoeff );
 
   return *this;
@@ -120,4 +116,11 @@ high_polynomial::operator()( const input_point& point ) const{
   }
 
   return total;
+}
+
+std::set<double>
+high_polynomial::solve( input_point hint, unsigned int iterations ) const{
+  ( void )hint;
+  ( void )iterations;
+  return {};
 }
