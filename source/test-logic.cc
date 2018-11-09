@@ -15,14 +15,25 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
   SECTION( "Basic operation" ){
     REQUIRE( ( foo )( {"foo"} ) ); // trivially true
     REQUIRE(!( foo )( {} ) );      // trivially false
+
     REQUIRE( ( foo ).solve( {"foo"} ) ==
              set<set<string> >{{"foo"}} );
 
-    REQUIRE( ( foo ).solve2( {"foo"} ) ==
+    REQUIRE( ( foo ).solve( {"foo"} ) ==
              set<set<string> >{{"foo"}} );
 
-    REQUIRE( ( foo ).solve2( {"bar"} ) ==
+    REQUIRE( ( foo ).solve( {"bar"} ) ==
              set<set<string> >{{"bar", "foo"}, {"foo"}} );
+
+
+    REQUIRE( ( foo ).solve2( {"foo"} ) ==
+            set<set<string> >{{"foo"}} );
+
+    REQUIRE( ( foo ).solve2( {"foo"} ) ==
+            set<set<string> >{{"foo"}} );
+
+    REQUIRE( ( foo ).solve2( {"bar"} ) ==
+            set<set<string> >{{"bar", "foo"}, {"foo"}} );
   }
 
   SECTION( "Negation" ){
@@ -34,6 +45,9 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
       // which is represented by empty set
       REQUIRE( ( !foo ).solve( {"foo"} ) ==
                set<set<string> >{{}} );
+
+      REQUIRE( ( !foo ).solve2( {"foo"} ) ==
+              set<set<string> >{{}} );
     }
 
     SECTION( "Double negation" ){
@@ -41,6 +55,9 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
 
       REQUIRE( ( !!foo ).solve( {"foo"} ) ==
                set<set<string> >{{"foo"}} );
+
+      REQUIRE( ( !!foo ).solve2( {"foo"} ) ==
+              set<set<string> >{{"foo"}} );
     }
   }
 
@@ -53,7 +70,14 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
 
     REQUIRE( ( foo && bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >{{"foo", "bar"}} );
+
     REQUIRE( ( foo && !foo ).solve( {"foo"} ) ==
+              set<set<string> >{} );
+
+    REQUIRE( ( foo && bar ).solve2( {"foo", "bar"} ) ==
+             set<set<string> >{{"foo", "bar"}} );
+
+    REQUIRE( ( foo && !foo ).solve2( {"foo"} ) ==
               set<set<string> >{} );
   }
 
@@ -65,8 +89,15 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
 
     REQUIRE( ( foo || bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
+
     REQUIRE( ( foo || !foo ).solve( {"foo"} ) ==
              set<set<string> >{{"foo"}, {}} );
+
+    REQUIRE( ( foo || bar ).solve2( {"foo", "bar"} ) ==
+            set<set<string> >( {{"foo", "bar"}, {"foo"}, {"bar"}} ) );
+
+    REQUIRE( ( foo || !foo ).solve2( {"foo"} ) ==
+            set<set<string> >{{"foo"}, {}} );
   }
 
   SECTION( "Exclusive disjunction (xor)" ){
@@ -77,8 +108,21 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
 
     REQUIRE( ( foo ^ bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >{{"foo"}, {"bar"}} );
+
     REQUIRE( ( foo ^ !foo ).solve( {"foo"} ) ==
               set<set<string> >{} );
+
+    REQUIRE( ( foo ^ ( foo || bar ) ).solve( {"foo", "bar"} ) ==
+              set<set<string> >{{"bar"}} );
+
+    REQUIRE( ( foo ^ bar ).solve2( {"foo", "bar"} ) ==
+             set<set<string> >{{"foo"}, {"bar"}} );
+
+    REQUIRE( ( foo ^ !foo ).solve2( {"foo"} ) ==
+              set<set<string> >{} );
+
+    REQUIRE( ( foo ^ ( foo || bar ) ).solve2( {"foo", "bar"} ) ==
+              set<set<string> >{{"bar"}} );
   }
 
   SECTION( "Implication" ){
@@ -90,12 +134,28 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     // foo and bar both false is a valid answer, so empty set is included
     REQUIRE( ( foo.implies( bar ) ).solve( {"foo", "bar"} ) ==
              set<set<string> >{{"foo", "bar"}, {"bar"}, {}} );
+
     REQUIRE( ( foo.implies( foo ) ).solve( {"foo"} ) ==
              set<set<string> >{{"foo"}, {}} );
+
     REQUIRE( ( foo.implies( !foo ) ).solve( {"foo"} ) ==
              set<set<string> >{{"foo"}, {}} );
+
     REQUIRE( ( (!foo).implies( foo ) ).solve( {"foo"} ) ==
              set<set<string> >{{"foo"}, {}} );
+
+
+    REQUIRE( ( foo.implies( bar ) ).solve2( {"foo", "bar"} ) ==
+            set<set<string> >{{"foo", "bar"}, {"bar"}, {}} );
+
+    REQUIRE( ( foo.implies( foo ) ).solve2( {"foo"} ) ==
+            set<set<string> >{{"foo"}, {}} );
+
+    REQUIRE( ( foo.implies( !foo ) ).solve2( {"foo"} ) ==
+            set<set<string> >{{"foo"}, {}} );
+
+    REQUIRE( ( (!foo).implies( foo ) ).solve2( {"foo"} ) ==
+            set<set<string> >{{"foo"}, {}} );
   }
 
   SECTION( "Tautology (equivalence, iff)" ){
@@ -107,12 +167,23 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     // foo and bar both false is a valid answer, so empty set is included
     REQUIRE( ( foo.iff( bar ) ).solve( {"foo", "bar"} ) ==
              set<set<string> >{{"foo", "bar"}, {}} );
+
+    REQUIRE( ( foo.iff( bar ) ).solve2( {"foo", "bar"} ) ==
+            set<set<string> >{{"foo", "bar"}, {}} );
   }
 
   SECTION( "Can form logic sentences" ){
     auto prop = ( "A"_lvar && !"B"_lvar ).implies( "C"_lvar ) && ( !"A"_lvar ).iff( "B"_lvar && "C"_lvar );
+
     int i = 0;
     for( auto solution : prop.solve( {"A", "B", "C"} ) ){
+      REQUIRE( prop( solution ) );
+      ++i;
+    }
+    REQUIRE( i == 3 );
+
+    i = 0;
+    for( auto solution : prop.solve2( {"A", "B", "C"} ) ){
       REQUIRE( prop( solution ) );
       ++i;
     }
@@ -120,6 +191,15 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
   }
 
   SECTION( "Can solve compound propositions" ){
+    REQUIRE( ( ( foo || bar ) && ( baz || qux ) ).solve( {"foo", "bar", "baz", "qux"} ) ==
+             set<set<string> >{{"bar", "qux"}, {"foo", "qux"}, {"foo", "bar", "qux"},
+                                 {"bar", "baz"}, {"bar", "baz", "qux"}, {"foo", "baz"},
+                                 {"foo", "baz", "qux"}, {"foo", "bar", "baz"},
+                                 {"foo", "bar", "baz", "qux"}} );
+
+    REQUIRE( ( ( foo && bar ) || ( baz && qux ) ).solve( {"foo", "bar", "baz", "qux"} ) == set<set<string> >{{"foo", "bar"}, {"baz", "qux"}, {"foo", "bar", "baz"}, {"foo", "bar", "qux"}, {"baz", "qux", "foo"}, {"baz", "qux", "bar"}, {"foo", "bar", "baz", "qux"}} );
+
+
     REQUIRE( ( ( foo || bar ) && ( baz || qux ) ).solve2( {"foo", "bar", "baz", "qux"} ) ==
              set<set<string> >{{"bar", "qux"}, {"foo", "qux"}, {"foo", "bar", "qux"},
                                  {"bar", "baz"}, {"bar", "baz", "qux"}, {"foo", "baz"},

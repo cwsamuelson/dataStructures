@@ -207,7 +207,7 @@ proposition::evaluate( const set<string>& facts ) const{
 
 set<set<string> >
 proposition::solve( const set<string>& variables ) const{
-  set<set<string> > assignments;
+  set<set<string> > solutions;
   size_t max = pow( 2, variables.size() );
 
   // mask used to describe which elements from variables should be tested
@@ -227,11 +227,11 @@ proposition::solve( const set<string>& variables ) const{
 
     // once a set of values from variables is generated, test it
     if( evaluate( test ) ){
-      assignments.insert( test );
+      solutions.insert( test );
     }
   }
 
-  return assignments;
+  return solutions;
 }
 
 set<set<string> >

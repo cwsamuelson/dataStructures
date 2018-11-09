@@ -163,7 +163,7 @@ public:
     return evaluate( facts );
   }
 
-  /*! Reverse evaluation
+  /*! Brute force solver
    *
    * @param variables set of variables to work with
    *
@@ -176,6 +176,11 @@ public:
   std::set<std::set<std::string> >
   solve( const std::set<std::string>& variables ) const;
 
+  /*! Reverse evaluation
+   *
+   * @param variables
+   * @return
+   */
   std::set<std::set<std::string> >
   solve2( std::set<std::string> variables ) const;
 
