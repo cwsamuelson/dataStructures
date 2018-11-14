@@ -75,6 +75,7 @@ TEST_CASE( "Lists can be iterated across using standard mechanisms", "[list]" ){
     for( auto it : lst ){
       CHECK( it == lst[i] );
       ++i;
+      CHECK( it == i );
     }
     CHECK( i == lst.size() );
   }
