@@ -305,6 +305,30 @@ public:
     }
   }
 
+  /*! Insert new element at pos
+   *
+   * @param pos Iterator to location to place new element
+   *
+   * @param value New value to place in list
+   *
+   * @return iterator to new value
+   */
+  template<typename ...Args>
+  iterator
+  emplace( iterator pos, Args... args ){
+    node_type* next = new node_type( std::forward<Args>( args )... );
+    node_type* current = pos.mCurrent;
+    node_type* last = current.next;
+
+    next.prev = current;
+    next.next = last;
+
+    current.next = next;
+    last.prev = next;
+
+    return iterator( next );
+  }
+
   /*! Examine front object of list
    *
    * @return Reference to the first object in the list
