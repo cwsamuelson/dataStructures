@@ -65,4 +65,5 @@ TEST_CASE( "Strings have compile time facility", "[string]" ){
   CHECK( gsw::test_ct_string( "test!" ) != test );
   CHECK( !( gsw::test_ct_string( "hello!" ) != test ) );
   CHECK( !( gsw::test_ct_string( "test!" ) == test ) );
+  CHECK( gsw::cat( abc(), nums() ) == gsw::concatenate<abc,nums>::result() );
 }

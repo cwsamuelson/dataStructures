@@ -143,6 +143,15 @@ struct concatenate<ct_string<Ls...>, ct_string<Rs...> >{
   using result = ct_string<Ls..., Rs...>;
 };
 
+/*!
+ */
+template<char ...Ls, char ...Rs>
+constexpr
+auto
+cat( ct_string<Ls...>, ct_string<Rs...> ){
+  return ct_string<Ls..., Rs...>();
+}
+
 }
 
 #endif
