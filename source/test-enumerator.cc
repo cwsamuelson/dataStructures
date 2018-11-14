@@ -4,10 +4,13 @@
 
 #include<enumerator.hh>
 
+using namespace gsw;
+using namespace std;
+
 TEST_CASE( "", "[enumerator]" ){
-  std::vector<int> v1{1, 2, 3};
-  std::vector<int> v2{1, 2, 3};
-  std::vector<int> v3{6, 7, 8};
+  vector<int> v1{1, 2, 3};
+  vector<int> v2{1, 2, 3};
+  vector<int> v3{6, 7, 8};
 
   size_t count = 0;
   for( auto [i, it] : enumerate( v1 ) ){

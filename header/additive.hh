@@ -13,8 +13,8 @@ namespace gsw{
  *
  * @tparam RHS  Type of the right hand side of the + and - operators
  *
- * Convenience class to simply allow the + and - operators to a class
- * implementing the += and -= operators through inheritance.
+ * Convenience mix-in class to allow the + and - operators to a class
+ * implementing the += and -= operators.
  *
  * Intended usage:
  * @code{.cpp}

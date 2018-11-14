@@ -22,22 +22,13 @@ namespace gsw{
 template<typename T>
 class accessor{
 public:
-  /*! Stored type
-   */
   using value_type = T;
-
-  /*! Ref shorthand
-   */
   using reference = value_type&;
-
-  /*! Cref shorthand
-   */
   using const_reference = const value_type&;
 
   /*! Callback definition
    *
-   * Type of callback that will be called when this is assigned to.  Also type
-   * taken as a parameter to ctor.
+   * Type of callback that will be called when this is assigned to.
    */
   using callback = std::function<bool( value_type )>;
 
@@ -46,7 +37,7 @@ private:
   callback mcb;
 
 public:
-  /*! ctor simply storing the ref and assignment callback
+  /*! ctor storing the ref and assignment callback
    *
    * @param ref  Reference to an object to store
    *
@@ -100,11 +91,10 @@ public:
    * Conditionally moves new value to stored reference, based upon the result
    * of the callback function provided at construction.
    */
-  template<typename U>
   reference
-  operator=( U&& other ){
+  operator=( value_type&& other ){
     if( mcb( other ) ){
-      mRef = std::forward<U>( other );
+      mRef = std::move( other );
     }
 
     return mRef;

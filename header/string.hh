@@ -80,12 +80,13 @@ public:
   }
 };
 
-/*!
- * @tparam STRING
+/*! Compile time string
+ *
+ * @tparam STRING List of characters comprising the string
  */
 template<char ...STRING>
 struct ct_string{
-  /*!
+  /*! Retrieve compile time string at runtime
    */
   static
   basic_string<char>
@@ -93,7 +94,10 @@ struct ct_string{
     return basic_string<char>{ STRING... };
   }
 
-  /*!
+  /*! Compare with another string
+   *
+   * Equality is determined at compile time because the types are the same,
+   * indicating the content is the same as well.
    */
   constexpr
   bool
@@ -101,7 +105,12 @@ struct ct_string{
     return true;
   }
 
-  /*!
+  /*! Compare with another string
+   *
+   * @tparam OTHER_STRING
+   *
+   * Since this function was deduced, and not the previous overload, then the
+   * string content is different
    */
   template<char ...OTHER_STRING>
   constexpr

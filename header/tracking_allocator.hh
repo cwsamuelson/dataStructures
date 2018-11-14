@@ -7,10 +7,14 @@
 
 namespace gsw{
 
-/*!
- * @tparam T
+/*! Allocator which tracks the maximum object count during runtime
  *
- * @tparam A
+ * @tparam T Type that will be allocated
+ *
+ * @tparam A Allocator to inherit base allocation behaviour from
+ *
+ * This allocator will track maximum memory usage, as well as exhibit any
+ * allocation behaviour described by A.
  *
  * @todo add custom logging facility? (through callback)
  */

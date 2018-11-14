@@ -5,8 +5,9 @@
 
 namespace gsw{
 
-/*!
- * @tparam Alloc
+/*! Generic traits of allocators
+ *
+ * @tparam Alloc Allocator type
  */
 template<typename Alloc>
 class allocator_traits{
@@ -17,10 +18,13 @@ public:
   using pointer    = value_type*;
   using reference  = value_type&;
 
-  /*!
-   * @param alloc
+  /*! Allocate a number of objects
    *
-   * @param number
+   * @param alloc Allocator to allocate through
+   *
+   * @param number How many objects to allocate
+   *
+   * @return Pointer to the resulting allocation
    */
   static
   pointer
@@ -28,12 +32,13 @@ public:
     return alloc.allocate( number );
   }
 
-  /*!
-   * @param alloc
+  /*! Deallocate objects pointed to by ptr
    *
-   * @param ptr
+   * @param alloc Allocator used to allocate objects
    *
-   * @param number
+   * @param ptr Pointer to objects to be deallocated
+   *
+   * @param number Number of objects which were previously allocated
    */
   static
   void
@@ -41,16 +46,17 @@ public:
     alloc.deallocate( ptr, number );
   }
 
-  /*!
-   * @tparam T
+  /*! Construct objects located in memory
    *
-   * @tparam ...Args
+   * @tparam T Type of objects to be constructed
    *
-   * @param alloc
+   * @tparam ...Args Type of arguments being sent to constructor
    *
-   * @param ptr
+   * @param alloc Allocator used for allocation
    *
-   * @param args
+   * @param ptr Pointer to objects to be constructed
+   *
+   * @param args Arguments to forward to the object constructor
    */
   template<typename T, class ...Args>
   static
@@ -60,10 +66,11 @@ public:
     ::new ( ptr ) value_type( std::forward<Args>( args )... );
   }
 
-  /*!
-   * @param alloc
+  /*! Destroy previously constructed objects
    *
-   * @param ptr
+   * @param alloc Allocator used for allocation
+   *
+   * @param ptr Pointer to objects to be destroyed
    */
   static
   void

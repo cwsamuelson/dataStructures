@@ -38,36 +38,13 @@ using requireInputIter =
 template<typename T, typename ALLOC = allocator<T> >
 class vector{
 public:
-  /*! Type of stored values
-   */
   using value_type = T;
-
-  /*! pointer type to stored value
-   */
   using pointer = value_type*;
-
-  /*! reference to stored value
-   */
   using reference = value_type&;
-
-  /*! const reference to stored value
-   */
   using const_reference = const value_type&;
-
-  /*! const pointer type to stored value
-   */
   using const_pointer = const value_type*;
-
-  /*! Iterator type
-   */
   using iterator = normal_iterator<value_type, vector>;
-
-  /*! Type used for anything associated with container size
-   */
   using size_type = unsigned long;
-
-  /*!
-   */
   using alloc = ALLOC;
 
 private:
@@ -200,7 +177,7 @@ public:
     }
   }
 
-  /*! dtor
+  /*! Destructor
    *
    * all data is cleared, destructors ran, and memory freed
    */

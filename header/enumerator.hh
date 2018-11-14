@@ -4,6 +4,12 @@
 #include<type_traits>
 #include<utility>
 
+/*!
+ * @example test-enumerator.cc
+ */
+
+namespace gsw{
+
 /*! Container wrapper that provides iterators with counters
  *
  * @tparam container_t type of container to enumerate
@@ -121,6 +127,8 @@ constexpr
 auto
 enumerate( container_t& c ){
   return enumerator( c );
+}
+
 }
 
 #endif

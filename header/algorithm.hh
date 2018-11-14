@@ -16,9 +16,9 @@ namespace gsw{
  *
  * @tparam T Floating point type to be compared
  *
- * @param f1 First value to be compared against f2
+ * @param f1 First value to be compared
  *
- * @param f2 Second value to be compared against f1
+ * @param f2 Second value to be compared
  *
  * @return The effective equality of f1 and f2
  *
@@ -33,12 +33,13 @@ are_equal( T f1, T f2 ){
   return ( std::fabs( f1 - f2 ) <= std::numeric_limits<T>::epsilon() * std::max( {1.0, std::fabs( f1 ), std::fabs( f2 )} ) );
 }
 
-/*!
- * @param f1
+/*! Compare equality of floating point numbers
  *
- * @param f2
+ * @param f1 First value to be compared
  *
- * @return
+ * @param f2 Second value to be compared
+ *
+ * @return Whether f1 and f2 are approximately equal
  */
 template<>
 bool
@@ -80,23 +81,21 @@ invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
  */
 template<typename T>
 struct less{
-  /*!
-   */
   bool
   operator()( const T& lhs, const T& rhs ){
     return lhs < rhs;
   }
 };
 
-/*!
+/*! Find the distance between 2 iterators from a single container
  *
- * @tparam iter
+ * @tparam iter Iterator type
  *
- * @param first
+ * @param first starting point to count from
  *
- * @param last
+ * @param last ending point to count to
  *
- * @return
+ * @return The 'distance' between first and last
  */
 template<typename iter>
 unsigned long
@@ -110,13 +109,13 @@ distance( iter first, iter last ){
   return ret;
 }
 
-/*!
+/*! Swap the contents of x and y
  *
- * @tparam iter
+ * @tparam iter Iterator type
  *
- * @param x
+ * @param x Iterator to first swapping object
  *
- * @param y
+ * @param y Iterator to second swapping object
  */
 template<typename iter>
 void
@@ -170,17 +169,17 @@ merge( iter first, iter mid, iter last, compare comp ){
   }
 }
 
-/*!
+/*! Sort a collection of items
  *
- * @tparam iter
+ * @tparam iter Iterator type
  *
- * @tparam compare
+ * @tparam compare Comparison type
  *
- * @param first
+ * @param first Iterator to first object to sort
  *
- * @param last
+ * @param last Iterator to last object to sort
  *
- * @param comp
+ * @param comp Comparison function
  */
 template<typename iter, typename compare = less<typename iter::value_type> >
 void

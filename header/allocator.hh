@@ -3,8 +3,9 @@
 
 namespace gsw{
 
-/*!
- * @tparam T
+/*! Basic allocator, using new and delete
+ *
+ * @tparam T Type of objects allocated and constructed by this allocator
  */
 template<typename T>
 class allocator{
