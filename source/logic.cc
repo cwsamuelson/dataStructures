@@ -14,7 +14,7 @@ using namespace gsw;
    ***********/
 set<string>
 invert( set<string> operand, set<string> variables ){
-  for( auto op : operand ){
+  for( const auto& op : operand ){
     if( variables.count( op ) ){
       variables.erase( variables.find( op ) );
     }
@@ -28,7 +28,7 @@ invert( set<string> operand, set<string> variables ){
    ************/
 bool
 proposition::variable::evaluate( const set<string>& facts ) const{
-  return facts.count( name );
+  return facts.count( name ) > 0;
 }
 
 set<set<string> >
@@ -46,7 +46,7 @@ proposition::variable::solve( set<string> data ) const{
     // each element of data is mapped to a bit in mask
     // each bit is tested, and each respective variable is added appropriately
     size_t j = 1;
-    for( auto var : data ){
+    for( const auto& var : data ){
       if( j & mask ){
         test.insert( var );
       }
@@ -151,7 +151,7 @@ proposition::negation::solve( set<string> data ) const{
   auto solutions = operand->solve( data );
   set<set<string> > result;
 
-  for( auto solution : solutions ){
+  for( const auto& solution : solutions ){
     result.insert( invert( solution, data ) );
   }
 
@@ -172,7 +172,7 @@ proposition::operator&&( const proposition& conjunct ) const{
   var->lhs = mValue;
   var->rhs = conjunct.mValue;
 
-  return {var};
+  return proposition{var};
 }
 
 proposition
@@ -182,7 +182,7 @@ proposition::operator||( const proposition& disjunct ) const{
   var->lhs = mValue;
   var->rhs = disjunct.mValue;
 
-  return {var};
+  return proposition{var};
 }
 
 proposition
@@ -192,7 +192,7 @@ proposition::operator^( const proposition& operand ) const{
   var->lhs = mValue;
   var->rhs = operand.mValue;
 
-  return {var};
+  return proposition{var};
 }
 
 proposition
@@ -201,7 +201,7 @@ proposition::operator!() const{
 
   var->operand = mValue;
 
-  return {var};
+  return proposition{var};
 }
 
 proposition
@@ -259,5 +259,5 @@ gsw::operator""_lvar( const char* name, size_t sz ){
 
   var->name = string( name, sz );
 
-  return {var};
+  return proposition{var};
 }

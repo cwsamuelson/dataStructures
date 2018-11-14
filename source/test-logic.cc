@@ -71,14 +71,12 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     CHECK( ( foo && bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >{{"foo", "bar"}} );
 
-    CHECK( ( foo && !foo ).solve( {"foo"} ) ==
-              set<set<string> >{} );
+    CHECK( ( foo && !foo ).solve( {"foo"} ).empty() );
 
     CHECK( ( foo && bar ).solve2( {"foo", "bar"} ) ==
              set<set<string> >{{"foo", "bar"}} );
 
-    CHECK( ( foo && !foo ).solve2( {"foo"} ) ==
-              set<set<string> >{} );
+    CHECK( ( foo && !foo ).solve2( {"foo"} ).empty() );
   }
 
   SECTION( "Disjunction (or)" ){
@@ -109,8 +107,7 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     CHECK( ( foo ^ bar ).solve( {"foo", "bar"} ) ==
              set<set<string> >{{"foo"}, {"bar"}} );
 
-    CHECK( ( foo ^ !foo ).solve( {"foo"} ) ==
-              set<set<string> >{} );
+    CHECK( ( foo ^ !foo ).solve( {"foo"} ).empty() );
 
     CHECK( ( foo ^ ( foo || bar ) ).solve( {"foo", "bar"} ) ==
               set<set<string> >{{"bar"}} );
@@ -119,8 +116,7 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     CHECK( ( foo ^ bar ).solve2( {"foo", "bar"} ) ==
              set<set<string> >{{"foo"}, {"bar"}} );
 
-    CHECK( ( foo ^ !foo ).solve2( {"foo"} ) ==
-              set<set<string> >{} );
+    CHECK( ( foo ^ !foo ).solve2( {"foo"} ).empty() );
 
     CHECK( ( foo ^ ( foo || bar ) ).solve2( {"foo", "bar"} ) ==
               set<set<string> >{{"bar"}} );
@@ -177,14 +173,14 @@ TEST_CASE( "Logic operators behave as expected", "[logic]" ){
     auto prop = ( "A"_lvar && !"B"_lvar ).implies( "C"_lvar ) && ( !"A"_lvar ).iff( "B"_lvar && "C"_lvar );
 
     int i = 0;
-    for( auto solution : prop.solve( {"A", "B", "C"} ) ){
+    for( const auto& solution : prop.solve( {"A", "B", "C"} ) ){
       CHECK( prop( solution ) );
       ++i;
     }
     CHECK( i == 3 );
 
     i = 0;
-    for( auto solution : prop.solve2( {"A", "B", "C"} ) ){
+    for( const auto& solution : prop.solve2( {"A", "B", "C"} ) ){
       CHECK( prop( solution ) );
       ++i;
     }

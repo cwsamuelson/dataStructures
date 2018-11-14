@@ -31,10 +31,10 @@ private:
     std::string name;
 
     bool
-    evaluate( const std::set<std::string>& facts ) const;
+    evaluate( const std::set<std::string>& facts ) const override;
 
     std::set<std::set<std::string> >
-    solve( std::set<std::string> data ) const;
+    solve( std::set<std::string> data ) const override;
   };
 
   struct conjunction : public operation{
@@ -42,10 +42,10 @@ private:
     op_ptr rhs;
 
     bool
-    evaluate( const std::set<std::string>& facts ) const;
+    evaluate( const std::set<std::string>& facts ) const override;
 
     std::set<std::set<std::string> >
-    solve( std::set<std::string> data ) const;
+    solve( std::set<std::string> data ) const override;
   };
 
   struct disjunction : public operation{
@@ -53,10 +53,10 @@ private:
     op_ptr rhs;
 
     bool
-    evaluate( const std::set<std::string>& facts ) const;
+    evaluate( const std::set<std::string>& facts ) const override;
 
     std::set<std::set<std::string> >
-    solve( std::set<std::string> data ) const;
+    solve( std::set<std::string> data ) const override;
   };
 
   struct exDisjunction : public operation{
@@ -64,22 +64,23 @@ private:
     op_ptr rhs;
 
     bool
-    evaluate( const std::set<std::string>& facts ) const;
+    evaluate( const std::set<std::string>& facts ) const override;
 
     std::set<std::set<std::string> >
-    solve( std::set<std::string> data ) const;
+    solve( std::set<std::string> data ) const override;
   };
 
   struct negation : public operation{
     op_ptr operand;
 
     bool
-    evaluate( const std::set<std::string>& facts ) const;
+    evaluate( const std::set<std::string>& facts ) const override;
 
     std::set<std::set<std::string> >
-    solve( std::set<std::string> data ) const;
+    solve( std::set<std::string> data ) const override;
   };
 
+  explicit
   proposition( const op_ptr value );
 
   op_ptr mValue;

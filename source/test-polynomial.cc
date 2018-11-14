@@ -2,6 +2,7 @@
 
 #include<polynomial.hh>
 #include<algorithm.hh>
+#include<catch_stringify_helper.hh>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ TEST_CASE( "polynomial can be intuitively copied", "[poly]" ){
   gsw::polynomial e;
   auto a = e;
   gsw::polynomial e0( a );
-  gsw::polynomial e1( gsw::polynomial() );
+  gsw::polynomial e1{ gsw::polynomial() };
 }
 
 TEST_CASE( "polynomial can be used in basic arithmetic", "[poly]" ){
