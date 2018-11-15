@@ -9,6 +9,9 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
   SECTION( "Basic operation" ){
     CHECK( ( "X"_evar ).evaluate( {{"X", 1}} ) == 1 );
     CHECK( ( "X"_evar ).evaluate( {{"X", 5}} ) == 5 );
+    auto X = "X"_evar;
+    auto Y = "Y"_evar;
+    CHECK( ( X * Y ).evaluate( {{"X", 3}, {"Y", 2}} ) == 6 );
     //CHECK( ( "x"_evar ).solve( {"x"} ) ==
     //         set<set<string> > {{"foo"}} );
   }
@@ -47,6 +50,9 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     CHECK( ( "X"_evar * "X"_evar ).evaluate( {{"X", 3}} ) == 9 );
     CHECK( ( "X"_evar * "5"_evar ).evaluate( {{"X", 3}} ) == 15 );
     CHECK( ( "4.2"_evar * "X"_evar ).evaluate( {{"X", 2}} ) == 8.4 );
+    CHECK( ( "X"_evar * "4.2"_evar ).evaluate( {{"X", 2}} ) == 8.4 );
+    //CHECK( ( 4.2 * "X"_evar ).evaluate( {{"X", 2}} ) == 8.4 );
+    CHECK( ( "X"_evar * 4.2 ).evaluate( {{"X", 2}} ) == 8.4 );
     CHECK( ( "3"_evar * "5"_evar ).evaluate({}) == 15 );
 
     CHECK( ( "X"_evar * 5.0_evar ).evaluate( {{"X", 3}} ) == 15 );
@@ -62,6 +68,8 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     CHECK( ( "X"_evar / "Y"_evar ).evaluate( {{"X", 12}, {"Y", -2}} ) == -6 );
     CHECK( ( "X"_evar / "X"_evar ).evaluate( {{"X", 12}} ) == 1 );
     CHECK( ( "X"_evar / "3"_evar ).evaluate( {{"X", 12}} ) == 4 );
+    CHECK( ( "X"_evar / 3 ).evaluate( {{"X", 12}} ) == 4 );
+    //CHECK( ( 12 / "X"_evar ).evaluate( {{"X", 3}} ) == 4 );
     CHECK( ( "4.2"_evar / "X"_evar ).evaluate( {{"X", 2}} ) == 2.1 );
     CHECK( ( "15"_evar / "3"_evar ).evaluate( {} ) == 5 );
 
@@ -75,6 +83,9 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     CHECK( ( "X"_evar + "Y"_evar ).evaluate( {{"X", 3}, {"Y", 2}} ) == 5 );
     CHECK( ( "X"_evar + "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == -2 );
     CHECK( ( "X"_evar + "3"_evar ).evaluate( {{"X", 3}} ) == 6 );
+    CHECK( ( "3"_evar + "X"_evar ).evaluate( {{"X", 3}} ) == 6 );
+    CHECK( ( "X"_evar + 3 ).evaluate( {{"X", 3}} ) == 6 );
+    //CHECK( ( 3 + "X"_evar ).evaluate( {{"X", 3}} ) == 6 );
     CHECK( ( "5"_evar + "3"_evar ).evaluate( {} ) == 8 );
 
     CHECK( ( "X"_evar + 3.0_evar ).evaluate( {{"X", 3}} ) == 6 );
@@ -88,7 +99,13 @@ TEST_CASE( "Mathematical operators behave as expected", "[equ]" ){
     CHECK( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", 4}} ) == 1 );
     CHECK( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", 7}} ) == -2 );
     CHECK( ( "X"_evar - "Y"_evar ).evaluate( {{"X", 5}, {"Y", -7}} ) == 12 );
+
     CHECK( ( "X"_evar - "3"_evar ).evaluate( {{"X", 5}} ) == 2 );
+    CHECK( ( "3"_evar - "X"_evar ).evaluate( {{"X", 5}} ) == -2 );
+
+    CHECK( ( "X"_evar - 3 ).evaluate( {{"X", 5}} ) == 2 );
+    //CHECK( ( 3 - "X"_evar ).evaluate( {{"X", 5}} ) == 2 );
+
     CHECK( ( "5"_evar - "3"_evar ).evaluate( {} ) == 2 );
 
     CHECK( ( "X"_evar - 3.0_evar ).evaluate( {{"X", 5}} ) == 2 );

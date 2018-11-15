@@ -137,11 +137,31 @@ equation::operator*( const equation& multiplicand ) const{
 }
 
 equation
+equation::operator*( double d ) const{
+  auto var = make_shared<equation::constant>();
+  var->value = d;
+
+  equation e( var );
+
+  return *this * e;
+}
+
+equation
 equation::operator/( const equation& dividend ) const{
   auto var = make_shared<equation::division>();
   var->lhs = mValue;
   var->rhs = dividend.mValue;
   return {var};
+}
+
+equation
+equation::operator/( double d ) const{
+  auto var = make_shared<equation::constant>();
+  var->value = d;
+
+  equation e( var );
+
+  return *this / e;
 }
 
 equation
@@ -153,11 +173,31 @@ equation::operator+( const equation& operand ) const{
 }
 
 equation
+equation::operator+( double d ) const{
+  auto var = make_shared<equation::constant>();
+  var->value = d;
+
+  equation e( var );
+
+  return *this + e;
+}
+
+equation
 equation::operator-( const equation& operand ) const{
   auto var = make_shared<equation::subtraction>();
   var->lhs = mValue;
   var->rhs = operand.mValue;
   return {var};
+}
+
+equation
+equation::operator-( double d ) const{
+  auto var = make_shared<equation::constant>();
+  var->value = d;
+
+  equation e( var );
+
+  return *this - e;
 }
 
 equation
@@ -185,11 +225,13 @@ equation::pow( const const_eq& operand ) const{
 
 equation
 equation::pow( double operand ) const{
-  auto var = make_shared<equation::exponentiation>( true );
   auto cnst = make_shared<equation::constant>();
   cnst->value = operand;
+
+  auto var = make_shared<equation::exponentiation>( true );
   var->base = mValue;
   var->exponent = cnst;
+
   return {var};
 }
 

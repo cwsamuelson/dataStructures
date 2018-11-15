@@ -14,7 +14,16 @@ namespace gsw{
 
 /*! Mathematical equation
  *
- * @todo implement operators with doubles
+ * Composable equation system, allowing for symbolic variables, and intuitive
+ * composition.
+ * @code{.cpp}
+ * auto X = "X"_evar;
+ * auto Y = "Y"_evar;
+ * ( X * Y ).evaluate( {{"X", 3}, {"Y", 2}} ) == 6
+ * ( ( X * 3 ) + 2 ).evaluate( {"X", 4} ) == 14
+ * @endcode
+ *
+ * @todo implement the commutivity of operators (particular with doubles)
  */
 class equation{
 public:
@@ -168,6 +177,15 @@ public:
   equation
   operator*( const equation& multiplicand ) const;
 
+  /*! Multiplication operator
+   *
+   * @param d Constant to multiply the equation with
+   *
+   * @return an equation representing the multiplication of this with d
+   */
+  equation
+  operator*( double d ) const;
+
   /*! Division operator
    *
    * @param dividend operand equation to divide this by
@@ -176,6 +194,15 @@ public:
    */
   equation
   operator/( const equation& dividend ) const;
+
+  /*! Division operator
+   *
+   * @param d Constant to divide the equation by
+   *
+   * @return an equation representing the division of this by d
+   */
+  equation
+  operator/( double d ) const;
 
   /*! Addition operator
    *
@@ -186,6 +213,15 @@ public:
   equation
   operator+( const equation& operand ) const;
 
+  /*! Addition operator
+   *
+   * @param d Constant to add to the equation
+   *
+   * @return an equation representing the addition of d to this
+   */
+  equation
+  operator+( double d ) const;
+
   /*! Subtraction operator
    *
    * @param operand equation to subtract from this
@@ -194,6 +230,15 @@ public:
    */
   equation
   operator-( const equation& operand ) const;
+
+  /*! Subtraction operator
+   *
+   * @param d Constant to subtract from the equation
+   *
+   * @return an equation representing the subtraction of d from this
+   */
+  equation
+  operator-( double d ) const;
 
   /*! Negation operator
    *
