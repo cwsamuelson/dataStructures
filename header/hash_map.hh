@@ -11,15 +11,15 @@
 
 namespace gsw{
 
-/*!
+/*! Associative data container type
  *
- * @tparam KEY
+ * @tparam KEY Input type, used to retrieve output VALUE type objects
  *
- * @tparam VALUE
+ * @tparam VALUE Output/'stored' type, found/referenced using the KEY type
  *
- * @tparam HASH
+ * @tparam HASH Type used to hash KEY for easier storage, and data locating
  *
- * @tparam ALLOC
+ * @tparam ALLOC Type used to allocate key-value pairs
  */
 template<typename KEY, typename VALUE, typename HASH = std::hash<KEY>, typename ALLOC = allocator<std::tuple<KEY, VALUE> > >
 class hash_map{
@@ -38,14 +38,18 @@ private:
   size_t mMaxSize;
 
 public:
-  /*!
+  /*! Ctor defining the number of buckets to be hashed into
+   *
+   * @param map_max Maximum number of buckets
    */
   hash_map( size_t map_max = 16 )
     : mValues( map_max )
     , mMaxSize( map_max ){
   }
 
-  /*!
+  /*! Move constructor
+   *
+   * @param other
    */
   template<typename U>
   hash_map( U&& other )
@@ -53,13 +57,15 @@ public:
     mValues = std::forward<container>( other.mValues );
   }
 
-  /*!
+  /*! Destructor
    */
   ~hash_map() = default;
 
-  /*!
+  /*! Universal reference assignment
    *
-   * @return
+   * @param other Object to be moved/copied
+   *
+   * @return Resulting *this
    */
   template<typename U>
   hash_map&
@@ -70,13 +76,21 @@ public:
     return *this;
   }
 
-  /*!
+  /*! Insert a new key-value pair
+   *
+   * @param key Key to new value being inserted
+   *
+   * @param value Value being inserted
    */
   void
   insert( const key_type& key, const value_type& value ){
     mValues.at( mHashFunc( key ) % mMaxSize ) = {key, value};
   }
 
+  /*! Erase data already in container
+   *
+   * @param key key to find value to erase from container
+   */
   void
   erase( const key_type& key ){
     mValues.at( mHashFunc( key ) % mMaxSize ).reset();

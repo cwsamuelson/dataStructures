@@ -113,7 +113,9 @@ public:
   /*! Create a new edge between 2 nodes
    *
    * @param refA node to create edge from
+   *
    * @param refB node to create edge to
+   *
    * @param is_directed whether the edge should be directed or not
    */
   void
@@ -133,6 +135,7 @@ public:
   /*! Remove edge between 2 nodes from graph
    *
    * @param refA node edge is from
+   *
    * @param refB node edge is to
    */
   void
@@ -144,7 +147,7 @@ public:
     inedges.erase( inedges.find( refA ) );
   }
 
-  /*!
+  /*! Emplace new edge
    *
    * @param refA
    * @param refB
@@ -251,8 +254,9 @@ public:
 
   /*! Test whether 2 nodes are connected
    *
-   * @param refA
-   * @param refB
+   * @param refA First node to test connection
+   *
+   * @param refB Second node to test connection
    *
    * @return whether the refA and refB are adjacent
    */
@@ -260,7 +264,7 @@ public:
   adjacent( const_reference refA, const_reference refB ) const{
     //return mNodes.at( refA ).contains( refB );//contains is c++20
     return mNodes.at( refA ).count( refB ) > 0;
-    //should direction be accounted for here? guess is no
+    //!@todo should direction be accounted for here? guess is no
   }
 
   /*! Get a set of nodes adjacent to a particular node

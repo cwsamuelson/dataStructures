@@ -49,20 +49,9 @@ namespace gsw{
 template<typename SELECTOR>
 class menu{
 public:
-  /*! selector type, used to differentiate and retrieve menu options from this node
-   */
   using selector = SELECTOR;
-
-  /*! pointer to menu type
-   */
   using pointer = std::shared_ptr<menu>;
-
-  /*! callback used to inform user of changed state
-   */
   using optionCallback = std::function<bool(selector)>;
-
-  /*!
-   */
   using menu_item = std::tuple<std::string, pointer, optionCallback>;
 
 private:
@@ -72,12 +61,14 @@ private:
 public:
   /*! Menu text and default ctor
    */
+  explicit
   menu( std::string text = "" ):
     mMenuText( text ){
   }
 
   /*!
    */
+  explicit
   menu( const char* arr )
     : menu( std::string( arr ) ){
   }

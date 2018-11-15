@@ -20,6 +20,8 @@ namespace gsw{
 template<typename ...Args>
 class event_channel{
 public:
+  /*! Container for handling events
+   */
   class event_handler{
   public:
     using counter_t = unsigned long long;
@@ -31,32 +33,38 @@ public:
     handler mHandler;
     counter_t mCounter;
 
+    /*! Private constructor
+     *
+     * Constructor is private so that only the channel creates handlers
+     */
     event_handler( event_channel& channel, counter_t counter, handler handle )
       : mChannel( channel )
       , mHandler( handle )
       , mCounter( counter ){
     }
 
-  public:
-    event_handler( const event_handler& handler )
-      : mChannel( handler.mChannel )
-      , mHandler( handler.mHandler )
-      , mCounter( handler.mCounter ){
-    }
-
-    event_handler&
-    operator=( const event_handler& handler ){
-      mChannel = handler.mChannel;
-      mHandler = handler.mHandler;
-      mCounter = handler.mCounter;
-
-      return *this;
-    }
-
+    /*! Call event
+     *
+     * Made private so that only the channel triggers events
+     */
     void
     operator()( Args... args ){
       mHandler( mChannel, mCounter, args... );
     }
+
+  public:
+    /*! Copy ctor
+     *
+     * @param handler Event handler to copy from
+     */
+    event_handler( const event_handler& handler ) = default;
+
+    /*! Copy assignment
+     *
+     * @param handler Event handler to copy from
+     */
+    event_handler&
+    operator=( const event_handler& handler ) = default;
 
     bool
     operator==( event_handler other ){
@@ -93,9 +101,9 @@ private:
 public:
   /*! Register new handler
    *
-   * @param handler
+   * @param handler Handler to register
    *
-   * @return
+   * @return The new modified channel
    */
   event_channel&
   operator+=( const handler& handle ){
@@ -106,9 +114,9 @@ public:
 
   /*! Register new handler
    *
-   * @param handler
+   * @param handler Handler to enlist
    *
-   * @return
+   * @return The new modified channel
    */
   event_handler
   enlist( const handler& handle ){
@@ -119,7 +127,7 @@ public:
 
   /*! Unregister a previously registered handler
    *
-   * @param ref
+   * @param ref Handler to no longer be fired when the event goes off
    */
   void
   delist( const event_handler& handle ){
@@ -152,7 +160,9 @@ public:
     }
   }
 
-  /*!
+  /*! Fire the event!
+   *
+   * @param args Arguments to pass on to handlers
    */
   void
   operator()( Args... args ){

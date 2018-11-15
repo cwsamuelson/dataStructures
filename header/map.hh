@@ -38,32 +38,12 @@ public:
 template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY>, typename ALLOC = allocator<tuple<KEY, VALUE> > >
 class map{
 public:
-  /*!
-   */
   using key_type     = KEY;
-
-  /*!
-   */
   using map_type     = VALUE;
-
-  /*!
-   */
   using size_type    = unsigned long;
-
-  /*!
-   */
   using compare      = COMPARE;
-
-  /*!
-   */
   using storage_type = tuple<key_type, map_type>;
-
-  /*!
-   */
   using iterator     = normal_iterator<storage_type, map>;
-
-  /*!
-   */
   using alloc        = ALLOC;
 
 private:
