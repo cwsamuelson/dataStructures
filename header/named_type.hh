@@ -1,6 +1,8 @@
 #ifndef __NAMED_TYPE_HH__
 #define __NAMED_TYPE_HH__
 
+#include<utility>
+
 template<typename T, typename parameter>
 class named_type{
 public:
