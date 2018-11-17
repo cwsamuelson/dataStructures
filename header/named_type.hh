@@ -3,6 +3,8 @@
 
 #include<utility>
 
+namespace gsw{
+
 template<typename T, typename parameter>
 class named_type{
 public:
@@ -60,5 +62,7 @@ public:
     return mValue == value;
   }
 };
+
+}
 
 #endif
