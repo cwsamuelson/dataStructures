@@ -45,7 +45,7 @@ public:
 
   bound
   operator/( long long rhs ) const{
-    bound b;
+    bound b = *this;
 
     for( auto& val : b.data ){
       val /= rhs;
@@ -85,14 +85,14 @@ public:
 
     recurse.recur( low, half );
 
-    low[DIM] += half[DIM];
+    low[DIM - 1] += half[DIM - 1];
 
     recurse.recur( low, half );
   }
 };
 
 template<typename T, long DIMS>
-class recurse_bounds<T, -1, DIMS>{
+class recurse_bounds<T, 0, DIMS>{
 private:
   const size_t mMax;
   std::vector<T>& mSubregions;
