@@ -8,4 +8,5 @@ depend/*
 *.swp
 *.stackdump
 documentation/*
+build/*
 
