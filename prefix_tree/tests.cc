@@ -7,7 +7,7 @@
 using namespace std;
 using namespace gsw;
 
-TEST_CASE( "", "[trie]" ){
+TEST_CASE( "", "[prefix_tree]" ){
   prefix_tree<string, int> tree;
 
   REQUIRE( tree.empty() );
