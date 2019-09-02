@@ -241,8 +241,8 @@ public:
    * @param X
    * @return
    */
-  y_type
-  operator()( x_type X ) const;
+  point2::y_type
+  operator()( point2::x_type X ) const;
 
   /*!
    *

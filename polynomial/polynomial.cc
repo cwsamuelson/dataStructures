@@ -166,8 +166,8 @@ polynomial::operator()( double X ) const{
   return val;
 }
 
-y_type
-polynomial::operator()( x_type X ) const{
+point2::y_type
+polynomial::operator()( point2::x_type X ) const{
   return operator()( X.get() );
 }
 
