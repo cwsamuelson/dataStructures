@@ -7,7 +7,7 @@ using namespace gsw;
 
 TEST_CASE( "Normal iterator", "[norm_iter]" ){
   SECTION( "Basic operation" ){
-    REQUIRE(true);
+    REQUIRE(false);
   }
 }
 

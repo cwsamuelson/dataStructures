@@ -4,5 +4,6 @@
 #include <named_type.hh>
 
 TEST_CASE("Named type testing", "[named]"){
+  CHECK(false);
 }
 

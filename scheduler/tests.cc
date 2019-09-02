@@ -6,5 +6,6 @@
 using namespace std;
 
 TEST_CASE( "", "[]" ){
+  CHECK(false);
 }
 
