@@ -65,23 +65,10 @@ public:
 
   /*! Menu text and default ctor
    */
-<<<<<<< HEAD:header/menu.hh
   explicit
-  menu( std::string text = "" ):
-    mMenuText( text ){
-  }
-=======
   menu( std::string text = "")
     : mMenuText( text )
   {}
->>>>>>> master:menu/menu.hh
-
-  /*!
-   */
-  explicit
-  menu( const char* arr )
-    : menu( std::string( arr ) ){
-  }
 
   /*! Copy/Move ctor
    *

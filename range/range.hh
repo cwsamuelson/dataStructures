@@ -186,13 +186,8 @@ public:
     : mBegin( begin )
     , mEnd( end )
     , mFilter( filFN )
-<<<<<<< HEAD:header/range.hh
-    , mModifier( modFN ){
-  }
-=======
     , mModifier( modFN )
   {}
->>>>>>> master:range/range.hh
 
   /*! Takes a container, and stores its beginning and ending iterators, and filtering callback, and modification callback
    *
@@ -208,13 +203,8 @@ public:
   range( container& cont,
          filter filFN = []( const reference ){ return true; },
          modifier modFN = []( const reference t ){ return t; } )
-<<<<<<< HEAD:header/range.hh
-    : range( cont.begin(), cont.end(), filFN, modFN ){
-  }
-=======
     : range( cont.begin(), cont.end(), filFN, modFN )
   {}
->>>>>>> master:range/range.hh
 
   /*! Get beginning iterator
    *

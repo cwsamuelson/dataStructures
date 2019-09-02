@@ -125,14 +125,12 @@ TEST_CASE( "Shared_ptrs obey move semantics", "[shared_ptr]" ){
     CHECK( b1 == false );
   }
 }
-<<<<<<< HEAD:source/test-shared.cc
-=======
 
 class foo{
 private:
   int& X;
   bool& flag;
-  
+
 public:
   foo( int& x, bool& f ):
     X( x ),
@@ -142,7 +140,7 @@ public:
   ~foo(){
     flag = true;
   }
-  
+
   int& value(){
     return X;
   }
@@ -174,23 +172,22 @@ TEST_CASE( "Unique pointers behave mostly as regular pointers", "[unique_ptr]" )
   unique_ptr<int> ptr2( new int );
   unique_ptr<foo> ptr3( new foo( x, flag1 ) );
   unique_ptr<foo> ptr4( new foo( y, flag2 ) );
-  
+
   *ptr1 = 1;
   *ptr2 = 2;
 
   ptr1 = std::move( ptr2 );
   ptr4 = std::move( ptr3 );
-  
+
   /* flag2 should be toggled now, and not flag1 */
   REQUIRE( !flag1 );
   REQUIRE( flag2 );
   REQUIRE( ptr4->value() == x );
   ptr4 = std::move( ptr4 );
   REQUIRE( ptr4->value() == x );
-  
+
   x = 2;
   REQUIRE( ( *ptr1 ) == 2 );
   REQUIRE( ptr4->value() == x );
 }
 
->>>>>>> master:memory/tests.cc

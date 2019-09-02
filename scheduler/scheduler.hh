@@ -12,7 +12,7 @@ class scheduler{
 public:
   using tick_rate = decltype( tick<double>() / time<double>() );
 
-  using callback = std::function(void()>;
+  using callback = std::function<void()>;
 
 private:
   time<double> mCounter;
@@ -21,7 +21,8 @@ private:
 
 public:
   scheduler( callback cb, tick_rate rate )
-    : mCall( cb )
+    : mCounter(0.0)
+    , mCall( cb )
     , mRate( rate ){
   }
 
@@ -29,8 +30,10 @@ public:
   update( time<double> t ){
     mCounter += t;
 
-    if( ( mCounter * mRate ) > 1 ){
-      mCounter -= ( ( 1 / mRate ) * tick<double>( 1 ) );
+    //this allows t to trigger multiple events.
+    while( ( mCounter * mRate ) > 1 ){
+      //the amount of time for one tick, given mRate
+      mCounter -= ( ( 1.0 / mRate ) * tick<double>( 1 ) );
 
       mCall();
     }

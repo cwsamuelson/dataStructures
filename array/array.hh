@@ -114,14 +114,11 @@ public:
    */
   constexpr
   array() = default;
-<<<<<<< HEAD:header/array.hh
-=======
 
   constexpr
   array(array_t arr)
     : mArr(arr)
   {}
->>>>>>> master:array/array.hh
 
   /*! List initialization ctor
    *
@@ -132,13 +129,8 @@ public:
   template<typename ...Args>
   constexpr
   array( Args... args )
-<<<<<<< HEAD:header/array.hh
-    : mArr{ args...}{
-  }
-=======
     : mArr{ args...}
   {}
->>>>>>> master:array/array.hh
 
   /*! Get the size of the array
    *
@@ -146,12 +138,8 @@ public:
    *
    * Returns the number of elements stored in the array.
    */
-<<<<<<< HEAD:header/array.hh
   constexpr
   index_t
-=======
-  constexpr index_t
->>>>>>> master:array/array.hh
   size() const{
     return mSize;
   }
@@ -207,12 +195,8 @@ public:
    * Behaves the same as non-const version, but provides a const reference,
    * and can be used on const objects.
    */
-<<<<<<< HEAD:header/array.hh
   constexpr
   const_reference
-=======
-  constexpr const_reference
->>>>>>> master:array/array.hh
   operator[]( index_t idx ) const{
     return mArr[idx];
   }

@@ -26,11 +26,7 @@ public:
   public:
     using counter_t = unsigned long long;
     using handler = std::function<void( event_channel&, counter_t, Args... )>;
-<<<<<<< HEAD:header/event_handler.hh
     friend event_channel;
-=======
-    friend class event_channel;
->>>>>>> master:event_handler/event_handler.hh
 
   private:
     event_channel& mChannel;
@@ -47,42 +43,10 @@ public:
       , mCounter( counter ){
     }
 
-<<<<<<< HEAD:header/event_handler.hh
     /*! Call event
      *
      * Made private so that only the channel triggers events
      */
-=======
-  public:
-    event_handler(const event_handler& from)
-      : mChannel(from.mChannel)
-      , mHandler(from.mHandler)
-      , mCounter(from.mCounter)
-    {}
-
-    event_handler(event_handler&& from)
-      : mChannel(from.mChannel)
-      , mHandler(std::move(from.mHandler))
-      , mCounter(std::move(from.mCounter))
-    {}
-
-    //mChannel cannot be reassigned!
-    // some other solution is needed (ref wrapper?)
-    event_handler&
-    operator=(const event_handler& from){
-      //mChannel = from.mChannel;
-      mHandler = from.mHandler;
-      mCounter = from.mCounter;
-    }
-
-    event_handler&
-    operator=(event_handler&& from){
-      //mChannel = from.mChannel;
-      mHandler = std::move(from.mHandler);
-      mCounter = std::move(from.mCounter);
-    }
-
->>>>>>> master:event_handler/event_handler.hh
     void
     operator()( Args... args ){
       mHandler( mChannel, mCounter, args... );
@@ -156,15 +120,9 @@ public:
    * @return The new modified channel
    */
   event_channel&
-<<<<<<< HEAD:header/event_handler.hh
   operator+=( const handler& handle ){
     enlist( handle );
 
-=======
-  operator+=( const handler& handler ){
-    enlist( handler );
- 
->>>>>>> master:event_handler/event_handler.hh
     return *this;
   }
 
@@ -174,45 +132,20 @@ public:
    *
    * @return The new modified channel
    */
-<<<<<<< HEAD:header/event_handler.hh
   event_handler
   enlist( const handler& handle ){
     handlers.emplace( std::make_pair( idCounter, event_handler{*this, idCounter, handle} ) );
 
     return handlers.at( idCounter++ );
-=======
-  event_handler&
-  enlist( const handler& handler ){
-    handlers.insert({idCounter, event_handler( *this, idCounter, handler )});
-
-    return handlers.at(idCounter++);
->>>>>>> master:event_handler/event_handler.hh
   }
 
   /*! Unregister a previously registered handler
    *
-<<<<<<< HEAD:header/event_handler.hh
    * @param ref Handler to no longer be fired when the event goes off
    */
   void
   delist( const event_handler& handle ){
     handlers.erase( handlers.find( handle.mCounter ) );
-=======
-   * @param handle
-   */
-  void
-  delist( const event_handler& handler ){
-    for(auto& [id, hndl] : handlers){
-      if(hndl == handler){
-        handlers.erase(id);
-      }
-    }
-  }
-
-  void
-  delist(counter_t id){
-    handlers.erase(id);
->>>>>>> master:event_handler/event_handler.hh
   }
 
   /*!
@@ -236,13 +169,8 @@ public:
    */
   void
   fire( Args... args ){
-<<<<<<< HEAD:header/event_handler.hh
-    for( auto& handle : handlers ){
-      handle.second( args... );
-=======
     for( auto& [id, handler] : handlers ){
       handler( args... );
->>>>>>> master:event_handler/event_handler.hh
     }
   }
 

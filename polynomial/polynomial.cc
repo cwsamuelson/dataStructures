@@ -208,7 +208,6 @@ gsw::operator==( point p, const polynomial& eq ){
   return eq == p;
 }
 
-<<<<<<< HEAD:source/polynomial.cc
 bool
 gsw::operator<( point p, const polynomial& eq ){
   return p.y() < eq( p.x() );
@@ -216,13 +215,6 @@ gsw::operator<( point p, const polynomial& eq ){
 
 bool
 gsw::operator>( point p, const polynomial& eq ){
-=======
-bool gsw::operator<( point p, const polynomial& eq ){
-  return p.y() < eq( p.x() );
-}
-
-bool gsw::operator>( point p, const polynomial& eq ){
->>>>>>> master:polynomial/polynomial.cc
   return p.y() > eq( p.x() );
 }
 

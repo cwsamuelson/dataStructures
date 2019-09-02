@@ -125,7 +125,6 @@ swap( iter x, iter y ){
   *y = z;
 }
 
-<<<<<<< HEAD:header/algorithm.hh
 /*!
  *
  * @tparam iter
@@ -140,13 +139,8 @@ swap( iter x, iter y ){
  *
  * @param comp
  */
-template<typename iter, typename compare>
-void
-merge( iter first, iter mid, iter last, compare comp ){
-=======
 /*template<typename iter, typename compare>
 void merge( iter first, iter mid, iter last, compare comp ){
->>>>>>> master:algorithm/algorithm.hh
   vector<typename iter::value_type> vec;
   auto middle = mid;
   auto start = first;
@@ -186,6 +180,7 @@ void merge( iter first, iter mid, iter last, compare comp ){
  *
  * @param comp Comparison function
  */
+/*
 template<typename iter, typename compare = less<typename iter::value_type> >
 void
 sort( iter first, iter last, compare comp = compare() ){

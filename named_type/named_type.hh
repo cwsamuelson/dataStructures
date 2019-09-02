@@ -1,11 +1,8 @@
 #ifndef __NAMED_TYPE_HH__
 #define __NAMED_TYPE_HH__
 
-<<<<<<< HEAD:header/named_type.hh
-#include<utility>
+//#include<utility>
 
-=======
->>>>>>> master:named_type/named_type.hh
 namespace gsw{
 
 template<typename T, typename parameter>
@@ -67,10 +64,5 @@ public:
 };
 
 }
-<<<<<<< HEAD:header/named_type.hh
-=======
-
-#endif
->>>>>>> master:named_type/named_type.hh
 
 #endif

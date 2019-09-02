@@ -102,8 +102,6 @@ TEST_CASE( "common_type", "[traits]" ){
     //CHECK( gsw::is_same<gsw::common_type<d1, d2          >::type, base>::value );
   }
 }
-<<<<<<< HEAD:source/test-traits.cc
-=======
 
 TEST_CASE( "Same-ness checks", "[is_same]"){
   REQUIRE( gsw::is_same<int, signed int>::value );
@@ -114,4 +112,3 @@ TEST_CASE( "Same-ness checks", "[is_same]"){
   REQUIRE( !gsw::is_same<int, bar>::value );
 }
 
->>>>>>> master:traits/tests.cc
