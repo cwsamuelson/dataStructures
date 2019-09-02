@@ -73,7 +73,15 @@ TEST_CASE( "Units participate in arithmetic", "[unit]" ){
     SECTION( "Kinematics example" ){
       CHECK( acceleration<>( 5 ) * gsw::time<>( 2 ) * gsw::time<>( 4 ) == length<>( 40 ) );
     }
-  }
+
+    using tick_rate = decltype( tick<double>() / gsw::time<double>() );
+    gsw::time<double> mCounter(0.0);
+    tick_rate mRate(3.0);
+
+    mCounter += gsw::time<double>(5.0);
+
+    CHECK((mCounter * mRate) > 1);
+    CHECK((mCounter - ((1.0 / mRate) * tick<double>(1))) == 2);
 
   SECTION( "Units of same type can be value compared" ){
     test_t X = 1.0;

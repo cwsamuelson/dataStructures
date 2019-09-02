@@ -71,6 +71,8 @@ public:
   static constexpr int tick = TICK;
   static constexpr int mole = MOLE;
   static constexpr int byte = BYTE;
+
+  using inverse = meas<-LENGTH, -TIME, -MASS, -CURRENT, -TEMPERATURE, -CANDELA, -MONEY, -ANGLE, -PERCENTAGE, -TICK, -MOLE, -BYTE>;
 };
 
 /*!
@@ -207,7 +209,6 @@ public:
   }
 };
 
-//! @todo add comparitive to unit?
 /*! Unit class that differentiates between different measurements.
  *
  * @tparam MEAS Unit of measurement in terms of length, time, mass etc.
@@ -234,24 +235,10 @@ public:
  *        Using the pimpl idiom also separates concerns of exception safety per
  *        http://www.gotw.ca/gotw/059.htm
  */
-<<<<<<< HEAD:header/unit.hh
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
 class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR> >,
                     additive<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>,
                     multiplicative<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>{
-=======
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY = 0, int ANGLE = 0, int PERCENTAGE = 0, int TICK = 0,
-         /*typename SYSTEM,*/ typename DBL = double, typename FACTOR = ratio<1, 1> >
-class unit : public additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
-                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, /*SYSTEM,*/ DBL, FACTOR> >,
-                    additive<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE,
-                                  CANDELA, MONEY, ANGLE, PERCENTAGE, TICK, /*SYSTEM,*/ DBL, FACTOR>,
-                                  DBL>,
-                    multiplicative<unit<LENGTH, TIME, MASS, CURRENT, TEMPERATURE, CANDELA,
-                                        MONEY, ANGLE, PERCENTAGE, TICK, /*SYSTEM,*/ DBL, FACTOR>,
-                                        DBL>{
->>>>>>> master:unit/unit.hh
 public:
   /*! Storage type
    */
@@ -765,13 +752,9 @@ operator/( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
  * @param u
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<MEAS, SYSTEM, DBL, FACTOR>
+unit<typename MEAS::inverse, SYSTEM, DBL, typename FACTOR::invert_type>
 operator/( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
-  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
-
-  cp /= d;
-
-  return cp;
+  return d / u.getValue();
 }
 
 /*! Multiplication operator
@@ -911,23 +894,7 @@ using celsius = temperature<T, metric, F>;
 
 /* english */
 template<typename T = double, typename F = ratio<1, 1> >
-<<<<<<< HEAD:header/unit.hh
 using feet = length<T, english, F>;
-=======
-using speed         = decltype( length<T, F>() / time<T, F>() );
-template<typename T = double, typename F = ratio<1, 1> >
-using acceleration  = decltype( speed<T, F>() / time<T, F>() );
-template<typename T = double, typename F = ratio<1, 1> >
-using force         = decltype( mass<T, F>() * acceleration<T, F>() );//newtons
-template<typename T = double, typename F = ratio<1, 1> >
-using momentum      = decltype( mass<T, F>() * speed<T, F>() );
-template<typename T = double, typename F = ratio<1, 1> >
-using energy        = decltype( force<T, F>() * length<T, F>() );//joules
-template<typename T = double, typename F = ratio<1, 1> >
-using power         = decltype( energy<T, F>() / time<T, F>() );//watts
-template<typename T = double, typename F = ratio<1, 1> >
-using rad           = decltype( energy<T, F>() / mass<T, F>() );//rads
->>>>>>> master:unit/unit.hh
 
 template<typename T = double, typename F = ratio<1, 1> >
 using slug = mass<T, english, F>;
