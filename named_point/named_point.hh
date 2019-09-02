@@ -121,7 +121,7 @@ public:
   operator=(const x_type& x)
   {
     mData[0] = x.get();
-    
+
     return *this;
   }
 
@@ -129,7 +129,7 @@ public:
   operator=(const y_type& y)
   {
     mData[1] = y.get();
-    
+
     return *this;
   }
 
@@ -137,7 +137,7 @@ public:
   operator=(const z_type& z)
   {
     mData[2] = z.get();
-    
+
     return *this;
   }
 
@@ -145,7 +145,7 @@ public:
   operator=(const w_type& w)
   {
     mData[3] = w.get();
-    
+
     return *this;
   }
 
@@ -158,14 +158,25 @@ public:
     {
       mData[i] = v.mData[i];
     }
-    
+
     return *this;
   }
 
   bool
   operator==(const vec& v) const
   {
-    return mData == v.mData;
+    if(mData.size() != v.mData.size())
+    {
+      return false;
+    }
+
+    for(int i = 0; i < mData.size(); ++i)
+    {
+      if(mData[i] != v.mData[i])
+        return false;
+    }
+
+    return true;
   }
 
   template<unsigned long M>
@@ -186,6 +197,30 @@ public:
       }
     }
     return false;
+  }
+
+  bool
+  operator==(const x_type& x) const
+  {
+    return mData[0] == x.get();
+  }
+
+  bool
+  operator==(const y_type& y) const
+  {
+    return mData[1] == y.get();
+  }
+
+  bool
+  operator==(const z_type& z) const
+  {
+    return mData[2] == z.get();
+  }
+
+  bool
+  operator==(const w_type& w) const
+  {
+    return mData[3] == w.get();
   }
 };
 
