@@ -121,18 +121,14 @@ TEST_CASE("", "[hp]")
   SECTION("Multiplication")
   {
     CHECK((eq1 * 2)({{2, 0, 0}}) == 2 * eq1({{2, 0, 0}}));
+    CHECK((eq1 * 2)({{2, 0, 0}}) == eq2({{2, 0, 0}}));
 
-    vector<double> vec3 {1, 1};
+    vector<gsw::high_polynomial::storage_type::value_type> vec3 {{{1, 0, 0}, 1}};
     gsw::high_polynomial eq3(vec3.begin(), vec3.end());
-    vec3[0] = 2;
-    gsw::high_polynomial eq4(vec3.begin(), vec3.end());
-    CHECK((eq3 * eq4)({{2, 0, 0}}) == 12);
-
-    vector<double> vec4 {1, 1};
-    gsw::high_polynomial eq5(vec4.begin(), vec4.end());
-    vec4.push_back(1.0);
-    gsw::high_polynomial eq6(vec4.begin(), vec4.end());
-    CHECK((eq5 * eq6)({{2, 0, 0}}) == 21);
+    vector<gsw::high_polynomial::storage_type::value_type> vec4 {{{1, 0, 0}, 2}};
+    gsw::high_polynomial eq4(vec4.begin(), vec4.end());
+    CHECK((eq3 * eq4)({5, 0, 0}) == 50);
+    CHECK((eq3 * eq4)({5, 0, 0}) == eq3({5, 0, 0}) * eq4({5, 0, 0}));
   }
 
   /*! @todo test dividing high_polynomial by another high_polynomial */
@@ -140,9 +136,9 @@ TEST_CASE("", "[hp]")
   {
     CHECK((eq2 / 2)({{2, 0, 0}}) == eq2({{2, 0, 0}}) / 2);
 
-    vector<double> vec1{-5, 1};
-    vector<double> vec2{-2, 1};
-    vector<double> vec3{10, -7, 1};
+    vector<gsw::high_polynomial::storage_type::value_type> vec1{{{0, 0, 0}, -5}, {{1, 0, 0}, 1}};
+    vector<gsw::high_polynomial::storage_type::value_type> vec2{{{0, 0, 0}, -2}, {{1, 0, 0}, 1}};
+    vector<gsw::high_polynomial::storage_type::value_type> vec3{{{0, 0, 0} ,10}, {{1, 0, 0}, -7}, {{2, 0, 0}, 1}};
     gsw::high_polynomial eq1(vec1.begin(), vec1.end());
     gsw::high_polynomial eq2(vec2.begin(), vec2.end());
     gsw::high_polynomial eq3(vec3.begin(), vec3.end());
@@ -326,65 +322,65 @@ TEST_CASE("Polynomial can find its roots", "[poly]")
 }
 
 TEST_CASE( "", "[high_poly]" ){
-SECTION( "linear equation" ){
-high_polynomial hp;
+  SECTION( "linear equation" ){
+    gsw::high_polynomial hp;
 
-//2x
-hp[{1.0, 0.0, 0.0}] = 2;
+    //2x
+    hp[{1, 0, 0}] = 2;
 
-for( int i = 0; i < 10; ++i ){
-CHECK( hp( {i, 0, 0} ) == 2 * i );
-}
-}
+    for( int i = 0; i < 10; ++i ){
+      CHECK( hp( {i, 0, 0} ) == 2 * i );
+    }
+  }
 
 SECTION( "Quadratic equation" ){
-high_polynomial hp;
+  gsw::high_polynomial hp;
 
-//3x2 + 2x
-hp[{2, 0, 0}] = 3;
-hp[{1, 0, 0}] = 2;
+  //3x2 + 2x
+  hp[{2, 0, 0}] = 3;
+  hp[{1, 0, 0}] = 2;
 
-CHECK( hp( {1, 0, 0} ) == 5 );
-CHECK( hp( {2, 0, 0} ) == 16 );
+  CHECK( hp( {1, 0, 0} ) == 5 );
+  CHECK( hp( {2, 0, 0} ) == 16 );
 
-hp[{0, 0, 0}] = 4;
-CHECK( hp( {1, 0, 0} ) == 9 );
-CHECK( hp( {2, 0, 0} ) == 20 );
+  hp[{0, 0, 0}] = 4;
+  CHECK( hp( {1, 0, 0} ) == 9 );
+  CHECK( hp( {2, 0, 0} ) == 20 );
 
-for( int i = 5; i < 15; ++i ){
-CHECK( hp( {i, 0, 0} ) == ( ( 3 * i * i ) + ( 2 * i ) + 4 )  );
+  for( int i = 5; i < 15; ++i ){
+    CHECK( hp( {i, 0, 0} ) == ( ( 3 * i * i ) + ( 2 * i ) + 4 )  );
+  }
+
+  for( int i = 0; i < 5; ++i ){
+    for( int j = 0; j < 5; ++j ){
+      CHECK( hp( {0, i, j} ) == 4 );
+    }
+  }
 }
 
-for( int i = 0; i < 5; ++i ){
-for( int j = 0; j < 5; ++j ){
-CHECK( hp( {0, i, j} ) == 4 );
-}
-}
-}
+  SECTION( "Multivariate equation" ){
+    gsw::high_polynomial hp;
 
-SECTION( "Multivariate equation" ){
-high_polynomial hp;
+    //xy
+    hp[{1, 1, 0}] = 1;
 
-//xy
-hp[{1, 1, 0}] = 1;
+    CHECK( hp( {1, 0, 0} ) == 0 );
+    CHECK( hp( {0, 1, 0} ) == 0 );
 
-CHECK( hp( {1, 0, 0} ) == 0 );
-CHECK( hp( {0, 1, 0} ) == 0 );
+    CHECK( hp( {1, 1, 0} ) == 1 );
+    CHECK( hp( {1, 2, 0} ) == 2 );
+    CHECK( hp( {2, 1, 0} ) == 2 );
+    CHECK( hp( {3, 2, 0} ) == 6 );
+    CHECK( hp( {2, 3, 0} ) == 6 );
 
-CHECK( hp( {1, 1, 0} ) == 1 );
-CHECK( hp( {1, 2, 0} ) == 2 );
-CHECK( hp( {2, 1, 0} ) == 2 );
-CHECK( hp( {3, 2, 0} ) == 6 );
-CHECK( hp( {2, 3, 0} ) == 6 );
-
-//xy + 2xyz
-hp[{1, 1, 1}] = 2;
-for( int i = 0; i < 10; ++i ){
-for( int j = 0; j < 10; ++j ){
-for( int k = 0; k < 10; ++k ){
-CHECK( hp( {i, j, k} ) == ( i * j ) + ( 2 * i * j * k ) );
-}
-}
-}
-}
+    //xy + 2xyz
+    hp[{1, 1, 1}] = 2;
+    for( int i = 0; i < 10; ++i ){
+      for( int j = 0; j < 10; ++j ){
+        for( int k = 0; k < 10; ++k ){
+          CHECK( hp( {i, j, k} ) == ( i * j ) + ( 2 * i * j * k ) );
+        }
+      }
+    }
+  }
 }

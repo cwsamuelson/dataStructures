@@ -14,10 +14,9 @@ public:
   using value_type = double;
   using reference = value_type&;
   using const_reference = const value_type&;
-
-private:
   using storage_type = std::map<input_point, value_type>;
 
+private:
   mutable storage_type mCoeff;
 
 public:
