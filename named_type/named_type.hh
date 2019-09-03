@@ -16,6 +16,10 @@ private:
   value_type mValue;
 
 public:
+  named_type()
+    : mValue()
+  {}
+
   named_type( const_ref value )
     : mValue( value ){
   }
@@ -34,6 +38,7 @@ public:
     return mValue;
   }
 
+  explicit
   operator T() const{
     return mValue;
   }
