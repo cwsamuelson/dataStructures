@@ -8,16 +8,19 @@ endif()
 if(NOT TARGET Catch2)
 	add_subdirectory("../catch/" Catch2)
 endif()
+if(NOT TARGET polynomial)
+	add_subdirectory("polynomial" polynomial)
+endif()
 
-add_library(spline INTERFACE)
+add_library(spline spline.cc)
 
 set_target_properties(spline PROPERTIES
                              INTERFACE_CXX_STANDARD 17
                              INTERFACE_CXX_STANDARD_REQUIRED YES
                              INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(spline INTERFACE .)
-#target_link_libraries(spline INTERFACE tuple)
+target_include_directories(spline PUBLIC .)
+target_link_libraries(spline PRIVATE polynomial)
 
 add_executable(test-spline tests.cc)
 set_target_properties(test-spline PROPERTIES
