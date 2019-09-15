@@ -43,6 +43,8 @@ public:
   point2d
   gradient(float p) const;
 
+  float
+  segmentLength(float p) const;
 };
 
 }

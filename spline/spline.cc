@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "spline.hh"
 
 using namespace gsw;
@@ -51,5 +53,30 @@ spline::gradient(float p) const
   float ty = 0.5f * (mPoints[p0].y * q0 + mPoints[p1].y * q1 + mPoints[p2].y * q2 + mPoints[p3].y * q3);
 
   return {tx, ty};
+}
+
+float
+spline::segmentLength(float p) const
+{
+  float length = 0.0f;
+  float stepSize = 0.005f;
+
+  auto oldpt = point(p);
+  decltype(oldpt) newpt;
+
+  for(float t = 0.0f; t < 1.0f; t += stepSize)
+  {
+    newpt = point(p + t);
+
+    auto xdiff = newpt.x - oldpt.x;
+    auto ydiff = newpt.y - oldpt.y;
+    auto xdiff2 = xdiff * xdiff;
+    auto ydiff2 = ydiff * ydiff;
+    length += sqrt(xdiff2 + ydiff2);
+
+    oldpt = newpt;
+  }
+
+  return length;
 }
 
