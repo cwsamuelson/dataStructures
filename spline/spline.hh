@@ -41,7 +41,8 @@ public:
   point(float p) const;
 
   point2d
-  gradient(float p);
+  gradient(float p) const;
+
 };
 
 }

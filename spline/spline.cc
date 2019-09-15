@@ -32,7 +32,7 @@ spline::point(float p) const
 }
 
 point2d
-spline::gradient(float p)
+spline::gradient(float p) const
 {
   int p1 = int(p);
   int p0 = p1 - 1;
