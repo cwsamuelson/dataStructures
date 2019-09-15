@@ -10,7 +10,7 @@ spline::spline()
 {}
 
 point2d
-spline::operator()(float p)
+spline::point(float p) const
 {
   int p1 = int(p);
   int p0 = p1 - 1;

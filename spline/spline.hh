@@ -32,7 +32,13 @@ public:
   spline();
 
   point2d
-  operator()(float p);
+  operator()(float p) const
+  {
+    return point(p);
+  }
+
+  point2d
+  point(float p) const;
 
   point2d
   gradient(float p);
