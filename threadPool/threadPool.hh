@@ -1,6 +1,7 @@
 #ifndef GALACTICSTRUCTURES_THREADPOOL_HH
 #define GALACTICSTRUCTURES_THREADPOOL_HH
 
+#include <memory>
 #include <functional>
 #include <thread>
 #include <queue>
@@ -21,31 +22,39 @@ private:
   std::mutex mMutex;
   std::condition_variable mCV;
   std::queue<work> mWorkQueue;
-  std::vector<std::tuple<std::thread, bool>> mWorkers;
-
-  void
-  work_func()
-  {
-  }
+  std::vector<std::tuple<std::thread, std::shared_ptr<bool>>> mWorkers;
 
 public:
   threadPool(int size = 1)
   {
     for(int i = 0; i < size; ++i)
     {
+      auto rnng = std::make_shared<bool>(false);
       mWorkers.emplace_back(
-        []()
+        [&, running = rnng]()
         {
+          *running = true;
 
-        }
+          while(*running)
+          {
+            std::unique_lock lk(mMutex);
+            mCV.wait([&](){ return !mWorkQueue.empty(); });
+
+            auto work = mWorkQueue.front();
+            mWorkQueue.pop();
+            lk.unlock();
+            work();
+          }
+        }, rnng
       );
     }
   }
 
   ~threadPool()
   {
-    for(auto& worker : mWorkers)
+    for(auto& [worker, control] : mWorkers)
     {
+      *control = false;
       if(worker.joinable())
       {
         worker.join();
@@ -61,7 +70,7 @@ public:
     mWorkQueue.emplace(w);
 
     lk.unlock();
-    mCV.notify_all();
+    mCV.notify_one();
   }
 };
 
@@ -131,7 +140,7 @@ public:
     mWorkQueue.emplace(w);
 
     lk.unlock();
-    mCV.notify_all();
+    mCV.notify_one();
   }
 };
 
@@ -154,7 +163,7 @@ public:
     mWorkQueue.emplace({w, /* a promise*/});
 
     lk.unlock();
-    mCV.notify_all();
+    mCV.notify_one();
   }
 };
 
