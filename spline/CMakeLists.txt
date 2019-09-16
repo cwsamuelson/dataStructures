@@ -9,7 +9,7 @@ if(NOT TARGET Catch2)
 	add_subdirectory("../catch/" Catch2)
 endif()
 if(NOT TARGET polynomial)
-	add_subdirectory("polynomial" polynomial)
+	add_subdirectory("../polynomial/" polynomial)
 endif()
 
 add_library(spline spline.cc)
@@ -20,7 +20,7 @@ set_target_properties(spline PROPERTIES
                              INTERFACE_CXX_EXTENSIONS NO)
 
 target_include_directories(spline PUBLIC .)
-target_link_libraries(spline PRIVATE polynomial)
+target_link_libraries(spline PUBLIC polynomial)
 
 add_executable(test-spline tests.cc)
 set_target_properties(test-spline PROPERTIES

@@ -6,22 +6,29 @@
 #define GALACTICSTRUCTURES_SPLINE_HH
 
 #include <vector>
-#include <polynomial.hh>
 #include <initializer_list>
+
+#include "polynomial.hh"
 
 namespace gsw {
 
 struct point2d{
   float x;
   float y;
+
+  bool
+  operator==(const point2d& rhs)const
+  {
+    return (x == rhs.x) && (y == rhs.y);
+  }
 };
 
-/** Catmull-Rom
- * maybe take a polynomial as an argument?
+/*! Catmull-Rom
+ * maybe take polynomials as an argument?
+ * @todo: looping?
+ * floats are used because we don't care about the precision of a double, and floats will be faster/smaller
+ * splines basically require at least 3 points to be meaningful; does this need to be enforced? or just documented
  */
- //@todo: looping?
- /* floats are used because we don't care about the precision of a double, and floats will be faster/smaller
-  */
 class spline
 {
 private:
@@ -34,7 +41,7 @@ public:
   std::vector<point2d> points;/*!< manipulate the points directly */
 
   spline()
-    : spline({})
+    : spline{{}}
   {}
 
   spline(std::initializer_list<point2d> il);
