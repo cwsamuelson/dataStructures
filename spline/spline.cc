@@ -23,10 +23,10 @@ spline::point(float p) const
   // get the fractional part
   float fract = p - int(p);
 
-  float q0 = mPoly0(fract);
-  float q1 = mPoly1(fract);
-  float q2 = mPoly2(fract);
-  float q3 = mPoly3(fract);
+  auto q0 = float(mPoly0(fract));
+  auto q1 = float(mPoly1(fract));
+  auto q2 = float(mPoly2(fract));
+  auto q3 = float(mPoly3(fract));
 
   float tx = 0.5f * (points[p0].x * q0 + points[p1].x * q1 + points[p2].x * q2 + points[p3].x * q3);
   float ty = 0.5f * (points[p0].y * q0 + points[p1].y * q1 + points[p2].y * q2 + points[p3].y * q3);

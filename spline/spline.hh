@@ -20,6 +20,8 @@ struct point2d{
  * maybe take a polynomial as an argument?
  */
  //@todo: looping?
+ /* floats are used because we don't care about the precision of a double, and floats will be faster/smaller
+  */
 class spline
 {
 private:
