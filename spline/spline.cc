@@ -56,10 +56,9 @@ spline::gradient(float p) const
 }
 
 float
-spline::segmentLength(float p) const
+spline::segmentLength(float p, float stepSize) const
 {
   float length = 0.0f;
-  float stepSize = 0.005f;
 
   auto oldpt = point(p);
   decltype(oldpt) newpt;

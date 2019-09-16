@@ -44,7 +44,7 @@ public:
   gradient(float p) const;
 
   float
-  segmentLength(float p) const;
+  segmentLength(float p, float stepSize = 0.005f) const;
 };
 
 }
