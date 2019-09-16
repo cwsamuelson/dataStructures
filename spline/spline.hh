@@ -7,6 +7,7 @@
 
 #include <vector>
 #include <polynomial.hh>
+#include <initializer_list>
 
 namespace gsw {
 
@@ -22,14 +23,19 @@ struct point2d{
 class spline
 {
 private:
-  std::vector<point2d> mPoints;
   gsw::polynomial mPoly0;
   gsw::polynomial mPoly1;
   gsw::polynomial mPoly2;
   gsw::polynomial mPoly3;
 
 public:
-  spline();
+  std::vector<point2d> points;/*!< manipulate the points directly */
+
+  spline()
+    : spline({})
+  {}
+
+  spline(std::initializer_list<point2d> il);
 
   point2d
   operator()(float p) const
