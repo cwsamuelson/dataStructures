@@ -74,12 +74,12 @@ struct foo{
       g_i = i;
     };
 
-  *chan0 += handler0;
-  *chan0 += handler2;
-  *chan1 += handler1;
-  *chan2 += handler4;
-  auto idx = chan0->enlist( handler3 );
-  chan0->delist( idx );
+  *chan0.lock() += handler0;
+  *chan0.lock() += handler2;
+  *chan1.lock() += handler1;
+  *chan2.lock() += handler4;
+  auto idx = chan0.lock()->enlist( handler3 );
+  chan0.lock()->delist( idx );
 
   CHECK( g_i   == 0 );
   CHECK( g_j   == 0 );
@@ -100,31 +100,45 @@ struct foo{
   CHECK( g_f.x == 69 );
 }*/
 
-class serial : public gsw::event_trigger<string>
+class serial
 {
 public:
-  using base_t = gsw::event_trigger<string>;
-  using handler = base_t::channel_t::handler;
+  using handler = gsw::event_trigger<string>::channel_t::handler;
+  using channel_t = gsw::event_trigger<string>::channel_t;
+
+private:
+  gsw::event_trigger<string> mSendEvent;
+
+public:
+  auto
+  sendEvent() const
+  {
+    return mSendEvent.getChannel();
+  }
 
   void
   send(const string& d)
   {
-    fire(d);
+    //do some things with the data
+
+    //then fire the corresponding event!
+    mSendEvent.fire(d);
   }
 };
 
-TEST_CASE( "In context usage", "[events]" ){
+TEST_CASE("In context usage", "[events]"){
   string response;
   serial ser;
   serial::handler serialRxHandler(
-    [&]( const serial::channel_t&, unsigned long long, const string& str ){
+    [&](const serial::channel_t&, unsigned long long, const string& str){
       response = str + "response!";
     }
   );
-  ser.getChannel()->enlist(serialRxHandler);
+  auto eventChannel = ser.sendEvent().lock();
+  eventChannel->enlist(serialRxHandler);
 
-  ser.send( "data!" );
+  ser.send("data!");
 
-  CHECK( response == "data!response!" );
+  CHECK(response == "data!response!");
 }
 
