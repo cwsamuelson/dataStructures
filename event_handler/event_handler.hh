@@ -8,6 +8,7 @@
 #include<map>
 #include<functional>
 #include<utility>
+#include <memory>
 
 #include<tuple.hh>
 
@@ -16,10 +17,24 @@ namespace gsw{
 /*! Event channel system
  *
  * @tparam Args...
+ *
+ * @TODO non-blocking event handling
+ *
+ * @TODO could add a couple special type parameters to distinguish different event_channels within the type system
+ *
+ * One might be the owner type.  Doing that would allow the channel to friend the owner, and then make the fire method private,
+ * that way the owner is the only one that's allowed to fire an event! (this feature is somewhat desired)
+ * another parameter might be a dummy, kinda like what's used in the named_type system
+ * this dummy might look like struct OnMousePressed, to help distinguish between different posseble events
  */
+template<typename ...Args>
+class event_trigger;
+
 template<typename ...Args>
 class event_channel{
 public:
+  friend class event_trigger<Args...>;
+
   /*! Container for handling events
    */
   class event_handler{
@@ -98,13 +113,39 @@ private:
   std::map<counter_t, event_handler> handlers;
   counter_t idCounter = 0;
 
-public:
+protected:
+  /*! Fire the event!
+   *
+   * @param args Arguments to pass on to handlers
+   *
+   * parameters will not be forwarded because they cannot be moved to multiple
+   * places at once.
+   *
+   * @todo find a nice way to fire handlers in parallel
+   */
+  void
+  fire( Args... args ){
+    for( auto& [id, handler] : handlers ){
+      handler( args... );
+    }
+  }
+
+  /*! Fire the event!
+   *
+   * @param args Arguments to pass on to handlers
+   */
+  void
+  operator()( Args... args ){
+    fire( args... );
+  }
+
   event_channel() noexcept = default;
 
   event_channel(const event_channel&) = default;
 
   event_channel(event_channel&&) = default;
 
+public:
   ~event_channel() noexcept = default;
 
   event_channel&
@@ -158,31 +199,6 @@ public:
     return *this;
   }
 
-  /*! Fire the event!
-   *
-   * @param args Arguments to pass on to handlers
-   *
-   * parameters will not be forwarded because they cannot be moved to multiple
-   * places at once.
-   *
-   * @todo find a nice way to fire handlers in parallel
-   */
-  void
-  fire( Args... args ){
-    for( auto& [id, handler] : handlers ){
-      handler( args... );
-    }
-  }
-
-  /*! Fire the event!
-   *
-   * @param args Arguments to pass on to handlers
-   */
-  void
-  operator()( Args... args ){
-    fire( args... );
-  }
-
   /*! Remove all registered handlers
    */
   void
@@ -202,6 +218,32 @@ public:
   operator!=(const event_channel& channel) const
   {
     return !((*this) == channel);
+  }
+};
+
+template<typename ...Args>
+class event_trigger{
+public:
+  using channel_t = event_channel<Args...>;
+
+private:
+  std::shared_ptr<channel_t> mChannel;
+
+protected:
+  void
+  fire( Args... args ){
+    mChannel->fire(args...);
+  }
+
+public:
+  event_trigger()
+    : mChannel(new channel_t)
+  {}
+
+  std::shared_ptr<channel_t>
+  getChannel()
+  {
+    return mChannel;
   }
 };
 
