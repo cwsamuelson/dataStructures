@@ -11,7 +11,8 @@ struct foo{
   int x;
 };
 
-TEST_CASE( "Basic event control flow", "[events]" ){
+/*TEST_CASE( "Basic event control flow", "[events]" )
+{
   int g_i = 0;
   int g_j = 0;
   int g_k = 0;
@@ -20,9 +21,30 @@ TEST_CASE( "Basic event control flow", "[events]" ){
   foo g_f;
   g_f.x = 0;
 
-  gsw::event_channel<int> chan0;
-  gsw::event_channel<foo> chan1;
-  gsw::event_channel<int, int> chan2;
+  class trigg0 : public gsw::event_trigger<int>
+  {
+  public:
+    using base_t = gsw::event_trigger<int>;
+    using base_t::fire;
+  };
+  class trigg1 : public gsw::event_trigger<foo>
+  {
+    public:
+    using base_t = gsw::event_trigger<foo>;
+    using base_t::fire;
+  };
+  class trigg2 : public gsw::event_trigger<int, int>
+  {
+  public:
+    using base_t = gsw::event_trigger<int, int>;
+    using base_t::fire;
+  };
+  trigg0 t0;
+  trigg1 t1;
+  trigg2 t2;
+  auto chan0 = t0.getChannel();
+  auto chan1 = t1.getChannel();
+  auto chan2 = t2.getChannel();
 
   gsw::event_channel<int>::handler handler0;
   gsw::event_channel<foo>::handler handler1(
@@ -52,12 +74,12 @@ TEST_CASE( "Basic event control flow", "[events]" ){
       g_i = i;
     };
 
-  chan0 += handler0;
-  chan0 += handler2;
-  chan1 += handler1;
-  chan2 += handler4;
-  auto idx = chan0.enlist( handler3 );
-  chan0.delist( idx );
+  *chan0.lock() += handler0;
+  *chan0.lock() += handler2;
+  *chan1.lock() += handler1;
+  *chan2.lock() += handler4;
+  auto idx = chan0.lock()->enlist( handler3 );
+  chan0.lock()->delist( idx );
 
   CHECK( g_i   == 0 );
   CHECK( g_j   == 0 );
@@ -66,9 +88,9 @@ TEST_CASE( "Basic event control flow", "[events]" ){
   CHECK( g_m   == 0 );
   CHECK( g_f.x == 0 );
 
-  chan0.fire(     42 );
-  chan1.fire( foo{69} );
-  chan2.fire( 6, 9 );
+  t0.fire(     42 );
+  t1.fire( foo{69} );
+  t2.fire( 6, 9 );
 
   CHECK( g_i   == 42 );
   CHECK( g_j   == 42 );
@@ -76,32 +98,47 @@ TEST_CASE( "Basic event control flow", "[events]" ){
   CHECK( g_l   == 6 );
   CHECK( g_m   == 9 );
   CHECK( g_f.x == 69 );
-}
+}*/
 
-class serial{
+class serial
+{
 public:
-  using rxEvent = gsw::event_channel<string>;
-  using rxHandler = rxEvent::handler;
+  using handler = gsw::event_trigger<string>::channel_t::handler;
+  using channel_t = gsw::event_trigger<string>::channel_t;
 
-  rxEvent rxDataEvent;
+private:
+  gsw::event_trigger<string> mSendEvent;
+
+public:
+  auto
+  sendEvent() const
+  {
+    return mSendEvent.getChannel();
+  }
 
   void
-  send( const string& d ){
-    rxDataEvent.fire( d + "response!" );
+  send(const string& d)
+  {
+    //do some things with the data
+
+    //then fire the corresponding event!
+    mSendEvent.fire(d);
   }
 };
 
-TEST_CASE( "In context usage", "[events]" ){
+TEST_CASE("In context usage", "[events]"){
   string response;
   serial ser;
-  serial::rxHandler serialRxHandler(
-    [&]( const serial::rxEvent&, unsigned long long, const string& str ){
-      response = str;
+  serial::handler serialRxHandler(
+    [&](const serial::channel_t&, unsigned long long, const string& str){
+      response = str + "response!";
     }
   );
-  ser.rxDataEvent += serialRxHandler;
+  auto eventChannel = ser.sendEvent().lock();
+  eventChannel->enlist(serialRxHandler);
 
-  ser.send( "data!" );
+  ser.send("data!");
 
-  CHECK( response == "data!response!" );
+  CHECK(response == "data!response!");
 }
+
