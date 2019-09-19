@@ -229,19 +229,18 @@ public:
 private:
   std::shared_ptr<channel_t> mChannel;
 
-protected:
+public:
   void
   fire( Args... args ){
     mChannel->fire(args...);
   }
 
-public:
   event_trigger()
     : mChannel(new channel_t)
   {}
 
-  std::shared_ptr<channel_t>
-  getChannel()
+  std::weak_ptr<channel_t>
+  getChannel() const
   {
     return mChannel;
   }
