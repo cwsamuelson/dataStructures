@@ -40,31 +40,46 @@ public:
   class event_handler{
   public:
     using counter_t = unsigned long long;
-    using handler = std::function<void( event_channel&, counter_t, Args... )>;
+    using handler = std::function<void(event_channel&, counter_t, Args...)>;
+    using simple_handler = std::function<void(Args...)>;
     friend event_channel;
 
   private:
     event_channel& mChannel;
     handler mHandler;
+    simple_handler mSHandler;
     counter_t mCounter;
 
     /*! Private constructor
      *
      * Constructor is private so that only the channel creates handlers
      */
-    event_handler( event_channel& channel, counter_t counter, handler handle )
-      : mChannel( channel )
-      , mHandler( handle )
-      , mCounter( counter ){
-    }
+    event_handler(event_channel& channel, counter_t counter, handler handle)
+      : mChannel(channel)
+      , mHandler(handle)
+      , mCounter(counter)
+    {}
+
+    /*! Private constructor
+     *
+     * Constructor is private so that only the channel creates handlers
+     */
+    event_handler(event_channel& channel, counter_t counter, simple_handler handle)
+      : mChannel(channel)
+      , mSHandler(handle)
+      , mCounter(counter)
+    {}
 
     /*! Call event
      *
      * Made private so that only the channel triggers events
      */
     void
-    operator()( Args... args ){
-      mHandler( mChannel, mCounter, args... );
+    operator()(Args... args){
+      if(mHandler)
+        mHandler(mChannel, mCounter, args...);
+      if(mSHandler)
+        mHandler(args...);
     }
 
   public:
@@ -72,24 +87,24 @@ public:
      *
      * @param handler Event handler to copy from
      */
-    event_handler( const event_handler& handler ) = default;
+    event_handler(const event_handler& handler) = default;
 
     /*! Copy assignment
      *
      * @param handler Event handler to copy from
      */
     event_handler&
-    operator=( const event_handler& handler ) = default;
+    operator=(const event_handler& handler) = default;
 
     bool
-    operator==( event_handler other ) const{
-      return ( mCounter == other.mCounter )
-          && ( mChannel == other.mChannel );
+    operator==(event_handler other) const{
+      return (mCounter == other.mCounter)
+          && (mChannel == other.mChannel);
     }
 
     bool
-    operator!=( event_handler other ) const{
-      return !( *this == other );
+    operator!=(event_handler other) const{
+      return !(*this == other);
     }
   };
 
@@ -102,6 +117,7 @@ public:
    *    this will allow operator -= to identify which handler to use
    */
   using handler = typename event_handler::handler;
+  using simple_handler = typename event_handler::simple_handler;
 
   /*!
    * @tparam N
@@ -124,9 +140,9 @@ protected:
    * @todo find a nice way to fire handlers in parallel
    */
   void
-  fire( Args... args ){
-    for( auto& [id, handler] : handlers ){
-      handler( args... );
+  fire(Args... args){
+    for(auto& [id, handler] : handlers){
+      handler(args...);
     }
   }
 
@@ -135,8 +151,8 @@ protected:
    * @param args Arguments to pass on to handlers
    */
   void
-  operator()( Args... args ){
-    fire( args... );
+  operator()(Args... args){
+    fire(args...);
   }
 
   event_channel() noexcept = default;
@@ -156,28 +172,25 @@ public:
 
   /*! Register new handler
    *
-   * @param handler Handler to register
-   *
-   * @return The new modified channel
-   */
-  event_channel&
-  operator+=( const handler& handle ){
-    enlist( handle );
-
-    return *this;
-  }
-
-  /*! Register new handler
-   *
    * @param handler Handler to enlist
    *
    * @return The new modified channel
    */
   event_handler
-  enlist( const handler& handle ){
-    handlers.emplace( std::make_pair( idCounter, event_handler{*this, idCounter, handle} ) );
+  subscribe(const handler& handle){
+    handlers.emplace(std::make_pair(idCounter, event_handler{*this, idCounter, handle}));
 
-    return handlers.at( idCounter++ );
+    return handlers.at(idCounter++);
+  }
+
+  /*!
+   */
+  event_handler
+  subscribe(const simple_handler& handle)
+  {
+    handlers.emplace(std::make_pair(idCounter, event_handler{ *this, idCounter, handle }));
+
+    return handlers.at(idCounter++);
   }
 
   /*! Unregister a previously registered handler
@@ -185,16 +198,30 @@ public:
    * @param ref Handler to no longer be fired when the event goes off
    */
   void
-  delist( const event_handler& handle ){
-    handlers.erase( handlers.find( handle.mCounter ) );
+  unsubscribe(const event_handler& handle)
+  {
+    handlers.erase(handlers.find(handle.mCounter));
+  }
+
+  /*! Register new handler
+   *
+   * @param handler Handler to register
+   *
+   * @return The new modified channel
+   */
+  event_channel&
+  operator+=(const handler& handle){
+    enlist(handle);
+
+    return *this;
   }
 
   /*!
    * @todo implement handler de-registration
    */
   event_channel&
-  operator-=( const event_handler& handler ){
-    delist( handler );
+  operator-=(const event_handler& handler){
+    delist(handler);
 
     return *this;
   }
@@ -231,7 +258,7 @@ private:
 
 public:
   void
-  fire( Args... args ){
+  fire(Args... args){
     mChannel->fire(args...);
   }
 

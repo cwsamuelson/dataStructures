@@ -78,8 +78,8 @@ struct foo{
   *chan0.lock() += handler2;
   *chan1.lock() += handler1;
   *chan2.lock() += handler4;
-  auto idx = chan0.lock()->enlist( handler3 );
-  chan0.lock()->delist( idx );
+  auto idx = chan0.lock()->subscribe( handler3 );
+  chan0.lock()->unsubscribe( idx );
 
   CHECK( g_i   == 0 );
   CHECK( g_j   == 0 );
@@ -135,7 +135,7 @@ TEST_CASE("In context usage", "[events]"){
     }
   );
   auto eventChannel = ser.sendEvent().lock();
-  eventChannel->enlist(serialRxHandler);
+  eventChannel->subscribe(serialRxHandler);
 
   ser.send("data!");
 
