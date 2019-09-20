@@ -79,7 +79,7 @@ public:
       if(mHandler)
         mHandler(mChannel, mCounter, args...);
       if(mSHandler)
-        mHandler(args...);
+        mSHandler(args...);
     }
 
   public:
