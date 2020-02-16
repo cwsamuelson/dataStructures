@@ -1,7 +1,3 @@
-//
-// Created by chris on 9/1/2019.
-//
-
 #ifndef GALACTICSTRUCTURES_SPLINE_HH
 #define GALACTICSTRUCTURES_SPLINE_HH
 
@@ -26,6 +22,7 @@ struct point2d{
 /*! Catmull-Rom
  * maybe take polynomials as an argument?
  * @todo: looping?
+ * @todo: template parameterize 'points' and/or the container?
  * floats are used because we don't care about the precision of a double, and floats will be faster/smaller
  * splines basically require at least 3 points to be meaningful; does this need to be enforced? or just documented
  */
@@ -60,6 +57,8 @@ public:
 
   float
   segmentLength(float p, float stepSize = 0.005f) const;
+
+  void push_back(const point2d& pt);
 };
 
 }

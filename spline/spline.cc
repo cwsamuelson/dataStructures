@@ -82,3 +82,7 @@ spline::segmentLength(float p, float stepSize) const
   return length;
 }
 
+void spline::push_back(const point2d& pt){
+  mPoints.push_back(pt);
+}
+
