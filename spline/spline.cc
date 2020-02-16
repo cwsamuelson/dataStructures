@@ -15,13 +15,14 @@ spline::spline(std::initializer_list<point2d> il)
 point2d
 spline::point(float p) const
 {
-  int p1 = int(p);
+  // get the fractional part
+  int whole = int(p);
+  float fract = p - whole;
+
+  int p1 = whole;
   int p0 = p1 - 1;
   int p2 = p1 + 1;
   int p3 = p1 + 2;
-
-  // get the fractional part
-  float fract = p - int(p);
 
   auto q0 = float(mPoly0(fract));
   auto q1 = float(mPoly1(fract));
@@ -37,13 +38,14 @@ spline::point(float p) const
 point2d
 spline::gradient(float p) const
 {
-  int p1 = int(p);
+  // get the fractional part
+  int whole = int(p);
+  float fract = p - whole;
+
+  int p1 = whole;
   int p0 = p1 - 1;
   int p2 = p1 + 1;
   int p3 = p1 + 2;
-
-  // get the fractional part
-  float fract = p - int(p);
 
   float q0 = derive(mPoly0)(fract);
   float q1 = derive(mPoly1)(fract);
