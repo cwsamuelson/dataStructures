@@ -9,7 +9,7 @@ spline::spline(std::initializer_list<point2d> il)
   , mPoly1{2, 0, -5, 3}
   , mPoly2{0, 1, 4, -3}
   , mPoly3{0, 0, -1, 1}
-  , points(il)
+  , mPoints(il)
 {}
 
 point2d
@@ -28,8 +28,8 @@ spline::point(float p) const
   auto q2 = float(mPoly2(fract));
   auto q3 = float(mPoly3(fract));
 
-  float tx = 0.5f * (points[p0].x * q0 + points[p1].x * q1 + points[p2].x * q2 + points[p3].x * q3);
-  float ty = 0.5f * (points[p0].y * q0 + points[p1].y * q1 + points[p2].y * q2 + points[p3].y * q3);
+  float tx = 0.5f * (mPoints[p0].x * q0 + mPoints[p1].x * q1 + mPoints[p2].x * q2 + mPoints[p3].x * q3);
+  float ty = 0.5f * (mPoints[p0].y * q0 + mPoints[p1].y * q1 + mPoints[p2].y * q2 + mPoints[p3].y * q3);
 
   return {tx, ty};
 }
@@ -50,8 +50,8 @@ spline::gradient(float p) const
   float q2 = derive(mPoly2)(fract);
   float q3 = derive(mPoly3)(fract);
 
-  float tx = 0.5f * (points[p0].x * q0 + points[p1].x * q1 + points[p2].x * q2 + points[p3].x * q3);
-  float ty = 0.5f * (points[p0].y * q0 + points[p1].y * q1 + points[p2].y * q2 + points[p3].y * q3);
+  float tx = 0.5f * (mPoints[p0].x * q0 + mPoints[p1].x * q1 + mPoints[p2].x * q2 + mPoints[p3].x * q3);
+  float ty = 0.5f * (mPoints[p0].y * q0 + mPoints[p1].y * q1 + mPoints[p2].y * q2 + mPoints[p3].y * q3);
 
   return {tx, ty};
 }

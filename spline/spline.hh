@@ -37,9 +37,9 @@ private:
   gsw::polynomial mPoly2;
   gsw::polynomial mPoly3;
 
-public:
-  std::vector<point2d> points;/*!< manipulate the points directly */
+  std::vector<point2d> mPoints;
 
+public:
   spline()
     : spline{{}}
   {}
