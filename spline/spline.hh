@@ -41,7 +41,7 @@ private:
 
 public:
   spline()
-    : spline{{}}
+    : spline({})
   {}
 
   spline(std::initializer_list<point2d> il);
