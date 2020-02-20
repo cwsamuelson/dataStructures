@@ -64,11 +64,10 @@ spline::segmentLength(float p, float stepSize) const
   float length = 0.0f;
 
   auto oldpt = point(p);
-  decltype(oldpt) newpt;
 
   for(float t = 0.0f; t < 1.0f; t += stepSize)
   {
-    newpt = point(p + t);
+    decltype(oldpt) newpt = point(p + t);
 
     auto xdiff = newpt.x - oldpt.x;
     auto ydiff = newpt.y - oldpt.y;
