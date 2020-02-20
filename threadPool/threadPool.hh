@@ -74,7 +74,8 @@ public:
   }
 };
 
-template<tyename T>
+/*
+template<typename T>
 class workingThread{
 public:
   using work = std::function<void(T&)>;
@@ -160,13 +161,14 @@ public:
   {
     std::lock_guard lk(mMutex);
 
-    mWorkQueue.emplace({w, /* a promise*/});
+    mWorkQueue.emplace({w, /* a promise*//*});
 
     lk.unlock();
     mCV.notify_one();
   }
 };
 
+*/
 }
 
 #endif //GALACTICSTRUCTURES_THREADPOOL_HH
