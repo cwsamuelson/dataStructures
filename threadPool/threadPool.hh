@@ -40,10 +40,15 @@ public:
             std::unique_lock lk(mMutex);
             mCV.wait([&](){ return !mWorkQueue.empty(); });
 
+            try
+            {
             auto work = mWorkQueue.front();
             mWorkQueue.pop();
             lk.unlock();
             work();
+            } catch(...){
+              //what do?
+          }
           }
         }, rnng
       );
