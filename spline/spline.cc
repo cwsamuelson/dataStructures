@@ -17,7 +17,7 @@ spline::point(float p) const
 {
   // get the fractional part
   int whole = int(p);
-  float fract = p - whole;
+  float fract = p - float(whole);
 
   int p1 = whole;
   int p0 = p1 - 1;
@@ -40,7 +40,7 @@ spline::gradient(float p) const
 {
   // get the fractional part
   int whole = int(p);
-  float fract = p - whole;
+  float fract = p - float(whole);
 
   int p1 = whole;
   int p0 = p1 - 1;
