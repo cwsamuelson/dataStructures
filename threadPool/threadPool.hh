@@ -38,17 +38,17 @@ public:
           while(*running)
           {
             std::unique_lock lk(mMutex);
-            mCV.wait([&](){ return !mWorkQueue.empty(); });
+            mCV.wait(lk, [&](){ return !mWorkQueue.empty(); });
 
             try
             {
-            auto work = mWorkQueue.front();
-            mWorkQueue.pop();
-            lk.unlock();
-            work();
+              auto work = mWorkQueue.front();
+              mWorkQueue.pop();
+              lk.unlock();
+              work();
             } catch(...){
               //what do?
-          }
+            }
           }
         }, rnng
       );
@@ -68,13 +68,12 @@ public:
   }
 
   void
-  addWork(work w)
+  addWork(const work& w)
   {
     std::lock_guard lk(mMutex);
 
     mWorkQueue.emplace(w);
 
-    lk.unlock();
     mCV.notify_one();
   }
 };
