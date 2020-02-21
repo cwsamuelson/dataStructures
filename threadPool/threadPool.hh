@@ -34,7 +34,7 @@ private:
   }
 
 public:
-  threadPool(int size = 1)
+  explicit
   threadPool(size_t size = 1)
   {
     for(size_t i = 0; i < size; ++i)
