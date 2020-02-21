@@ -35,8 +35,9 @@ private:
 
 public:
   threadPool(int size = 1)
+  threadPool(size_t size = 1)
   {
-    for(int i = 0; i < size; ++i)
+    for(size_t i = 0; i < size; ++i)
     {
       auto rnng = std::make_shared<bool>(false);
       mWorkers.emplace_back(
