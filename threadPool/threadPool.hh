@@ -19,10 +19,19 @@ public:
   using work = std::function<void()>;
 
 private:
+  using internal_work = std::function<void(bool&)>;
   std::mutex mMutex;
   std::condition_variable mCV;
-  std::queue<work> mWorkQueue;
+  std::queue<internal_work> mWorkQueue;
   std::vector<std::tuple<std::thread, std::shared_ptr<bool>>> mWorkers;
+
+  void enqueueWork(const internal_work& iw){
+    std::lock_guard lk(mMutex);
+
+    mWorkQueue.emplace(iw);
+
+    mCV.notify_one();
+  }
 
 public:
   threadPool(int size = 1)
@@ -44,8 +53,7 @@ public:
             {
               auto work = mWorkQueue.front();
               mWorkQueue.pop();
-              lk.unlock();
-              work();
+              work(*running);
             } catch(...){
               //what do?
             }
@@ -59,22 +67,19 @@ public:
   {
     for(auto& [worker, control] : mWorkers)
     {
-      *control = false;
-      if(worker.joinable())
-      {
+      enqueueWork([](bool& b){ b = false; });
+    }
+
+    for(auto& [worker, _] : mWorkers){
+      if(worker.joinable()){
         worker.join();
       }
     }
   }
 
-  void
-  addWork(const work& w)
+  void addWork(const work& w)
   {
-    std::lock_guard lk(mMutex);
-
-    mWorkQueue.emplace(w);
-
-    mCV.notify_one();
+    enqueueWork([=](bool&){ w(); });
   }
 };
 
