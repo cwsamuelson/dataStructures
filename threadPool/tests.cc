@@ -5,8 +5,18 @@
 
 using namespace gsw;
 
-TEST_CASE("", "[]"){
-  threadPool pool;
+TEST_CASE("Executes work given to it", "[]"){
+  bool finished1 = false;
+  bool finished2 = false;
 
-  pool.addWork([](){});
+  {
+    threadPool pool;
+
+    pool.addWork([&]() { finished1 = true; });
+    pool.addWork([&]() { finished2 = true; });
+  }
+
+  CHECK(finished1);
+  CHECK(finished2);
 }
+
