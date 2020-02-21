@@ -20,3 +20,25 @@ TEST_CASE("Executes work given to it", "[]"){
   CHECK(finished2);
 }
 
+TEST_CASE("several threads", "[]"){
+  constexpr size_t thread_count = 13;
+  bool finished[thread_count];
+  for(auto i = 0; i < thread_count; ++i){
+    finished[i] = false;
+  }
+
+  {
+    threadPool pool(5);
+
+    for(auto i = 0; i < thread_count; ++i)
+    {
+      pool.addWork([&]()
+                   { finished[i] = true; });
+    }
+  }
+
+  for(auto i = 0; i < thread_count; ++i){
+    CHECK(finished[i]);
+  }
+}
+
