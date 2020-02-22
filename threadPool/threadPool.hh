@@ -128,7 +128,7 @@ private:
 
 public:
   workerThread()
-    : mWorkThread(std::bind(&workerThread::thread_func, this))
+    : workerThread(std::move(context()))
   {}
 
   template<typename U>
