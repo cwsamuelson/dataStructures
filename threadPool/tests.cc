@@ -3,6 +3,8 @@
 
 #include "threadPool.hh"
 
+#include <thread>
+
 using namespace gsw;
 
 TEST_CASE("Executes work given to it", "[]"){
@@ -21,6 +23,8 @@ TEST_CASE("Executes work given to it", "[]"){
 }
 
 TEST_CASE("several threads", "[]"){
+  using namespace std::chrono_literals;
+
   constexpr size_t thread_count = 13;
   bool finished[thread_count];
   for(auto i = 0; i < thread_count; ++i){
@@ -34,6 +38,8 @@ TEST_CASE("several threads", "[]"){
       pool.addWork([&]()
                    { thread_has_finished = true; });
     }
+
+    std::this_thread::sleep_for(1s);//wait for the work to actually be done
   }
 
   for(auto thread_has_finished : finished){
