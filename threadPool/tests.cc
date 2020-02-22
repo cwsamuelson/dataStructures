@@ -64,7 +64,6 @@ TEST_CASE("Worker thread", "[]"){
     std::promise<int> p;
     auto f = p.get_future();
     worker.addWork([&](int& i){ p.set_value(i); });
-    f.wait();
     CHECK(f.get() == work_count);
   }
 
@@ -79,7 +78,6 @@ TEST_CASE("Worker thread", "[]"){
     std::promise<int> p;
     auto f = p.get_future();
     worker.addWork([&](int& i){ p.set_value(i); });
-    f.wait();
     CHECK(f.get() == work_count);
   }
 }
