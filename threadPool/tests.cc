@@ -41,7 +41,7 @@ TEST_CASE("several threads", "[]"){
                    { thread_has_finished = true; });
     }
 
-    std::this_thread::sleep_for(1s);//wait for the work to actually be done
+    std::this_thread::sleep_for(500ms);//wait for the work to actually be done
   }
 
   CHECK(std::all_of(finished, finished + thread_count, [](bool b){ return b; }));
