@@ -85,7 +85,7 @@ public:
 };
 
 template<typename T>
-class workingThread{
+class workerThread{
 public:
   using work = std::function<void(T&)>;
 
@@ -122,11 +122,11 @@ private:
   }
 
 public:
-  workingThread()
+  workerThread()
     : work_thread(thread_func)
   {}
 
-  ~workingThread()
+  ~workerThread()
   {
     stop();
   }
