@@ -84,7 +84,6 @@ public:
   }
 };
 
-/*
 template<typename T>
 class workingThread{
 public:
@@ -154,7 +153,7 @@ public:
     mCV.notify_one();
   }
 };
-
+/*
 template<typename T>
 class resultsPool{
 public:
