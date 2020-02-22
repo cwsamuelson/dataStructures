@@ -109,3 +109,12 @@ TEST_CASE("sized resultsPool", "[]"){
   size_t counter = 0;
   CHECK(std::all_of(futures.begin(), futures.end(), [&](std::future<int>& f){ return f.get() == counter++; }));
 }
+
+TEST_CASE("resultPool with exceptions", "[]"){
+  resultsPool<int> pool;
+
+  auto f = pool.addWork([](){ throw 42; return 24; });
+
+  CHECK_THROWS_AS(f.get(), int);
+}
+
