@@ -172,7 +172,7 @@ public:
     mCV.notify_one();
   }
 };
-/*
+
 template<typename T>
 class resultsPool{
 public:
@@ -189,13 +189,12 @@ public:
   {
     std::lock_guard lk(mMutex);
 
-    mWorkQueue.emplace({w, /* a promise*//*});
+    mWorkQueue.emplace({w, std::promise<T>()});
 
     mCV.notify_one();
   }
 };
 
-*/
 }
 
 #endif //GALACTICSTRUCTURES_THREADPOOL_HH
