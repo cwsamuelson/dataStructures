@@ -162,7 +162,6 @@ public:
 
     mWorkQueue.emplace(w);
 
-    lk.unlock();
     mCV.notify_one();
   }
 };
@@ -185,7 +184,6 @@ public:
 
     mWorkQueue.emplace({w, /* a promise*//*});
 
-    lk.unlock();
     mCV.notify_one();
   }
 };
