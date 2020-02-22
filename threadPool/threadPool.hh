@@ -179,11 +179,43 @@ public:
   using work = std::function<T()>;
 
 private:
+  using internal_work = std::function<void(std::promise<T>)>;
+
   std::mutex mMutex;
   std::condition_variable mCV;
-  std::queue<std::tuple<work, std::promise<T>>> mWorkQueue;
+  std::thread mWorkThread;
+  bool mRunning = false;
+
+  std::queue<std::tuple<internal_work, std::promise<T>>> mWorkQueue;
+
+  void thread_func()
+  {
+    mRunning = true;
+
+    while(mRunning)
+    {
+      std::unique_lock lk(mMutex);
+      mCV.wait(lk, [&](){ return !mWorkQueue.empty(); });
+
+      auto [work, p] = mWorkQueue.front();
+      mWorkQueue.pop();
+
+      try
+      {
+        p.set_value(work());
+      }
+      catch(...)// all exceptions must be caught so the thread doesn't die silently
+      {
+        p.set_exception(std::current_exception());
+      }
+    }
+  }
 
 public:
+  resultsPool()
+    : mWorkThread(std::bind(&resultsPool::thread_func, this))
+  {}
+
   std::future<T>
   enqueueWork(work w)
   {
