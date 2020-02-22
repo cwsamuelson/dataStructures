@@ -148,6 +148,11 @@ public:
         mRunning = false;
       }
     );
+
+    if(mWorkThread.joinable())
+    {
+      mWorkThread.join();
+    }
   }
 
   void
