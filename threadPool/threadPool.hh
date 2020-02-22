@@ -124,7 +124,7 @@ private:
 
 public:
   workerThread()
-    : work_thread(thread_func)
+    : mWorkThread(std::bind(&workerThread::thread_func, this))
   {}
 
   ~workerThread()
