@@ -134,7 +134,7 @@ public:
   void
   stop()
   {
-    enqueueWork(
+    addWork(
       [](T&)
       {
         mRunning = false;
@@ -143,7 +143,7 @@ public:
   }
 
   void
-  enqueueWork(work w)
+  addWork(const work& w)
   {
     std::lock_guard lk(mMutex);
 
