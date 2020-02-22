@@ -134,7 +134,7 @@ public:
   template<typename U>
   explicit
   workerThread(U&& u)
-    : mContext(std::forward(u))
+    : mContext(std::forward<U>(u))
     , mWorkThread(std::bind(&workerThread::thread_func, this))
   {}
 
