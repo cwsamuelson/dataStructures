@@ -14,6 +14,9 @@
 //! @todo forward exceptions
 namespace gsw{
 
+/*!
+ * @todo figure out rule-of-5-stuff
+ */
 class threadPool{
 public:
   using work = std::function<void()>;
@@ -57,7 +60,7 @@ public:
 
               work(*running);
             } catch(...){
-              //what do?
+              //! @todo determine error handling
             }
           }
         }, rnng
@@ -121,7 +124,7 @@ private:
       }
       catch(...)// all exceptions must be caught so the thread doesn't die silently
       {
-        //how to handle errors?
+        //! @todo determine how to handle errors
       }
     }
   }
