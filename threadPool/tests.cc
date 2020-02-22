@@ -24,11 +24,11 @@ TEST_CASE("Executes work given to it", "[]"){
 
 TEST_CASE("several threads", "[]"){
   using namespace std::chrono_literals;
-
   constexpr size_t thread_count = 13;
+
   bool finished[thread_count];
-  for(auto i = 0; i < thread_count; ++i){
-    finished[i] = false;
+  for(auto& thread_check : finished){
+    thread_check = false;
   }
 
   {
