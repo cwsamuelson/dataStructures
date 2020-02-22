@@ -4,6 +4,7 @@
 #include "threadPool.hh"
 
 #include <thread>
+#include <future>
 #include <algorithm>
 
 using namespace gsw;
@@ -45,6 +46,26 @@ TEST_CASE("several threads", "[]"){
 
   CHECK(std::all_of(finished, finished + thread_count, [](bool b){ return b; }));
 }
+
+TEST_CASE("", "[]"){
+  using namespace std::chrono_literals;
+  constexpr size_t work_count = 13;
+
+  {
+    workerThread<int> worker;
+
+    worker.addWork([](int& i){ i = 0; });
+
+    for(size_t idx = 0; idx < work_count; ++idx){
+      worker.addWork([&](int& i)
+                   { ++i; });
+    }
+
+    std::promise<int> p;
+    auto f = p.get_future();
+    worker.addWork([&](int& i){ p.set_value(i); });
+    f.wait();
+    CHECK(f.get() == work_count);
   }
 }
 
