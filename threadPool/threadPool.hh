@@ -127,6 +127,13 @@ public:
     : mWorkThread(std::bind(&workerThread::thread_func, this))
   {}
 
+  template<typename U>
+  explicit
+  workerThread(U&& u)
+    : mContext(std::forward(u))
+    , mWorkThread(std::bind(&workerThread::thread_func, this))
+  {}
+
   ~workerThread()
   {
     stop();
