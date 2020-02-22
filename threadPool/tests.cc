@@ -4,6 +4,7 @@
 #include "threadPool.hh"
 
 #include <thread>
+#include <algorithm>
 
 using namespace gsw;
 
@@ -42,8 +43,8 @@ TEST_CASE("several threads", "[]"){
     std::this_thread::sleep_for(1s);//wait for the work to actually be done
   }
 
-  for(auto thread_has_finished : finished){
-    CHECK(thread_has_finished);
+  CHECK(std::all_of(finished, finished + thread_count, [](bool b){ return b; }));
+}
   }
 }
 
