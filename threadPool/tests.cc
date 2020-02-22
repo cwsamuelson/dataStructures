@@ -30,15 +30,14 @@ TEST_CASE("several threads", "[]"){
   {
     threadPool pool(5);
 
-    for(auto i = 0; i < thread_count; ++i)
-    {
+    for(auto& thread_has_finished : finished){
       pool.addWork([&]()
-                   { finished[i] = true; });
+                   { thread_has_finished = true; });
     }
   }
 
-  for(auto i = 0; i < thread_count; ++i){
-    CHECK(finished[i]);
+  for(auto thread_has_finished : finished){
+    CHECK(thread_has_finished);
   }
 }
 
