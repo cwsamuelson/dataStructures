@@ -84,3 +84,12 @@ TEST_CASE("Worker thread", "[]"){
   }
 }
 
+TEST_CASE("default resultsPool", "[]"){
+  resultsPool<int> pool;
+
+  auto f1 = pool.addWork([]()->int{ return 42; });
+  auto f2 = pool.addWork([]()->int{ return 69; });
+
+  CHECK(f1.get() == 42);
+  CHECK(f2.get() == 69);
+}
