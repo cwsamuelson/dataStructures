@@ -87,7 +87,8 @@ public:
 template<typename T>
 class workerThread{
 public:
-  using work = std::function<void(T&)>;
+  using context = T;
+  using work = std::function<void(context&)>;
 
 private:
   std::mutex mMutex;
@@ -95,11 +96,11 @@ private:
   std::thread mWorkThread;
   std::queue<work> mWorkQueue;
   bool mRunning = false;
+  context mContext;
 
   void
   thread_func()
   {
-    T t;
     mRunning = true;
 
     while(mRunning)
@@ -107,12 +108,12 @@ private:
       std::unique_lock lk(mMutex);
       mCV.wait(lk, [&](){ return !mWorkQueue.empty(); });
 
+      try
+      {
       auto work = mWorkQueue.front();
       mWorkQueue.pop();
 
-      try
-      {
-        work(t);
+        work(mContext);
       }
       catch(...)// all exceptions must be caught so the thread doesn't die silently
       {
@@ -135,7 +136,7 @@ public:
   stop()
   {
     addWork(
-      [](T&)
+      [this](context&)
       {
         mRunning = false;
       }
