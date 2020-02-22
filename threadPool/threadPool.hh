@@ -11,7 +11,7 @@
 #include <future>
 
 // it is possible to have a variant that gets results out as well with future/promise
-//  don't forget to forward exceptions!
+//! @todo forward exceptions
 namespace gsw{
 
 class threadPool{
@@ -54,6 +54,7 @@ public:
             {
               auto work = mWorkQueue.front();
               mWorkQueue.pop();
+
               work(*running);
             } catch(...){
               //what do?
@@ -91,9 +92,12 @@ public:
   using work = std::function<void(context&)>;
 
 private:
+  // threading tools
   std::mutex mMutex;
   std::condition_variable mCV;
   std::thread mWorkThread;
+
+  // execution tools
   std::queue<work> mWorkQueue;
   bool mRunning = false;
   context mContext;
@@ -110,8 +114,8 @@ private:
 
       try
       {
-      auto work = mWorkQueue.front();
-      mWorkQueue.pop();
+        auto work = mWorkQueue.front();
+        mWorkQueue.pop();
 
         work(mContext);
       }
