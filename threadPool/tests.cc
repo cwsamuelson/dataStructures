@@ -47,11 +47,11 @@ TEST_CASE("several threads", "[]"){
   CHECK(std::all_of(finished, finished + thread_count, [](bool b){ return b; }));
 }
 
-TEST_CASE("", "[]"){
+TEST_CASE("Worker thread", "[]"){
   using namespace std::chrono_literals;
   constexpr size_t work_count = 13;
 
-  {
+  SECTION("Default initialize"){
     workerThread<int> worker;
 
     worker.addWork([](int& i){ i = 0; });
@@ -59,6 +59,21 @@ TEST_CASE("", "[]"){
     for(size_t idx = 0; idx < work_count; ++idx){
       worker.addWork([&](int& i)
                    { ++i; });
+    }
+
+    std::promise<int> p;
+    auto f = p.get_future();
+    worker.addWork([&](int& i){ p.set_value(i); });
+    f.wait();
+    CHECK(f.get() == work_count);
+  }
+
+  SECTION("Forwarded constructor"){
+    workerThread<int> worker(0);
+
+    for(size_t idx = 0; idx < work_count; ++idx){
+      worker.addWork([&](int& i)
+                     { ++i; });
     }
 
     std::promise<int> p;
