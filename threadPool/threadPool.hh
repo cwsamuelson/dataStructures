@@ -217,13 +217,15 @@ public:
   {}
 
   std::future<T>
-  enqueueWork(work w)
+  addWork(const work& w)
   {
     std::lock_guard lk(mMutex);
 
     mWorkQueue.emplace({w, std::promise<T>()});
 
     mCV.notify_one();
+
+    return std::get<1>(mWorkQueue.back()).get_future();
   }
 };
 
