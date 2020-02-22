@@ -93,3 +93,19 @@ TEST_CASE("default resultsPool", "[]"){
   CHECK(f1.get() == 42);
   CHECK(f2.get() == 69);
 }
+
+TEST_CASE("sized resultsPool", "[]"){
+  constexpr size_t work_size = 13;
+
+  resultsPool<int> pool(5);
+  std::vector<std::future<int>> futures;
+
+  for(size_t i = 0; i < work_size; ++i)
+  {
+    futures.emplace_back(pool.addWork([=]() -> int
+                           { return i; }));
+  }
+
+  size_t counter = 0;
+  CHECK(std::all_of(futures.begin(), futures.end(), [&](std::future<int>& f){ return f.get() == counter++; }));
+}
