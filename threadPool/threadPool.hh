@@ -23,8 +23,10 @@ public:
 
 private:
   using internal_work = std::function<void(bool&)>;
+
   std::mutex mMutex;
   std::condition_variable mCV;
+
   std::queue<internal_work> mWorkQueue;
   std::vector<std::tuple<std::thread, std::shared_ptr<bool>>> mWorkers;
 
@@ -105,8 +107,7 @@ private:
   bool mRunning = false;
   context mContext;
 
-  void
-  thread_func()
+  void thread_func()
   {
     mRunning = true;
 
@@ -179,51 +180,70 @@ public:
   using work = std::function<T()>;
 
 private:
-  using internal_work = std::function<void(std::promise<T>)>;
+  using internal_work = std::function<T(bool&)>;
 
   std::mutex mMutex;
   std::condition_variable mCV;
-  std::thread mWorkThread;
-  bool mRunning = false;
 
   std::queue<std::tuple<internal_work, std::promise<T>>> mWorkQueue;
+  std::vector<std::tuple<std::thread, std::shared_ptr<bool>>> mWorkerThreads;
 
-  void thread_func()
+  void enqueueWork(const internal_work& iw){
+    std::lock_guard lk(mMutex);
+
+    mWorkQueue.emplace(iw, std::promise<T>());
+
+    mCV.notify_one();
+  }
+
+public:
+  explicit
+  resultsPool(size_t size = 1)
   {
-    mRunning = true;
+    for(size_t i = 0; i < size; ++i){
+      auto rnng = std::make_shared<bool>(false);
 
-    while(mRunning)
+      mWorkerThreads.emplace_back(
+        [this, running = rnng](){
+            *running = true;
+
+            while(*running)
+            {
+              std::unique_lock lk(mMutex);
+              mCV.wait(lk, [&](){ return !mWorkQueue.empty(); });
+
+              auto [work, p] = std::move(mWorkQueue.front());
+              mWorkQueue.pop();
+
+              try
+              {
+                p.set_value(work(*running));
+              }
+              catch(...)// all exceptions must be caught so the thread doesn't die silently
+              {
+                p.set_exception(std::current_exception());
+              }
+            }
+        }, rnng);
+    }
+  }
+
+  ~resultsPool(){
+    for(auto& [worker, control] : mWorkerThreads)
     {
-      std::unique_lock lk(mMutex);
-      mCV.wait(lk, [&](){ return !mWorkQueue.empty(); });
+      enqueueWork([](bool& b){ b = false; return T(); });
+    }
 
-      auto [work, p] = mWorkQueue.front();
-      mWorkQueue.pop();
-
-      try
-      {
-        p.set_value(work());
-      }
-      catch(...)// all exceptions must be caught so the thread doesn't die silently
-      {
-        p.set_exception(std::current_exception());
+    for(auto& [worker, _] : mWorkerThreads){
+      if(worker.joinable()){
+        worker.join();
       }
     }
   }
 
-public:
-  resultsPool()
-    : mWorkThread(std::bind(&resultsPool::thread_func, this))
-  {}
-
-  std::future<T>
-  addWork(const work& w)
+  std::future<T> addWork(const work& w)
   {
-    std::lock_guard lk(mMutex);
-
-    mWorkQueue.emplace({w, std::promise<T>()});
-
-    mCV.notify_one();
+    enqueueWork([=](bool&){ return w(); });
 
     return std::get<1>(mWorkQueue.back()).get_future();
   }
