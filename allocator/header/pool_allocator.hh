@@ -1,7 +1,7 @@
 #ifndef __POOL_ALLOCATOR_HH__
 #define __POOL_ALLOCATOR_HH__
 
-#include<mem_exceptions.hh>
+#include<header/mem_exceptions.hh>
 
 namespace gsw{
 

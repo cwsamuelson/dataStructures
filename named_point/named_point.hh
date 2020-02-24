@@ -4,7 +4,7 @@
 #include <initializer_list>
 
 #include <named_type.hh>
-#include <array.hh>
+#include <header/array.hh>
 
 namespace gsw{
 

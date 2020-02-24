@@ -5,7 +5,7 @@
 
 #include <polynomial.hh>
 #include <high_polynomial.hh>
-#include <algorithm.hh>
+#include <header/algorithm.hh>
 
 using namespace std;
 

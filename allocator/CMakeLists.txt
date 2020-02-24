@@ -19,9 +19,9 @@ set_target_properties(allocator PROPERTIES
                                 INTERFACE_CXX_STANDARD_REQUIRED YES
                                 INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(allocator INTERFACE .)
+target_include_directories(allocator INTERFACE header)
 
-add_executable(test-allocator tests.cc)
+add_executable(test-allocator test/tests.cc)
 set_target_properties(test-allocator PROPERTIES
                                      CXX_STANDARD 17
                                      CXX_STANDARD_REQUIRED YES

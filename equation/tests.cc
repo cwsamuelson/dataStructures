@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include<catch2/catch.hpp>
 
-#include<algorithm.hh>
+#include<header/algorithm.hh>
 #include<equation.hh>
 
 using namespace gsw;
