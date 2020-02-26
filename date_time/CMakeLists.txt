@@ -19,10 +19,10 @@ set_target_properties(date_time PROPERTIES
                                 INTERFACE_CXX_STANDARD_REQUIRED YES
                                 INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(date_time INTERFACE .)
+target_include_directories(date_time INTERFACE header)
 target_link_libraries(date_time INTERFACE unit)
 
-add_executable(test-date_time tests.cc)
+add_executable(test-date_time test/tests.cc)
 set_target_properties(test-date_time PROPERTIES
                                      CXX_STANDARD 17
                                      CXX_STANDARD_REQUIRED YES
