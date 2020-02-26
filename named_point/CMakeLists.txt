@@ -22,10 +22,10 @@ set_target_properties(named_point PROPERTIES
                                   INTERFACE_CXX_STANDARD_REQUIRED YES
                                   INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(named_point INTERFACE .)
+target_include_directories(named_point INTERFACE header)
 target_link_libraries(named_point INTERFACE named_type INTERFACE array)
 
-add_executable(test-named_point tests.cc)
+add_executable(test-named_point test/tests.cc)
 set_target_properties(test-named_point PROPERTIES
                                        CXX_STANDARD 17
                                        CXX_STANDARD_REQUIRED YES
