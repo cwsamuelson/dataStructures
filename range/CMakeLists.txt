@@ -16,9 +16,9 @@ set_target_properties(range PROPERTIES
                             INTERFACE_CXX_STANDARD_REQUIRED YES
                             INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(range INTERFACE .)
+target_include_directories(range INTERFACE header)
 
-add_executable(test-range tests.cc)
+add_executable(test-range test/tests.cc)
 set_target_properties(test-range PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES
