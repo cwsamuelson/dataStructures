@@ -22,11 +22,11 @@ set_target_properties(scheduler PROPERTIES
                                 INTERFACE_CXX_STANDARD_REQUIRED YES
                                 INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(scheduler INTERFACE .)
+target_include_directories(scheduler INTERFACE header)
 target_link_libraries(scheduler INTERFACE ratio
 		                        INTERFACE unit)
 
-add_executable(test-scheduler tests.cc)
+add_executable(test-scheduler test/tests.cc)
 set_target_properties(test-scheduler PROPERTIES
                                      CXX_STANDARD 17
                                      CXX_STANDARD_REQUIRED YES
