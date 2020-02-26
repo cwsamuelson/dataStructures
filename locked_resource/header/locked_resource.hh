@@ -11,26 +11,27 @@ class locked_resource{
 public:
   using value_type = T;
   using resource_type = value_type;
+  using ptr_type = std::shared_ptr<resource_type>;
   using mutex_type = M;
-  using lock_type = L<resource_type>;
+  using lock_type = L<mutex_type>;
 
   class proxy{
     friend class locked_resource;
-    std::shared_ptr<resource_type> mRef;
+    ptr_type mRef;
     lock_type mLock;
 
-    proxy(std::shared_ptr<resource_type> in, mutex_type m)
+    proxy(ptr_type in, mutex_type& m)
       : mRef(in)
       , mLock(m)
     {}
 
   public:
-    operator resource_type&(){
+    auto operator*(){
       return *mRef;
     }
 
-    operator const resource_type&() const{
-      return *mRef;
+    auto operator->(){
+      return mRef;
     }
   };
 
@@ -39,15 +40,18 @@ private:
   std::mutex mMutex;
 
 public:
-  locked_resource() = default;
+  locked_resource()
+    : mData(std::make_shared<resource_type>())
+  {}
 
   template<typename ...Args>
+  explicit
   locked_resource(Args... args)
     : mData(std::make_shared<resource_type>(std::forward<Args>(args)...))
   {}
 
   proxy get(){
-    return mData;
+    return {mData, mMutex};
   }
 };
 
