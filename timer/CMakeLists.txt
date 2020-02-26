@@ -16,9 +16,9 @@ set_target_properties(timer PROPERTIES
                             INTERFACE_CXX_STANDARD_REQUIRED YES
                             INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(timer INTERFACE .)
+target_include_directories(timer INTERFACE header)
 
-add_executable(test-timer tests.cc)
+add_executable(test-timer test/tests.cc)
 set_target_properties(test-timer PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES
