@@ -19,10 +19,10 @@ set_target_properties(event_handler PROPERTIES
                                     INTERFACE_CXX_STANDARD_REQUIRED YES
                                     INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(event_handler INTERFACE .)
+target_include_directories(event_handler INTERFACE header)
 target_link_libraries(event_handler INTERFACE tuple)
 
-add_executable(test-event_handler tests.cc)
+add_executable(test-event_handler test/tests.cc)
 set_target_properties(test-event_handler PROPERTIES
                                          CXX_STANDARD 17
                                          CXX_STANDARD_REQUIRED YES

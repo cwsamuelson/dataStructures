@@ -12,16 +12,16 @@ if(NOT TARGET algorithms)
 	add_subdirectory("../algorithm/" algorithms)
 endif()
 
-add_library(equation equation.cc)
+add_library(equation source/equation.cc)
 
 set_target_properties(equation PROPERTIES
                                INTERFACE_CXX_STANDARD 17
                                INTERFACE_CXX_STANDARD_REQUIRED YES
                                INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(equation PUBLIC .)
+target_include_directories(equation PUBLIC header)
 
-add_executable(test-equation tests.cc)
+add_executable(test-equation test/tests.cc)
 set_target_properties(test-equation PROPERTIES
                                     CXX_STANDARD 17
                                     CXX_STANDARD_REQUIRED YES

@@ -16,9 +16,9 @@ set_target_properties(memory_pool PROPERTIES
                                   INTERFACE_CXX_STANDARD_REQUIRED YES
                                   INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(memory_pool INTERFACE .)
+target_include_directories(memory_pool INTERFACE header)
 
-add_executable(test-memory_pool tests.cc)
+add_executable(test-memory_pool test/tests.cc)
 set_target_properties(test-memory_pool PROPERTIES
                                        CXX_STANDARD 17
                                        CXX_STANDARD_REQUIRED YES

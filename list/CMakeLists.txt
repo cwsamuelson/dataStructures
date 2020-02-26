@@ -19,10 +19,10 @@ set_target_properties(list PROPERTIES
                            INTERFACE_CXX_STANDARD_REQUIRED YES
                            INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(list INTERFACE .)
+target_include_directories(list INTERFACE header)
 target_link_libraries(list INTERFACE normal_iterator)
 
-add_executable(test-list tests.cc)
+add_executable(test-list test/tests.cc)
 set_target_properties(test-list PROPERTIES
                                 CXX_STANDARD 17
                                 CXX_STANDARD_REQUIRED YES

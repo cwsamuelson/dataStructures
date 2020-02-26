@@ -15,9 +15,9 @@ set_target_properties(enumerator PROPERTIES
                                  INTERFACE_CXX_STANDARD 17
                                  INTERFACE_CXX_STANDARD_REQUIRED YES
                                  INTERFACE_CXX_EXTENSIONS NO)
-target_include_directories(enumerator INTERFACE .)
+target_include_directories(enumerator INTERFACE header)
 
-add_executable(test-enumerator tests.cc)
+add_executable(test-enumerator test/tests.cc)
 set_target_properties(test-enumerator PROPERTIES
                                       CXX_STANDARD 17
                                       CXX_STANDARD_REQUIRED YES

@@ -12,17 +12,17 @@ if(NOT TARGET polynomial)
 	add_subdirectory("polynomial" polynomial)
 endif()
 
-add_library(spline spline.cc)
+add_library(spline source/spline.cc)
 
 set_target_properties(spline PROPERTIES
                              INTERFACE_CXX_STANDARD 17
                              INTERFACE_CXX_STANDARD_REQUIRED YES
                              INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(spline PUBLIC .)
+target_include_directories(spline PUBLIC header)
 target_link_libraries(spline PRIVATE polynomial)
 
-add_executable(test-spline tests.cc)
+add_executable(test-spline test/tests.cc)
 set_target_properties(test-spline PROPERTIES
                                   CXX_STANDARD 17
                                   CXX_STANDARD_REQUIRED YES

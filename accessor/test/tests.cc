@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include<catch2/catch.hpp>
 
-#include<accessor.hh>
+#include <accessor.hh>
 
 using namespace gsw;
 

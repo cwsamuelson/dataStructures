@@ -22,12 +22,12 @@ set_target_properties(string PROPERTIES
                              INTERFACE_CXX_STANDARD_REQUIRED YES
                              INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(string INTERFACE .)
+target_include_directories(string INTERFACE header)
 target_link_libraries(string INTERFACE tuple
                              INTERFACE allocator
                              INTERFACE normal_iterator)
 
-add_executable(test-string tests.cc)
+add_executable(test-string test/tests.cc)
 set_target_properties(test-string PROPERTIES
                                   CXX_STANDARD 17
                                   CXX_STANDARD_REQUIRED YES

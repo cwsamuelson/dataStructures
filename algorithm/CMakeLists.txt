@@ -19,12 +19,12 @@ set_target_properties(algorithms PROPERTIES
                                  INTERFACE_CXX_STANDARD_REQUIRED YES
                                  INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(algorithms INTERFACE .)
+target_include_directories(algorithms INTERFACE header)
 
 #target_link_libraries(algorithms INTERFACE vector)
 target_link_libraries(algorithms INTERFACE)
 
-add_executable(test-algorithms tests.cc)
+add_executable(test-algorithms test/tests.cc)
 set_target_properties(test-algorithms PROPERTIES
                                       CXX_STANDARD 17
                                       CXX_STANDARD_REQUIRED YES

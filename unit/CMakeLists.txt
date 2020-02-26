@@ -22,10 +22,10 @@ set_target_properties(unit PROPERTIES
                                     INTERFACE_CXX_STANDARD_REQUIRED YES
                                     INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(unit INTERFACE .)
+target_include_directories(unit INTERFACE header)
 target_link_libraries(unit INTERFACE operators INTERFACE ratio)
 
-add_executable(test-unit tests.cc)
+add_executable(test-unit test/tests.cc)
 set_target_properties(test-unit PROPERTIES
                                          CXX_STANDARD 17
                                          CXX_STANDARD_REQUIRED YES

@@ -18,17 +18,17 @@ if(NOT TARGET algorithm)
 	add_subdirectory("../algorithm/" algorithm)
 endif()
 
-add_library(polynomial polynomial.cc high_polynomial.cc)
+add_library(polynomial source/polynomial.cc source/high_polynomial.cc)
 
 set_target_properties(polynomial PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES
                                  CXX_EXTENSIONS NO)
 
-target_include_directories(polynomial PUBLIC .)
+target_include_directories(polynomial PUBLIC header)
 target_link_libraries(polynomial PUBLIC operators PUBLIC named_point)
 
-add_executable(test-polynomial tests.cc)
+add_executable(test-polynomial test/tests.cc)
 set_target_properties(test-polynomial PROPERTIES
                                       CXX_STANDARD 17
                                       CXX_STANDARD_REQUIRED YES

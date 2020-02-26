@@ -16,9 +16,9 @@ set_target_properties(menu PROPERTIES
                            INTERFACE_CXX_STANDARD_REQUIRED YES
                            INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(menu INTERFACE .)
+target_include_directories(menu INTERFACE header)
 
-add_executable(test-menu tests.cc)
+add_executable(test-menu test/tests.cc)
 set_target_properties(test-menu PROPERTIES
                                 CXX_STANDARD 17
                                 CXX_STANDARD_REQUIRED YES

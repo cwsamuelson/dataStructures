@@ -15,9 +15,9 @@ set_target_properties(graph PROPERTIES
                             INTERFACE_CXX_STANDARD 17
                             INTERFACE_CXX_STANDARD_REQUIRED YES
                             INTERFACE_CXX_EXTENSIONS NO)
-target_include_directories(graph INTERFACE .)
+target_include_directories(graph INTERFACE header)
 
-add_executable(test-graph tests.cc)
+add_executable(test-graph test/tests.cc)
 set_target_properties(test-graph PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES

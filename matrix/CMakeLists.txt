@@ -22,10 +22,10 @@ set_target_properties(matrix PROPERTIES
                              INTERFACE_CXX_STANDARD_REQUIRED YES
                              INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(matrix INTERFACE .)
+target_include_directories(matrix INTERFACE header)
 target_link_libraries(matrix INTERFACE tuple)
 
-add_executable(test-matrix tests.cc)
+add_executable(test-matrix test/tests.cc)
 set_target_properties(test-matrix PROPERTIES
                                   CXX_STANDARD 17
                                   CXX_STANDARD_REQUIRED YES

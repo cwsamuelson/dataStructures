@@ -16,9 +16,9 @@ set_target_properties(tuple PROPERTIES
                             INTERFACE_CXX_STANDARD_REQUIRED YES
                             INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(tuple INTERFACE .)
+target_include_directories(tuple INTERFACE header)
 
-add_executable(test-tuple tests.cc)
+add_executable(test-tuple test/tests.cc)
 set_target_properties(test-tuple PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES

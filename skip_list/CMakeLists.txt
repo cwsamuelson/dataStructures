@@ -19,10 +19,10 @@ set_target_properties(skip_list PROPERTIES
                                 INTERFACE_CXX_STANDARD_REQUIRED YES
                                 INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(skip_list INTERFACE .)
+target_include_directories(skip_list INTERFACE header)
 target_link_libraries(skip_list INTERFACE normal_iterator)
 
-add_executable(test-skip_list tests.cc)
+add_executable(test-skip_list test/tests.cc)
 set_target_properties(test-skip_list PROPERTIES
                                      CXX_STANDARD 17
                                      CXX_STANDARD_REQUIRED YES

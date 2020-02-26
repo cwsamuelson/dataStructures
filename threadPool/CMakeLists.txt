@@ -18,11 +18,11 @@ set_target_properties(threadPool PROPERTIES
                                  INTERFACE_CXX_STANDARD_REQUIRED YES
                                  INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(threadPool INTERFACE .)
+target_include_directories(threadPool INTERFACE header)
 target_link_libraries(threadPool INTERFACE Threads::Threads)
 #target_link_libraries(threadPool INTERFACE tuple)
 
-add_executable(test-threadPool tests.cc)
+add_executable(test-threadPool test/tests.cc)
 set_target_properties(test-threadPool PROPERTIES
                                       CXX_STANDARD 17
                                       CXX_STANDARD_REQUIRED YES

@@ -9,16 +9,16 @@ if(NOT TARGET Catch2)
 	add_subdirectory("../catch/" Catch2)
 endif()
 
-add_library(logic logic.cc)
+add_library(logic source/logic.cc)
 
 set_target_properties(logic PROPERTIES
                             CXX_STANDARD 17
                             CXX_STANDARD_REQUIRED YES
                             CXX_EXTENSIONS NO)
 
-target_include_directories(logic PUBLIC .)
+target_include_directories(logic PUBLIC header)
 
-add_executable(test-logic tests.cc)
+add_executable(test-logic test/tests.cc)
 set_target_properties(test-logic PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES

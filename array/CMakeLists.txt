@@ -19,10 +19,10 @@ set_target_properties(array PROPERTIES
                                     INTERFACE_CXX_STANDARD_REQUIRED YES
                                     INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(array INTERFACE .)
+target_include_directories(array INTERFACE header)
 target_link_libraries(array INTERFACE normal_iterator)
 
-add_executable(test-array tests.cc)
+add_executable(test-array test/tests.cc)
 set_target_properties(test-array PROPERTIES
                                          CXX_STANDARD 17
                                          CXX_STANDARD_REQUIRED YES

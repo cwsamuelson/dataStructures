@@ -16,9 +16,9 @@ set_target_properties(long PROPERTIES
                            INTERFACE_CXX_STANDARD_REQUIRED YES
                            INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(long INTERFACE .)
+target_include_directories(long INTERFACE header)
 
-add_executable(test-long tests.cc)
+add_executable(test-long test/tests.cc)
 set_target_properties(test-long PROPERTIES
                                 CXX_STANDARD 17
                                 CXX_STANDARD_REQUIRED YES
