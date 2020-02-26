@@ -3,7 +3,7 @@
 
 #include<algorithm>
 
-#include<header/allocator.hh>
+#include<allocator.hh>
 
 namespace gsw{
 

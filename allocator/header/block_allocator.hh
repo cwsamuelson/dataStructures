@@ -4,7 +4,7 @@
 #include<bitset>
 #include<exception>
 
-#include<header/static_allocator.hh>
+#include<static_allocator.hh>
 
 namespace gsw{
 

@@ -4,7 +4,7 @@
 #include<bitset>
 #include<array>
 
-#include<header/mem_exceptions.hh>
+#include<mem_exceptions.hh>
 
 namespace gsw{
 
