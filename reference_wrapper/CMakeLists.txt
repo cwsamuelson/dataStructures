@@ -16,10 +16,10 @@ set_target_properties(reference_wrapper PROPERTIES
                                         INTERFACE_CXX_STANDARD_REQUIRED YES
                                         INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(reference_wrapper INTERFACE .)
+target_include_directories(reference_wrapper INTERFACE header)
 target_link_libraries(reference_wrapper INTERFACE tuple)
 
-add_executable(test-reference_wrapper tests.cc)
+add_executable(test-reference_wrapper test/tests.cc)
 set_target_properties(test-reference_wrapper PROPERTIES
                                              CXX_STANDARD 17
                                              CXX_STANDARD_REQUIRED YES
