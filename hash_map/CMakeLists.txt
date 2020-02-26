@@ -22,11 +22,11 @@ set_target_properties(hash_map PROPERTIES
                                INTERFACE_CXX_STANDARD_REQUIRED YES
                                INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(hash_map INTERFACE .)
+target_include_directories(hash_map INTERFACE header)
 target_link_libraries(hash_map INTERFACE normal_iterator
                                INTERFACE allocator)
 
-add_executable(test-hash_map tests.cc)
+add_executable(test-hash_map test/tests.cc)
 set_target_properties(test-hash_map PROPERTIES
                                     CXX_STANDARD 17
                                     CXX_STANDARD_REQUIRED YES
