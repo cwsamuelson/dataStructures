@@ -16,10 +16,10 @@ set_target_properties(json PROPERTIES
                            INTERFACE_CXX_STANDARD_REQUIRED YES
                            INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(json INTERFACE .)
+target_include_directories(json INTERFACE header)
 #target_link_libraries(json INTERFACE tuple)
 
-add_executable(test-json tests.cc)
+add_executable(test-json test/tests.cc)
 set_target_properties(test-json PROPERTIES
                                 CXX_STANDARD 17
                                 CXX_STANDARD_REQUIRED YES
