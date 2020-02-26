@@ -1,7 +1,3 @@
-//
-// Created by chris on 9/1/2019.
-//
-
 #ifndef GALACTICSTRUCTURES_SPLINE_HH
 #define GALACTICSTRUCTURES_SPLINE_HH
 
