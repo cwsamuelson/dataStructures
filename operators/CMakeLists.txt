@@ -16,9 +16,9 @@ set_target_properties(operators PROPERTIES
                                 INTERFACE_CXX_STANDARD_REQUIRED YES
                                 INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(operators INTERFACE .)
+target_include_directories(operators INTERFACE header)
 
-add_executable(test-operators tests.cc)
+add_executable(test-operators test/tests.cc)
 set_target_properties(test-operators PROPERTIES
                                      CXX_STANDARD 17
                                      CXX_STANDARD_REQUIRED YES
