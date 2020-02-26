@@ -16,9 +16,9 @@ set_target_properties(locked_resource PROPERTIES
                             INTERFACE_CXX_STANDARD_REQUIRED YES
                             INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(locked_resource INTERFACE .)
+target_include_directories(locked_resource INTERFACE header)
 
-add_executable(test-locked_resource tests.cc)
+add_executable(test-locked_resource test/tests.cc)
 set_target_properties(test-locked_resource PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES
