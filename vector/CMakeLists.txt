@@ -22,11 +22,11 @@ set_target_properties(vector PROPERTIES
                               INTERFACE_CXX_STANDARD_REQUIRED YES
                               INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(vector INTERFACE .)
+target_include_directories(vector INTERFACE header)
 
 target_link_libraries(vector INTERFACE normal_iterator allocator)
 
-add_executable(test-vector tests.cc)
+add_executable(test-vector test/tests.cc)
 set_target_properties(test-vector PROPERTIES
                               CXX_STANDARD 17
                               CXX_STANDARD_REQUIRED YES
