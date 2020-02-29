@@ -9,6 +9,8 @@ if(NOT TARGET Catch2)
 	add_subdirectory("../catch/" Catch2)
 endif()
 
+find_package(Threads REQUIRED)
+
 add_library(locked_resource INTERFACE)
 
 set_target_properties(locked_resource PROPERTIES
@@ -17,6 +19,7 @@ set_target_properties(locked_resource PROPERTIES
                             INTERFACE_CXX_EXTENSIONS NO)
 
 target_include_directories(locked_resource INTERFACE header)
+target_link_libraries(locked_resource INTERFACE Threads::Threads)
 
 add_executable(test-locked_resource test/tests.cc)
 set_target_properties(test-locked_resource PROPERTIES
