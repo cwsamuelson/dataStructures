@@ -8,8 +8,8 @@
 TEST_CASE("Locked Resource", "[]"){
   gsw::locked_resource<int> lr;
 
-  std::thread one([res = lr.get()](){ *res = 42; });
-  std::thread two([res = lr.get()](){ *res = 24; });
+  std::thread one([&](){ *lr.get() = 42; });
+  std::thread two([&](){ *lr.get() = 24; });
 
   one.join();
   two.join();
