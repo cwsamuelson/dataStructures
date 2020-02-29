@@ -26,7 +26,7 @@ public:
     {}
 
   public:
-    auto operator*(){
+    auto& operator*(){
       return *mRef;
     }
 
