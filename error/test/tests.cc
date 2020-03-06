@@ -24,6 +24,11 @@ TEST_CASE("gsw::exception captures location information", ""){
   try{
     thrower(true);
   } catch(gsw::exception& e){
-    CHECK(true);
+    CHECK(e.line() == 7);
+    CHECK(e.message() == "bah, humbug");
+    CHECK(!e.file().empty());
+    std::string w(e.what());
+    CHECK(!w.empty());
+    CHECK(w != e.message());
   }
 }
