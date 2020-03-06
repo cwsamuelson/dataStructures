@@ -9,17 +9,14 @@ if(NOT TARGET Catch2)
 	add_subdirectory("../catch/" Catch2)
 endif()
 
-add_library(pager pager.cc pager.hh)
-
+add_library(pager INTERFACE)
 set_target_properties(pager PROPERTIES
                             INTERFACE_CXX_STANDARD 17
                             INTERFACE_CXX_STANDARD_REQUIRED YES
                             INTERFACE_CXX_EXTENSIONS NO)
+target_include_directories(pager INTERFACE header)
 
-target_include_directories(pager PUBLIC .)
-target_link_libraries(pager PRIVATE polynomial)
-
-add_executable(test-pager tests.cc)
+add_executable(test-pager test/tests.cc)
 set_target_properties(test-pager PROPERTIES
                                  CXX_STANDARD 17
                                  CXX_STANDARD_REQUIRED YES
