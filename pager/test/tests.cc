@@ -40,5 +40,9 @@ TEST_CASE("pager", "[]"){
     for(size_t i = 0; i < 10; ++i){
       p[i] = i;
     }
+
+    for(size_t i = 0; i < 10; ++i){
+      CHECK(p[i] == i);
+    }
   }
 }
