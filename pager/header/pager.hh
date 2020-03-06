@@ -12,6 +12,7 @@ namespace gsw {
  *
  * @todo generalize the page file
  * ultimately the user should decide exactly what happens when data is paged in and out
+ * and possibly how victim pages are chosen?
  */
 template<typename T, typename F = std::fstream>
 class pager
@@ -29,10 +30,21 @@ private:
   std::map<size_t, size_t> mMemoryMap; /**< map of item index to memory index */
 
   int victimize(){
+    return mMemoryMap.begin()->first;
   }
 
-  void page_fault(index_t idx){
-    auto victim_page = victimize();
+  void save_page(size_t){}
+
+  void load_page(size_t){}
+
+  void page_fault(index_t page_id){
+    auto victim_page_id = victimize();
+    save_page(victim_page_id);
+    load_page(page_id);
+
+    auto offset = mMemoryMap.at(victim_page_id);
+    mMemoryMap.erase(victim_page_id);
+    mMemoryMap.insert({page_id, offset});
   }
 
   auto getPageId(size_t idx) const{
@@ -45,7 +57,12 @@ private:
 
 public:
   explicit
-  pager(size_t object_count, size_t page_size = 100, size_t page_count = 1)
+  pager(size_t object_count)
+    : pager(object_count, object_count)
+  {}
+
+  explicit
+  pager(size_t object_count, size_t page_size, size_t page_count = 1)
     : mPageSize(page_size)
     , mPageCount(page_count)
     , mPageMemory(std::make_unique<value_type[]>(allocatedMemory()))
@@ -61,7 +78,8 @@ public:
     if(mMemoryMap.count(page_id) > 0){
       return mPageMemory[mMemoryMap[page_id] + getPageOffset(idx)];
     } else {
-      throw std::runtime_error("Page fault! What do?");
+      page_fault(page_id);
+      return (*this)[idx];
     }
   }
 
