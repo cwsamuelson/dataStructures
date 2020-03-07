@@ -16,7 +16,11 @@ TEST_CASE("gsw::exception and GSW_THROW can be caught be std exception", ""){
   try{
     thrower(true);
   } catch(std::exception& e) {
-    CHECK(true);
+    std::string w(e.what());
+    CHECK(!w.empty());
+#if __cpp_lib_starts_ends_with
+    w.ends_with("bah, humbug");
+#endif
   }
 }
 
@@ -30,5 +34,8 @@ TEST_CASE("gsw::exception captures location information", ""){
     std::string w(e.what());
     CHECK(!w.empty());
     CHECK(w != e.message());
+#if __cpp_lib_starts_ends_with
+    w.ends_with("bah, humbug");
+#endif
   }
 }
