@@ -44,7 +44,8 @@ public:
 };
 
 #define GSW_WRAP(anything) do{anything;}while(false);
-#define GSW_THROW(cond, msg) GSW_WRAP(if(!(cond)){ throw gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg); });
+#define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
+#define GSW_THROW(cond, msg) GSW_IF(!(cond), throw gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg); );
 
 }
 
