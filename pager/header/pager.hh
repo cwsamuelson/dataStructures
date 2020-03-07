@@ -90,7 +90,7 @@ private:
   }
 
   auto getPageId(size_t idx) const{
-    return idx - (idx % mPageSize);
+    return (idx - (idx % mPageSize)) / mPageSize;
   }
 
   auto getPageOffset(size_t idx) const{
