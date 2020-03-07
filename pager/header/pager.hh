@@ -73,8 +73,14 @@ private:
 
     std::rewind(f);
 
-    for(size_t i = 0; i < sizeof(value_type) * mPageSize; ++i){
-      mPageMemory[i + offset] = char(std::fgetc(f));
+    for(size_t i = 0; i < mPageSize; ++i){
+      char arr[sizeof(value_type)];
+
+      for(size_t j = 0; j < sizeof(value_type); ++j){
+        arr[j] = char(std::fgetc(f));
+      }
+
+      std::memcpy(&mPageMemory[i], arr, sizeof(value_type));
     }
   }
 
