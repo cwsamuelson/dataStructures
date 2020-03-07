@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <memory>
 #include <map>
+#include <chrono>
 
 namespace gsw {
 
@@ -24,14 +25,24 @@ public:
   using ptr_type = std::unique_ptr<value_type[]>;
 
 private:
+  struct PageMetadata{
+    std::chrono::system_clock::time_point last_access;
+  };
   size_t mPageSize;
   size_t mPageCount;
   ptr_type mPageMemory;
   std::map<size_t, size_t> mMemoryMap; /**< map of item index to memory index */
   std::map<size_t, std::FILE*> mFileMap;
+  std::map<size_t, PageMetadata> mMetaData;
 
-  int victimize(){
-    return mMemoryMap.begin()->first;
+  size_t victimize(){
+    //lru
+    auto min = std::min_element(mMetaData.begin(), mMetaData.end(),
+      [](const std::pair<size_t, PageMetadata>& l, const std::pair<size_t, PageMetadata>& r){
+        return l.second.last_access < r.second.last_access;
+      }
+    );
+    return min->first;
   }
 
   void save_page(size_t page_id){
@@ -73,6 +84,7 @@ private:
     load_page(victim_page_id, page_id);
 
     auto offset = mMemoryMap.at(victim_page_id);
+    mMetaData.erase(victim_page_id);
     mMemoryMap.erase(victim_page_id);
     mMemoryMap.insert({page_id, offset});
   }
@@ -103,9 +115,11 @@ public:
     }
   }
 
+  [[nodiscard]]
   value_type& operator[](index_t idx){
     auto page_id = getPageId(idx);
     if(mMemoryMap.count(page_id) > 0){
+      mMetaData[page_id].last_access = std::chrono::system_clock::now();
       return mPageMemory[mMemoryMap[page_id] + getPageOffset(idx)];
     } else {
       page_fault(page_id);
