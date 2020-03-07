@@ -51,13 +51,14 @@ private:
       mFileMap[page_id] = tmpfile();
     }
 
+    auto offset = mMemoryMap[page_id];
     f = mFileMap[page_id];
 
     std::rewind(f);
 
     for(size_t i = 0; i < mPageSize; ++i){
       char arr[sizeof(value_type)];
-      std::memcpy(arr, &mPageMemory[i], sizeof(value_type));
+      std::memcpy(arr, &mPageMemory[i + offset], sizeof(value_type));
 
       for(size_t j = 0; j < sizeof(value_type); ++j){
         std::fputc(arr[j], f);
@@ -80,7 +81,7 @@ private:
         arr[j] = char(std::fgetc(f));
       }
 
-      std::memcpy(&mPageMemory[i], arr, sizeof(value_type));
+      std::memcpy(&mPageMemory[i + offset], arr, sizeof(value_type));
     }
   }
 
