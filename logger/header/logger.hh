@@ -19,7 +19,7 @@ public:
 
 private:
   level mLogLevel;
-  static std::mutex sConsoleMutex;
+  inline static std::mutex sConsoleMutex;
 
   //! @todo maybe use magic_enum?
   static std::string level_string(level l){
