@@ -7,6 +7,7 @@
 namespace gsw{
 
 //! @todo enable output to different streams?
+// it might not actually be testable without this..
 class logger{
 public:
   enum class level{
@@ -47,9 +48,10 @@ public:
 
   template<typename LOGGABLE>
   logger& operator<<(const LOGGABLE& loggable){
-    std::unique_lock lk(sConsoleMutex);
+    std::unique_lock lk(logger::sConsoleMutex);
 
-    std::cout << std::setw(10) << '[' << level_string(mLogLevel) << "]\t" << loggable;
+    std::cout << '[' << level_string(mLogLevel) << "]\t" << std::setw(14) << loggable << '\n';
+
     return *this;
   }
 };
