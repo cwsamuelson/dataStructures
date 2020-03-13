@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <string>
+#include <vector>
 
 namespace gsw{
 
@@ -19,7 +20,9 @@ public:
   };
 
 private:
+  friend class LoggingContext;
   level mLogLevel;
+  std::vector<std::string> mContexts;
   inline static std::mutex sConsoleMutex;
 
   //! @todo maybe use magic_enum?
@@ -50,7 +53,11 @@ public:
   logger& operator<<(const LOGGABLE& loggable){
     std::unique_lock lk(logger::sConsoleMutex);
 
-    std::cout << '[' << level_string(mLogLevel) << "]\t" << std::setw(14) << loggable << '\n';
+    std::cout << '[' << level_string(mLogLevel) << "]\t" << std::setw(14);
+    for(auto& context : mContexts){
+      std::cout << context << "\t";
+    }
+    std::cout << loggable << '\n';
 
     return *this;
   }
