@@ -49,9 +49,6 @@ private:
   alloc mAlloc;
   size_type mSize;
   size_type mCapacity;
-
-  /* data is stored as char array, allowing constructors and destructors to be
-   * manually run */
   value_type* mData;
 
   static const unsigned int datasize = sizeof(value_type);
@@ -220,6 +217,10 @@ public:
    * @return reference to this container
    */
   vector& operator=(vector&& other) {
+    if(mData == other.mData) {
+      return *this;
+    }
+
     alloc_traits::deallocate(mAlloc, mData, mCapacity);
 
     mSize = other.mSize;
