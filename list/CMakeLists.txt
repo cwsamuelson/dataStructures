@@ -1,34 +1,34 @@
-cmake_minimum_required(VERSION 3.0)
-project(list LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(list LANGUAGES CXX)
 
-if(TARGET list)
-	return()
-endif()
+IF(TARGET list)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET normal_iterator)
-	add_subdirectory("../normal_iterator/" normal_iterator)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
+IF(NOT TARGET normal_iterator)
+    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
+ENDIF()
 
-add_library(list INTERFACE)
+ADD_LIBRARY(list INTERFACE)
 
-set_target_properties(list PROPERTIES
-                           INTERFACE_CXX_STANDARD 17
-                           INTERFACE_CXX_STANDARD_REQUIRED YES
-                           INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(list PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(list INTERFACE header)
-target_link_libraries(list INTERFACE normal_iterator)
+TARGET_INCLUDE_DIRECTORIES(list INTERFACE header)
+TARGET_LINK_LIBRARIES(list INTERFACE normal_iterator)
 
-add_executable(test-list test/tests.cc)
-set_target_properties(test-list PROPERTIES
-                                CXX_STANDARD 17
-                                CXX_STANDARD_REQUIRED YES
-                                CXX_EXTENSIONS NO)
-target_link_libraries(test-list list Catch2)
+ADD_EXECUTABLE(test-list test/tests.cc)
+SET_TARGET_PROPERTIES(test-list PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-list list Catch2)
 
-enable_testing()
-add_test(test-list test-list)
+ENABLE_TESTING()
+ADD_TEST(test-list test-list)
 

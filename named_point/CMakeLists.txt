@@ -1,37 +1,37 @@
-cmake_minimum_required(VERSION 3.0)
-project(named_point LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(named_point LANGUAGES CXX)
 
-if(TARGET named_point)
-	return()
-endif()
+IF(TARGET named_point)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET named_type)
-	add_subdirectory("../named_type/" named_type)
-endif()
-if(NOT TARGET array)
-	add_subdirectory("../array/" array)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
+IF(NOT TARGET named_type)
+    ADD_SUBDIRECTORY("../named_type/" named_type)
+ENDIF()
+IF(NOT TARGET array)
+    ADD_SUBDIRECTORY("../array/" array)
+ENDIF()
 
-add_library(named_point INTERFACE)
+ADD_LIBRARY(named_point INTERFACE)
 
-set_target_properties(named_point PROPERTIES
-                                  INTERFACE_CXX_STANDARD 17
-                                  INTERFACE_CXX_STANDARD_REQUIRED YES
-                                  INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(named_point PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(named_point INTERFACE header)
-target_link_libraries(named_point INTERFACE named_type INTERFACE array)
+TARGET_INCLUDE_DIRECTORIES(named_point INTERFACE header)
+TARGET_LINK_LIBRARIES(named_point INTERFACE named_type INTERFACE array)
 
-add_executable(test-named_point test/tests.cc)
-set_target_properties(test-named_point PROPERTIES
-                                       CXX_STANDARD 17
-                                       CXX_STANDARD_REQUIRED YES
-                                       CXX_EXTENSIONS NO)
-target_link_libraries(test-named_point named_point Catch2)
+ADD_EXECUTABLE(test-named_point test/tests.cc)
+SET_TARGET_PROPERTIES(test-named_point PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-named_point named_point Catch2)
 
-enable_testing()
-add_test(test-named_point test-named_point)
+ENABLE_TESTING()
+ADD_TEST(test-named_point test-named_point)
 

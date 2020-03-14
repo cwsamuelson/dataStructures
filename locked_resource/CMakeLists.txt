@@ -1,33 +1,33 @@
-cmake_minimum_required(VERSION 3.0)
-project(locked_resource LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(locked_resource LANGUAGES CXX)
 
-if(TARGET locked_resource)
-	return()
-endif()
+IF(TARGET locked_resource)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-find_package(Threads REQUIRED)
+FIND_PACKAGE(Threads REQUIRED)
 
-add_library(locked_resource INTERFACE)
+ADD_LIBRARY(locked_resource INTERFACE)
 
-set_target_properties(locked_resource PROPERTIES
-                            INTERFACE_CXX_STANDARD 17
-                            INTERFACE_CXX_STANDARD_REQUIRED YES
-                            INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(locked_resource PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(locked_resource INTERFACE header)
-target_link_libraries(locked_resource INTERFACE Threads::Threads)
+TARGET_INCLUDE_DIRECTORIES(locked_resource INTERFACE header)
+TARGET_LINK_LIBRARIES(locked_resource INTERFACE Threads::Threads)
 
-add_executable(test-locked_resource test/tests.cc)
-set_target_properties(test-locked_resource PROPERTIES
-                                 CXX_STANDARD 17
-                                 CXX_STANDARD_REQUIRED YES
-                                 CXX_EXTENSIONS NO)
-target_link_libraries(test-locked_resource locked_resource Catch2)
+ADD_EXECUTABLE(test-locked_resource test/tests.cc)
+SET_TARGET_PROPERTIES(test-locked_resource PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-locked_resource locked_resource Catch2)
 
-enable_testing()
-add_test(test-locked_resource test-locked_resource)
+ENABLE_TESTING()
+ADD_TEST(test-locked_resource test-locked_resource)
 

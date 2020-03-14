@@ -1,37 +1,37 @@
-cmake_minimum_required(VERSION 3.0)
-project(unit LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(unit LANGUAGES CXX)
 
-if(TARGET unit)
-	return()
-endif()
+IF(TARGET unit)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET operators)
-	add_subdirectory("../operators/" operators)
-endif()
-if(NOT TARGET ratio)
-	add_subdirectory("../ratio/" ratio)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
+IF(NOT TARGET operators)
+    ADD_SUBDIRECTORY("../operators/" operators)
+ENDIF()
+IF(NOT TARGET ratio)
+    ADD_SUBDIRECTORY("../ratio/" ratio)
+ENDIF()
 
-add_library(unit INTERFACE)
+ADD_LIBRARY(unit INTERFACE)
 
-set_target_properties(unit PROPERTIES
-                                    INTERFACE_CXX_STANDARD 17
-                                    INTERFACE_CXX_STANDARD_REQUIRED YES
-                                    INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(unit PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(unit INTERFACE header)
-target_link_libraries(unit INTERFACE operators INTERFACE ratio)
+TARGET_INCLUDE_DIRECTORIES(unit INTERFACE header)
+TARGET_LINK_LIBRARIES(unit INTERFACE operators INTERFACE ratio)
 
-add_executable(test-unit test/tests.cc)
-set_target_properties(test-unit PROPERTIES
-                                         CXX_STANDARD 17
-                                         CXX_STANDARD_REQUIRED YES
-                                         CXX_EXTENSIONS NO)
-target_link_libraries(test-unit unit Catch2)
+ADD_EXECUTABLE(test-unit test/tests.cc)
+SET_TARGET_PROPERTIES(test-unit PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-unit unit Catch2)
 
-enable_testing()
-add_test(test-unit test-unit)
+ENABLE_TESTING()
+ADD_TEST(test-unit test-unit)
 

@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
-project(timer LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(timer LANGUAGES CXX)
 
-if(TARGET timer)
-	return()
-endif()
+IF(TARGET timer)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(timer INTERFACE)
+ADD_LIBRARY(timer INTERFACE)
 
-set_target_properties(timer PROPERTIES
-                            INTERFACE_CXX_STANDARD 17
-                            INTERFACE_CXX_STANDARD_REQUIRED YES
-                            INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(timer PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(timer INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(timer INTERFACE header)
 
-add_executable(test-timer test/tests.cc)
-set_target_properties(test-timer PROPERTIES
-                                 CXX_STANDARD 17
-                                 CXX_STANDARD_REQUIRED YES
-                                 CXX_EXTENSIONS NO)
-target_link_libraries(test-timer timer Catch2)
+ADD_EXECUTABLE(test-timer test/tests.cc)
+SET_TARGET_PROPERTIES(test-timer PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-timer timer Catch2)
 
-enable_testing()
-add_test(test-timer test-timer)
+ENABLE_TESTING()
+ADD_TEST(test-timer test-timer)
 

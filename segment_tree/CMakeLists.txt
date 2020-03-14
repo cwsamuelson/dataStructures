@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
-project(segment_tree LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(segment_tree LANGUAGES CXX)
 
-if(TARGET segment_tree)
-	return()
-endif()
+IF(TARGET segment_tree)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(segment_tree INTERFACE)
+ADD_LIBRARY(segment_tree INTERFACE)
 
-set_target_properties(segment_tree PROPERTIES
-                                    INTERFACE_CXX_STANDARD 17
-                                    INTERFACE_CXX_STANDARD_REQUIRED YES
-                                    INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(segment_tree PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(segment_tree INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(segment_tree INTERFACE header)
 
-add_executable(test-segment_tree test/tests.cc)
-set_target_properties(test-segment_tree PROPERTIES
-                                        CXX_STANDARD 17
-                                        CXX_STANDARD_REQUIRED YES
-                                        CXX_EXTENSIONS NO)
-target_link_libraries(test-segment_tree segment_tree Catch2)
+ADD_EXECUTABLE(test-segment_tree test/tests.cc)
+SET_TARGET_PROPERTIES(test-segment_tree PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-segment_tree segment_tree Catch2)
 
-enable_testing()
-add_test(test-segment_tree test-segment_tree)
+ENABLE_TESTING()
+ADD_TEST(test-segment_tree test-segment_tree)
 

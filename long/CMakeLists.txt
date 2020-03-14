@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
-project(long LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(long LANGUAGES CXX)
 
-if(TARGET long)
-	return()
-endif()
+IF(TARGET long)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(long INTERFACE)
+ADD_LIBRARY(long INTERFACE)
 
-set_target_properties(long PROPERTIES
-                           INTERFACE_CXX_STANDARD 17
-                           INTERFACE_CXX_STANDARD_REQUIRED YES
-                           INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(long PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(long INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(long INTERFACE header)
 
-add_executable(test-long test/tests.cc)
-set_target_properties(test-long PROPERTIES
-                                CXX_STANDARD 17
-                                CXX_STANDARD_REQUIRED YES
-                                CXX_EXTENSIONS NO)
-target_link_libraries(test-long long Catch2)
+ADD_EXECUTABLE(test-long test/tests.cc)
+SET_TARGET_PROPERTIES(test-long PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-long long Catch2)
 
-enable_testing()
-add_test(test-long test-long)
+ENABLE_TESTING()
+ADD_TEST(test-long test-long)
 

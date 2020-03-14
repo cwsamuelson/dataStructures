@@ -1,34 +1,34 @@
-cmake_minimum_required(VERSION 3.0)
-project(threadPool LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(threadPool LANGUAGES CXX)
 
-if(TARGET threadPool)
-	return()
-endif()
+IF(TARGET threadPool)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-find_package(Threads REQUIRED)
+FIND_PACKAGE(Threads REQUIRED)
 
-add_library(threadPool INTERFACE)
+ADD_LIBRARY(threadPool INTERFACE)
 
-set_target_properties(threadPool PROPERTIES
-                                 INTERFACE_CXX_STANDARD 17
-                                 INTERFACE_CXX_STANDARD_REQUIRED YES
-                                 INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(threadPool PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(threadPool INTERFACE header)
-target_link_libraries(threadPool INTERFACE Threads::Threads)
+TARGET_INCLUDE_DIRECTORIES(threadPool INTERFACE header)
+TARGET_LINK_LIBRARIES(threadPool INTERFACE Threads::Threads)
 #target_link_libraries(threadPool INTERFACE tuple)
 
-add_executable(test-threadPool test/tests.cc)
-set_target_properties(test-threadPool PROPERTIES
-                                      CXX_STANDARD 17
-                                      CXX_STANDARD_REQUIRED YES
-                                      CXX_EXTENSIONS NO)
-target_link_libraries(test-threadPool threadPool Catch2)
+ADD_EXECUTABLE(test-threadPool test/tests.cc)
+SET_TARGET_PROPERTIES(test-threadPool PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-threadPool threadPool Catch2)
 
-enable_testing()
-add_test(test-threadPool test-threadPool)
+ENABLE_TESTING()
+ADD_TEST(test-threadPool test-threadPool)
 

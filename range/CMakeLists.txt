@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
-project(range LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(range LANGUAGES CXX)
 
-if(TARGET range)
-	return()
-endif()
+IF(TARGET range)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(range INTERFACE)
+ADD_LIBRARY(range INTERFACE)
 
-set_target_properties(range PROPERTIES
-                            INTERFACE_CXX_STANDARD 17
-                            INTERFACE_CXX_STANDARD_REQUIRED YES
-                            INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(range PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(range INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(range INTERFACE header)
 
-add_executable(test-range test/tests.cc)
-set_target_properties(test-range PROPERTIES
-                                 CXX_STANDARD 17
-                                 CXX_STANDARD_REQUIRED YES
-                                 CXX_EXTENSIONS NO)
-target_link_libraries(test-range range Catch2)
+ADD_EXECUTABLE(test-range test/tests.cc)
+SET_TARGET_PROPERTIES(test-range PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-range range Catch2)
 
-enable_testing()
-add_test(test-range test-range)
+ENABLE_TESTING()
+ADD_TEST(test-range test-range)
 

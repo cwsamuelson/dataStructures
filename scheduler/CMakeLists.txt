@@ -1,38 +1,38 @@
-cmake_minimum_required(VERSION 3.0)
-project(scheduler LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(scheduler LANGUAGES CXX)
 
-if(TARGET scheduler)
-	return()
-endif()
+IF(TARGET scheduler)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET unit)
-	add_subdirectory("../unit/" unit)
-endif()
-if(NOT TARGET ratio)
-	add_subdirectory("../ratio/" ratio)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
+IF(NOT TARGET unit)
+    ADD_SUBDIRECTORY("../unit/" unit)
+ENDIF()
+IF(NOT TARGET ratio)
+    ADD_SUBDIRECTORY("../ratio/" ratio)
+ENDIF()
 
-add_library(scheduler INTERFACE)
+ADD_LIBRARY(scheduler INTERFACE)
 
-set_target_properties(scheduler PROPERTIES
-                                INTERFACE_CXX_STANDARD 17
-                                INTERFACE_CXX_STANDARD_REQUIRED YES
-                                INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(scheduler PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(scheduler INTERFACE header)
-target_link_libraries(scheduler INTERFACE ratio
-		                        INTERFACE unit)
+TARGET_INCLUDE_DIRECTORIES(scheduler INTERFACE header)
+TARGET_LINK_LIBRARIES(scheduler INTERFACE ratio
+                      INTERFACE unit)
 
-add_executable(test-scheduler test/tests.cc)
-set_target_properties(test-scheduler PROPERTIES
-                                     CXX_STANDARD 17
-                                     CXX_STANDARD_REQUIRED YES
-                                     CXX_EXTENSIONS NO)
-target_link_libraries(test-scheduler scheduler Catch2)
+ADD_EXECUTABLE(test-scheduler test/tests.cc)
+SET_TARGET_PROPERTIES(test-scheduler PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-scheduler scheduler Catch2)
 
-enable_testing()
-add_test(test-scheduler test-scheduler)
+ENABLE_TESTING()
+ADD_TEST(test-scheduler test-scheduler)
 

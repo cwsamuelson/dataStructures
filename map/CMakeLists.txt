@@ -1,46 +1,46 @@
-cmake_minimum_required(VERSION 3.0)
-project(map LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(map LANGUAGES CXX)
 
-if(TARGET map)
-	return()
-endif()
+IF(TARGET map)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET normal_iterator)
-	add_subdirectory("../normal_iterator/" normal_iterator)
-endif()
-if(NOT TARGET vector)
-	add_subdirectory("../vector/" vector)
-endif()
-if(NOT TARGET tuple)
-	add_subdirectory("../tuple/" tuple)
-endif()
-if(NOT TARGET allocator)
-	add_subdirectory("../allocator/" allocator)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
+IF(NOT TARGET normal_iterator)
+    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
+ENDIF()
+IF(NOT TARGET vector)
+    ADD_SUBDIRECTORY("../vector/" vector)
+ENDIF()
+IF(NOT TARGET tuple)
+    ADD_SUBDIRECTORY("../tuple/" tuple)
+ENDIF()
+IF(NOT TARGET allocator)
+    ADD_SUBDIRECTORY("../allocator/" allocator)
+ENDIF()
 
-add_library(map INTERFACE)
+ADD_LIBRARY(map INTERFACE)
 
-set_target_properties(map PROPERTIES
-                          INTERFACE_CXX_STANDARD 17
-                          INTERFACE_CXX_STANDARD_REQUIRED YES
-                          INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(map PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(map INTERFACE header)
-target_link_libraries(map INTERFACE normal_iterator
-                          INTERFACE vector
-                          INTERFACE tuple
-                          INTERFACE allocator)
+TARGET_INCLUDE_DIRECTORIES(map INTERFACE header)
+TARGET_LINK_LIBRARIES(map INTERFACE normal_iterator
+                      INTERFACE vector
+                      INTERFACE tuple
+                      INTERFACE allocator)
 
-add_executable(test-map test/tests.cc)
-set_target_properties(test-map PROPERTIES
-                               CXX_STANDARD 17
-                               CXX_STANDARD_REQUIRED YES
-                               CXX_EXTENSIONS NO)
-target_link_libraries(test-map map Catch2)
+ADD_EXECUTABLE(test-map test/tests.cc)
+SET_TARGET_PROPERTIES(test-map PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-map map Catch2)
 
-enable_testing()
-add_test(test-map test-map)
+ENABLE_TESTING()
+ADD_TEST(test-map test-map)
 

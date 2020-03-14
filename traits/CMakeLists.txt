@@ -1,26 +1,26 @@
-cmake_minimum_required(VERSION 3.0)
-project(traits LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(traits LANGUAGES CXX)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(traits INTERFACE)
+ADD_LIBRARY(traits INTERFACE)
 
-set_target_properties(traits PROPERTIES
-                               INTERFACE_CXX_STANDARD 17
-                               INTERFACE_CXX_STANDARD_REQUIRED YES
-                               INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(traits PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(traits INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(traits INTERFACE header)
 
-add_executable(test-traits test/tests.cc)
-set_target_properties(test-traits PROPERTIES
-                              CXX_STANDARD 17
-                              CXX_STANDARD_REQUIRED YES
-                              CXX_EXTENSIONS NO)
-target_link_libraries(test-traits traits Catch2)
+ADD_EXECUTABLE(test-traits test/tests.cc)
+SET_TARGET_PROPERTIES(test-traits PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-traits traits Catch2)
 
-enable_testing()
-add_test(test-traits test-traits)
+ENABLE_TESTING()
+ADD_TEST(test-traits test-traits)
 

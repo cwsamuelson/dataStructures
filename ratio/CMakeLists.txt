@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
-project(ratio LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(ratio LANGUAGES CXX)
 
-if(TARGET ratio)
-	return()
-endif()
+IF(TARGET ratio)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(ratio INTERFACE)
+ADD_LIBRARY(ratio INTERFACE)
 
-set_target_properties(ratio PROPERTIES
-                                    INTERFACE_CXX_STANDARD 17
-                                    INTERFACE_CXX_STANDARD_REQUIRED YES
-                                    INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(ratio PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(ratio INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(ratio INTERFACE header)
 
-add_executable(test-ratio test/tests.cc)
-set_target_properties(test-ratio PROPERTIES
-                                         CXX_STANDARD 17
-                                         CXX_STANDARD_REQUIRED YES
-                                         CXX_EXTENSIONS NO)
-target_link_libraries(test-ratio ratio Catch2)
+ADD_EXECUTABLE(test-ratio test/tests.cc)
+SET_TARGET_PROPERTIES(test-ratio PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-ratio ratio Catch2)
 
-enable_testing()
-add_test(test-ratio test-ratio)
+ENABLE_TESTING()
+ADD_TEST(test-ratio test-ratio)
 

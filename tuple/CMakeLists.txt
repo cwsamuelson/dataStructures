@@ -1,30 +1,30 @@
-cmake_minimum_required(VERSION 3.0)
-project(tuple LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(tuple LANGUAGES CXX)
 
-if(TARGET tuple)
-	return()
-endif()
+IF(TARGET tuple)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
 
-add_library(tuple INTERFACE)
+ADD_LIBRARY(tuple INTERFACE)
 
-set_target_properties(tuple PROPERTIES
-                            INTERFACE_CXX_STANDARD 17
-                            INTERFACE_CXX_STANDARD_REQUIRED YES
-                            INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(tuple PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(tuple INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(tuple INTERFACE header)
 
-add_executable(test-tuple test/tests.cc)
-set_target_properties(test-tuple PROPERTIES
-                                 CXX_STANDARD 17
-                                 CXX_STANDARD_REQUIRED YES
-                                 CXX_EXTENSIONS NO)
-target_link_libraries(test-tuple tuple Catch2)
+ADD_EXECUTABLE(test-tuple test/tests.cc)
+SET_TARGET_PROPERTIES(test-tuple PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-tuple tuple Catch2)
 
-enable_testing()
-add_test(test-tuple test-tuple)
+ENABLE_TESTING()
+ADD_TEST(test-tuple test-tuple)
 

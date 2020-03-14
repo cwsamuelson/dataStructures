@@ -1,33 +1,33 @@
-cmake_minimum_required(VERSION 3.0)
-project(allocator LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(allocator LANGUAGES CXX)
 
-if(TARGET allocator)
-	return()
-endif()
+IF(TARGET allocator)
+    RETURN()
+ENDIF()
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET algorithm)
-	add_subdirectory("../algorithm/" algorithm)
-endif()
+IF(NOT TARGET Catch2)
+    ADD_SUBDIRECTORY("../catch/" Catch2)
+ENDIF()
+IF(NOT TARGET algorithm)
+    ADD_SUBDIRECTORY("../algorithm/" algorithm)
+ENDIF()
 
-add_library(allocator INTERFACE)
+ADD_LIBRARY(allocator INTERFACE)
 
-set_target_properties(allocator PROPERTIES
-                                INTERFACE_CXX_STANDARD 17
-                                INTERFACE_CXX_STANDARD_REQUIRED YES
-                                INTERFACE_CXX_EXTENSIONS NO)
+SET_TARGET_PROPERTIES(allocator PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-target_include_directories(allocator INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(allocator INTERFACE header)
 
-add_executable(test-allocator test/tests.cc)
-set_target_properties(test-allocator PROPERTIES
-                                     CXX_STANDARD 17
-                                     CXX_STANDARD_REQUIRED YES
-                                     CXX_EXTENSIONS NO)
-target_link_libraries(test-allocator allocator Catch2 algorithms)
+ADD_EXECUTABLE(test-allocator test/tests.cc)
+SET_TARGET_PROPERTIES(test-allocator PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-allocator allocator Catch2 algorithms)
 
-enable_testing()
-add_test(test-allocator test-allocator)
+ENABLE_TESTING()
+ADD_TEST(test-allocator test-allocator)
 
