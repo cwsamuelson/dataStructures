@@ -161,6 +161,7 @@ public:
 
   /*! String equality compare
    */
+  [[nodiscard]]
   bool operator==(const basic_string& other) const {
     if(mSize != other.mSize) {
       return false;
@@ -176,6 +177,7 @@ public:
 
   /*! Equality compare against array of value_type
    */
+  [[nodiscard]]
   bool operator==(const_pointer other) const {
     return *this == basic_string(other);
   }
@@ -227,6 +229,7 @@ public:
    *
    * @param rhs what to append to lhs
    */
+  [[nodiscard]]
   constexpr friend auto operator+(basic_string lhs, const basic_string& rhs) noexcept {
     return (lhs += rhs);
   }
@@ -237,6 +240,7 @@ public:
    *
    * @param rhs what to append to lhs
    */
+  [[nodiscard]]
   constexpr friend auto operator+(basic_string lhs, const_pointer rhs) noexcept {
     return (lhs += rhs);
   }
@@ -245,6 +249,7 @@ public:
    *
    * @param idx
    */
+  [[nodiscard]]
   reference operator[](unsigned int idx) {
     return mString[idx];
   }
@@ -253,42 +258,49 @@ public:
    *
    * @param idx
    */
+  [[nodiscard]]
   const_reference operator[](unsigned int idx) const {
     return mString[idx];
   }
 
   /*!
    */
+  [[nodiscard]]
   size_type size() const {
     return mSize;
   }
 
   /*!
    */
+  [[nodiscard]]
   bool empty() const {
     return mSize == 0;
   }
 
   /*!
    */
+  [[nodiscard]]
   const char* data() const {
     return mString;
   }
 
   /*!
    */
+  [[nodiscard]]
   iterator begin() {
     return Iterator(0);
   }
 
   /*!
    */
+  [[nodiscard]]
   iterator end() {
     return Iterator(mSize);
   }
 
   /*!
    */
+  [[nodiscard]]
   iterator Iterator(unsigned long idx) {
     return iterator(mString + idx);
   }

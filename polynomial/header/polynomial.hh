@@ -106,12 +106,14 @@ public:
    *
    * 6 iterations is chosen arbitrarily to provide 'sufficient' default accuracy
    */
+  [[nodiscard]]
   std::set<double> solve(double hint = 1.0, unsigned int iterations = 6) const;
 
   /*!
    *
    * @return the order of the polynomial (X^2+x+1 has order 2)
    */
+  [[nodiscard]]
   unsigned long order() const;
 
   /*! copy/move assignment
@@ -196,6 +198,7 @@ public:
    *
    * @return This
    */
+  [[nodiscard]]
   polynomial operator-() const;
 
   /*!
@@ -204,6 +207,7 @@ public:
    *
    * @return
    */
+  [[nodiscard]]
   double& operator[](size_t idx);
 
   /*!
@@ -212,6 +216,7 @@ public:
    *
    * @return
    */
+  [[nodiscard]]
   const double& operator[](size_t idx) const;
 
   /*! Find the value of the polynomial at a particular value
@@ -222,6 +227,7 @@ public:
    *
    * Calculate a y-value for the given x-value
    */
+  [[nodiscard]]
   double operator()(double X) const;
 
   /*!
@@ -229,6 +235,7 @@ public:
    * @param X
    * @return
    */
+  [[nodiscard]]
   point2::y_type operator()(point2::x_type X) const;
 
   /*!
@@ -354,32 +361,46 @@ public:
   friend double integrate(const polynomial& eq, double upperBound, double lowerBound);
 };
 
+[[nodiscard]]
 bool operator==(const polynomial& lhs, const polynomial& rhs);
 
+[[nodiscard]]
 bool operator==(const polynomial& eq, point p);
 
+[[nodiscard]]
 bool operator<(const polynomial& eq, point p);
 
+[[nodiscard]]
 bool operator<=(const polynomial& eq, point p);
 
+[[nodiscard]]
 bool operator>(const polynomial& eq, point p);
 
+[[nodiscard]]
 bool operator>=(const polynomial& eq, point p);
 
+[[nodiscard]]
 bool operator==(point p, const polynomial& eq);
 
+[[nodiscard]]
 bool operator<(point p, const polynomial& eq);
 
+[[nodiscard]]
 bool operator<=(point p, const polynomial& eq);
 
+[[nodiscard]]
 bool operator>(point p, const polynomial& eq);
 
+[[nodiscard]]
 bool operator>=(point p, const polynomial& eq);
 
+[[nodiscard]]
 polynomial derive(const polynomial& eq, unsigned int order = 1);
 
+[[nodiscard]]
 polynomial antiderive(const polynomial& eq);
 
+[[nodiscard]]
 double integrate(const polynomial& eq, double upperBound, double lowerBound);
 
 }

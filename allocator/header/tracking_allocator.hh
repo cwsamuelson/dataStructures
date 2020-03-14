@@ -37,6 +37,7 @@ public:
    *
    * @return Pointer to newly allocated objects
    */
+  [[nodiscard]]
   pointer allocate(size_type number) {
     mCurrentStored += number;
 
@@ -57,6 +58,7 @@ public:
    *
    * @return The current usage value
    */
+  [[nodiscard]]
   size_type usage() const {
     return mCurrentStored;
   }
@@ -67,6 +69,7 @@ public:
    *
    * Maximum number of objects of type T allocated at one time
    */
+  [[nodiscard]]
   size_type max_usage() const {
     return mMaxStored;
   }

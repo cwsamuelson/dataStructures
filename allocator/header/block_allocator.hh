@@ -69,6 +69,7 @@ public:
    *
    * @param number
    */
+  [[nodiscard]]
   pointer allocate(size_type number) {
     if(number > alloc_size) {
       throw std::bad_alloc();

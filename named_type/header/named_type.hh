@@ -28,14 +28,17 @@ public:
           : mValue(std::move(value)) {
   }
 
+  [[nodiscard]]
   reference get() {
     return mValue;
   }
 
+  [[nodiscard]]
   const_ref get() const {
     return mValue;
   }
 
+  [[nodiscard]]
   explicit
   operator T() const {
     return mValue;
@@ -53,10 +56,12 @@ public:
     return *this;
   }
 
+  [[nodiscard]]
   bool operator==(const named_type& name_t) const {
     return mValue == name_t.mValue;
   }
 
+  [[nodiscard]]
   bool operator==(const_ref value) const {
     return mValue == value;
   }

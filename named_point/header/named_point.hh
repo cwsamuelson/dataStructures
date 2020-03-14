@@ -58,38 +58,47 @@ public:
     }
   }
 
+  [[nodiscard]]
   value_type& operator[](unsigned long idx) {
     return mData[idx];
   }
 
+  [[nodiscard]]
   value_type& x() {
     return mData[0];
   }
 
+  [[nodiscard]]
   value_type& y() {
     return mData[1];
   }
 
+  [[nodiscard]]
   value_type& z() {
     return mData[2];
   }
 
+  [[nodiscard]]
   value_type& w() {
     return mData[3];
   }
 
+  [[nodiscard]]
   const value_type& x() const {
     return mData[0];
   }
 
+  [[nodiscard]]
   const value_type& y() const {
     return mData[1];
   }
 
+  [[nodiscard]]
   const value_type& z() const {
     return mData[2];
   }
 
+  [[nodiscard]]
   const value_type& w() const {
     return mData[3];
   }
@@ -128,6 +137,7 @@ public:
     return *this;
   }
 
+  [[nodiscard]]
   bool operator==(const vec& v) const {
     if(mData.size() != v.mData.size()) {
       return false;
@@ -143,10 +153,12 @@ public:
   }
 
   template<unsigned long M>
+  [[nodiscard]]
   bool operator==(storage_t v) const {
     return mData == v;
   }
 
+  [[nodiscard]]
   bool operator<(const vec& v) const {
     for(auto i = 0; i < mSize; ++i) {
       if(mData[i] < v.mData[i]) {
@@ -156,18 +168,22 @@ public:
     return false;
   }
 
+  [[nodiscard]]
   bool operator==(const x_type& x) const {
     return mData[0] == x.get();
   }
 
+  [[nodiscard]]
   bool operator==(const y_type& y) const {
     return mData[1] == y.get();
   }
 
+  [[nodiscard]]
   bool operator==(const z_type& z) const {
     return mData[2] == z.get();
   }
 
+  [[nodiscard]]
   bool operator==(const w_type& w) const {
     return mData[3] == w.get();
   }

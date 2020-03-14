@@ -26,6 +26,7 @@ public:
    *
    * @return Pointer to the resulting allocation
    */
+  [[nodiscard]]
   static pointer allocate(allocator_type& alloc, size_type number) {
     return alloc.allocate(number);
   }

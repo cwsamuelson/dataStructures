@@ -214,6 +214,7 @@ public:
  * @return Reference to the data at M in tup
  */
 template<size_t M, typename ...Args>
+[[nodiscard]]
 auto& get(tuple<Args...>& tup) {
   return detail::get_impl<M, 0, Args...>::get(static_cast<detail::tuple_impl<0, Args...>& >( tup ));
 }
@@ -229,6 +230,7 @@ auto& get(tuple<Args...>& tup) {
  * @return Const reference to the data at M in tup
  */
 template<size_t M, typename ...Args>
+[[nodiscard]]
 const auto& get(const tuple<Args...>& tup) {
   return detail::get_impl<M, 0, Args...>::get(static_cast<const detail::tuple_impl<0, Args...>& >( tup ));
 }
@@ -244,6 +246,7 @@ const auto& get(const tuple<Args...>& tup) {
  * all of them.
  */
 template<typename ...Args>
+[[nodiscard]]
 tuple<Args...> make_tuple(Args... args) {
   return tuple<Args...>(std::forward<Args>(args)...);
 }

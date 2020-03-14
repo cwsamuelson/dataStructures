@@ -54,19 +54,25 @@ public:
 
   high_polynomial& operator-() const;
 
+  [[nodiscard]]
   reference operator[](const input_point& point);
 
+  [[nodiscard]]
   const_reference operator[](const input_point& point) const;
 
+  [[nodiscard]]
   reference at(input_point point);
 
+  [[nodiscard]]
   const_reference at(input_point point) const;
 
+  [[nodiscard]]
   value_type operator()(input_point point) const;
 
   friend bool operator==(const high_polynomial& lhs, const high_polynomial& rhs);
 };
 
+[[nodiscard]]
 bool operator==(const high_polynomial& lhs, const high_polynomial& rhs);
 
 }

@@ -61,6 +61,7 @@ public:
   /*!
    * @param number
    */
+  [[nodiscard]]
   pointer allocate(size_type number) {
     size_type caveStart = 0;
     size_type caveSize = 0;

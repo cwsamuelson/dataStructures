@@ -54,12 +54,14 @@ public:
 
   /*! Value_type operator allowing usage as raw stored type
    */
+  [[nodiscard]]
   operator value_type() {
     return mRef;
   }
 
   /*!
    */
+  [[nodiscard]]
   operator const value_type() const {
     return mRef;
   }

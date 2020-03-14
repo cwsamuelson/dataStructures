@@ -162,7 +162,7 @@ meas<LENGTH1 - LENGTH2,
                                          MOLE2,
                                          BYTE2>& rhs);
 
-//                              d   t   m   c   T  l  M  a  p  k, ml, B
+//                           d   t   m   c   T  l  M  a  p  k, ml, B
 using none_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
 using length_msr      = meas<1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
 using mass_msr        = meas<0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
@@ -400,6 +400,7 @@ public:
    * @todo Allow small error in comparison to account for floating point math.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr bool operator==(const other_type<S, D, F>& other) const {
     return getRaw() == converter<MEAS, S, SYSTEM, D, D, F, FACTOR>()(other).getRaw();
   }
@@ -418,6 +419,7 @@ public:
    * Compares this instance with another instance for inequality.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr bool operator!=(const other_type<S, D, F>& other) const {
     return !(*this == other);
   }
@@ -434,6 +436,7 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr bool operator<(const other_type<S, D, F>& other) const {
     return getRaw() < convert_type<S, D, F>()(other).getRaw();
   }
@@ -450,6 +453,7 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr bool operator>(const other_type<S, D, F>& other) const {
     return getRaw() > convert_type<S, D, F>()(other).getRaw();
   }
@@ -466,6 +470,7 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr bool operator<=(const other_type<S, D, F>& other) const {
     return !((*this) > other);
   }
@@ -482,6 +487,7 @@ public:
    * @return Result of comparison
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr bool operator>=(const other_type<S, D, F>& other) const {
     return !((*this) < other);
   }
@@ -492,6 +498,7 @@ public:
    *
    * @return Result of comparison
    */
+  [[nodiscard]]
   constexpr bool operator==(value_type other) const {
     return mValue == other;
   }
@@ -502,6 +509,7 @@ public:
    *
    * @return Result of comparison
    */
+  [[nodiscard]]
   constexpr bool operator<(value_type other) const {
     return mValue < other;
   }
@@ -512,6 +520,7 @@ public:
    *
    * @return Result of comparison
    */
+  [[nodiscard]]
   constexpr bool operator>(value_type other) const {
     return mValue > other;
   }
@@ -522,6 +531,7 @@ public:
    *
    * @return Result of comparison
    */
+  [[nodiscard]]
   constexpr bool operator<=(value_type other) const {
     return !((*this) > other);
   }
@@ -532,6 +542,7 @@ public:
    *
    * @return Result of comparison
    */
+  [[nodiscard]]
   constexpr bool operator>=(value_type other) const {
     return !((*this) < other);
   }
@@ -620,6 +631,7 @@ public:
    * be part of the class to be used in inheritance.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr auto operator+(const other_type<S, D, F>& other) const {
     return unit(*this) += convert_type<S, D, F>()(other);
   }
@@ -654,6 +666,7 @@ public:
    * be part of the class to be used in inheritance.
    */
   template<typename D, typename F, typename S>
+  [[nodiscard]]
   constexpr auto operator-(const other_type<S, D, F>& other) const {
     return unit(*this) -= convert_type<S, D, F>()(other);
   }
@@ -720,12 +733,14 @@ public:
 
   /*! Get factored, stored value
    */
+  [[nodiscard]]
   constexpr value_type getValue() const {
     return mValue;
   }
 
   /*! Retrieve actual raw value (factor is taken into account)
    */
+  [[nodiscard]]
   constexpr value_type getRaw() const {
     return (mValue * factor_type::value);
   }
@@ -736,6 +751,7 @@ public:
  * @param d
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
 unit<MEAS, SYSTEM, DBL, FACTOR> operator*(const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d) {
   unit<MEAS, SYSTEM, DBL, FACTOR> cp(u);
 
@@ -749,6 +765,7 @@ unit<MEAS, SYSTEM, DBL, FACTOR> operator*(const unit<MEAS, SYSTEM, DBL, FACTOR>&
  * @param u
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
 unit<MEAS, SYSTEM, DBL, FACTOR> operator*(const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u) {
   unit<MEAS, SYSTEM, DBL, FACTOR> cp(u);
 
@@ -762,6 +779,7 @@ unit<MEAS, SYSTEM, DBL, FACTOR> operator*(const DBL& d, const unit<MEAS, SYSTEM,
  * @param d
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
 unit<MEAS, SYSTEM, DBL, FACTOR> operator/(const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d) {
   unit<MEAS, SYSTEM, DBL, FACTOR> cp(u);
 
@@ -775,6 +793,7 @@ unit<MEAS, SYSTEM, DBL, FACTOR> operator/(const unit<MEAS, SYSTEM, DBL, FACTOR>&
  * @param u
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
 unit<typename MEAS::inverse, SYSTEM, DBL, typename FACTOR::invert_type> operator/(const DBL& d,
                                                                                   const unit<MEAS,
                                                                                              SYSTEM,
@@ -800,6 +819,7 @@ template<typename MEAS1,
          typename D_t2,
          typename F_t1,
          typename F_t2>
+[[nodiscard]]
 constexpr unit<decltype(MEAS1() * MEAS2()), S_t1, D_t1, decltype(F_t1() * F_t2())> operator*(const unit<MEAS1,
                                                                                                         S_t1,
                                                                                                         D_t1,
@@ -828,6 +848,7 @@ template<typename MEAS1,
          typename D_t2,
          typename F_t1,
          typename F_t2>
+[[nodiscard]]
 constexpr unit<decltype(MEAS1() / MEAS2()), S_t1, D_t1, decltype(F_t1() / F_t2())> operator/(const unit<MEAS1,
                                                                                                         S_t1,
                                                                                                         D_t1,

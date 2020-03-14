@@ -48,6 +48,7 @@ public:
    *
    * @return Whether lhs != rhs
    */
+  [[nodiscard]]
   constexpr friend
   bool
   operator!=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
@@ -62,6 +63,7 @@ public:
    *
    * @return Whether lhs > rhs
    */
+  [[nodiscard]]
   constexpr friend
   bool
   operator>( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
@@ -76,6 +78,7 @@ public:
    *
    * @return Whether lhs >= rhs
    */
+  [[nodiscard]]
   constexpr friend
   bool
   operator>=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
@@ -90,6 +93,7 @@ public:
    *
    * @return whether lhs is <= rhs
    */
+  [[nodiscard]]
   constexpr friend
   bool
   operator<=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{

@@ -27,10 +27,12 @@ public:
 
   bound& operator=(const bound&) = default;
 
+  [[nodiscard]]
   bool operator==(const bound& other) const {
     return data == other.data;
   }
 
+  [[nodiscard]]
   bound operator+(const bound& rhs) const {
     bound b;
     for(int i = 0; i < DIMS; ++i) {
@@ -40,6 +42,7 @@ public:
     return b;
   }
 
+  [[nodiscard]]
   bound operator/(long long rhs) const {
     bound b = *this;
 
@@ -50,10 +53,12 @@ public:
     return b;
   }
 
+  [[nodiscard]]
   double& operator[](size_t idx) {
     return data[idx];
   }
 
+  [[nodiscard]]
   const double& operator[](size_t idx) const {
     return data[idx];
   }
@@ -120,6 +125,7 @@ public:
     value_type value;
     location loc;
 
+    [[nodiscard]]
     bool operator<(const item& other) const {
       for(int i = 0; i < DIMS; ++i) {
         if(loc[i] < other.loc[i]) {
@@ -129,6 +135,7 @@ public:
       return false;
     }
 
+    [[nodiscard]]
     bool operator==(const item& other) const {
       return value == other.value && loc == other.loc;
     }
@@ -140,6 +147,7 @@ private:
   std::vector<segment_tree> mSubregions;
   bounds mBounds;
 
+  [[nodiscard]]
   bool contains(location loc) const {
     for(unsigned int i = 0; i < DIMS; ++i) {
       if(loc[i] < mBounds[0][i] || loc[i] > mBounds[1][i]) {
@@ -191,6 +199,7 @@ public:
     }
   }
 
+  [[nodiscard]]
   std::set<std::set<item>> get_groups() const {
     std::set<std::set<item>> result;
 

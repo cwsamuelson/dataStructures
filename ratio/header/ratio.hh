@@ -18,6 +18,7 @@ namespace gsw {
  * @param t  Integral argument
  */
 template<typename T>
+[[nodiscard]]
 constexpr signed int sign(T t) {
   if(std::signbit(t)) {
     return -1;
@@ -33,6 +34,7 @@ constexpr signed int sign(T t) {
  * @param t  Numeric argument
  */
 template<typename T>
+[[nodiscard]]
 constexpr T myAbs(T t) {
   if(t < 0) {
     return -t;
@@ -48,6 +50,7 @@ constexpr T myAbs(T t) {
  * @tparam U  Type of 'rhs'
  */
 template<typename T, typename U>
+[[nodiscard]]
 constexpr std::common_type_t<T, U> gcd(T t, U u) {
   //return std::gcd( t, u );
   while(u != 0) {
@@ -88,6 +91,7 @@ public:
    * to a double value
    */
   constexpr
+  [[nodiscard]]
   operator double() const {
     return value;
   }
@@ -105,6 +109,7 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
+  [[nodiscard]]
   constexpr auto operator*(ratio<NUM, DEN> other) const {
     typedef decltype(other) OTHER;
 
@@ -124,6 +129,7 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
+  [[nodiscard]]
   constexpr auto operator/(ratio<NUM, DEN> other) const {
     typedef decltype(other) OTHER;
 
@@ -133,6 +139,7 @@ public:
   /*!
    * @return
    */
+  [[nodiscard]]
   constexpr auto invert() const {
     return invert_type();
   }
@@ -153,6 +160,7 @@ public:
  * @return Number of type T, containing multiplication result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+[[nodiscard]]
 constexpr T operator*(T t, ratio<N, D> r) {
   return (t * N) / D;
 }
@@ -172,6 +180,7 @@ constexpr T operator*(T t, ratio<N, D> r) {
  * @return Number of type T, containing multiplication result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+[[nodiscard]]
 constexpr T operator*(ratio<N, D> r, T t) {
   return (t * N) / D;
 }
@@ -191,6 +200,7 @@ constexpr T operator*(ratio<N, D> r, T t) {
  * @return Number of type T, containing division result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+[[nodiscard]]
 constexpr T operator/(T t, ratio<N, D> r) {
   using R = decltype(r);
 
@@ -212,6 +222,7 @@ constexpr T operator/(T t, ratio<N, D> r) {
  * @return Number of type T, containing division result
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+[[nodiscard]]
 constexpr T operator/(ratio<N, D> r, T t) {
   using R = decltype(r);
 
@@ -231,6 +242,7 @@ constexpr T operator/(ratio<N, D> r, T t) {
  * 'Actual' equality determined by value property
  */
 template<size_t N1, size_t D1, size_t N2, size_t D2>
+[[nodiscard]]
 constexpr bool operator==(ratio<N1, D1> r1, ratio<N2, D2> r2) {
   typedef decltype(r1) R1;
   typedef decltype(r2) R2;
@@ -251,6 +263,7 @@ constexpr bool operator==(ratio<N1, D1> r1, ratio<N2, D2> r2) {
  * 'Actual' inequality determined by value property
  */
 template<size_t N1, size_t D1, size_t N2, size_t D2>
+[[nodiscard]]
 constexpr bool operator!=(ratio<N1, D1> r1, ratio<N2, D2> r2) {
   return !(r1 == r2);
 }
@@ -276,6 +289,7 @@ using kibi  = ratio<1024, 1>;
 using mebi  = ratio<1048576, 1>;
 using gibi  = ratio<1073741824, 1>;
 //using tebi  = ratio<1099511627776, 1>;
+
 }
 
 #endif

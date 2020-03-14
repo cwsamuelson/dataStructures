@@ -47,24 +47,28 @@ public:
 
   /*! Get wrapped reference
    */
+  [[nodiscard]]
   operator reference() {
     return mRef;
   }
 
   /*!
    */
+  [[nodiscard]]
   operator const_ref() const {
     return mRef;
   }
 
   /*! Get wrapped reference
    */
+  [[nodiscard]]
   reference get() {
     return mRef;
   }
 
   /*! Get const version of wrapped reference
    */
+  [[nodiscard]]
   const reference cget() const {
     return mRef;
   }

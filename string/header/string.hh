@@ -43,12 +43,14 @@ public:
 
   /*!
    */
+  [[nodiscard]]
   constexpr size_t size() const {
     return mSize;
   }
 
   /*!
    */
+  [[nodiscard]]
   constexpr bool operator==(const test_ct_string& other) const {
     if(mSize != other.mSize) {
       return false;
@@ -65,6 +67,7 @@ public:
 
   /*!
    */
+  [[nodiscard]]
   constexpr bool operator!=(const test_ct_string& other) const {
     return !(*this == other);
   }
@@ -87,6 +90,7 @@ struct ct_string {
    * Equality is determined at compile time because the types are the same,
    * indicating the content is the same as well.
    */
+  [[nodiscard]]
   constexpr bool operator==(const ct_string&) const {
     return true;
   }
@@ -99,6 +103,7 @@ struct ct_string {
    * string content is different
    */
   template<char ...OTHER_STRING>
+  [[nodiscard]]
   constexpr bool operator==(const ct_string<OTHER_STRING...>&) const {
     return false;
   }
@@ -106,6 +111,7 @@ struct ct_string {
   /*!
    */
   template<char ...OTHER_STRING>
+  [[nodiscard]]
   constexpr bool operator!=(const ct_string<OTHER_STRING...>& other) const {
     return !(*this == other);
   }

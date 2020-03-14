@@ -135,6 +135,7 @@ public:
    *
    * Returns the number of elements stored in the array.
    */
+  [[nodiscard]]
   constexpr index_t size() const {
     return mSize;
   }
@@ -178,6 +179,7 @@ public:
    *    }
    *  }
    */
+  [[nodiscard]]
   reference operator[](index_t idx) {
     return mArr[idx];
   }
@@ -189,6 +191,7 @@ public:
    * Behaves the same as non-const version, but provides a const reference,
    * and can be used on const objects.
    */
+  [[nodiscard]]
   constexpr const_reference operator[](index_t idx) const {
     return mArr[idx];
   }
@@ -206,6 +209,7 @@ public:
    *
    * This will assign all elements at indexes 3 - 5 equal to 42.
    */
+  [[nodiscard]]
   helper operator[](const splicer& spl) {
     helper h(*this);
 
@@ -241,6 +245,7 @@ public:
    * This will assign elements at indexes 3 and 4 equal to 42.
    */
   template<unsigned int M>
+  [[nodiscard]]
   helper operator[](array<unsigned int[M]>& a) {
     helper h(*this);
 
@@ -256,6 +261,7 @@ public:
    * @param idx  Index, greater than which will be included in subsequent
    *             splicing operations
    */
+  [[nodiscard]]
   splicer operator>(index_t idx) {
     return splicer(std::greater<value_type>(), idx);
   }
@@ -265,6 +271,7 @@ public:
    * @param idx  Index, greater than and equal to which will be included in
    *             subsequent splicing operations
    */
+  [[nodiscard]]
   splicer operator>=(index_t idx) {
     return splicer(std::greater_equal<value_type>(), idx);
   }
@@ -274,6 +281,7 @@ public:
    * @param idx  Index, lesser than which will be included in subsequent
    *             splicing operations
    */
+  [[nodiscard]]
   splicer operator<(index_t idx) {
     return splicer(std::less<value_type>(), idx);
   }
@@ -283,30 +291,35 @@ public:
    * @param idx  Index, less than or equal to which will be included in
    *             subsequent splicing operations
    */
+  [[nodiscard]]
   splicer operator<=(index_t idx) {
     return splicer(std::less_equal<value_type>(), idx);
   }
 
   /*! Create an iterator to first element
    */
+  [[nodiscard]]
   iterator begin() {
     return Iterator(0);
   }
 
   /*! Create an iterator to final element
    */
+  [[nodiscard]]
   iterator end() {
     return Iterator(mSize);
   }
 
   /*! Create a const iterator to first element
    */
+  [[nodiscard]]
   const_iterator cbegin() const {
     return begin();
   }
 
   /*! Create a const iterator to final element
    */
+  [[nodiscard]]
   const_iterator cend() const {
     return end();
   }
@@ -315,6 +328,7 @@ public:
    *
    * @param idx Index of element iterator will be directed to
    */
+  [[nodiscard]]
   iterator Iterator(index_t idx) {
     return iterator(&mArr[idx]);
   }

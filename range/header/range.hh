@@ -57,30 +57,35 @@ public:
 
   /*!
    */
+  [[nodiscard]]
   bool operator==(const range_iterator& other) const {
     return mIterator == other.mIterator;
   }
 
   /*!
    */
+  [[nodiscard]]
   bool operator==(const iterator& other) const {
     return mIterator == other;
   }
 
   /*!
    */
+  [[nodiscard]]
   bool operator!=(const range_iterator& other) const {
     return !((*this) == other);
   }
 
   /*!
    */
+  [[nodiscard]]
   bool operator!=(const iterator& other) const {
     return !(mIterator == other);
   }
 
   /*!
    */
+  [[nodiscard]]
   value_type operator*() const {
     while(!mRange->mFilter(*mIterator) && (mRange->end() != mIterator)) {
       ++mIterator;
@@ -90,6 +95,7 @@ public:
 
   /*!
    */
+  [[nodiscard]]
   pointer operator->() const {
     return mIterator.operator->();
   }
@@ -207,6 +213,7 @@ public:
    *
    * @return Iterator pointing to beginning of container
    */
+  [[nodiscard]]
   iterator begin() const {
     return iterator(this, mBegin);
   }
@@ -215,6 +222,7 @@ public:
    *
    * @return Iterator pointing to past end of container
    */
+  [[nodiscard]]
   iterator end() const {
     return iterator(this, mEnd);
   }

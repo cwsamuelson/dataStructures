@@ -35,6 +35,7 @@ private:
   std::map<size_t, std::FILE*> mFileMap;
   std::map<size_t, PageMetadata> mMetaData;
 
+  [[nodiscard]]
   size_t victimize() {
     //lru
     auto min = std::min_element(mMetaData.begin(),
@@ -99,10 +100,12 @@ private:
     mMemoryMap.insert({ page_id, offset });
   }
 
+  [[nodiscard]]
   auto getPageId(size_t idx) const {
     return (idx - (idx % mPageSize)) / mPageSize;
   }
 
+  [[nodiscard]]
   auto getPageOffset(size_t idx) const {
     return idx % mPageSize;
   }

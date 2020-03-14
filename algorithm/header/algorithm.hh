@@ -27,6 +27,7 @@ namespace gsw {
  * must be utilized.
  */
 template<typename T>
+[[nodiscard]]
 static bool are_equal(T f1, T f2) {
   return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon() * std::max({ 1.0, std::fabs(f1), std::fabs(f2) }));
 }
@@ -40,6 +41,7 @@ static bool are_equal(T f1, T f2) {
  * @return Whether f1 and f2 are approximately equal
  */
 template<>
+[[nodiscard]]
 bool are_equal<float>(float f1, float f2) {
   return (std::fabs(f1 - f2) <=
           std::numeric_limits<float>::epsilon() * std::max({ 1.0f, std::fabs(f1), std::fabs(f2) }));
@@ -78,6 +80,7 @@ auto invoke(OBJ obj, MEMBER_FN memfun, Args ...args) {
  */
 template<typename T>
 struct less {
+  [[nodiscard]]
   bool operator()(const T& lhs, const T& rhs) {
     return lhs < rhs;
   }
@@ -94,6 +97,7 @@ struct less {
  * @return The 'distance' between first and last
  */
 template<typename iter>
+[[nodiscard]]
 unsigned long distance(iter first, iter last) {
   unsigned long ret = 0;
 

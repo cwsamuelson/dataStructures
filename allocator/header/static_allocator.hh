@@ -74,6 +74,7 @@ public:
   /*!
    * @todo create subclasses of bad_alloc in order to provide values in throw statements
    */
+  [[nodiscard]]
   pointer allocate(size_type number) {
     size_type caveStart = 0;
     size_type caveSize = 0;
@@ -112,12 +113,14 @@ public:
 
   /*!
    */
+  [[nodiscard]]
   pointer storage() {
     return pointer(mStorage.data());
   }
 
   /*!
    */
+  [[nodiscard]]
   bool free_space(size_type amount = 1) {
     return (storage_size - mIndicator.count()) >= amount;
   }

@@ -59,6 +59,7 @@ public:
   /*!
    * @param other
    */
+  [[nodiscard]]
   unsigned int operator-(const normal_iterator& other) const {
     return mCurrent - other.mCurrent;
   }
@@ -82,6 +83,7 @@ public:
   /*!
    * @param iter
    */
+  [[nodiscard]]
   bool operator==(const normal_iterator& iter) const {
     return mCurrent == iter.mCurrent;
   }
@@ -89,6 +91,7 @@ public:
   /*!
    * @param iter
    */
+  [[nodiscard]]
   bool operator!=(const normal_iterator& iter) const {
     return !((*this) == iter);
   }
@@ -96,6 +99,7 @@ public:
   /*!
    * @param other
    */
+  [[nodiscard]]
   bool operator<(const normal_iterator& other) const {
     return mCurrent < other.mCurrent;
   }
@@ -103,6 +107,7 @@ public:
   /*!
    * @param other
    */
+  [[nodiscard]]
   bool operator>(const normal_iterator& other) const {
     return mCurrent > other.mCurrent;
   }
@@ -110,6 +115,7 @@ public:
   /*!
    *
    */
+  [[nodiscard]]
   reference operator*() const {
     return *mCurrent;
   }
@@ -117,6 +123,7 @@ public:
   /*!
    *
    */
+  [[nodiscard]]
   pointer operator->() const {
     return mCurrent;
   }

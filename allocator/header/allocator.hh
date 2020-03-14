@@ -36,6 +36,7 @@ public:
    *
    * Allocate enough memory for number objects of type T
    */
+  [[nodiscard]]
   pointer allocate(size_type number) {
     return pointer(new unsigned char[number * sizeof(value_type)]);
   }

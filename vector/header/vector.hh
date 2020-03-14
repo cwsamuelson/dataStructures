@@ -239,6 +239,7 @@ public:
    *
    * @return reference to data located at index idx
    */
+  [[nodiscard]]
   reference operator[](size_type idx) {
     using namespace std::string_literals;
 
@@ -256,6 +257,7 @@ public:
    *
    * @return const reference to data located at index idx
    */
+  [[nodiscard]]
   const_reference operator[](size_type idx) const {
     return (*this)[idx];
   }
@@ -264,6 +266,7 @@ public:
    *
    * @return reference to first element
    */
+  [[nodiscard]]
   reference front() {
     return (*this)[0];
   }
@@ -272,6 +275,7 @@ public:
    *
    * @return reference to last element
    */
+  [[nodiscard]]
   reference back() {
     return (*this)[mSize - 1];
   }
@@ -330,6 +334,7 @@ public:
    *
    * @return container size equal to zero
    */
+  [[nodiscard]]
   bool empty() const {
     return mSize == 0;
   }
@@ -338,6 +343,7 @@ public:
    *
    * @return count of currently stored elements
    */
+  [[nodiscard]]
   size_type size() const {
     return mSize;
   }
@@ -346,6 +352,7 @@ public:
    *
    * @return number of elements that can be stored before a resize is necessary
    */
+  [[nodiscard]]
   size_type capacity() const {
     return mCapacity;
   }
@@ -379,6 +386,7 @@ public:
    *
    * @return iterator to the first element of the container
    */
+  [[nodiscard]]
   iterator begin() {
     return Iterator(0);
   }
@@ -387,6 +395,7 @@ public:
    *
    * @return const iterator to the first element of the container
    */
+  [[nodiscard]]
   const iterator cbegin() const {
     return begin();
   }
@@ -395,6 +404,7 @@ public:
    *
    * @return iterator to the last element of the container
    */
+  [[nodiscard]]
   iterator end() {
     return Iterator(mSize);
   }
@@ -403,6 +413,7 @@ public:
    *
    * @return const iterator to the last element of the container
    */
+  [[ndiscard]]
   const iterator cend() const {
     return end();
   }
@@ -413,6 +424,7 @@ public:
    *
    * @return iterator pointing to element at index idx
    */
+  [[nodiscard]]
   iterator Iterator(size_type idx) {
     return iterator(pointer(mData + idx));
   }

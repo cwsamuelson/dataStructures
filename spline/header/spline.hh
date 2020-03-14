@@ -26,8 +26,10 @@ private:
 public:
   spline();
 
+  [[nodiscard]]
   point2d operator()(float p);
 
+  [[nodiscard]]
   point2d gradient(float p);
 };
 

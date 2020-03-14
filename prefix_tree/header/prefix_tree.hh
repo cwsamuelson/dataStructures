@@ -31,6 +31,7 @@ private:
     std::optional<value_type> mData;
   };
 
+  [[nodiscard]]
   node* seek_node(const key_type& key) {
     node* curr = &mRoot;
 
@@ -47,6 +48,7 @@ private:
     return curr;
   }
 
+  [[nodiscard]]
   node const* c_seek_node(const key_type& key) const {
     node const* curr = &mRoot;
 
@@ -101,6 +103,7 @@ public:
     curr->mData = std::make_optional<value_type>(value);
   }
 
+  [[nodiscard]]
   bool contains(const key_type& key) const {
     auto nod = c_seek_node(key);
 
@@ -115,6 +118,7 @@ public:
     }
   }
 
+  [[nodiscard]]
   std::set<value_type> find(const key_type& key) const {
     std::set<value_type> results;
 
@@ -128,6 +132,7 @@ public:
     return results;
   }
 
+  [[nodiscard]]
   size_t count(const key_type& key = key_type()) const {
     size_t count = 0;
 
@@ -146,6 +151,7 @@ public:
     iterator begin
     iterator end*/
 
+  [[nodiscard]]
   bool empty() const {
     return mRoot.mChildren.empty();
   }
