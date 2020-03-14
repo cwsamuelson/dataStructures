@@ -9,7 +9,7 @@
 #include<type_traits>
 #include<cmath>
 
-namespace gsw{
+namespace gsw {
 
 /*! Get the sign of a given number
  *
@@ -18,10 +18,8 @@ namespace gsw{
  * @param t  Integral argument
  */
 template<typename T>
-constexpr
-signed int
-sign( T t ){
-  if( std::signbit( t ) ){
+constexpr signed int sign(T t) {
+  if(std::signbit(t)) {
     return -1;
   } else {
     return 1;
@@ -35,10 +33,8 @@ sign( T t ){
  * @param t  Numeric argument
  */
 template<typename T>
-constexpr
-T
-myAbs( T t ){
-  if( t < 0 ){
+constexpr T myAbs(T t) {
+  if(t < 0) {
     return -t;
   } else {
     return t;
@@ -52,11 +48,9 @@ myAbs( T t ){
  * @tparam U  Type of 'rhs'
  */
 template<typename T, typename U>
-constexpr
-std::common_type_t<T, U>
-gcd( T t, U u ){
+constexpr std::common_type_t<T, U> gcd(T t, U u) {
   //return std::gcd( t, u );
-  while ( u != 0 ){
+  while(u != 0) {
     unsigned r = t % u;
 
     t = u;
@@ -75,12 +69,16 @@ gcd( T t, U u ){
  * Provides compile time ratios, including reduced fractions
  */
 template<size_t N, size_t D>
-class ratio{
+class ratio {
 public:
   typedef size_t value_type;
-  static constexpr value_type numerator = sign( N ) * sign( D ) * myAbs( N ) / gcd( N, D );
-  static constexpr value_type denominator = myAbs( D ) / gcd( N, D );
-  static constexpr double value = double( double( numerator ) / double( denominator ) );
+
+  static constexpr value_type numerator = sign(N) * sign(D) * myAbs(N) / gcd(N, D);
+
+  static constexpr value_type denominator = myAbs(D) / gcd(N, D);
+
+  static constexpr double value = double(double(numerator) / double(denominator));
+
   using type = ratio<numerator, denominator>;
   using invert_type = ratio<denominator, numerator>;
 
@@ -90,7 +88,7 @@ public:
    * to a double value
    */
   constexpr
-  operator double() const{
+  operator double() const {
     return value;
   }
 
@@ -107,10 +105,8 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
-  constexpr
-  auto
-  operator*( ratio<NUM, DEN> other ) const{
-    typedef decltype( other ) OTHER;
+  constexpr auto operator*(ratio<NUM, DEN> other) const {
+    typedef decltype(other) OTHER;
 
     return ratio<numerator * OTHER::numerator, denominator * OTHER::denominator>();
   }
@@ -128,10 +124,8 @@ public:
    * Returns object of new ratio type, dependent on this object, and parameter
    */
   template<size_t NUM, size_t DEN>
-  constexpr
-  auto
-  operator/( ratio<NUM, DEN> other ) const{
-    typedef decltype( other ) OTHER;
+  constexpr auto operator/(ratio<NUM, DEN> other) const {
+    typedef decltype(other) OTHER;
 
     return (*this) * typename OTHER::invert_type();
   }
@@ -139,9 +133,7 @@ public:
   /*!
    * @return
    */
-  constexpr
-  auto
-  invert() const{
+  constexpr auto invert() const {
     return invert_type();
   }
 };
@@ -160,11 +152,9 @@ public:
  *
  * @return Number of type T, containing multiplication result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
-constexpr
-T
-operator*( T t, ratio<N, D> r ){
-  return ( t * N ) / D;
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+constexpr T operator*(T t, ratio<N, D> r) {
+  return (t * N) / D;
 }
 
 /*! Value of ratio multiplied with a number
@@ -181,11 +171,9 @@ operator*( T t, ratio<N, D> r ){
  *
  * @return Number of type T, containing multiplication result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
-constexpr
-T
-operator*( ratio<N, D> r, T t ){
-  return ( t * N ) / D;
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+constexpr T operator*(ratio<N, D> r, T t) {
+  return (t * N) / D;
 }
 
 /*! Value of number divided by ratio
@@ -202,13 +190,11 @@ operator*( ratio<N, D> r, T t ){
  *
  * @return Number of type T, containing division result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type>
-constexpr
-T
-operator/( T t, ratio<N, D> r ){
-  using R = decltype( r );
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+constexpr T operator/(T t, ratio<N, D> r) {
+  using R = decltype(r);
 
-  return ( t * typename R::invert_type() );
+  return (t * typename R::invert_type());
 }
 
 /*! Value of ratio divided by number
@@ -225,13 +211,11 @@ operator/( T t, ratio<N, D> r ){
  *
  * @return Number of type T, containing division result
  */
-template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D> >::value>::type >
-constexpr
-T
-operator/( ratio<N, D> r, T t ){
-  using R = decltype( r );
+template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
+constexpr T operator/(ratio<N, D> r, T t) {
+  using R = decltype(r);
 
-  return ( R::numerator / ( t * R::denominator ) );
+  return (R::numerator / (t * R::denominator));
 }
 
 /*! Check 'actual' equality of 2 ratios
@@ -246,13 +230,10 @@ operator/( ratio<N, D> r, T t ){
  *
  * 'Actual' equality determined by value property
  */
-template<size_t N1, size_t D1,
-         size_t N2, size_t D2>
-constexpr
-bool
-operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
-  typedef decltype( r1 ) R1;
-  typedef decltype( r2 ) R2;
+template<size_t N1, size_t D1, size_t N2, size_t D2>
+constexpr bool operator==(ratio<N1, D1> r1, ratio<N2, D2> r2) {
+  typedef decltype(r1) R1;
+  typedef decltype(r2) R2;
 
   return R1::value == R2::value;
 }
@@ -269,35 +250,31 @@ operator==( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
  *
  * 'Actual' inequality determined by value property
  */
-template<size_t N1, size_t D1,
-         size_t N2, size_t D2>
-constexpr
-bool
-operator!=( ratio<N1, D1> r1, ratio<N2, D2> r2 ){
-  return !( r1 == r2 );
+template<size_t N1, size_t D1, size_t N2, size_t D2>
+constexpr bool operator!=(ratio<N1, D1> r1, ratio<N2, D2> r2) {
+  return !(r1 == r2);
 }
 
-template<size_t N, size_t D>
-constexpr double ratio<N, D>::value;
-template<size_t N, size_t D>
-constexpr typename ratio<N, D>::value_type ratio<N, D>::numerator;
-template<size_t N, size_t D>
-constexpr typename ratio<N, D>::value_type ratio<N, D>::denominator;
+template<size_t N, size_t D> constexpr double ratio<N, D>::value;
 
-using unity = ratio<1,          1>;
+template<size_t N, size_t D> constexpr typename ratio<N, D>::value_type ratio<N, D>::numerator;
 
-using kilo  = ratio<1000,       1>;
-using mega  = ratio<1000000,    1>;
+template<size_t N, size_t D> constexpr typename ratio<N, D>::value_type ratio<N, D>::denominator;
+
+using unity = ratio<1, 1>;
+
+using kilo  = ratio<1000, 1>;
+using mega  = ratio<1000000, 1>;
 using giga  = ratio<1000000000, 1>;
-using milli = ratio<1,          1000>;
-using micro = ratio<1,          1000000>;
-using nano  = ratio<1,          1000000000>;
+using milli = ratio<1, 1000>;
+using micro = ratio<1, 1000000>;
+using nano  = ratio<1, 1000000000>;
 //using pico  = ratio<1,          1000000000000>;
 //using femto = ratio<1,          1000000000000000>;
 
-using kibi  = ratio<1024,          1>;
-using mebi  = ratio<1048576,       1>;
-using gibi  = ratio<1073741824,    1>;
+using kibi  = ratio<1024, 1>;
+using mebi  = ratio<1048576, 1>;
+using gibi  = ratio<1073741824, 1>;
 //using tebi  = ratio<1099511627776, 1>;
 }
 

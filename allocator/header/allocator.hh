@@ -1,14 +1,14 @@
 #ifndef __ALLOCATOR_HH__
 #define __ALLOCATOR_HH__
 
-namespace gsw{
+namespace gsw {
 
 /*! Basic allocator, using new and delete
  *
  * @tparam T Type of objects allocated and constructed by this allocator
  */
 template<typename T>
-class allocator{
+class allocator {
 public:
   using value_type = T;
   using pointer    = value_type*;
@@ -24,11 +24,11 @@ public:
 
   /*! Copy ctor
    */
-  allocator( const allocator& ) = default;
+  allocator(const allocator&) = default;
 
   /*! Move ctor
    */
-  allocator( allocator&& ) = default;
+  allocator(allocator&&) = default;
 
   /*! Allocate memory
    *
@@ -36,9 +36,8 @@ public:
    *
    * Allocate enough memory for number objects of type T
    */
-  pointer
-  allocate( size_type number ){
-    return pointer( new unsigned char[number * sizeof( value_type )] );
+  pointer allocate(size_type number) {
+    return pointer(new unsigned char[number * sizeof(value_type)]);
   }
 
   /*! Deallocate memory
@@ -49,10 +48,8 @@ public:
    *
    * Deallocate/delete memory previously allocated by this allocator
    */
-  void
-  deallocate( pointer ptr, size_type number ){
-    ( void )number;
-    delete[] ( unsigned char* )( ptr );
+  void deallocate(pointer ptr, size_type) {
+    delete[] (unsigned char*) (ptr);
   }
 };
 

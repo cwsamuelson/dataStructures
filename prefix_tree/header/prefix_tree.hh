@@ -7,21 +7,21 @@
 #include<functional>
 #include<optional>
 
-namespace gsw{
+namespace gsw {
 
 /*!
  * @tparam key
  * @tparam VALUE
  */
 template<typename KEY, typename VALUE>
-class prefix_tree{
+class prefix_tree {
 public:
   using key_type = KEY;
   using value_type = VALUE;
   //using iterator = iter;
 
 private:
-  struct node{
+  struct node {
     // using a map slows down processing
     // managing some kind of array may speed things up (but also increase memory footprint)
     // maybe should provide facilities to do either?
@@ -31,15 +31,14 @@ private:
     std::optional<value_type> mData;
   };
 
-  node*
-  seek_node( const key_type& key ){
+  node* seek_node(const key_type& key) {
     node* curr = &mRoot;
 
-    for( auto ch : key ){
+    for(auto ch : key) {
       //c++20 provides a contains facility
       //if( curr->mChildren.contains( ch ) ){
-      if( curr->mChildren.count( ch ) > 0 ){
-        curr = &curr->mChildren.at( ch );
+      if(curr->mChildren.count(ch) > 0) {
+        curr = &curr->mChildren.at(ch);
       } else {
         return nullptr;
       }
@@ -48,15 +47,14 @@ private:
     return curr;
   }
 
-  node const*
-  c_seek_node( const key_type& key ) const{
+  node const* c_seek_node(const key_type& key) const {
     node const* curr = &mRoot;
 
-    for( auto ch : key ){
+    for(auto ch : key) {
       //c++20 provides a contains facility
       //if( curr->mChildren.contains( ch ) ){
-      if( curr->mChildren.count( ch ) > 0 ){
-        curr = &curr->mChildren.at( ch );
+      if(curr->mChildren.count(ch) > 0) {
+        curr = &curr->mChildren.at(ch);
       } else {
         return nullptr;
       }
@@ -65,27 +63,26 @@ private:
     return curr;
   }
 
-  void
-  explore( const key_type& key, std::function<void(node const*)> callback ) const{
+  void explore(const key_type& key, std::function<void(node const*)> callback) const {
     std::queue<node const*> node_que;
-    node const* n = c_seek_node( key );
+    node const* n = c_seek_node(key);
 
-    if( !n ){
+    if(!n) {
       return;
     }
 
-    node_que.push( n );
+    node_que.push(n);
 
-    while( !node_que.empty() ){
+    while(!node_que.empty()) {
       node const* ptr = node_que.front();
       node_que.pop();
 
-      callback( ptr );
+      callback(ptr);
 
-      std::for_each( ptr->mChildren.begin(), ptr->mChildren.end(),
-                     [&]( const auto& pair ){
-                       node_que.push( &pair.second );
-                     } );
+      std::for_each(ptr->mChildren.begin(), ptr->mChildren.end(), [&](const auto& pair)
+        {
+          node_que.push(&pair.second);
+        });
     }
   }
 
@@ -94,73 +91,66 @@ private:
 public:
   prefix_tree() = default;
 
-  void
-  insert( const key_type& key, const value_type& value ){
+  void insert(const key_type& key, const value_type& value) {
     node* curr = &mRoot;
 
-    for( auto ch : key ){
+    for(auto ch : key) {
       curr = &curr->mChildren[ch];
     }
 
-    curr->mData = std::make_optional<value_type>( value );
+    curr->mData = std::make_optional<value_type>(value);
   }
 
-  bool
-  contains( const key_type& key ) const{
-    auto nod = c_seek_node( key );
+  bool contains(const key_type& key) const {
+    auto nod = c_seek_node(key);
 
     return nod ? nod->mData.has_value() : false;
   }
 
-  void
-  erase( const key_type& key ){
-    node* nod = seek_node( key );
+  void erase(const key_type& key) {
+    node* nod = seek_node(key);
 
-    if( nod ){
+    if(nod) {
       nod->mData.reset();
     }
   }
 
-  std::set<value_type>
-  find( const key_type& key ) const{
+  std::set<value_type> find(const key_type& key) const {
     std::set<value_type> results;
 
-    explore( key,
-      [&]( node const* ptr ){
-        if( ptr && ptr->mData.has_value() ){
-          results.insert( ptr->mData.value() );
+    explore(key, [&](node const* ptr)
+      {
+        if(ptr && ptr->mData.has_value()) {
+          results.insert(ptr->mData.value());
         }
-      } );
+      });
 
     return results;
   }
 
-  size_t
-  count( const key_type& key = key_type() ) const{
+  size_t count(const key_type& key = key_type()) const {
     size_t count = 0;
 
-    explore( key,
-      [&]( node const* ptr ){
-        if( ptr && ptr->mData.has_value() ){
+    explore(key, [&](node const* ptr)
+      {
+        if(ptr && ptr->mData.has_value()) {
           ++count;
         }
-      } );
+      });
 
     return count;
   }
 
-/*value_type get
-  value_type getBest
-  iterator begin
-  iterator end*/
+  /*value_type get
+    value_type getBest
+    iterator begin
+    iterator end*/
 
-  bool
-  empty() const{
+  bool empty() const {
     return mRoot.mChildren.empty();
   }
 
-  void
-  clear(){
+  void clear() {
     mRoot.mChildren.clear();
     mRoot.mData.reset();
   }

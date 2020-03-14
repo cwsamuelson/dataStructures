@@ -6,7 +6,7 @@
 
 namespace gsw {
 
-struct point2d{
+struct point2d {
   float x;
   float y;
 };
@@ -14,9 +14,8 @@ struct point2d{
 /** Catmull-Rom
  * maybe take a polynomial as an argument?
  */
- //@todo: looping?
-class spline
-{
+//@todo: looping?
+class spline {
 private:
   std::vector<point2d> mPoints;
   gsw::polynomial mPoly0;
@@ -27,11 +26,9 @@ private:
 public:
   spline();
 
-  point2d
-  operator()(float p);
+  point2d operator()(float p);
 
-  point2d
-  gradient(float p);
+  point2d gradient(float p);
 };
 
 }

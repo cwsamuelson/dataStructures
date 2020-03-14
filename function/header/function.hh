@@ -9,7 +9,7 @@
 
 #include<tuple.hh>
 
-namespace gsw{
+namespace gsw {
 
 template<typename T>
 class function;
@@ -23,32 +23,32 @@ class function;
  * Function pointer wrapper
  */
 template<typename R, typename ...Args>
-class function<R( Args... )>{
+class function<R(Args...)> {
 public:
-  typedef R( *func )( Args... );
+  typedef R( * func )(Args...);
+
   typedef R result;
+
   typedef tuple<Args...> args;
 
 private:
-  class interface{
+  class interface {
   public:
-      virtual
-      result
-      operator()( Args... ) = 0;
+    virtual result operator()(Args...) = 0;
   };
 
   template<typename T>
-  class wrapper : public interface{
+  class wrapper : public interface {
   private:
     T mUnder;
+
   public:
-    wrapper( const T& t )
-      : mUnder( t ){
+    wrapper(const T& t)
+            : mUnder(t) {
     }
 
-    result
-    operator()( Args... args ){
-      return mUnder( std::forward<Args>( args )... );
+    result operator()(Args... args) {
+      return mUnder(std::forward<Args>(args)...);
     }
   };
 
@@ -66,8 +66,8 @@ public:
    * Store provided function pointer
    */
   template<typename T>
-  function( const T& t )
-    : f( t ){
+  function(const T& t)
+          : f(t) {
   }
 
   /*! Function call operator
@@ -76,9 +76,8 @@ public:
    *
    * Call stored function with provided arguments
    */
-  result
-  operator()( Args... args ){
-    return f->operator()( std::forward<Args>( args )... );
+  result operator()(Args... args) {
+    return f->operator()(std::forward<Args>(args)...);
   }
 
   /*! Copy assignment operator
@@ -87,8 +86,7 @@ public:
    *
    * Store the function pointer stored in rhs
    */
-  function&
-  operator=( const function& rhs ){
+  function& operator=(const function& rhs) {
     f = rhs.f;
     return *this;
   }
@@ -100,17 +98,15 @@ public:
    * Store function pointer F
    */
   template<typename T>
-  function&
-  operator=( const T& t ){
-    f = std::make_shared<wrapper<T> >( t );
+  function& operator=(const T& t) {
+    f = std::make_shared<wrapper<T>>(t);
 
     return *this;
   }
 
   template<typename R1, typename ...Args1>
-  function&
-  operator=( R1(*t)(Args...) ){
-    f = std::make_shared<wrapper<R1(*)(Args...)> >( t );
+  function& operator=(R1(* t)(Args...)) {
+    f = std::make_shared<wrapper<R1(*)(Args...)>>(t);
 
     return *this;
   }

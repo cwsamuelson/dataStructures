@@ -9,7 +9,7 @@
 
 #include<unit.hh>
 
-namespace gsw{
+namespace gsw {
 
 typedef unsigned long long under_type;
 
@@ -21,19 +21,21 @@ typedef unsigned long long under_type;
  * is simultaneously a different type.
  */
 template<size_t F>
-class time_type : public time<under_type, metric, ratio<F, 1> >{
+class time_type : public time<under_type, metric, ratio<F, 1>> {
 public:
-  typedef time<under_type, metric, ratio<F, 1> > base;
+  typedef time<under_type, metric, ratio<F, 1>> base;
 
   constexpr time_type()
-    : base(){
+          : base() {
   }
-  constexpr time_type( under_type ut )
-    : base( ut ){
+
+  constexpr time_type(under_type ut)
+          : base(ut) {
   }
+
   template<typename D, typename F_t>
-  constexpr time_type( const typename base::template other_type<metric, D, F_t>& other )
-    : base( other ){
+  constexpr time_type(const typename base::template other_type<metric, D, F_t>& other)
+          : base(other) {
   }
 };
 
@@ -45,45 +47,31 @@ using week   = time_type<60 * 60 * 24 * 7>;
 using month  = time_type<60 * 60 * 24 * 7 * 4>;
 using year   = time_type<60 * 60 * 24 * 365>;
 
-constexpr
-second
-operator""_s( under_type val ){
+constexpr second operator ""_s(under_type val) {
   return val;
 }
 
-constexpr
-minute
-operator""_m( under_type val ){
+constexpr minute operator ""_m(under_type val) {
   return val;
 }
 
-constexpr
-hour
-operator""_h( under_type val ){
+constexpr hour operator ""_h(under_type val) {
   return val;
 }
 
-constexpr
-day
-operator""_d( under_type val ){
+constexpr day operator ""_d(under_type val) {
   return val;
 }
 
-constexpr
-week
-operator""_w( under_type val ){
+constexpr week operator ""_w(under_type val) {
   return val;
 }
 
-constexpr
-month
-operator""_M( under_type val ){
+constexpr month operator ""_M(under_type val) {
   return val;
 }
 
-constexpr
-year
-operator""_y( under_type val ){
+constexpr year operator ""_y(under_type val) {
   return val;
 }
 
@@ -100,9 +88,8 @@ operator""_y( under_type val ){
  * @return
  */
 template<typename OSTREAM>
-auto&
-output( OSTREAM& os, under_type t, const std::string& type ){
-  return ( os << t << " " << type );
+auto& output(OSTREAM& os, under_type t, const std::string& type) {
+  return (os << t << " " << type);
 }
 
 /*! Stream insertion operator
@@ -122,29 +109,28 @@ output( OSTREAM& os, under_type t, const std::string& type ){
  *
  */
 template<typename OSTREAM, size_t F>
-auto&
-operator<<( OSTREAM& os, const time_type<F>& tt ){
+auto& operator<<(OSTREAM& os, const time_type<F>& tt) {
   std::string type;
 
-  if ( F == second::factor_type::value ){
+  if(F == second::factor_type::value) {
     type = "seconds";
-  } else if ( F == minute::factor_type::value ){
+  } else if(F == minute::factor_type::value) {
     type = "minutes";
-  } else if ( F == hour::factor_type::value ){
+  } else if(F == hour::factor_type::value) {
     type = "hours";
-  } else if ( F == day::factor_type::value ){
+  } else if(F == day::factor_type::value) {
     type = "days";
-  } else if ( F == week::factor_type::value ){
+  } else if(F == week::factor_type::value) {
     type = "weeks";
-  } else if ( F == month::factor_type::value ){
+  } else if(F == month::factor_type::value) {
     type = "months";
-  } else if ( F == year::factor_type::value ){
+  } else if(F == year::factor_type::value) {
     type = "years";
   } else {
     type = "time units";
   }
 
-  return output( os, tt.getValue(), type );
+  return output(os, tt.getValue(), type);
 }
 
 /*! Stream extraction operator
@@ -164,28 +150,27 @@ operator<<( OSTREAM& os, const time_type<F>& tt ){
  *
  */
 template<size_t F, typename ISTREAM>
-auto&
-operator>>( ISTREAM& is, time_type<F>& tu ){
+auto& operator>>(ISTREAM& is, time_type<F>& tu) {
   long long val;
   std::string str;
 
   is >> val;
   is >> str;
 
-  if( str == "seconds" ){
-    tu = second( val );
-  } else if( str == "minutes" ){
-    tu = minute( val );
-  } else if( str == "hours" ){
-    tu = hour( val );
-  } else if( str == "days" ){
-    tu = day( val );
-  } else if( str == "weeks" ){
-    tu = week( val );
-  } else if( str == "months" ){
-    tu = month( val );
-  } else if( str == "years" ){
-    tu = year( val );
+  if(str == "seconds") {
+    tu = second(val);
+  } else if(str == "minutes") {
+    tu = minute(val);
+  } else if(str == "hours") {
+    tu = hour(val);
+  } else if(str == "days") {
+    tu = day(val);
+  } else if(str == "weeks") {
+    tu = week(val);
+  } else if(str == "months") {
+    tu = month(val);
+  } else if(str == "years") {
+    tu = year(val);
   }
 
   return is;
@@ -195,16 +180,25 @@ operator>>( ISTREAM& is, time_type<F>& tu ){
  *
  * Interacts with time types to increment the current date appropriately
  */
-class date{
+class date {
 private:
   day mDay;
   year mYear;
-  static constexpr unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30,
-                                                31, 31, 30, 31, 30, 31 };
-  static constexpr char monthNames[][12] = { "January", "February", "March",
-                                             "April", "May", "June", "July",
-                                             "August", "September", "October",
-                                             "November", "December" };
+
+  static constexpr unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+  static constexpr char monthNames[][12] = { "January",
+                                             "February",
+                                             "March",
+                                             "April",
+                                             "May",
+                                             "June",
+                                             "July",
+                                             "August",
+                                             "September",
+                                             "October",
+                                             "November",
+                                             "December" };
 
 public:
   /*! Ctor
@@ -215,11 +209,11 @@ public:
    *
    * @param y  The year to initialize
    */
-  date( day d, unsigned int mont, year y )
-    : mDay( d )
-    , mYear( y ){
+  date(day d, unsigned int mont, year y)
+          : mDay(d)
+          , mYear(y) {
 
-    for( unsigned int i = 0; i < mont - 1; ++i ){
+    for(unsigned int i = 0; i < mont - 1; ++i) {
       mDay += mMonths[i];
     }
   }
@@ -233,9 +227,8 @@ public:
    * @return Value of result of addition
    */
   template<size_t F>
-  date
-  operator+( const time_type<F>& tu ){
-    date d( *this );
+  date operator+(const time_type<F>& tu) {
+    date d(*this);
 
     d += tu;
 
@@ -251,9 +244,8 @@ public:
    * @return Value of result of subtraction
    */
   template<size_t F>
-  date
-  operator-( const time_type<F>& tu ){
-    date d( *this );
+  date operator-(const time_type<F>& tu) {
+    date d(*this);
 
     d -= tu;
 
@@ -269,10 +261,9 @@ public:
    * @return Reference to result of addition
    */
   template<size_t F>
-  date&
-  operator+=( const time_type<F>& tu ){
+  date& operator+=(const time_type<F>& tu) {
     mDay += tu;
-    if( mDay >= 365ll ){
+    if(mDay >= 365ll) {
       ++mYear;
       mDay -= 365;
     }
@@ -289,10 +280,9 @@ public:
    * @return Reference to result of subtraction
    */
   template<size_t F>
-  date&
-  operator-=( const time_type<F>& tu ){
+  date& operator-=(const time_type<F>& tu) {
     mDay -= tu;
-    while( mDay <= 0ll ){
+    while(mDay <= 0ll) {
       --mYear;
       mDay += 365;
     }
@@ -311,27 +301,24 @@ public:
    * @return Reference to resulting stream object
    */
   template<typename OSTREAM>
-  friend
-  auto&
-  operator<<( OSTREAM& os, date dayt ){
+  friend auto& operator<<(OSTREAM& os, date dayt) {
     unsigned int mont = 0;
 
-    while( dayt.mDay.getValue() > date::mMonths[mont] ){
+    while(dayt.mDay.getValue() > date::mMonths[mont]) {
       dayt.mDay -= date::mMonths[mont++];
     }
 
-    return ( os << dayt.mDay.getValue() << " "
-                << date::monthNames[mont] << " "
-                << dayt.mYear.getValue() );
+    return (os << dayt.mDay.getValue() << " " << date::monthNames[mont] << " " << dayt.mYear.getValue());
   }
 };
 
 constexpr unsigned int date::mMonths[12];
+
 constexpr char date::monthNames[][12];
 
 /*!
  */
-class date_time{
+class date_time {
 private:
   date mDate;
   hour mHour;
@@ -349,11 +336,11 @@ public:
    *
    * @param d
    */
-  date_time( const hour& h, const minute& m, const second& s, const date& d = date( day( 0 ), 0, year( 0 ) ) )
-    : mDate( d )
-    , mHour( h )
-    , mMinute( m )
-    , mSecond( s ){
+  date_time(const hour& h, const minute& m, const second& s, const date& d = date(day(0), 0, year(0)))
+          : mDate(d)
+          , mHour(h)
+          , mMinute(m)
+          , mSecond(s) {
   }
 
   /*! Date-centric ctor
@@ -366,11 +353,11 @@ public:
    *
    * @param s
    */
-  date_time( const date& d, const hour& h = hour( 0 ), const minute& m = minute( 0 ), const second& s = second( 0 ) )
-    : mDate( d )
-    , mHour( h )
-    , mMinute( m )
-    , mSecond( s ){
+  date_time(const date& d, const hour& h = hour(0), const minute& m = minute(0), const second& s = second(0))
+          : mDate(d)
+          , mHour(h)
+          , mMinute(m)
+          , mSecond(s) {
   }
 
   /*! Addition operator
@@ -382,9 +369,8 @@ public:
    * @return
    */
   template<size_t F>
-  date_time
-  operator+( const time_type<F>& tu ){
-    date_time ret( *this );
+  date_time operator+(const time_type<F>& tu) {
+    date_time ret(*this);
 
     ret += tu;
 
@@ -400,22 +386,21 @@ public:
    * @return
    */
   template<size_t F>
-  date_time&
-  operator+=( const time_type<F>& tu ){
-    while( tu.getRaw() > day::factor_type::value ){
-      day one( 1 );
+  date_time& operator+=(const time_type<F>& tu) {
+    while(tu.getRaw() > day::factor_type::value) {
+      day one(1);
       mDate += one;
       tu -= one;
     }
 
     //whatever's left will be hour/min/sec
     //dump it into the time
-    while( tu.getRaw() > hour::factor_type::value ){
+    while(tu.getRaw() > hour::factor_type::value) {
       ++mHour;
       tu -= 3600 / F;
     }
 
-    while( tu.getRaw() > minute::factor_type::value ){
+    while(tu.getRaw() > minute::factor_type::value) {
       ++mMinute;
       tu -= 60 / F;
     }
@@ -436,12 +421,10 @@ public:
    * @return Reference to resulting output stream object
    */
   template<typename OSTREAM>
-  friend
-  auto&
-  operator<<( OSTREAM& os, date_time dt ){
+  friend auto& operator<<(OSTREAM& os, date_time dt) {
     os << dt.mDate << " ";
 
-    return ( os << dt.mHour.getValue() << ":" << dt.mMinute.getValue() << ":" << dt.mSecond.getValue() );
+    return (os << dt.mHour.getValue() << ":" << dt.mMinute.getValue() << ":" << dt.mSecond.getValue());
   }
 };
 

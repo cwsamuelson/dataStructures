@@ -4,9 +4,9 @@
 #include <exception>
 #include <string>
 
-namespace gsw{
+namespace gsw {
 
-class exception : public std::runtime_error{
+class exception : public std::runtime_error {
 private:
   std::string mFile;
   std::string mFunction;
@@ -15,30 +15,31 @@ private:
 
 public:
   exception(std::string file, std::string function, size_t line, std::string message)
-    : std::runtime_error(message + " on line: " + std::to_string(line) + " in function " + function + " and file " + file)
-    , mFile(std::move(file))
-    , mFunction(std::move(function))
-    , mLine(line)
-    , mMessage(std::move(message))
-  {}
+          : std::runtime_error(
+          message + " on line: " + std::to_string(line) + " in function " + function + " and file " + file)
+          , mFile(std::move(file))
+          , mFunction(std::move(function))
+          , mLine(line)
+          , mMessage(std::move(message)) {
+  }
 
   [[nodiscard]]
-  auto file() const{
+  auto file() const {
     return mFile;
   }
 
   [[nodiscard]]
-  auto function() const{
+  auto function() const {
     return mFunction;
   }
 
   [[nodiscard]]
-  auto line() const{
+  auto line() const {
     return mLine;
   }
 
   [[nodiscard]]
-  auto message() const{
+  auto message() const {
     return mMessage;
   }
 };

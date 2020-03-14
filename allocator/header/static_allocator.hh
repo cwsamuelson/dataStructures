@@ -6,7 +6,7 @@
 
 #include<mem_exceptions.hh>
 
-namespace gsw{
+namespace gsw {
 
 /* In research for stateful allocators, I found this:
   Do you have any suggestions for how to do the sort of thing I'm trying to do? That is, how do I include allocated-type-specific state in my allocator?
@@ -39,17 +39,20 @@ namespace gsw{
  * allocation request is made in excess of N.
  */
 template<typename T, size_t N>
-class static_allocator{
+class static_allocator {
 public:
   using value_type = T;
   using pointer    = value_type*;
   using reference  = value_type&;
   using size_type  = unsigned long long;
+
   static const size_type storage_size = N;
 
 private:
-  static const size_type ptrdiff = sizeof( value_type );
+  static const size_type ptrdiff = sizeof(value_type);
+
   static const size_type block_size = storage_size * ptrdiff;
+
   using ind_type = std::bitset<storage_size>;
 
   std::array<unsigned char, block_size> mStorage;
@@ -62,32 +65,31 @@ public:
 
   /*! Copy ctor
    */
-  static_allocator( const static_allocator& ) = default;
+  static_allocator(const static_allocator&) = default;
 
   /*! Move ctor
    */
-  static_allocator( static_allocator&& ) = default;
+  static_allocator(static_allocator&&) = default;
 
   /*!
    * @todo create subclasses of bad_alloc in order to provide values in throw statements
    */
-  pointer
-  allocate( size_type number ){
+  pointer allocate(size_type number) {
     size_type caveStart = 0;
     size_type caveSize = 0;
 
-    if( number > ( storage_size - mIndicator.count() ) ){
+    if(number > (storage_size - mIndicator.count())) {
       throw std::bad_alloc();
     }
 
-    for( size_type index = 0; index < storage_size; ++index ){
-      if( !mIndicator[index] ){
-        if( ++caveSize == number ){
-          for( size_type i = 0; i < number; ++i ){
-            mIndicator.set( i + caveStart );
+    for(size_type index = 0; index < storage_size; ++index) {
+      if(!mIndicator[index]) {
+        if(++caveSize == number) {
+          for(size_type i = 0; i < number; ++i) {
+            mIndicator.set(i + caveStart);
           }
 
-          return pointer( mStorage.data() + ( caveStart * ptrdiff ) );
+          return pointer(mStorage.data() + (caveStart * ptrdiff));
         }
       } else {
         caveStart = index + 1;
@@ -100,27 +102,24 @@ public:
 
   /*!
    */
-  void
-  deallocate( pointer ptr, size_type number ){
-    unsigned long start = ( ( unsigned char* )ptr - mStorage.data() ) / ptrdiff;
+  void deallocate(pointer ptr, size_type number) {
+    unsigned long start = ((unsigned char*) ptr - mStorage.data()) / ptrdiff;
 
-    for( unsigned int i = 0; i < number; ++i ){
-      mIndicator.reset( i + start );
+    for(unsigned int i = 0; i < number; ++i) {
+      mIndicator.reset(i + start);
     }
   }
 
   /*!
    */
-  pointer
-  storage(){
-    return pointer( mStorage.data() );
+  pointer storage() {
+    return pointer(mStorage.data());
   }
 
   /*!
    */
-  bool
-  free_space( size_type amount = 1 ){
-    return ( storage_size - mIndicator.count() ) >= amount;
+  bool free_space(size_type amount = 1) {
+    return (storage_size - mIndicator.count()) >= amount;
   }
 };
 

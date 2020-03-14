@@ -10,7 +10,7 @@
 #include<map>
 #include<string>
 
-namespace gsw{
+namespace gsw {
 
 /*! Mathematical equation
  *
@@ -25,98 +25,80 @@ namespace gsw{
  *
  * @todo implement the commutivity of operators (particular with doubles)
  */
-class equation{
+class equation {
 public:
   using data = std::map<std::string, double>;
 
 private:
-  struct operation{
-    virtual
-    double
-    evaluate( const data& variables ) const = 0;
+  struct operation {
+    virtual double evaluate(const data& variables) const = 0;
 
-    virtual
-    equation
-    derive( std::string var ) const = 0;
+    virtual equation derive(std::string var) const = 0;
   };
 
   using op_ptr = std::shared_ptr<operation>;
 
-  struct constant : public operation{
+  struct constant : public operation {
     double value;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct variable : public operation{
+  struct variable : public operation {
     std::string name;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct multiplication : public operation{
+  struct multiplication : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct division : public operation{
+  struct division : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct addition : public operation{
+  struct addition : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct subtraction : public operation{
+  struct subtraction : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct inversion : public operation{
+  struct inversion : public operation {
     op_ptr operand;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct exponentiation : public operation{
+  struct exponentiation : public operation {
   private:
     bool use_power;
 
@@ -124,27 +106,23 @@ private:
     op_ptr base;
     op_ptr exponent;
 
-    exponentiation( bool power = false );
+    exponentiation(bool power = false);
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  struct logarithm : public operation{
+  struct logarithm : public operation {
     op_ptr base;
     op_ptr value;
 
-    double
-    evaluate( const data& variables ) const;
+    double evaluate(const data& variables) const;
 
-    equation
-    derive( std::string var ) const;
+    equation derive(std::string var) const;
   };
 
-  equation( const op_ptr value );
+  equation(const op_ptr value);
 
   op_ptr mValue;
 
@@ -157,14 +135,15 @@ public:
    * distinguish between when to use the power rule and exponentiation rule for
    * derivatives
    */
-  class const_eq{
+  class const_eq {
   private:
-    const_eq( const const_ptr value );
+    const_eq(const const_ptr value);
 
     const_ptr mValue;
 
   public:
-    friend const_eq operator""_cvar( long double value );
+    friend const_eq operator ""_cvar(long double value);
+
     friend equation;
   };
 
@@ -174,8 +153,7 @@ public:
    *
    * @return an equation that represents the multiplication of this and multiplicand
    */
-  equation
-  operator*( const equation& multiplicand ) const;
+  equation operator*(const equation& multiplicand) const;
 
   /*! Multiplication operator
    *
@@ -183,8 +161,7 @@ public:
    *
    * @return an equation representing the multiplication of this with d
    */
-  equation
-  operator*( double d ) const;
+  equation operator*(double d) const;
 
   /*! Division operator
    *
@@ -192,8 +169,7 @@ public:
    *
    * @return an equation that represents the division of this by dividend
    */
-  equation
-  operator/( const equation& dividend ) const;
+  equation operator/(const equation& dividend) const;
 
   /*! Division operator
    *
@@ -201,8 +177,7 @@ public:
    *
    * @return an equation representing the division of this by d
    */
-  equation
-  operator/( double d ) const;
+  equation operator/(double d) const;
 
   /*! Addition operator
    *
@@ -210,8 +185,7 @@ public:
    *
    * @return an equation that represents the division of this by dividend
    */
-  equation
-  operator+( const equation& operand ) const;
+  equation operator+(const equation& operand) const;
 
   /*! Addition operator
    *
@@ -219,8 +193,7 @@ public:
    *
    * @return an equation representing the addition of d to this
    */
-  equation
-  operator+( double d ) const;
+  equation operator+(double d) const;
 
   /*! Subtraction operator
    *
@@ -228,8 +201,7 @@ public:
    *
    * @return an equation that represents the subtraction of operand from this
    */
-  equation
-  operator-( const equation& operand ) const;
+  equation operator-(const equation& operand) const;
 
   /*! Subtraction operator
    *
@@ -237,15 +209,13 @@ public:
    *
    * @return an equation representing the subtraction of d from this
    */
-  equation
-  operator-( double d ) const;
+  equation operator-(double d) const;
 
   /*! Negation operator
    *
    * @return negative of this
    */
-  equation
-  operator-() const;
+  equation operator-() const;
 
   /*! Evaluation operator
    *
@@ -255,25 +225,21 @@ public:
    *
    * Implementation provided here to assist with inlining
    */
-  double
-  operator()( const data& variables ) const{
-    return evaluate( variables );
+  double operator()(const data& variables) const {
+    return evaluate(variables);
   }
 
   /*!
    */
-  equation
-  pow( const equation& operand ) const;
+  equation pow(const equation& operand) const;
 
   /*!
    */
-  equation
-  pow( const const_eq& operand ) const;
+  equation pow(const const_eq& operand) const;
 
   /*!
    */
-  equation
-  pow( double operand ) const;
+  equation pow(double operand) const;
 
   /*! Take the derivative of this wrt var
    *
@@ -283,13 +249,11 @@ public:
    *
    * @todo fix finding repeated derivatives of exponents
    */
-  equation
-  derive( std::string var, unsigned long long order = 1 ) const;
+  equation derive(std::string var, unsigned long long order = 1) const;
 
   /*!
    */
-  equation
-  integrate( unsigned long long min = 0, unsigned long long max = 0 ) const;
+  equation integrate(unsigned long long min = 0, unsigned long long max = 0) const;
 
   /*! Evaluate this function
    *
@@ -297,8 +261,7 @@ public:
    *
    * @return This function evaluated with the given variable names and values
    */
-  double
-  evaluate( const data& variables ) const;
+  double evaluate(const data& variables) const;
 
   /*!
    *
@@ -311,13 +274,15 @@ public:
    *    variables? (i.e. (("x"_evar + "y"_evar) = 0).solve({{"x", 1}} == map<string, double>{{"y", -1}}) )
    *    (("x"_evar + "y"_evar.pow(2)) = 0).solve({{"x", -1}} == map<string, double>{{"y", -1}, {"y", 1}}) )
    */
-  std::set<data>
-  solve( const data& variables ) const;
+  std::set<data> solve(const data& variables) const;
 
-  friend equation operator""_evar( const char* name, size_t sz );
-  friend equation operator""_evar( long double value );
-  friend const_eq operator""_cvar( long double value );
-  friend equation log( const equation& b, const equation& eq );
+  friend equation operator ""_evar(const char* name, size_t sz);
+
+  friend equation operator ""_evar(long double value);
+
+  friend const_eq operator ""_cvar(long double value);
+
+  friend equation log(const equation& b, const equation& eq);
 };
 
 /*! Equation string
@@ -328,8 +293,7 @@ public:
  *
  * @return Constant or variable equation, depending on data at name
  */
-equation
-operator""_evar( const char* name, size_t sz );
+equation operator ""_evar(const char* name, size_t sz);
 
 /*! Constant value equation
  *
@@ -337,8 +301,7 @@ operator""_evar( const char* name, size_t sz );
  *
  * @return Constant value wrapper
  */
-equation
-operator""_evar( long double value );
+equation operator ""_evar(long double value);
 
 /*! Constant value equation
  *
@@ -351,8 +314,7 @@ operator""_evar( long double value );
  * equation::pow means the power rule will be utilized when taking the
  * derivative of the return value from pow.
  */
-equation::const_eq
-operator""_cvar( long double value );
+equation::const_eq operator ""_cvar(long double value);
 
 /*! Logarithm of eq with base b
  *
@@ -362,11 +324,12 @@ operator""_cvar( long double value );
  *
  * @return Equation representing log base b of eq
  */
-equation
-log( const equation& b, const equation& eq );
+equation log(const equation& b, const equation& eq);
 
-const equation e_evar  = "2.718281828459"_evar;
+const equation e_evar = "2.718281828459"_evar;
+
 const equation pi_evar = "3.141592653589"_evar;
+
 const equation gr_evar = "1.61803398875"_evar;
 
 }

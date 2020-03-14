@@ -4,10 +4,10 @@
 #include <mutex>
 #include <memory>
 
-namespace gsw{
+namespace gsw {
 
 template<typename T, typename M = std::mutex, template<typename> typename L = std::lock_guard>
-class locked_resource{
+class locked_resource {
 public:
   using value_type = T;
   using resource_type = value_type;
@@ -15,22 +15,23 @@ public:
   using mutex_type = M;
   using lock_type = L<mutex_type>;
 
-  class proxy{
+  class proxy {
     friend class locked_resource;
+
     ptr_type mRef;
     lock_type mLock;
 
     proxy(ptr_type in, mutex_type& m)
-      : mRef(in)
-      , mLock(m)
-    {}
+            : mRef(in)
+            , mLock(m) {
+    }
 
   public:
-    auto& operator*(){
+    auto& operator*() {
       return *mRef;
     }
 
-    auto operator->(){
+    auto operator->() {
       return mRef;
     }
   };
@@ -41,17 +42,16 @@ private:
 
 public:
   locked_resource()
-    : mData(std::make_shared<resource_type>())
-  {}
+          : mData(std::make_shared<resource_type>()) {
+  }
 
   template<typename ...Args>
-  explicit
-  locked_resource(Args... args)
-    : mData(std::make_shared<resource_type>(std::forward<Args>(args)...))
-  {}
+  explicit locked_resource(Args... args)
+          : mData(std::make_shared<resource_type>(std::forward<Args>(args)...)) {
+  }
 
-  proxy get(){
-    return {mData, mMutex};
+  proxy get() {
+    return { mData, mMutex };
   }
 };
 

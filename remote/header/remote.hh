@@ -1,7 +1,7 @@
 #ifndef GALACTICSTRUCTURES_REMOTE_HH
 #define GALACTICSTRUCTURES_REMOTE_HH
 
-class remote{
+class remote {
 };
 
 #endif //GALACTICSTRUCTURES_REMOTE_HH

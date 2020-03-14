@@ -8,7 +8,7 @@
  * @example test-enumerator.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! Container wrapper that provides iterators with counters
  *
@@ -22,24 +22,24 @@ namespace gsw{
  * dereferencing the underlying iterator.
  */
 template<typename container_t>
-class enumerator{
+class enumerator {
 public:
   using iterator_type  = std::conditional_t<std::is_const_v<container_t>,
-                                          typename container_t::const_iterator,
-                                          typename container_t::iterator>;
+                                            typename container_t::const_iterator,
+                                            typename container_t::iterator>;
   using pointer_type   = std::conditional_t<std::is_const_v<container_t>,
-                                          typename container_t::const_pointer,
-                                          typename container_t::pointer>;
+                                            typename container_t::const_pointer,
+                                            typename container_t::pointer>;
   using reference_type = std::conditional_t<std::is_const_v<container_t>,
-                                          typename container_t::const_reference,
-                                          typename container_t::reference>;
+                                            typename container_t::const_reference,
+                                            typename container_t::reference>;
 
   /*! Iterator wrapper
    *
    * Helper class that forwards increment, comparison, and deref calls to the
    * underlying object, and provides an index/counter as well.
    */
-  class enumerator_iter{
+  class enumerator_iter {
   public:
     size_t mIndex;
     iterator_type mIter;
@@ -48,9 +48,7 @@ public:
      *
      * @return Reference to modified iter
      */
-    constexpr
-    auto
-    operator++(){
+    constexpr auto operator++() {
       ++mIndex;
       ++mIter;
 
@@ -63,9 +61,7 @@ public:
      *
      * @return Whether this is not-equal to iter
      */
-    constexpr
-    bool
-    operator!=( const iterator_type& iter ) const{
+    constexpr bool operator!=(const iterator_type& iter) const {
       return mIter != iter;
     }
 
@@ -73,10 +69,8 @@ public:
      *
      * @return Pair of counter and reference to dereffed iterator
      */
-    constexpr
-    std::pair<size_t, reference_type>
-    operator*(){
-      return {mIndex, *mIter};
+    constexpr std::pair<size_t, reference_type> operator*() {
+      return { mIndex, *mIter };
     }
   };
 
@@ -88,29 +82,24 @@ public:
    *
    * @param c Refrence to container to wrap
    */
-  constexpr
-  enumerator( container_t& c )
-    : mContainer( c ){
+  constexpr enumerator(container_t& c)
+          : mContainer(c) {
   }
 
   /*! Get beginning iterator
    *
    * @return Iterator wrapper providing access to underlying container
    */
-  constexpr
-  enumerator_iter
-  begin(){
-    return {0, std::begin( mContainer )};
+  constexpr enumerator_iter begin() {
+    return { 0, std::begin(mContainer) };
   }
 
   /*! Get ending iterator
    *
    * @return Iterator wrapper providing access to underlying end.
    */
-  constexpr
-  auto
-  end(){
-    return std::end( mContainer );
+  constexpr auto end() {
+    return std::end(mContainer);
   }
 };
 
@@ -123,10 +112,8 @@ public:
  * @return Container wrapper whose iterators will provide access to c
  */
 template<typename container_t>
-constexpr
-auto
-enumerate( container_t& c ){
-  return enumerator( c );
+constexpr auto enumerate(container_t& c) {
+  return enumerator(c);
 }
 
 }

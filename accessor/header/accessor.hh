@@ -7,7 +7,7 @@
 
 #include<functional>
 
-namespace gsw{
+namespace gsw {
 
 /*! Accessor to allow controlled access to internal members
  *
@@ -20,7 +20,7 @@ namespace gsw{
  * preparation before assignment.
  */
 template<typename T>
-class accessor{
+class accessor {
 public:
   using value_type = T;
   using reference = value_type&;
@@ -30,7 +30,7 @@ public:
    *
    * Type of callback that will be called when this is assigned to.
    */
-  using callback = std::function<bool( value_type )>;
+  using callback = std::function<bool(value_type)>;
 
 private:
   reference mRef;
@@ -47,20 +47,20 @@ public:
    * assigned to.  The callback dictates whether assignment will actually occur
    * based upon the value that was to be assigned.
    */
-  accessor( reference ref, callback cb )
-    : mRef( ref )
-    , mcb( cb ){
+  accessor(reference ref, callback cb)
+          : mRef(ref)
+          , mcb(cb) {
   }
 
   /*! Value_type operator allowing usage as raw stored type
    */
-  operator value_type(){
+  operator value_type() {
     return mRef;
   }
 
   /*!
    */
-  operator const value_type() const{
+  operator const value_type() const {
     return mRef;
   }
 
@@ -73,9 +73,8 @@ public:
    * Conditionally assigns new value to stored reference, based upon the result
    * of the callback function provided at construction.
    */
-  reference
-  operator=( const_reference cref ){
-    if( mcb( cref ) ){
+  reference operator=(const_reference cref) {
+    if(mcb(cref)) {
       mRef = cref;
     }
 
@@ -91,10 +90,9 @@ public:
    * Conditionally moves new value to stored reference, based upon the result
    * of the callback function provided at construction.
    */
-  reference
-  operator=( value_type&& other ){
-    if( mcb( other ) ){
-      mRef = std::move( other );
+  reference operator=(value_type&& other) {
+    if(mcb(other)) {
+      mRef = std::move(other);
     }
 
     return mRef;

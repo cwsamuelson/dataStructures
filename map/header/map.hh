@@ -16,12 +16,12 @@
 #include<allocator_traits.hh>
 #include<allocator.hh>
 
-namespace gsw{
+namespace gsw {
 
-class keyNotFoundException : public std::out_of_range{
+class keyNotFoundException : public std::out_of_range {
 public:
   keyNotFoundException()
-    : std::out_of_range( "Requested key not found!" ){
+          : std::out_of_range("Requested key not found!") {
   }
 };
 
@@ -35,8 +35,8 @@ public:
  *
  * @tparam ALLOC type of allocator to use
  */
-template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY>, typename ALLOC = allocator<tuple<KEY, VALUE> > >
-class map{
+template<typename KEY, typename VALUE, typename COMPARE = std::less<KEY>, typename ALLOC = allocator<tuple<KEY, VALUE>>>
+class map {
 public:
   using key_type     = KEY;
   using map_type     = VALUE;
@@ -48,35 +48,33 @@ public:
 
 private:
   vector<storage_type, alloc> mData;
+
   compare comparator;
 
-  void
-  normalize(){
-    std::sort( mData.begin(), mData.end(),
-      [&]( const storage_type& x, const storage_type& y )->bool{
-        return comparator( get<0>( x ), get<0>( y ) );
-      }
-    );
+  void normalize() {
+    std::sort(mData.begin(), mData.end(), [&](const storage_type& x, const storage_type& y) -> bool
+      {
+        return comparator(get<0>(x), get<0>(y));
+      });
   }
 
-  size_type
-  seek_index( const key_type& key ){
+  size_type seek_index(const key_type& key) {
     size_type min = 0;
     size_type max = mData.size() - 1;
-    size_type idx = ( max + min ) / 2.0;
+    size_type idx = (max + min) / 2.0;
 
-    while( get<0>( mData[idx] ) != key ){
-      if( min == max || idx >= mData.size() ){
+    while(get<0>(mData[idx]) != key) {
+      if(min == max || idx >= mData.size()) {
         throw keyNotFoundException();
       }
 
-      if( comparator( key, get<0>( mData[idx] ) ) ){
+      if(comparator(key, get<0>(mData[idx]))) {
         max = idx - 1;
       } else {
         min = idx + 1;
       }
 
-      idx = ( max + min ) / 2.0;
+      idx = (max + min) / 2.0;
     }
 
     return idx;
@@ -87,8 +85,8 @@ public:
    *
    * No data stored.
    */
-  map( const alloc& alc = alloc() )
-    : mData( 1, alc ){
+  map(const alloc& alc = alloc())
+          : mData(1, alc) {
   }
 
   /*! Copy ctor
@@ -102,8 +100,8 @@ public:
    * @param alc Allocator object to allocate data
    */
   template<typename inputIter>
-  map( inputIter first, inputIter last, const alloc& alc = alloc() )
-    : mData( first, last, alc ){
+  map(inputIter first, inputIter last, const alloc& alc = alloc())
+          : mData(first, last, alc) {
     normalize();
   }
 
@@ -112,9 +110,9 @@ public:
    * @param other map to be copied/moved
    */
   template<typename U>
-  map( U&& other, const alloc& alc = alloc() )
-    : mData( alc ){
-    mData = std::forward<U>( other.mData );
+  map(U&& other, const alloc& alc = alloc())
+          : mData(alc) {
+    mData = std::forward<U>(other.mData);
     comparator = other.comparator;
   }
 
@@ -127,13 +125,12 @@ public:
    * Finds data associated with given key.  If no such exists, throws a
    * keyNotFoundException exception.
    */
-  map_type&
-  at( key_type key ){
-    if( mData.empty() ){
+  map_type& at(key_type key) {
+    if(mData.empty()) {
       throw keyNotFoundException();
     }
 
-    return get<1>( mData[seek_index( key )] );
+    return get<1>(mData[seek_index(key)]);
   }
 
   /*! Get reference associated with key
@@ -145,14 +142,13 @@ public:
    * Finds data associated with given key.  If no such exists, new data is
    * created.
    */
-  map_type&
-  operator[]( const key_type& key ){
-    try{
-      return at( key );
-    } catch ( keyNotFoundException& ex ){
-      emplace( key, map_type() );
+  map_type& operator[](const key_type& key) {
+    try {
+      return at(key);
+    } catch(keyNotFoundException& ex) {
+      emplace(key, map_type());
 
-      return at( key );
+      return at(key);
     }
   }
 
@@ -165,9 +161,8 @@ public:
    * Finds data associated with given key.  If no such exists, new data is
    * created.
    */
-  const map_type&
-  operator[]( const key_type& key ) const{
-    return ( *this )[key];
+  const map_type& operator[](const key_type& key) const {
+    return (*this)[key];
   }
 
   /*! Insert copies of new data
@@ -179,10 +174,9 @@ public:
    * @param last  one past the end of the range of elements to be copied
    */
   template<typename inputIter>
-  void
-  insert( inputIter first, inputIter last ){
-    for( ; first != last; ++first ){
-      mData.push_back( *first );
+  void insert(inputIter first, inputIter last) {
+    for(; first != last; ++first) {
+      mData.push_back(*first);
     }
 
     normalize();
@@ -201,21 +195,19 @@ public:
    * @todo return correct iterator
    */
   template<typename ...Args>
-  iterator
-  emplace( const key_type& key, Args ...args ){
-    mData.emplace_back( key, map_type( std::forward<Args>( args )... ) );
+  iterator emplace(const key_type& key, Args ...args) {
+    mData.emplace_back(key, map_type(std::forward<Args>(args)...));
 
     normalize();
 
-    return mData.Iterator( seek_index( key ) );
+    return mData.Iterator(seek_index(key));
   }
 
   /*! Get iterator to first element
    *
    * @return Iterator to beginning of container
    */
-  iterator
-  begin(){
+  iterator begin() {
     return mData.begin();
   }
 
@@ -223,8 +215,7 @@ public:
    *
    * @return Iterator to beginning of container
    */
-  const iterator
-  cbegin() const{
+  const iterator cbegin() const {
     return begin();
   }
 
@@ -232,8 +223,7 @@ public:
    *
    * @return Iterator past end of container
    */
-  iterator
-  end(){
+  iterator end() {
     return mData.end();
   }
 
@@ -241,15 +231,13 @@ public:
    *
    * @return Iterator past end of container
    */
-  const iterator
-  cend() const{
+  const iterator cend() const {
     return end();
   }
 
   /*! Empty container of all data
    */
-  void
-  clear(){
+  void clear() {
     mData.clear();
   }
 
@@ -257,8 +245,7 @@ public:
    *
    * @return Whether the container is empty
    */
-  bool
-  empty() const{
+  bool empty() const {
     return mData.empty();
   }
 
@@ -266,8 +253,7 @@ public:
    *
    * @return The number of elements in the container
    */
-  size_type
-  size() const{
+  size_type size() const {
     return mData.size();
   }
 };

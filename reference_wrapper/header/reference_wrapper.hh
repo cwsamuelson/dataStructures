@@ -5,7 +5,7 @@
  * @example test-wrapper.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! Wrapper around a reference type
  *
@@ -19,14 +19,16 @@ namespace gsw{
  * is legal.
  */
 template<typename T>
-class reference_wrapper{
+class reference_wrapper {
 public:
   /*! Type of stored reference
    */
   typedef T value_type;
+
   /*! Stored type; reference to value_type
    */
   typedef value_type& reference;
+
   /*! Const reference to value_type
    */
   typedef const value_type& const_ref;
@@ -39,33 +41,31 @@ public:
    *
    * @param ref Reference to be 'stored'
    */
-  reference_wrapper( reference ref )
-    : mRef( ref ){
+  reference_wrapper(reference ref)
+          : mRef(ref) {
   }
 
   /*! Get wrapped reference
    */
-  operator reference(){
+  operator reference() {
     return mRef;
   }
 
   /*!
    */
-  operator const_ref() const{
+  operator const_ref() const {
     return mRef;
   }
 
   /*! Get wrapped reference
    */
-  reference
-  get(){
+  reference get() {
     return mRef;
   }
 
   /*! Get const version of wrapped reference
    */
-  const reference
-  cget() const{
+  const reference cget() const {
     return mRef;
   }
 };

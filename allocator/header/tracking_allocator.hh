@@ -5,7 +5,7 @@
 
 #include<allocator.hh>
 
-namespace gsw{
+namespace gsw {
 
 /*! Allocator which tracks the maximum object count during runtime
  *
@@ -18,8 +18,8 @@ namespace gsw{
  *
  * @todo add custom logging facility? (through callback)
  */
-template<typename T, typename A = allocator<T> >
-class tracking_allocator : public A{
+template<typename T, typename A = allocator <T>>
+class tracking_allocator : public A {
 public:
   using value_type = T;
   using pointer    = value_type*;
@@ -29,6 +29,7 @@ public:
 
 private:
   static size_type mMaxStored;
+
   static size_type mCurrentStored;
 
 public:
@@ -36,30 +37,27 @@ public:
    *
    * @return Pointer to newly allocated objects
    */
-  pointer
-  allocate( size_type number ){
+  pointer allocate(size_type number) {
     mCurrentStored += number;
 
-    mMaxStored = std::max( mMaxStored, mCurrentStored );
+    mMaxStored = std::max(mMaxStored, mCurrentStored);
 
-    return base::allocate( number );
+    return base::allocate(number);
   }
 
   /*! Update tracking data, call base deallocation
    */
-  void
-  deallocate( pointer ptr, size_type number ){
+  void deallocate(pointer ptr, size_type number) {
     mCurrentStored -= number;
 
-    base::deallocate( ptr, number );
+    base::deallocate(ptr, number);
   }
 
   /*! Get the current number of T objects
    *
    * @return The current usage value
    */
-  size_type
-  usage() const{
+  size_type usage() const {
     return mCurrentStored;
   }
 
@@ -69,16 +67,15 @@ public:
    *
    * Maximum number of objects of type T allocated at one time
    */
-  size_type
-  max_usage() const{
+  size_type max_usage() const {
     return mMaxStored;
   }
 };
 
-template<typename T, typename A>
-typename tracking_allocator<T, A>::size_type tracking_allocator<T, A>::mMaxStored = 0;
-template<typename T, typename A>
-typename tracking_allocator<T, A>::size_type tracking_allocator<T, A>::mCurrentStored = 0;
+template<typename T, typename A> typename tracking_allocator<T, A>::size_type tracking_allocator<T, A>::mMaxStored = 0;
+
+template<typename T, typename A> typename tracking_allocator<T, A>::size_type tracking_allocator<T,
+                                                                                                 A>::mCurrentStored = 0;
 
 }
 
