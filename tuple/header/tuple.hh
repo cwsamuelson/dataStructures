@@ -198,6 +198,7 @@ public:
    * @param args List af arguments to be passed into tuple implementation
    */
   template<typename ...ARGS>
+  explicit
   tuple(ARGS... args)
           : base(std::forward<ARGS>(args)...) {
   }

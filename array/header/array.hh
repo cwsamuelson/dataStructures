@@ -65,6 +65,7 @@ struct splice_helper<T[N]> {
   /*!
    * @param arr
    */
+  explicit
   splice_helper(array<T[N]>& arr)
           : mArr(arr) {
   }

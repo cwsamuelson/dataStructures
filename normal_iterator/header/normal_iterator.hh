@@ -32,6 +32,7 @@ public:
    * @param ptr
    *
    */
+  explicit
   normal_iterator(pointer ptr)
           : mCurrent(ptr) {
   }
