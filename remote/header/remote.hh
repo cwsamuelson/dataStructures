@@ -1,7 +1,11 @@
 #ifndef GALACTICSTRUCTURES_REMOTE_HH
 #define GALACTICSTRUCTURES_REMOTE_HH
 
+namespace gsw {
+
 class remote {
 };
+
+}
 
 #endif //GALACTICSTRUCTURES_REMOTE_HH

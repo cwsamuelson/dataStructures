@@ -5,6 +5,8 @@
 #include<thread>
 #include<future>
 
+namespace gsw {
+
 /*! Timer facility for delayed and scheduled function calls
  *
  * @todo see notes in cppreference async about multiple sequential async calls
@@ -99,5 +101,7 @@ public:
       });
   }
 };
+
+}
 
 #endif

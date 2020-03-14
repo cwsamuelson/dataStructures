@@ -11,7 +11,7 @@ using namespace std::chrono_literals;
 
 TEST_CASE("", "[timer]") {
   SECTION("Delayed execution") {
-    timer t;
+    gsw::timer t;
 
     auto start = chrono::high_resolution_clock::now();
     decltype(start) end;
@@ -29,7 +29,7 @@ TEST_CASE("", "[timer]") {
   }
 
   SECTION("Scheduled execution") {
-    timer t;
+    gsw::timer t;
 
     auto start = chrono::high_resolution_clock::now();
     auto start_time = start + 10ms;
