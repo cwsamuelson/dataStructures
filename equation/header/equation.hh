@@ -39,63 +39,63 @@ private:
   using op_ptr = std::shared_ptr<operation>;
 
   struct constant : public operation {
-    double value;
+    double value = 0.0;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct variable : public operation {
     std::string name;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct multiplication : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct division : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct addition : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct subtraction : public operation {
     op_ptr lhs;
     op_ptr rhs;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct inversion : public operation {
     op_ptr operand;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct exponentiation : public operation {
@@ -106,23 +106,24 @@ private:
     op_ptr base;
     op_ptr exponent;
 
+    explicit
     exponentiation(bool power = false);
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
   struct logarithm : public operation {
     op_ptr base;
     op_ptr value;
 
-    double evaluate(const data& variables) const;
+    double evaluate(const data& variables) const override;
 
-    equation derive(std::string var) const;
+    equation derive(std::string var) const override;
   };
 
-  equation(const op_ptr value);
+  equation(op_ptr value);
 
   op_ptr mValue;
 
@@ -137,7 +138,7 @@ public:
    */
   class const_eq {
   private:
-    const_eq(const const_ptr value);
+    const_eq(const_ptr value);
 
     const_ptr mValue;
 

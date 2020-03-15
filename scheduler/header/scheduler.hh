@@ -22,7 +22,7 @@ private:
 public:
   scheduler(callback cb, tick_rate rate)
           : mCounter(0.0)
-          , mCall(cb)
+          , mCall(std::move(cb))
           , mRate(rate) {
   }
 

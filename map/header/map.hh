@@ -40,7 +40,7 @@ class map {
 public:
   using key_type     = KEY;
   using map_type     = VALUE;
-  using size_type    = unsigned long;
+  using size_type    = size_t;
   using compare      = COMPARE;
   using storage_type = tuple<key_type, map_type>;
   using iterator     = normal_iterator<storage_type, map>;
@@ -48,7 +48,6 @@ public:
 
 private:
   vector<storage_type, alloc> mData;
-
   compare comparator;
 
   void normalize() {
@@ -61,7 +60,7 @@ private:
   size_type seek_index(const key_type& key) {
     size_type min = 0;
     size_type max = mData.size() - 1;
-    size_type idx = (max + min) / 2.0;
+    size_type idx = (max + min) / 2;
 
     while(get<0>(mData[idx]) != key) {
       if(min == max || idx >= mData.size()) {
@@ -74,7 +73,7 @@ private:
         min = idx + 1;
       }
 
-      idx = (max + min) / 2.0;
+      idx = (max + min) / 2;
     }
 
     return idx;
@@ -85,6 +84,7 @@ public:
    *
    * No data stored.
    */
+  explicit
   map(const alloc& alc = alloc())
           : mData(1, alc) {
   }
@@ -110,6 +110,7 @@ public:
    * @param other map to be copied/moved
    */
   template<typename U>
+  explicit
   map(U&& other, const alloc& alc = alloc())
           : mData(alc) {
     mData = std::forward<U>(other.mData);
@@ -125,6 +126,7 @@ public:
    * Finds data associated with given key.  If no such exists, throws a
    * keyNotFoundException exception.
    */
+  [[nodiscard]]
   map_type& at(key_type key) {
     if(mData.empty()) {
       throw keyNotFoundException();
@@ -142,6 +144,7 @@ public:
    * Finds data associated with given key.  If no such exists, new data is
    * created.
    */
+  [[nodiscard]]
   map_type& operator[](const key_type& key) {
     try {
       return at(key);
@@ -161,6 +164,7 @@ public:
    * Finds data associated with given key.  If no such exists, new data is
    * created.
    */
+  [[nodiscard]]
   const map_type& operator[](const key_type& key) const {
     return (*this)[key];
   }
@@ -207,6 +211,7 @@ public:
    *
    * @return Iterator to beginning of container
    */
+  [[nodiscard]]
   iterator begin() {
     return mData.begin();
   }
@@ -215,6 +220,7 @@ public:
    *
    * @return Iterator to beginning of container
    */
+  [[nodiscard]]
   const iterator cbegin() const {
     return begin();
   }
@@ -223,6 +229,7 @@ public:
    *
    * @return Iterator past end of container
    */
+  [[nodiscard]]
   iterator end() {
     return mData.end();
   }
@@ -231,6 +238,7 @@ public:
    *
    * @return Iterator past end of container
    */
+  [[nodiscard]]
   const iterator cend() const {
     return end();
   }
@@ -245,6 +253,7 @@ public:
    *
    * @return Whether the container is empty
    */
+  [[nodiscard]]
   bool empty() const {
     return mData.empty();
   }
@@ -253,6 +262,7 @@ public:
    *
    * @return The number of elements in the container
    */
+  [[nodiscard]]
   size_type size() const {
     return mData.size();
   }

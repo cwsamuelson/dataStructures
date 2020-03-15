@@ -9,9 +9,14 @@
 namespace gsw {
 
 /* In research for stateful allocators, I found this:
-  Do you have any suggestions for how to do the sort of thing I'm trying to do? That is, how do I include allocated-type-specific state in my allocator?
+  Do you have any suggestions for how to do the sort of thing I'm trying to do? That is, how do I include
+  allocated-type-specific state in my allocator?
 
-  Don't embed it directly in the allocator, store it separately and have the allocator refer to it by a pointer (possibly smart pointer, depending on how you design the lifetime management of the resource). The actual allocator object should be a lightweight handle on to some external source of memory (e.g. an arena, or pool, or something managing a freelist). Allocator objects that share the same source should compare equal, this is true even for allocators with different value types (see below).
+  Don't embed it directly in the allocator, store it separately and have the allocator refer to it by a pointer
+  (possibly smart pointer, depending on how you design the lifetime management of the resource). The actual allocator
+  object should be a lightweight handle on to some external source of memory (e.g. an arena, or pool, or something
+  managing a freelist). Allocator objects that share the same source should compare equal, this is true even for
+  allocators with different value types (see below).
 
   https://stackoverflow.com/questions/24278803/how-can-i-write-a-stateful-allocator-in-c11-given-requirements-on-copy-constr
 
@@ -69,7 +74,7 @@ public:
 
   /*! Move ctor
    */
-  static_allocator(static_allocator&&) = default;
+  static_allocator(static_allocator&&) noexcept = default;
 
   /*!
    * @todo create subclasses of bad_alloc in order to provide values in throw statements

@@ -54,7 +54,7 @@ public:
    */
   block_allocator(const block_allocator& other) = delete;
 
-  block_allocator(block_allocator&& other)
+  block_allocator(block_allocator&& other) noexcept
           : mStart(other.mStart) {
     other.mStart = nullptr;
   }

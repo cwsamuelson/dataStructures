@@ -97,11 +97,11 @@ public:
   using reference = value_type&;
   using const_reference = const value_type&;
   using array_t = T[N];
-  using index_t = unsigned int;
+  using index_t = size_t;
   using splicer = splice_index<value_type>;
   using helper = splice_helper<value_type[N]>;
   using iterator = normal_iterator<value_type, array>;
-  using const_iterator = const normal_iterator<value_type, array>;
+  using const_iterator = normal_iterator<const value_type, array>;
 
   static constexpr index_t mSize = N;
 
@@ -129,6 +129,8 @@ public:
   constexpr array(Args... args)
           : mArr{ args... } {
   }
+
+  //! @todo add initializer list constructor
 
   /*! Get the size of the array
    *
@@ -232,6 +234,7 @@ public:
    * @return Helper to allow assignment to elements described by splicer argument
    *
    * @todo genericize to take other containers as well
+   * @todo allow different integral index types for the input array
    *
    * Utility operator to allow for more descriptive array modification.
    * Intended usage:
@@ -247,7 +250,7 @@ public:
    */
   template<unsigned int M>
   [[nodiscard]]
-  helper operator[](array<unsigned int[M]>& a) {
+  helper operator[](array<size_t[M]>& a) {
     helper h(*this);
 
     for(auto it : a) {

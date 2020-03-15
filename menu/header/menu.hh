@@ -60,6 +60,7 @@ private:
   std::map<selector, menu_item> mSubMenus;
 
 public:
+  explicit
   menu(const char* str)
           : mMenuText(str) {
   }
@@ -67,7 +68,7 @@ public:
   /*! Menu text and default ctor
    */
   explicit menu(std::string text = "")
-          : mMenuText(text) {
+          : mMenuText(std::move(text)) {
   }
 
   /*! Copy/Move ctor
@@ -77,7 +78,7 @@ public:
    * Copies/moves menu options from other
    */
   template<typename U>
-  menu(U&& other)
+  menu(U&& other) noexcept
           : mMenuText(std::forward<std::string>(other.mMenuText))
           , mSubMenus(std::forward<decltype(mSubMenus)>(other.mSubMenus)) {
   }
@@ -112,6 +113,7 @@ public:
    *
    * @return The selected menu item
    */
+  [[nodiscard]]
   menu_item& operator[](const selector& sel) {
     return mSubMenus[sel];
   }
@@ -119,6 +121,7 @@ public:
   /*!
    * @return
    */
+  [[nodiscard]]
   std::string& prompt() {
     return mMenuText;
   }

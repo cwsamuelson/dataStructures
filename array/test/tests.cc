@@ -72,7 +72,7 @@ TEST_CASE("Arrays can be 'spliced'.", "[array]") {
   }
 
   SECTION("Spliced by another container") {
-    gsw::array<unsigned int[3]> ids;
+    gsw::array<size_t[3]> ids;
 
     ids[0] = 1;
     ids[1] = 3;

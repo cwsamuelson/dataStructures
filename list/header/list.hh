@@ -20,6 +20,7 @@ class list {
 public:
   using value_type = T;
   using reference  = T&;
+  using const_reference = const T&;
   using pointer    = T*;
   using size_t     = unsigned long;
 
@@ -40,7 +41,7 @@ private:
     node* prev;
 
     template<typename ...Args>
-    node(Args... args)
+    explicit node(Args... args)
             : data(std::forward<Args>(args)...)
             , next(nullptr)
             , prev(nullptr) {
@@ -55,7 +56,7 @@ private:
     node_type* mCurrent;
 
   public:
-    node_iter(node_type* ptr)
+    explicit node_iter(node_type* ptr)
             : mCurrent(ptr) {
     }
 
@@ -148,15 +149,15 @@ public:
    * @return iterator to new value
    */
   iterator insert(iterator pos, const value_type& value) {
-    node_type* next = new node_type(value);
+    auto next = new node_type(value);
     node_type* current = pos.mCurrent;
-    node_type* last = current.next;
+    node_type* last = current->next;
 
     next.prev = current;
     next.next = last;
 
-    current.next = next;
-    last.prev = next;
+    current->next = next;
+    last->prev = next;
 
     return iterator(next);
   }
@@ -172,8 +173,8 @@ public:
     node_type* one = pos.mCurrent.prev;
     node_type* two = pos.mCurrent.next;
 
-    one.next = two;
-    two.prev = one;
+    one->next = two;
+    two->prev = one;
 
     delete pos.mCurrent;
 
@@ -298,15 +299,15 @@ public:
    */
   template<typename ...Args>
   iterator emplace(iterator pos, Args... args) {
-    node_type* next = new node_type(std::forward<Args>(args)...);
+    auto next = new node_type(std::forward<Args>(args)...);
     node_type* current = pos.mCurrent;
-    node_type* last = current.next;
+    node_type* last = current->next;
 
-    next.prev = current;
-    next.next = last;
+    next->prev = current;
+    next->next = last;
 
-    current.next = next;
-    last.prev = next;
+    current->next = next;
+    last->prev = next;
 
     return iterator(next);
   }
@@ -329,13 +330,13 @@ public:
 
   /*!
    */
-  const reference front() const {
+  const_reference front() const {
     return front();
   }
 
   /*!
    */
-  const reference back() const {
+  const_reference back() const {
     return back();
   }
 
@@ -390,7 +391,7 @@ public:
   /*!
    * @return
    */
-  list& merge(list&& other) {
+  list& merge(list&&) noexcept {
   }
 
   /*! Determine whether list is empty

@@ -11,7 +11,7 @@
 using namespace std;
 
 TEST_CASE("", "[graph]") {
-  graph<int> g;
+  gsw::graph<int> g;
 
   CHECK(g.empty());
   CHECK(g.node_count() == 0);
@@ -36,18 +36,18 @@ TEST_CASE("", "[graph]") {
     CHECK(g.node_count() == 2);
     CHECK(g.edge_count() == 2);
     CHECK(g.get_nodes() == set<int>{ 1, 2 });
-    CHECK(g.get_edges() == set<graph<int>::edge>{{ 1, 2 },
-                                                 { 2, 1 }});
+    CHECK(g.get_edges() == set<gsw::graph<int>::edge>{{ 1, 2 },
+                                                      { 2, 1 }});
 
     CHECK(g.adjacent(1, 2));
     CHECK(g.neighbors(1) == set<int>{ 2 });
-    CHECK(g.get_out_edges(1) == set<graph<int>::edge>{{ 1, 2 }});
-    CHECK(g.get_in_edges(1) == set<graph<int>::edge>{{ 2, 1 }});
+    CHECK(g.get_out_edges(1) == set<gsw::graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_in_edges(1) == set<gsw::graph<int>::edge>{{ 2, 1 }});
 
     CHECK(g.adjacent(2, 1));
     CHECK(g.neighbors(2) == set<int>{ 1 });
-    CHECK(g.get_out_edges(2) == set<graph<int>::edge>{{ 2, 1 }});
-    CHECK(g.get_in_edges(2) == set<graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_out_edges(2) == set<gsw::graph<int>::edge>{{ 2, 1 }});
+    CHECK(g.get_in_edges(2) == set<gsw::graph<int>::edge>{{ 1, 2 }});
   }
 
   SECTION("Directed edge") {
@@ -59,15 +59,15 @@ TEST_CASE("", "[graph]") {
 
     CHECK(g.adjacent(1, 2));
     CHECK(g.neighbors(1) == set<int>{ 2 });
-    CHECK(g.get_out_edges(1) == set<graph<int>::edge>{{ 1, 2 }});
-    CHECK(g.get_in_edges(1) == set<graph<int>::edge>{});
+    CHECK(g.get_out_edges(1) == set<gsw::graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_in_edges(1) == set<gsw::graph<int>::edge>{});
 
     CHECK(!g.adjacent(2, 1));
     CHECK(g.neighbors(2) == set<int>{});
-    CHECK(g.get_out_edges(2) == set<graph<int>::edge>{});
-    CHECK(g.get_in_edges(2) == set<graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_out_edges(2) == set<gsw::graph<int>::edge>{});
+    CHECK(g.get_in_edges(2) == set<gsw::graph<int>::edge>{{ 1, 2 }});
 
-    CHECK(g.get_edges() == set<graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_edges() == set<gsw::graph<int>::edge>{{ 1, 2 }});
   }
 
   SECTION("Circular ref") {
@@ -79,10 +79,10 @@ TEST_CASE("", "[graph]") {
 
     CHECK(g.adjacent(1, 1));
     CHECK(g.neighbors(1) == set<int>{ 1 });
-    CHECK(g.get_out_edges(1) == set<graph<int>::edge>{{ 1, 1 }});
-    CHECK(g.get_in_edges(1) == set<graph<int>::edge>{{ 1, 1 }});
+    CHECK(g.get_out_edges(1) == set<gsw::graph<int>::edge>{{ 1, 1 }});
+    CHECK(g.get_in_edges(1) == set<gsw::graph<int>::edge>{{ 1, 1 }});
 
-    CHECK(g.get_edges() == set<graph<int>::edge>{{ 1, 1 }});
+    CHECK(g.get_edges() == set<gsw::graph<int>::edge>{{ 1, 1 }});
   }
 
   SECTION("Several nodes") {
@@ -97,9 +97,9 @@ TEST_CASE("", "[graph]") {
     g.add_edge(1, 3, true);
 
     CHECK(g.edge_count() == 3);
-    CHECK(g.get_edges() == set<graph<int>::edge>{{ 1, 2 },
-                                                 { 2, 1 },
-                                                 { 1, 3 }});
+    CHECK(g.get_edges() == set<gsw::graph<int>::edge>{{ 1, 2 },
+                                                      { 2, 1 },
+                                                      { 1, 3 }});
 
     CHECK(g.adjacent(1, 2));
     CHECK(g.adjacent(2, 1));
@@ -110,14 +110,14 @@ TEST_CASE("", "[graph]") {
     CHECK(g.neighbors(2) == set<int>{ 1 });
     CHECK(g.neighbors(3) == set<int>{});
 
-    CHECK(g.get_out_edges(1) == set<graph<int>::edge>{{ 1, 2 },
-                                                      { 1, 3 }});
-    CHECK(g.get_out_edges(2) == set<graph<int>::edge>{{ 2, 1 }});
-    CHECK(g.get_out_edges(3) == set<graph<int>::edge>{});
+    CHECK(g.get_out_edges(1) == set<gsw::graph<int>::edge>{{ 1, 2 },
+                                                           { 1, 3 }});
+    CHECK(g.get_out_edges(2) == set<gsw::graph<int>::edge>{{ 2, 1 }});
+    CHECK(g.get_out_edges(3) == set<gsw::graph<int>::edge>{});
 
-    CHECK(g.get_in_edges(1) == set<graph<int>::edge>{{ 2, 1 }});
-    CHECK(g.get_in_edges(2) == set<graph<int>::edge>{{ 1, 2 }});
-    CHECK(g.get_in_edges(3) == set<graph<int>::edge>{{ 1, 3 }});
+    CHECK(g.get_in_edges(1) == set<gsw::graph<int>::edge>{{ 2, 1 }});
+    CHECK(g.get_in_edges(2) == set<gsw::graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_in_edges(3) == set<gsw::graph<int>::edge>{{ 1, 3 }});
   }
 
   SECTION("Remove nodes") {
@@ -132,13 +132,13 @@ TEST_CASE("", "[graph]") {
     CHECK(g.edge_count() == 0);
 
     CHECK(g.get_nodes() == set<int>{ 1, 3 });
-    CHECK(g.get_edges() == set<graph<int>::edge>{});
+    CHECK(g.get_edges() == set<gsw::graph<int>::edge>{});
 
-    CHECK(g.get_out_edges(1) == set<graph<int>::edge>{});
-    CHECK(g.get_out_edges(3) == set<graph<int>::edge>{});
+    CHECK(g.get_out_edges(1) == set<gsw::graph<int>::edge>{});
+    CHECK(g.get_out_edges(3) == set<gsw::graph<int>::edge>{});
 
-    CHECK(g.get_in_edges(1) == set<graph<int>::edge>{});
-    CHECK(g.get_in_edges(3) == set<graph<int>::edge>{});
+    CHECK(g.get_in_edges(1) == set<gsw::graph<int>::edge>{});
+    CHECK(g.get_in_edges(3) == set<gsw::graph<int>::edge>{});
   }
 
   SECTION("Remove edges") {
@@ -150,9 +150,9 @@ TEST_CASE("", "[graph]") {
     g.remove_edge(3, 1);
 
     CHECK(g.edge_count() == 3);
-    CHECK(g.get_edges() == set<graph<int>::edge>{{ 1, 2 },
-                                                 { 2, 1 },
-                                                 { 1, 3 }});
+    CHECK(g.get_edges() == set<gsw::graph<int>::edge>{{ 1, 2 },
+                                                      { 2, 1 },
+                                                      { 1, 3 }});
 
     CHECK(g.adjacent(1, 2));
     CHECK(g.adjacent(2, 1));
@@ -163,19 +163,19 @@ TEST_CASE("", "[graph]") {
     CHECK(g.neighbors(2) == set<int>{ 1 });
     CHECK(g.neighbors(3) == set<int>{});
 
-    CHECK(g.get_out_edges(1) == set<graph<int>::edge>{{ 1, 2 },
-                                                      { 1, 3 }});
-    CHECK(g.get_out_edges(2) == set<graph<int>::edge>{{ 2, 1 }});
-    CHECK(g.get_out_edges(3) == set<graph<int>::edge>{});
+    CHECK(g.get_out_edges(1) == set<gsw::graph<int>::edge>{{ 1, 2 },
+                                                           { 1, 3 }});
+    CHECK(g.get_out_edges(2) == set<gsw::graph<int>::edge>{{ 2, 1 }});
+    CHECK(g.get_out_edges(3) == set<gsw::graph<int>::edge>{});
 
-    CHECK(g.get_in_edges(1) == set<graph<int>::edge>{{ 2, 1 }});
-    CHECK(g.get_in_edges(2) == set<graph<int>::edge>{{ 1, 2 }});
-    CHECK(g.get_in_edges(3) == set<graph<int>::edge>{{ 1, 3 }});
+    CHECK(g.get_in_edges(1) == set<gsw::graph<int>::edge>{{ 2, 1 }});
+    CHECK(g.get_in_edges(2) == set<gsw::graph<int>::edge>{{ 1, 2 }});
+    CHECK(g.get_in_edges(3) == set<gsw::graph<int>::edge>{{ 1, 3 }});
   }
 
   SECTION("Clear the graph") {
     SECTION("Clear empty graph") {
-      graph<int> h;
+      gsw::graph<int> h;
       CHECK(h.empty());
 
       h.clear();

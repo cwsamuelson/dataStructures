@@ -2,6 +2,7 @@
 #include<sstream>
 
 #include<equation.hh>
+#include <utility>
 
 using namespace std;
 using namespace gsw;
@@ -102,12 +103,12 @@ equation equation::logarithm::derive(string var) const {
   return "1"_evar / (equation(value) * gsw::log(gsw::e_evar, { base }));
 }
 
-equation::equation(const equation::op_ptr value)
-        : mValue(value) {
+equation::equation(equation::op_ptr value)
+        : mValue(std::move(value)) {
 }
 
-equation::const_eq::const_eq(const equation::const_ptr value)
-        : mValue(value) {
+equation::const_eq::const_eq(equation::const_ptr value)
+        : mValue(std::move(value)) {
 }
 
 equation equation::operator*(const equation& multiplicand) const {

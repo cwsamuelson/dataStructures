@@ -41,6 +41,7 @@ public:
   /*!
    * @param size
    */
+  explicit
   memoryPool(size_type size)
           : mSize(size)
           , mInUse(0)

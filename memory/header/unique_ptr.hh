@@ -28,6 +28,7 @@ public:
    *
    * @param ptr  pointer to be stored
    */
+  explicit
   unique_ptr(pointer ptr = nullptr)
           : mData(ptr) {
   }
@@ -42,7 +43,7 @@ public:
    *
    * Performs a move operation
    */
-  unique_ptr(unique_ptr&& other)
+  unique_ptr(unique_ptr&& other) noexcept
           : mData(other.mData) {
     other.mData = nullptr;
   }
@@ -50,7 +51,8 @@ public:
   /*!
    */
   template<typename U>
-  unique_ptr(unique_ptr<U>&& other)
+  explicit
+  unique_ptr(unique_ptr<U>&& other) noexcept
           : mData(other.mData) {
     other.mData = nullptr;
   }
@@ -87,7 +89,7 @@ public:
    *
    * @param other unique_ptr to transfer ownership from
    */
-  unique_ptr& operator=(unique_ptr&& other) {
+  unique_ptr& operator=(unique_ptr&& other) noexcept {
     if(mData != other.mData && mData) {
       delete mData;
 

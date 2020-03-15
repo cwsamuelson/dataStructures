@@ -137,6 +137,7 @@ public:
    *
    * @return
    */
+  [[nodiscard]]
   bool empty() const {
     for(const auto& it : mValues) {
       if(it) {
@@ -151,6 +152,7 @@ public:
    *
    * @return
    */
+  [[nodiscard]]
   size_t size() const {
     size_t count = 0;
 

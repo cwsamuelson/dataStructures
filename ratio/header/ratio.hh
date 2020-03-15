@@ -76,11 +76,11 @@ class ratio {
 public:
   typedef size_t value_type;
 
-  static constexpr value_type numerator = sign(N) * sign(D) * myAbs(N) / gcd(N, D);
+  inline static constexpr value_type numerator = sign(N) * sign(D) * myAbs(N) / gcd(N, D);
 
-  static constexpr value_type denominator = myAbs(D) / gcd(N, D);
+  inline static constexpr value_type denominator = myAbs(D) / gcd(N, D);
 
-  static constexpr double value = double(double(numerator) / double(denominator));
+  inline static constexpr double value = double(double(numerator) / double(denominator));
 
   using type = ratio<numerator, denominator>;
   using invert_type = ratio<denominator, numerator>;
@@ -90,8 +90,8 @@ public:
    * This allows the number to be easily used at runtime, converting the ratio
    * to a double value
    */
-  constexpr
   [[nodiscard]]
+  constexpr
   operator double() const {
     return value;
   }
@@ -161,7 +161,7 @@ public:
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
 [[nodiscard]]
-constexpr T operator*(T t, ratio<N, D> r) {
+constexpr T operator*(T t, ratio<N, D>) {
   return (t * N) / D;
 }
 
@@ -181,7 +181,7 @@ constexpr T operator*(T t, ratio<N, D> r) {
  */
 template<typename T, size_t N, size_t D, typename std::enable_if<!std::is_same<T, ratio<N, D>>::value>::type>
 [[nodiscard]]
-constexpr T operator*(ratio<N, D> r, T t) {
+constexpr T operator*(ratio<N, D>, T t) {
   return (t * N) / D;
 }
 
@@ -267,12 +267,6 @@ template<size_t N1, size_t D1, size_t N2, size_t D2>
 constexpr bool operator!=(ratio<N1, D1> r1, ratio<N2, D2> r2) {
   return !(r1 == r2);
 }
-
-template<size_t N, size_t D> constexpr double ratio<N, D>::value;
-
-template<size_t N, size_t D> constexpr typename ratio<N, D>::value_type ratio<N, D>::numerator;
-
-template<size_t N, size_t D> constexpr typename ratio<N, D>::value_type ratio<N, D>::denominator;
 
 using unity = ratio<1, 1>;
 

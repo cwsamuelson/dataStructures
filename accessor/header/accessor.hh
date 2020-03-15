@@ -74,6 +74,9 @@ public:
    *
    * Conditionally assigns new value to stored reference, based upon the result
    * of the callback function provided at construction.
+   *
+   * Due to the function of accessor, this operator does NOT return a reference
+   * This may result in certain unexpected behaviours
    */
   reference operator=(const_reference cref) {
     if(mcb(cref)) {
@@ -91,6 +94,9 @@ public:
    *
    * Conditionally moves new value to stored reference, based upon the result
    * of the callback function provided at construction.
+   *
+   * Due to the function of accessor, this operator does NOT return a reference
+   * This may result in certain unexpected behaviours
    */
   reference operator=(value_type&& other) {
     if(mcb(other)) {

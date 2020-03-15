@@ -7,6 +7,15 @@
 using namespace std;
 
 TEST_CASE("", "[]") {
-  CHECK(false);
+  int i = 0;
+  gsw::scheduler s([&](){++i;}, 1);
+
+  s.update(1);
+
+  CHECK(i == 1);
+
+  s.update(2);
+
+  CHECK(i == 3);
 }
 

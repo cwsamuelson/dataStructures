@@ -46,6 +46,7 @@ public:
    *
    * @param vt Value of data to store in this unit
    */
+  explicit
   tuple_impl(value_type vt)
           : data(vt) {
   }
@@ -88,6 +89,7 @@ public:
    * @param args Arguments for future chain elements
    */
   template<typename ...ARGS>
+  explicit
   tuple_impl(value_type vt, ARGS... args)
           : base(std::forward<ARGS>(args)...)
           , data(vt) {

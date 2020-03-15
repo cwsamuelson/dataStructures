@@ -51,8 +51,6 @@ private:
   size_type mCapacity;
   value_type* mData;
 
-  static const unsigned int datasize = sizeof(value_type);
-
   const float goldenRatio = 1.4;
 
   void reallocateTo(size_type size) {
@@ -77,6 +75,7 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
+  explicit
   vector(size_type capacity = 1, const alloc& alc = alloc())
           : mAlloc(alc)
           , mSize(0)
@@ -123,7 +122,7 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector(vector&& other, const alloc& alc = alloc())
+  vector(vector&& other, const alloc& alc = alloc()) noexcept
           : mAlloc(alc)
           , mSize(other.mSize)
           , mCapacity(other.mCapacity)
@@ -165,7 +164,10 @@ public:
    */
   template<typename inputIter, typename = requireInputIter<inputIter>>
   vector(inputIter first, inputIter last, const alloc& alc = alloc())
-          : mAlloc(alc) {
+          : mAlloc(alc)
+          , mSize(0)
+          , mCapacity(1)
+          , mData(alloc_traits::allocate(mAlloc, mCapacity)){
 
     for(; first != last; ++first) {
       push_back(*first);
@@ -414,7 +416,7 @@ public:
    *
    * @return const iterator to the last element of the container
    */
-  [[ndiscard]]
+  [[nodiscard]]
   const iterator cend() const {
     return end();
   }

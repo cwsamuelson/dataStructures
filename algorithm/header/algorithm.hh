@@ -23,13 +23,16 @@ namespace gsw {
  * @return The effective equality of f1 and f2
  *
  * Due to the nature of the floating point implementation if
- * a==b and b==c a might== c.  To account for this, a more rigorous comparison
+ * a==b and b==c a might!= c.  To account for this, a more rigorous comparison
  * must be utilized.
+ * The implementation uses the data type's epsilon value, and multiplies by the
+ * largest order of magnitude, and then compares it to the absolute difference
+ * of the parameters
  */
 template<typename T>
 [[nodiscard]]
 static bool are_equal(T f1, T f2) {
-  return (std::fabs(f1 - f2) <= std::numeric_limits<T>::epsilon() * std::max({ 1.0, std::fabs(f1), std::fabs(f2) }));
+  return (std::fabs(f1 - f2) <= (std::numeric_limits<T>::epsilon() * std::max({ 1.0, std::fabs(f1), std::fabs(f2) })));
 }
 
 /*! Compare equality of floating point numbers
@@ -98,8 +101,8 @@ struct less {
  */
 template<typename iter>
 [[nodiscard]]
-unsigned long distance(iter first, iter last) {
-  unsigned long ret = 0;
+size_t distance(iter first, iter last) {
+  size_t ret = 0;
 
   while(first++ != last) {
     ++ret;

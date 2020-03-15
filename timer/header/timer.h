@@ -32,7 +32,7 @@ public:
   void interval(callback<void> fn, const std::chrono::duration<Rep, Period>& duration) {
     mCancel = false;
 
-    std::thread t([=]()
+    std::thread t([=, fn = std::move(fn)]()
                     {
                       while(true) {
                         std::this_thread::sleep_for(duration);

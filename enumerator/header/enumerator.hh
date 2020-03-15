@@ -82,6 +82,7 @@ public:
    *
    * @param c Refrence to container to wrap
    */
+  explicit
   constexpr enumerator(container_t& c)
           : mContainer(c) {
   }

@@ -103,7 +103,7 @@ public:
   /*!
    */
   range_iterator& operator++() {
-    while((!mRange->mFilter(*++mIterator)) && (mRange->end() != mIterator)) { ;
+    while((!mRange->mFilter(*++mIterator)) && (mRange->end() != mIterator)) {
     }
     return *this;
   }
@@ -199,6 +199,7 @@ public:
    * Takes container, filtering, and modification information that will be
    * needed when continuing to use range.
    */
+  explicit
   range(container& cont, filter filFN = [](const reference)
     {
       return true;

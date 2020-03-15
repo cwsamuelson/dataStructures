@@ -16,9 +16,11 @@ namespace gsw {
 class proposition {
 private:
   struct operation {
+    [[nodiscard]]
     virtual bool evaluate(const std::set<std::string>& facts) const = 0;
 
-    virtual std::set<std::set<std::string>> solve(std::set<std::string> data) const = 0;
+    [[nodiscard]]
+    virtual std::set<std::set<std::string>> solve(const std::set<std::string>& data) const = 0;
   };
 
   using op_ptr = std::shared_ptr<operation>;
@@ -26,9 +28,11 @@ private:
   struct variable : public operation {
     std::string name;
 
+    [[nodiscard]]
     bool evaluate(const std::set<std::string>& facts) const override;
 
-    std::set<std::set<std::string>> solve(std::set<std::string> data) const override;
+    [[nodiscard]]
+    std::set<std::set<std::string>> solve(const std::set<std::string>& data) const override;
   };
 
   struct conjunction : public operation {
@@ -36,9 +40,11 @@ private:
 
     op_ptr rhs;
 
+    [[nodiscard]]
     bool evaluate(const std::set<std::string>& facts) const override;
 
-    std::set<std::set<std::string>> solve(std::set<std::string> data) const override;
+    [[nodiscard]]
+    std::set<std::set<std::string>> solve(const std::set<std::string>& data) const override;
   };
 
   struct disjunction : public operation {
@@ -46,9 +52,11 @@ private:
 
     op_ptr rhs;
 
+    [[nodiscard]]
     bool evaluate(const std::set<std::string>& facts) const override;
 
-    std::set<std::set<std::string>> solve(std::set<std::string> data) const override;
+    [[nodiscard]]
+    std::set<std::set<std::string>> solve(const std::set<std::string>& data) const override;
   };
 
   struct exDisjunction : public operation {
@@ -56,20 +64,24 @@ private:
 
     op_ptr rhs;
 
+    [[nodiscard]]
     bool evaluate(const std::set<std::string>& facts) const override;
 
-    std::set<std::set<std::string>> solve(std::set<std::string> data) const override;
+    [[nodiscard]]
+    std::set<std::set<std::string>> solve(const std::set<std::string>& data) const override;
   };
 
   struct negation : public operation {
     op_ptr operand;
 
+    [[nodiscard]]
     bool evaluate(const std::set<std::string>& facts) const override;
 
-    std::set<std::set<std::string>> solve(std::set<std::string> data) const override;
+    [[nodiscard]]
+    std::set<std::set<std::string>> solve(const std::set<std::string>& data) const override;
   };
 
-  explicit proposition(const op_ptr value);
+  explicit proposition(op_ptr value);
 
   op_ptr mValue;
 
@@ -114,6 +126,7 @@ public:
    *
    * @return A new proposition of the implication of this and consequent
    */
+  [[nodiscard]]
   proposition implies(const proposition& consequent) const;
 
   /*! If and only if
@@ -122,6 +135,7 @@ public:
    *
    * @return A new proposition of the tautology of this and equivalent
    */
+  [[nodiscard]]
   proposition iff(const proposition& equivalent) const;
 
   /*! Evaluate proposition using given facts
@@ -130,6 +144,7 @@ public:
    *
    * @return Whether the proposition is true given facts
    */
+  [[nodiscard]]
   bool evaluate(const std::set<std::string>& facts) const;
 
   /*! Evaluation operator
@@ -140,6 +155,7 @@ public:
    *
    * Alias for bool proposition::evaluate( set<string> )
    */
+  [[nodiscard]]
   bool operator()(const std::set<std::string>& facts) const {
     return evaluate(facts);
   }
@@ -154,6 +170,7 @@ public:
    * Provided solutions only consist of those that can be made up from vars
    * provided in variables.
    */
+  [[nodiscard]]
   std::set<std::set<std::string>> solve(const std::set<std::string>& variables) const;
 
   /*! Reverse evaluation
@@ -161,7 +178,8 @@ public:
    * @param variables
    * @return
    */
-  std::set<std::set<std::string>> solve2(std::set<std::string> variables) const;
+  [[nodiscard]]
+  std::set<std::set<std::string>> solve2(const std::set<std::string>& variables) const;
 
   /*! Creates basic proposition that consists only of a variable named name
    *

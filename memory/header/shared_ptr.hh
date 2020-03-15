@@ -42,6 +42,7 @@ public:
    *
    * This constructor takes initial ownership of a provided pointer
    */
+  explicit
   shared_ptr(pointer ptr)
           : mData(ptr) {
     if(mData != nullptr) {
@@ -69,7 +70,7 @@ public:
    *
    * Takes ownership of pointer from other.
    */
-  shared_ptr(shared_ptr&& other)
+  shared_ptr(shared_ptr&& other) noexcept
           : mData(other.mData)
           , mCount(other.mCount) {
 
@@ -111,7 +112,7 @@ public:
    *
    * The provided shared_ptr is copied, increasing the owner count
    */
-  shared_ptr& operator=(shared_ptr& other) {
+  shared_ptr& operator=(const shared_ptr& other) {
     if(mData != other.mData) {
       if(--(*mCount) == 0) {
         delete mData;
@@ -130,7 +131,7 @@ public:
    *
    * Takes ownership of pointer from other.
    */
-  shared_ptr& operator=(shared_ptr&& other) {
+  shared_ptr& operator=(shared_ptr&& other) noexcept {
     // cleanup current storage
     if(mCount != nullptr) {
       --(*mCount);

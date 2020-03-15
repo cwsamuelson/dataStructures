@@ -2,6 +2,7 @@
 #include<algorithm>
 
 #include<logic.hh>
+#include <utility>
 
 using namespace std;
 using namespace gsw;
@@ -12,7 +13,7 @@ using namespace gsw;
 /***********
  * helpers *
  ***********/
-set<string> invert(set<string> operand, set<string> variables) {
+set<string> invert(const set<string>& operand, set<string> variables) {
   for(const auto& op : operand) {
     if(variables.count(op)) {
       variables.erase(variables.find(op));
@@ -29,7 +30,7 @@ bool proposition::variable::evaluate(const set<string>& facts) const {
   return facts.count(name) > 0;
 }
 
-set<set<string>> proposition::variable::solve(set<string> data) const {
+set<set<string>> proposition::variable::solve(const set<string>& data) const {
   // this throws in some confusion.  what to do if this variable doesn't exist in
   //  the variables to be solved on?
   set<set<string>> assignments;
@@ -65,7 +66,7 @@ bool proposition::conjunction::evaluate(const set<string>& facts) const {
   return lhs->evaluate(facts) && rhs->evaluate(facts);
 }
 
-set<set<string>> proposition::conjunction::solve(set<string> data) const {
+set<set<string>> proposition::conjunction::solve(const set<string>& data) const {
   auto lhs_data = lhs->solve(data);
   auto rhs_data = rhs->solve(data);
   set<set<string>> result;
@@ -86,7 +87,7 @@ bool proposition::disjunction::evaluate(const set<string>& facts) const {
   return lhs->evaluate(facts) || rhs->evaluate(facts);
 }
 
-set<set<string>> proposition::disjunction::solve(set<string> data) const {
+set<set<string>> proposition::disjunction::solve(const set<string>& data) const {
   auto lhs_data = lhs->solve(data);
   auto rhs_data = rhs->solve(data);
   set<set<string>> result;
@@ -103,7 +104,7 @@ bool proposition::exDisjunction::evaluate(const set<string>& facts) const {
   return lhs->evaluate(facts) ^ rhs->evaluate(facts);
 }
 
-set<set<string>> proposition::exDisjunction::solve(set<string> data) const {
+set<set<string>> proposition::exDisjunction::solve(const set<string>& data) const {
   auto lhs_data = lhs->solve(data);
   auto rhs_data = rhs->solve(data);
   set<set<string>> result;
@@ -138,7 +139,7 @@ bool proposition::negation::evaluate(const set<string>& facts) const {
   return !operand->evaluate(facts);
 }
 
-set<set<string>> proposition::negation::solve(set<string> data) const {
+set<set<string>> proposition::negation::solve(const set<string>& data) const {
   auto solutions = operand->solve(data);
   set<set<string>> result;
 
@@ -152,8 +153,8 @@ set<set<string>> proposition::negation::solve(set<string> data) const {
 /***************
  * proposition *
  ***************/
-proposition::proposition(const op_ptr value)
-        : mValue(value) {
+proposition::proposition(op_ptr value)
+        : mValue(std::move(value)) {
 }
 
 proposition proposition::operator&&(const proposition& conjunct) const {
@@ -217,21 +218,21 @@ set<set<string>> proposition::solve(const set<string>& variables) const {
     size_t j = 1;
     for(auto var : variables) {
       if(j & mask) {
-        test.insert(var);
+        test.insert(std::move(var));
       }
       j <<= 1;
     }
 
     // once a set of values from variables is generated, test it
     if(evaluate(test)) {
-      solutions.insert(test);
+      solutions.insert(std::move(test));
     }
   }
 
   return solutions;
 }
 
-set<set<string>> proposition::solve2(set<string> variables) const {
+set<set<string>> proposition::solve2(const set<string>& variables) const {
   return mValue->solve(variables);
 }
 

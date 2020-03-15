@@ -5,6 +5,8 @@
 #include<map>
 #include<set>
 
+namespace gsw {
+
 //TODO: consider associating data with edges
 //associating data with a node is meaningless for this data structure; this
 //  information is more appropriately stored at the client.  However the data of
@@ -164,6 +166,7 @@ public:
    *
    * @return a set of all node names
    */
+  [[nodiscard]]
   std::set<value_type> get_nodes() const {
     std::set<value_type> result;
 
@@ -178,6 +181,7 @@ public:
    *
    * @return set of all edges, expressed as a pair of node names {node_from, node_to}
    */
+  [[nodiscard]]
   std::set<edge> get_edges() const {
     std::set<edge> edges;
 
@@ -196,6 +200,7 @@ public:
    *
    * @return set of edges to and from ref
    */
+  [[nodiscard]]
   std::set<edge> get_edges(const_reference ref) const {
     auto result = get_out_edges(ref);
 
@@ -212,6 +217,7 @@ public:
    *
    * @return set of edges from ref
    */
+  [[nodiscard]]
   std::set<edge> get_out_edges(const_reference ref) const {
     std::set<edge> result;
 
@@ -228,6 +234,7 @@ public:
    *
    * @return set of edges to ref
    */
+  [[nodiscard]]
   std::set<edge> get_in_edges(const_reference ref) const {
     std::set<edge> result;
 
@@ -251,6 +258,7 @@ public:
    *
    * @return whether the refA and refB are adjacent
    */
+  [[nodiscard]]
   bool adjacent(const_reference refA, const_reference refB) const {
     //return mNodes.at( refA ).contains( refB );//contains is c++20
     return mNodes.at(refA).count(refB) > 0;
@@ -263,6 +271,7 @@ public:
    *
    * @return set of neighbors to ref
    */
+  [[nodiscard]]
   std::set<value_type> neighbors(const_reference ref) const {
     return mNodes.at(ref);
   }
@@ -271,6 +280,7 @@ public:
    *
    * @return the number of nodes in graph
    */
+  [[nodiscard]]
   size_t node_count() const {
     return mNodes.size();
   }
@@ -279,6 +289,7 @@ public:
    *
    * @return the number of edges in graph
    */
+  [[nodiscard]]
   size_t edge_count() const {
     unsigned int count = 0;
 
@@ -298,9 +309,12 @@ public:
 
   /*! Test whether the graph is empty
    */
+  [[nodiscard]]
   bool empty() const {
     return mNodes.empty();
   }
 };
+
+}
 
 #endif

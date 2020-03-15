@@ -18,17 +18,9 @@ public:
 private:
 
 public:
-  /*! Default ctor
-   */
   allocator() = default;
-
-  /*! Copy ctor
-   */
   allocator(const allocator&) = default;
-
-  /*! Move ctor
-   */
-  allocator(allocator&&) = default;
+  allocator(allocator&&) noexcept = default;
 
   /*! Allocate memory
    *

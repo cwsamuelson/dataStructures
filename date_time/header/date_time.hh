@@ -185,20 +185,20 @@ private:
   day mDay;
   year mYear;
 
-  static constexpr unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+  inline static constexpr unsigned int mMonths[12] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-  static constexpr char monthNames[][12] = { "January",
-                                             "February",
-                                             "March",
-                                             "April",
-                                             "May",
-                                             "June",
-                                             "July",
-                                             "August",
-                                             "September",
-                                             "October",
-                                             "November",
-                                             "December" };
+  inline static constexpr char monthNames[][12] = { "January",
+                                                    "February",
+                                                    "March",
+                                                    "April",
+                                                    "May",
+                                                    "June",
+                                                    "July",
+                                                    "August",
+                                                    "September",
+                                                    "October",
+                                                    "November",
+                                                    "December" };
 
 public:
   /*! Ctor
@@ -311,10 +311,6 @@ public:
     return (os << dayt.mDay.getValue() << " " << date::monthNames[mont] << " " << dayt.mYear.getValue());
   }
 };
-
-constexpr unsigned int date::mMonths[12];
-
-constexpr char date::monthNames[][12];
 
 /*!
  */

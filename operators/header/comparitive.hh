@@ -1,11 +1,11 @@
-#ifndef __ADDITIVE_HH__
-#define __ADDITIVE_HH__
+#ifndef __COMPARITIVE_HH__
+#define __COMPARITIVE_HH__
 
 /*!
  * @example test-operators.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! Comparison utility class to provide comparison operators
  *
@@ -35,7 +35,7 @@ namespace gsw{
  * This will provide 'for free' the !=, >=, >, and <= operators as well.
  */
 template<typename LHS, typename RHS = LHS>
-class comparitive{
+class comparitive {
 public:
   using lhs_type = LHS;
   using rhs_type = RHS;
@@ -49,10 +49,8 @@ public:
    * @return Whether lhs != rhs
    */
   [[nodiscard]]
-  constexpr friend
-  bool
-  operator!=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
-    return !( lhs == rhs );
+  constexpr friend bool operator!=(const lhs_type& lhs, const rhs_type& rhs) noexcept {
+    return !(lhs == rhs);
   }
 
   /*! Greater than comparison operator
@@ -64,10 +62,8 @@ public:
    * @return Whether lhs > rhs
    */
   [[nodiscard]]
-  constexpr friend
-  bool
-  operator>( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
-    return !( lhs <= rhs );
+  constexpr friend bool operator>(const lhs_type& lhs, const rhs_type& rhs) noexcept {
+    return !(lhs <= rhs);
   }
 
   /*! Greater than or equal comparison operator
@@ -79,10 +75,8 @@ public:
    * @return Whether lhs >= rhs
    */
   [[nodiscard]]
-  constexpr friend
-  bool
-  operator>=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
-    return !( lhs < rhs );
+  constexpr friend bool operator>=(const lhs_type& lhs, const rhs_type& rhs) noexcept {
+    return !(lhs < rhs);
   }
 
   /*! Less than or equal comparison operator
@@ -94,10 +88,8 @@ public:
    * @return whether lhs is <= rhs
    */
   [[nodiscard]]
-  constexpr friend
-  bool
-  operator<=( const lhs_type& lhs, const rhs_type& rhs ) noexcept{
-    return ( lhs < rhs ) || ( lhs == rhs );
+  constexpr friend bool operator<=(const lhs_type& lhs, const rhs_type& rhs) noexcept {
+    return (lhs < rhs) || (lhs == rhs);
   }
 };
 

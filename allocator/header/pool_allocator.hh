@@ -29,6 +29,7 @@ public:
   /*!
    * @param count
    */
+  explicit
   pool_allocator(size_type count = 0)
           : mIndicators(0)
           , mMax(count)
@@ -46,12 +47,17 @@ public:
   /*!
    * @param other
    */
-  pool_allocator(pool_allocator&& other) {
+  pool_allocator(pool_allocator&& other) noexcept{
+    if(mPool == other.mPool){
+      return;
+    }
+
     delete[] mPool;
 
     mIndicators = other.mIndicators;
     mMax = other.mMax;
     mPool = other.mPool;
+    mSize = other.mSize;
 
     other.mIndicators = 0;
     other.mMax = 0;
