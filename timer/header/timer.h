@@ -69,6 +69,8 @@ public:
         std::this_thread::sleep_for(duration);
         if(!mCancel) {
           return fn();
+        } else {
+          return decltype(fn())();
         }
       });
   }
@@ -97,6 +99,8 @@ public:
         std::this_thread::sleep_until(time);
         if(!mCancel) {
           return fn();
+        } else {
+          return decltype(fn())();
         }
       });
   }

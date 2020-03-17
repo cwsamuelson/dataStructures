@@ -21,6 +21,8 @@ public:
     if(b < c || b < other.b) {
       ++a;
     }
+
+    return *this;
   }
 
   template<typename T>
@@ -38,6 +40,8 @@ public:
       --a;
       b += std::numeric_limits<long long>::max();
     }
+
+    return *this;
   }
 
   template<typename T>

@@ -56,6 +56,8 @@ public:
     for(auto i = 0; i < mSize; ++i) {
       mData[i] = v.mData[i];
     }
+
+    return *this;
   }
 
   [[nodiscard]]

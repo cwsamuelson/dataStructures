@@ -124,6 +124,7 @@ public:
    * @return
    */
   iterator begin() {
+    return {};
   }
 
   /*!
@@ -131,6 +132,7 @@ public:
    * @return
    */
   iterator end() {
+    return {};
   }
 
   /*!
