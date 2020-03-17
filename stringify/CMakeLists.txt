@@ -1,0 +1,14 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(stringify LANGUAGES CXX)
+
+IF(TARGET stringify)
+    RETURN()
+ENDIF()
+
+ADD_LIBRARY(stringify INTERFACE)
+
+SET_TARGET_PROPERTIES(stringify PROPERTIES
+                                INTERFACE_CXX_STANDARD 17
+                                INTERFACE_CXX_STANDARD_REQUIRED YES
+                                INTERFACE_CXX_EXTENSIONS NO)
+TARGET_INCLUDE_DIRECTORIES(stringify INTERFACE header)

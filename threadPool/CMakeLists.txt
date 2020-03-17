@@ -20,7 +20,6 @@ SET_TARGET_PROPERTIES(threadPool PROPERTIES
 
 TARGET_INCLUDE_DIRECTORIES(threadPool INTERFACE header)
 TARGET_LINK_LIBRARIES(threadPool INTERFACE Threads::Threads)
-#target_link_libraries(threadPool INTERFACE tuple)
 
 ADD_EXECUTABLE(test-threadPool test/tests.cc)
 SET_TARGET_PROPERTIES(test-threadPool PROPERTIES

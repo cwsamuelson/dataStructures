@@ -23,7 +23,7 @@ private:
 public:
   high_polynomial() = default;
 
-  high_polynomial(std::initializer_list<input_point> il);
+  high_polynomial(std::initializer_list<storage_type::value_type> il);
 
   template<typename inputIter>
   high_polynomial(inputIter first, inputIter last)
@@ -31,13 +31,17 @@ public:
   }
 
   template<typename U>
-  high_polynomial(U&& eq) {
+  high_polynomial(U&& eq) noexcept
+          : mCoeff(std::forward<storage_type>(eq.mCoeff)) {
   }
 
   std::set<value_type> solve(input_point hint = input_point::storage_t{ 1, 1 }, unsigned int iterations = 6) const;
 
   template<typename U>
   high_polynomial& operator=(U&& eq) {
+    mCoeff = std::forward<storage_type>(eq.mCoeff);
+
+    return *this;
   }
 
   high_polynomial& operator+=(const high_polynomial& hp);
@@ -52,7 +56,7 @@ public:
 
   high_polynomial& operator/=(value_type d);
 
-  high_polynomial& operator-() const;
+  high_polynomial operator-() const;
 
   [[nodiscard]]
   reference operator[](const input_point& point);
@@ -61,10 +65,10 @@ public:
   const_reference operator[](const input_point& point) const;
 
   [[nodiscard]]
-  reference at(input_point point);
+  reference at(const input_point& point);
 
   [[nodiscard]]
-  const_reference at(input_point point) const;
+  const_reference at(const input_point& point) const;
 
   [[nodiscard]]
   value_type operator()(input_point point) const;

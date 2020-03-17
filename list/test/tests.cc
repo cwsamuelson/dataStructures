@@ -75,7 +75,7 @@ TEST_CASE("Lists can be iterated across using standard mechanisms", "[list]") {
   lst.push_back(4);
 
   SECTION("Lists can participate in range-based for loops") {
-    int i = 0;
+    size_t i = 0;
 
     for(auto it : lst) {
       CHECK(it == lst[i]);

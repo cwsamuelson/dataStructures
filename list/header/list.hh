@@ -406,12 +406,12 @@ public:
    *
    * @return Current size of the list
    */
-  unsigned long size() {
+  size_t size() {
     if(head == nullptr) {
       return 0;
     }
 
-    unsigned long count = 1;
+    size_t count = 1;
     node_type* cur = head;
 
     while(cur->next != nullptr) {

@@ -8,6 +8,9 @@ ENDIF()
 IF(NOT TARGET Catch2)
     ADD_SUBDIRECTORY("../catch/" Catch2)
 ENDIF()
+IF(NOT TARGET stringify)
+    ADD_SUBDIRECTORY("../stringify" stringify)
+ENDIF()
 
 ADD_LIBRARY(graph INTERFACE)
 
@@ -16,6 +19,7 @@ SET_TARGET_PROPERTIES(graph PROPERTIES
                       INTERFACE_CXX_STANDARD_REQUIRED YES
                       INTERFACE_CXX_EXTENSIONS NO)
 TARGET_INCLUDE_DIRECTORIES(graph INTERFACE header)
+TARGET_LINK_LIBRARIES(graph INTERFACE stringify)
 
 ADD_EXECUTABLE(test-graph test/tests.cc)
 SET_TARGET_PROPERTIES(test-graph PROPERTIES

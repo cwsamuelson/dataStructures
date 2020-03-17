@@ -8,6 +8,9 @@ ENDIF()
 IF(NOT TARGET Catch2)
     ADD_SUBDIRECTORY("../catch/" Catch2)
 ENDIF()
+IF(NOT TARGET stringify)
+    ADD_SUBDIRECTORY("../stringify" stringify)
+ENDIF()
 
 ADD_LIBRARY(logic source/logic.cc)
 
@@ -15,8 +18,8 @@ SET_TARGET_PROPERTIES(logic PROPERTIES
                       CXX_STANDARD 17
                       CXX_STANDARD_REQUIRED YES
                       CXX_EXTENSIONS NO)
-
 TARGET_INCLUDE_DIRECTORIES(logic PUBLIC header)
+TARGET_LINK_LIBRARIES(logic INTERFACE stringify)
 
 ADD_EXECUTABLE(test-logic test/tests.cc)
 SET_TARGET_PROPERTIES(test-logic PROPERTIES

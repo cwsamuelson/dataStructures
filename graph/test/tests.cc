@@ -6,7 +6,7 @@
 #include<catch2/catch.hpp>
 
 #include<graph.hh>
-#include<catch_stringify_helper.hh>
+#include <catch_stringify_helper.hh>
 
 using namespace std;
 

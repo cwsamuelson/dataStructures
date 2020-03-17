@@ -131,187 +131,189 @@ TEST_CASE("Units participate in arithmetic", "[unit]") {
       CHECK(v1 == 3);
     }
   }
+}
 
-  TEST_CASE("Unit can be used as a constant expression.", "[unit]") {
-    const voltage<> v1(3);
-    const voltage<> v2(3);
-    const voltage<> v3(5);
-    const double d1 = v1.getValue();
-    const double d2 = v1.getRaw();
-    const double d3 = (v1 + 4).getValue();
+TEST_CASE("Unit can be used as a constant expression.", "[unit]") {
+  const voltage<> v1(3);
+  const voltage<> v2(3);
+  const voltage<> v3(5);
+  const double d1 = v1.getValue();
+  const double d2 = v1.getRaw();
+  const double d3 = (v1 + 4).getValue();
 
-    static_assert(voltage<>(3) == 3);
-    static_assert(voltage<>(3).getValue() == 3);
-    static_assert(voltage<>(3).getRaw() == 3);
-    static_assert((voltage<>(3) + voltage<>(4)) == 7);
-    static_assert((voltage<>(7) - voltage<>(4)) == 3);
-    static_assert((voltage<>(3) * voltage<>(4)) == 12);
-    static_assert((voltage<>(12) / voltage<>(4)) == 3);
-    static_assert((voltage<>(3) += 5) == 8);
-    static_assert((voltage<>(8) -= 5) == 3);
-    static_assert((voltage<>(4) *= 3) == 12);
-    static_assert((voltage<>(12) /= 3) == 4);
-    static_assert(voltage<>(5)++ == 5);
-    static_assert(++voltage<>(5) == 6);
-    static_assert(voltage<>(5)-- == 5);
-    static_assert(--voltage<>(5) == 4);
-    static_assert(voltage<>(3) == voltage<>(3));
-    static_assert(voltage<>(3) < voltage<>(4));
-    static_assert(voltage<>(4) > voltage<>(3));
-    static_assert(voltage<>(3) <= voltage<>(3));
-    static_assert(voltage<>(3) >= voltage<>(3));
-    static_assert((voltage<>(5) = 6.0) == 6);
+  static_assert(voltage<>(3) == 3);
+  static_assert(voltage<>(3).getValue() == 3);
+  static_assert(voltage<>(3).getRaw() == 3);
+  static_assert((voltage<>(3) + voltage<>(4)) == 7);
+  static_assert((voltage<>(7) - voltage<>(4)) == 3);
+  static_assert((voltage<>(3) * voltage<>(4)) == 12);
+  static_assert((voltage<>(12) / voltage<>(4)) == 3);
+  static_assert((voltage<>(3) += 5) == 8);
+  static_assert((voltage<>(8) -= 5) == 3);
+  static_assert((voltage<>(4) *= 3) == 12);
+  static_assert((voltage<>(12) /= 3) == 4);
+  static_assert(voltage<>(5)++ == 5);
+  static_assert(++voltage<>(5) == 6);
+  static_assert(voltage<>(5)-- == 5);
+  static_assert(--voltage<>(5) == 4);
+  static_assert(voltage<>(3) == voltage<>(3));
+  static_assert(voltage<>(3) < voltage<>(4));
+  static_assert(voltage<>(4) > voltage<>(3));
+  static_assert(voltage<>(3) <= voltage<>(3));
+  static_assert(voltage<>(3) >= voltage<>(3));
+  static_assert((voltage<>(5) = 6.0) == 6);
 
-    CHECK(d1 == 3);
-    CHECK(d2 == 3);
-    CHECK(d3 == 7);
-    CHECK(v2 == v1);
-    CHECK(v1 < v3);
-    CHECK(v3 > v1);
-    CHECK(v1 <= v2);
-    CHECK(v1 >= v2);
+  CHECK(d1 == 3);
+  CHECK(d2 == 3);
+  CHECK(d3 == 7);
+  CHECK(v2 == v1);
+  CHECK(v1 < v3);
+  CHECK(v3 > v1);
+  CHECK(v1 <= v2);
+  CHECK(v1 >= v2);
+}
+
+TEST_CASE("Arithmetic doesn't confuse prefixes.", "[unit]") {
+  using kilo_amp = current<long, metric, kilo>;
+
+  voltage<long, metric, kilo> kv(12);
+  current<long, metric, milli> a;
+  resistance<long> o(3);
+  a = kv / o;
+
+  CHECK(a == 4000000);
+  CHECK(a == kilo_amp(4));
+  CHECK(a.getValue() == 4000000);
+}
+
+TEST_CASE("Scheduler test", "[unit]") {
+  using int_time = gsw::time<unsigned long long, metric, milli>;
+  using tick_rate = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0>;
+  using sched_tick_rate = unit<tick_rate, metric, unsigned long long, milli>;
+  const tick<unsigned long long, metric> t = int_time(50) / sched_tick_rate(5);
+
+  CHECK(t == 10);
+}
+
+TEST_CASE("Some units provide literal suffixes", "[unit]") {
+  CHECK((0.0_0 + none<long double>(3)) == 3);
+  CHECK((0.0_len + length<long double>(3)) == 3);
+  CHECK((0.0_mass + mass<long double>(3)) == 3);
+  CHECK((0.0_temp + temperature<long double>(3)) == 3);
+  CHECK((0.0_t + gsw::time<long double>(3)) == 3);
+  CHECK(3.0_A * 4.0_R == 12.0_V);
+
+  CHECK((0_0 + none<unsigned long long>(3)) == 3);
+  CHECK((0_len + length<unsigned long long>(3)) == 3);
+  CHECK((0_mass + mass<unsigned long long>(3)) == 3);
+  CHECK((0_temp + temperature<unsigned long long>(3)) == 3);
+  CHECK((0_t + gsw::time<unsigned long long>(3)) == 3);
+  CHECK(3_A * 4_R == 12_V);
+}
+
+class custom_system1 {};
+
+class custom_system2 {};
+
+using custom_unit1 = unit<length_msr, custom_system1, double, unity>;
+using custom_unit2 = unit<length_msr, custom_system2, double, unity>;
+
+template<typename T, typename F>
+class converter<length_msr, custom_system1, custom_system2, T, T, F, F> : public converter_base<length_msr,
+                                                                                                custom_system1,
+                                                                                                custom_system2,
+                                                                                                T,
+                                                                                                T,
+                                                                                                F,
+                                                                                                F> {
+public:
+  using base = converter_base<length_msr, custom_system1, custom_system2, T, T, F, F>;
+
+  constexpr converter() = default;
+
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw() / 5);
+  }
+};
+
+template<typename T, typename F>
+class converter<length_msr, custom_system2, custom_system1, T, T, F, F> : public converter_base<length_msr,
+                                                                                                custom_system2,
+                                                                                                custom_system1,
+                                                                                                T,
+                                                                                                T,
+                                                                                                F,
+                                                                                                F> {
+public:
+  using base = converter_base<length_msr, custom_system2, custom_system1, T, T, F, F>;
+
+  constexpr converter() = default;
+
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw() * 5);
+  }
+};
+
+TEST_CASE("Handles different unit systems", "[unit]") {
+  SECTION("Can convert between unit systems") {
+    celsius<> c(0);
+    fahrenheit<> f(c);
+
+    CHECK(f.getRaw() == 32);
+    f = -40;
+    c = f;
+    CHECK(c.getRaw() == -40);
   }
 
-  TEST_CASE("Arithmetic doesn't confuse prefixes.", "[unit]") {
-    using kilo_amp = current<long, metric, kilo>;
+  SECTION("Handles custom unit systems") {
+    custom_unit1 cu1(5);
+    custom_unit2 cu2(1);
 
-    voltage<long, metric, kilo> kv(12);
-    current<long, metric, milli> a;
-    resistance<long> o(3);
-    a = kv / o;
-
-    CHECK(a == 4000000);
-    CHECK(a == kilo_amp(4));
-    CHECK(a.getValue() == 4000000);
+    CHECK(cu1 == cu2);
   }
+}
 
-  TEST_CASE("Scheduler test", "[unit]") {
-    using int_time = gsw::time<unsigned long long, metric, milli>;
-    using tick_rate = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0>;
-    using sched_tick_rate = unit<tick_rate, metric, unsigned long long, milli>;
-    const tick<unsigned long long, metric> t = int_time(50) / sched_tick_rate(5);
+TEST_CASE("Converts between systems, and types and factors", "[unit]") {
+  feet<> f1(3);
+  meters<> m1(3);
 
-    CHECK(t == 10);
-  }
+  feet<> f2(f1);
+  meters<> m2(f1);
 
-  TEST_CASE("Some units provide literal suffixes", "[unit]") {
-    CHECK((0.0_0 + none<long double>(3)) == 3);
-    CHECK((0.0_len + length<long double>(3)) == 3);
-    CHECK((0.0_mass + mass<long double>(3)) == 3);
-    CHECK((0.0_temp + temperature<long double>(3)) == 3);
-    CHECK((0.0_t + gsw::time<long double>(3)) == 3);
-    CHECK(3.0_A * 4.0_R == 12.0_V);
+  feet<> f3(m1);
+  meters<> m3(m1);
 
-    CHECK((0_0 + none<unsigned long long>(3)) == 3);
-    CHECK((0_len + length<unsigned long long>(3)) == 3);
-    CHECK((0_mass + mass<unsigned long long>(3)) == 3);
-    CHECK((0_temp + temperature<unsigned long long>(3)) == 3);
-    CHECK((0_t + gsw::time<unsigned long long>(3)) == 3);
-    CHECK(3_A * 4_R == 12_V);
-  }
+  feet<int> f4(f1);
+  meters<int> m4(f1);
 
-  class custom_system1 {};
-  class custom_system2 {};
+  feet<int> f5(m1);
+  meters<int> m5(m1);
 
-  using custom_unit1 = unit<length_msr, custom_system1, double, unity>;
-  using custom_unit2 = unit<length_msr, custom_system2, double, unity>;
+  feet<double, ratio<5280, 1>> f6(f1);
+  meters<double, ratio<1000, 1>> m6(f1);
 
-  template<typename T, typename F>
-  class converter<length_msr, custom_system1, custom_system2, T, T, F, F> : public converter_base<length_msr,
-                                                                                                  custom_system1,
-                                                                                                  custom_system2,
-                                                                                                  T,
-                                                                                                  T,
-                                                                                                  F,
-                                                                                                  F> {
-  public:
-    using base = converter_base<length_msr, custom_system1, custom_system2, T, T, F, F>;
+  feet<double, ratio<5280, 1>> f7(m1);
+  meters<double, ratio<1000, 1>> m7(m1);
 
-    constexpr converter() = default;
+  feet<int, ratio<5280, 1>> f8(f1);
+  meters<int, ratio<1000, 1>> m8(f1);
 
-    constexpr typename base::result operator()(const typename base::input& val) {
-      return typename base::result(val.getRaw() / 5);
-    }
-  };
+  feet<int, ratio<5280, 1>> f9(m1);
+  meters<int, ratio<1000, 1>> m9(m1);
 
-  template<typename T, typename F>
-  class converter<length_msr, custom_system2, custom_system1, T, T, F, F> : public converter_base<length_msr,
-                                                                                                  custom_system2,
-                                                                                                  custom_system1,
-                                                                                                  T,
-                                                                                                  T,
-                                                                                                  F,
-                                                                                                  F> {
-  public:
-    using base = converter_base<length_msr, custom_system2, custom_system1, T, T, F, F>;
+  CHECK(f1 == f2);
+  CHECK(m1 == m3);
 
-    constexpr converter() = default;
+  CHECK(f1 == f4);
+  CHECK(m1 == m5);
 
-    constexpr typename base::result operator()(const typename base::input& val) {
-      return typename base::result(val.getRaw() * 5);
-    }
-  };
+  CHECK((f1 - m2) < .1);
+  CHECK((m1 - f3) < .1);
 
-  TEST_CASE("Handles different unit systems", "[unit]") {
-    SECTION("Can convert between unit systems") {
-      celsius<> c(0);
-      fahrenheit<> f(c);
+  CHECK(f8 == 0.0);
+  CHECK(m8 == 0.0);
 
-      CHECK(f.getRaw() == 32);
-      f = -40;
-      c = f;
-      CHECK(c.getRaw() == -40);
-    }
-
-    SECTION("Handles custom unit systems") {
-      custom_unit1 cu1(5);
-      custom_unit2 cu2(1);
-
-      CHECK(cu1 == cu2);
-    }
-  }
-
-  TEST_CASE("Converts between systems, and types and factors", "[unit]") {
-    feet<> f1(3);
-    meters<> m1(3);
-
-    feet<> f2(f1);
-    meters<> m2(f1);
-
-    feet<> f3(m1);
-    meters<> m3(m1);
-
-    feet<int> f4(f1);
-    meters<int> m4(f1);
-
-    feet<int> f5(m1);
-    meters<int> m5(m1);
-
-    feet<double, ratio<5280, 1>> f6(f1);
-    meters<double, ratio<1000, 1>> m6(f1);
-
-    feet<double, ratio<5280, 1>> f7(m1);
-    meters<double, ratio<1000, 1>> m7(m1);
-
-    feet<int, ratio<5280, 1>> f8(f1);
-    meters<int, ratio<1000, 1>> m8(f1);
-
-    feet<int, ratio<5280, 1>> f9(m1);
-    meters<int, ratio<1000, 1>> m9(m1);
-
-    CHECK(f1 == f2);
-    CHECK(m1 == m3);
-
-    CHECK(f1 == f4);
-    CHECK(m1 == m5);
-
-    CHECK((f1 - m2) < .1);
-    CHECK((m1 - f3) < .1);
-
-    CHECK(f8 == 0.0);
-    CHECK(m8 == 0.0);
-
-    CHECK(f9 == 0.0);
-    CHECK(m9 == 0.0);
-    //@todo add more tests for this
-  }
+  CHECK(f9 == 0.0);
+  CHECK(m9 == 0.0);
+  //@todo add more tests for this
+}

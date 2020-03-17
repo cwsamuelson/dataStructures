@@ -85,7 +85,7 @@ TEST_CASE("", "[hp]") {
 }
 
 TEST_CASE("", "[hp]") {
-  using tup_type = tuple<gsw::high_polynomial::input_point, gsw::high_polynomial::value_type>;
+  using tup_type = gsw::high_polynomial::storage_type::value_type;
 
   vector<tup_type> vec1{{{{ 0, 0, 0 }}, 1.0 },
                         {{{ 1, 0, 0 }}, 1.0 },

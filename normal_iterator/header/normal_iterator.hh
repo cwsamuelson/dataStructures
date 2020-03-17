@@ -28,13 +28,12 @@ protected:
   pointer mCurrent;
 
 public:
-  /*!
-   * @param ptr
-   *
-   */
-  explicit
-  normal_iterator(pointer ptr)
+  explicit normal_iterator(pointer ptr)
           : mCurrent(ptr) {
+  }
+
+  explicit normal_iterator(std::nullptr_t)
+          : mCurrent(nullptr) {
   }
 
   /*!

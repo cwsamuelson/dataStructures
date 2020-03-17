@@ -155,7 +155,7 @@ double polynomial::operator()(double X) const {
 }
 
 point2::y_type polynomial::operator()(point2::x_type X) const {
-  return operator()(X.get());
+  return point2::y_type(operator()(X.get()));
 }
 
 bool gsw::operator==(const polynomial& lhs, const polynomial& rhs) {

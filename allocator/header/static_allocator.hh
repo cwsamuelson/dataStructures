@@ -64,16 +64,8 @@ private:
   ind_type mIndicator;
 
 public:
-  /*! Default ctor
-   */
   static_allocator() = default;
-
-  /*! Copy ctor
-   */
   static_allocator(const static_allocator&) = default;
-
-  /*! Move ctor
-   */
   static_allocator(static_allocator&&) noexcept = default;
 
   /*!

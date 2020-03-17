@@ -14,7 +14,7 @@ struct point2d {
 /** Catmull-Rom
  * maybe take a polynomial as an argument?
  */
-//@todo: looping?
+//!@todo: looping?
 class spline {
 private:
   std::vector<point2d> mPoints;
