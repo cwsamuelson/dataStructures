@@ -4,8 +4,11 @@
 
 #include <errors.hh>
 
+inline static auto special_line_number = __LINE__;
+
 void thrower(bool should_throw) {
   GSW_THROW(!should_throw, "bah, humbug");
+  special_line_number = __LINE__ - 1;
 }
 
 TEST_CASE("Simple GSW_THROW macro checks", "") {
@@ -29,7 +32,7 @@ TEST_CASE("gsw::exception captures location information", "") {
   try {
     thrower(true);
   } catch(gsw::exception& e) {
-    CHECK(e.line() == 7);
+    CHECK(e.line() == special_line_number);
     CHECK(e.message() == "bah, humbug");
     CHECK(!e.file().empty());
     std::string w(e.what());
