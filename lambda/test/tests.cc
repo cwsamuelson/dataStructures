@@ -70,7 +70,7 @@ TEST_CASE("lambda", "[lambda]") {
   using env2 = binding<Y, succeed<Zero, 15>, binding<X, succeed<Zero, 7>>>;
 
   using A = eval<apply<eval<lambda<L, literal<ref<X>>>, env1>::result, Zero>::result, env1>::result;
-  using B = eval<apply<eval<lambda<L, literal<ref<X>>>, env2>::result, Zero>::result, env1>::result;
+  using B = eval<apply<eval<lambda<L, literal<ref<X>>>, env2>::result, Zero>::result, env2>::result;
   CHECK(A::value == 5);//?
   CHECK(B::value == 7);//?
 }
