@@ -1,14 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(reference_wrapper LANGUAGES CXX)
 
-IF(TARGET reference_wrapper)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-
 ADD_LIBRARY(reference_wrapper INTERFACE)
 
 SET_TARGET_PROPERTIES(reference_wrapper PROPERTIES

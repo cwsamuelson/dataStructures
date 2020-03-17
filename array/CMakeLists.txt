@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(array LANGUAGES CXX)
 
-IF(TARGET array)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET normal_iterator)
-    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
-ENDIF()
-
 ADD_LIBRARY(array INTERFACE)
 
 SET_TARGET_PROPERTIES(array PROPERTIES

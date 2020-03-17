@@ -1,14 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(locked_resource LANGUAGES CXX)
 
-IF(TARGET locked_resource)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-
 FIND_PACKAGE(Threads REQUIRED)
 
 ADD_LIBRARY(locked_resource INTERFACE)

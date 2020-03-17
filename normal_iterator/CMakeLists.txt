@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(normal_iterator LANGUAGES CXX)
 
-IF(TARGET normal_iterator)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET operators)
-    ADD_SUBDIRECTORY("../operators/" operators)
-ENDIF()
-
 ADD_LIBRARY(normal_iterator INTERFACE)
 
 SET_TARGET_PROPERTIES(normal_iterator PROPERTIES

@@ -1,26 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(map LANGUAGES CXX)
 
-IF(TARGET map)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET normal_iterator)
-    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
-ENDIF()
-IF(NOT TARGET vector)
-    ADD_SUBDIRECTORY("../vector/" vector)
-ENDIF()
-IF(NOT TARGET tuple)
-    ADD_SUBDIRECTORY("../tuple/" tuple)
-ENDIF()
-IF(NOT TARGET allocator)
-    ADD_SUBDIRECTORY("../allocator/" allocator)
-ENDIF()
-
 ADD_LIBRARY(map INTERFACE)
 
 SET_TARGET_PROPERTIES(map PROPERTIES

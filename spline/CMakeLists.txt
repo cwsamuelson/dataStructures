@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(spline LANGUAGES CXX)
 
-IF(TARGET spline)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET polynomial)
-    ADD_SUBDIRECTORY("../polynomial/" polynomial)
-ENDIF()
-
 ADD_LIBRARY(spline source/spline.cc)
 
 SET_TARGET_PROPERTIES(spline PROPERTIES

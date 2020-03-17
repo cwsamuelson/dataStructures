@@ -1,20 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(string LANGUAGES CXX)
 
-IF(TARGET string)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET allocator)
-    ADD_SUBDIRECTORY("../allocator/" allocator)
-ENDIF()
-IF(NOT TARGET normal_iterator)
-    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
-ENDIF()
-
 ADD_LIBRARY(string INTERFACE)
 
 SET_TARGET_PROPERTIES(string PROPERTIES

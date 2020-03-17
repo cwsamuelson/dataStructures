@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(allocator LANGUAGES CXX)
 
-IF(TARGET allocator)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET algorithm)
-    ADD_SUBDIRECTORY("../algorithm/" algorithm)
-ENDIF()
-
 ADD_LIBRARY(allocator INTERFACE)
 
 SET_TARGET_PROPERTIES(allocator PROPERTIES

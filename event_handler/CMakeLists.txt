@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(event_handler LANGUAGES CXX)
 
-IF(TARGET event_handler)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET tuple)
-    ADD_SUBDIRECTORY("../tuple/" tuple)
-ENDIF()
-
 ADD_LIBRARY(event_handler INTERFACE)
 
 SET_TARGET_PROPERTIES(event_handler PROPERTIES

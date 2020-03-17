@@ -1,23 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(polynomial LANGUAGES CXX)
 
-IF(TARGET polynomial)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET operators)
-    ADD_SUBDIRECTORY("../tuple/" operators)
-ENDIF()
-IF(NOT TARGET named_point)
-    ADD_SUBDIRECTORY("../tuple/" named_point)
-ENDIF()
-IF(NOT TARGET algorithm)
-    ADD_SUBDIRECTORY("../algorithm/" algorithm)
-ENDIF()
-
 ADD_LIBRARY(polynomial source/polynomial.cc source/high_polynomial.cc)
 
 SET_TARGET_PROPERTIES(polynomial PROPERTIES

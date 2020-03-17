@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(equation LANGUAGES CXX)
 
-IF(TARGET equation)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET algorithms)
-    ADD_SUBDIRECTORY("../algorithm/" algorithms)
-ENDIF()
-
 ADD_LIBRARY(equation source/equation.cc)
 
 SET_TARGET_PROPERTIES(equation PROPERTIES

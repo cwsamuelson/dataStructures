@@ -1,20 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(named_point LANGUAGES CXX)
 
-IF(TARGET named_point)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET named_type)
-    ADD_SUBDIRECTORY("../named_type/" named_type)
-ENDIF()
-IF(NOT TARGET array)
-    ADD_SUBDIRECTORY("../array/" array)
-ENDIF()
-
 ADD_LIBRARY(named_point INTERFACE)
 
 SET_TARGET_PROPERTIES(named_point PROPERTIES

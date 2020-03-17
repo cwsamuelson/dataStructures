@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(algorithms LANGUAGES CXX)
 
-IF(TARGET algorithms)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET vector)
-    #	add_subdirectory("../vector/" vector)
-ENDIF()
-
 ADD_LIBRARY(algorithms INTERFACE)
 
 SET_TARGET_PROPERTIES(algorithms PROPERTIES

@@ -1,20 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(scheduler LANGUAGES CXX)
 
-IF(TARGET scheduler)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET unit)
-    ADD_SUBDIRECTORY("../unit/" unit)
-ENDIF()
-IF(NOT TARGET ratio)
-    ADD_SUBDIRECTORY("../ratio/" ratio)
-ENDIF()
-
 ADD_LIBRARY(scheduler INTERFACE)
 
 SET_TARGET_PROPERTIES(scheduler PROPERTIES

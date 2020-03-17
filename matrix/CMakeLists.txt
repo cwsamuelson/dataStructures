@@ -1,20 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(matrix LANGUAGES CXX)
 
-IF(TARGET matrix)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET operators)
-    ADD_SUBDIRECTORY("../operators/" operators)
-ENDIF()
-IF(NOT TARGET normal_iterator)
-    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
-ENDIF()
-
 ADD_LIBRARY(matrix INTERFACE)
 
 SET_TARGET_PROPERTIES(matrix PROPERTIES

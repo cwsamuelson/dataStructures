@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(graph LANGUAGES CXX)
 
-IF(TARGET graph)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET stringify)
-    ADD_SUBDIRECTORY("../stringify" stringify)
-ENDIF()
-
 ADD_LIBRARY(graph INTERFACE)
 
 SET_TARGET_PROPERTIES(graph PROPERTIES
@@ -19,14 +8,13 @@ SET_TARGET_PROPERTIES(graph PROPERTIES
                       INTERFACE_CXX_STANDARD_REQUIRED YES
                       INTERFACE_CXX_EXTENSIONS NO)
 TARGET_INCLUDE_DIRECTORIES(graph INTERFACE header)
-TARGET_LINK_LIBRARIES(graph INTERFACE stringify)
 
 ADD_EXECUTABLE(test-graph test/tests.cc)
 SET_TARGET_PROPERTIES(test-graph PROPERTIES
                       CXX_STANDARD 17
                       CXX_STANDARD_REQUIRED YES
                       CXX_EXTENSIONS NO)
-TARGET_LINK_LIBRARIES(test-graph graph Catch2)
+TARGET_LINK_LIBRARIES(test-graph stringify graph Catch2)
 
 ENABLE_TESTING()
 ADD_TEST(test-graph test-graph)

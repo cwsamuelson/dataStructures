@@ -1,20 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(hash_map LANGUAGES CXX)
 
-IF(TARGET hash_map)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET normal_iterator)
-    ADD_SUBDIRECTORY("../normal_iterator/" normal_iterator)
-ENDIF()
-IF(NOT TARGET allocator)
-    ADD_SUBDIRECTORY("../allocator/" allocator)
-ENDIF()
-
 ADD_LIBRARY(hash_map INTERFACE)
 
 SET_TARGET_PROPERTIES(hash_map PROPERTIES

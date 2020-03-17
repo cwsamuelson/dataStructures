@@ -1,17 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(skip_list LANGUAGES CXX)
 
-IF(TARGET skip_list)
-    RETURN()
-ENDIF()
-
-IF(NOT TARGET Catch2)
-    ADD_SUBDIRECTORY("../catch/" Catch2)
-ENDIF()
-IF(NOT TARGET normal_iterator)
-    ADD_SUBDIRECTORY("../tuple/" normal_iterator)
-ENDIF()
-
 ADD_LIBRARY(skip_list INTERFACE)
 
 SET_TARGET_PROPERTIES(skip_list PROPERTIES
