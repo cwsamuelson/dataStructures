@@ -347,7 +347,7 @@ public:
    */
   template<typename D, typename F, typename S>
   constexpr unit(const other_type<S, D, F>& other)
-          : mValue(convert_type<S, D, F>()(other).getRaw()) {
+          : mValue(convert_type<S, D, F>()(other).getValue()) {
   }
 
   /*! Copy-assignment operator
