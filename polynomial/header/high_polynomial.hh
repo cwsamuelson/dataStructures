@@ -22,18 +22,17 @@ private:
 
 public:
   high_polynomial() = default;
-
   high_polynomial(std::initializer_list<storage_type::value_type> il);
-
   template<typename inputIter>
   high_polynomial(inputIter first, inputIter last)
           : mCoeff(first, last) {
   }
-
-  template<typename U>
-  high_polynomial(U&& eq) noexcept
-          : mCoeff(std::forward<storage_type>(eq.mCoeff)) {
-  }
+  high_polynomial(const high_polynomial& hp)
+    : mCoeff(hp.mCoeff)
+  {}
+  high_polynomial(high_polynomial&& hp) noexcept
+    : mCoeff(std::move(hp.mCoeff))
+  {}
 
   std::set<value_type> solve(input_point hint = input_point::storage_t{ 1, 1 }, unsigned int iterations = 6) const;
 
