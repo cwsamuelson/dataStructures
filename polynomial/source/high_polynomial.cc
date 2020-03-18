@@ -30,6 +30,10 @@ high_polynomial& high_polynomial::operator*=(const high_polynomial& hp) {
 }
 
 high_polynomial& high_polynomial::operator*=(value_type d) {
+  for(auto& [point, coeff] : mCoeff){
+    coeff *= d;
+  }
+
   return *this;
 }
 
@@ -38,7 +42,11 @@ high_polynomial& high_polynomial::operator/=(const high_polynomial& hp) {
 }
 
 high_polynomial& high_polynomial::operator/=(value_type d) {
-  return *this;
+  for(auto& [point, coeff] : mCoeff){
+    coeff /= d;
+  }
+
+  return *this;;
 }
 
 high_polynomial high_polynomial::operator-() const {
