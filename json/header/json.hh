@@ -84,7 +84,57 @@ public:
           , mData(std::move(b)){
   }
 
-  //enum class type_tag { none, object, array, string, integer, u_integer, floating, boolean };
+  //templatize some of the constructors and assignment operators?
+
+  basic_json& operator=(object_t o){
+    mTypeTag = type_tag::object;
+    mData = std::move(o);
+
+    return *this;
+  }
+
+  basic_json& operator=(array_t a){
+    mTypeTag = type_tag::array;
+    mData = std::move(a);
+
+    return *this;
+  }
+
+  basic_json& operator=(string_t s){
+    mTypeTag = type_tag::string;
+    mData = std::move(s);
+
+    return *this;
+  }
+
+  basic_json& operator=(integer_t i){
+    mTypeTag = type_tag::integer;
+    mData = std::move(i);
+
+    return *this;
+  }
+
+  basic_json& operator=(u_integer_t u){
+    mTypeTag = type_tag::u_integer;
+    mData = std::move(u);
+
+    return *this;
+  }
+
+  basic_json& operator=(float_t f){
+    mTypeTag = type_tag::floating;
+    mData = std::move(f);
+
+    return *this;
+  }
+
+  basic_json& operator=(bool_t b){
+    mTypeTag = type_tag::boolean;
+    mData = std::move(b);
+
+    return *this;
+  }
+
   [[nodiscard]]
   bool is_object() const{
     return mTypeTag == type_tag::object;
