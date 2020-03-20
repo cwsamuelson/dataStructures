@@ -76,6 +76,47 @@ public:
     : mTypeTag(type_tag::boolean)
           , mData(std::move(b)){
   }
+
+  //enum class type_tag { none, object, array, string, integer, u_integer, floating, boolean };
+  [[nodiscard]]
+  bool is_object() const{
+    return mTypeTag == type_tag::object;
+  }
+
+  [[nodiscard]]
+  bool is_array() const{
+    return mTypeTag == type_tag::array;
+  }
+
+  [[nodiscard]]
+  bool is_string() const{
+    return mTypeTag == type_tag::string;
+  }
+
+  [[nodiscard]]
+  bool is_integer() const{
+    return mTypeTag == type_tag::integer || mTypeTag == type_tag::u_integer;
+  }
+
+  [[nodiscard]]
+  bool is_signed() const{
+    return mTypeTag == type_tag::integer;
+  }
+
+  [[nodiscard]]
+  bool is_unsigned() const{
+    return mTypeTag == type_tag::u_integer;
+  }
+
+  [[nodiscard]]
+  bool is_floating() const{
+    return mTypeTag == type_tag::floating;
+  }
+
+  [[nodiscard]]
+  bool is_bool() const{
+    return mTypeTag == type_tag::boolean;
+  }
 };
 
 using json = basic_json<>;
