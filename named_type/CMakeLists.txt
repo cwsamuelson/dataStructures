@@ -1,31 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
-project(named_type LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(named_type LANGUAGES CXX)
 
-if(TARGET named_type)
-	return()
-endif()
+ADD_LIBRARY(named_type INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(named_type PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(named_type INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(named_type INTERFACE header)
+TARGET_LINK_LIBRARIES(named_type INTERFACE tuple)
 
-set_target_properties(named_type PROPERTIES
-                                 INTERFACE_CXX_STANDARD 17
-                                 INTERFACE_CXX_STANDARD_REQUIRED YES
-                                 INTERFACE_CXX_EXTENSIONS NO)
+ADD_EXECUTABLE(test-named_type test/tests.cc)
+SET_TARGET_PROPERTIES(test-named_type PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-named_type named_type Catch2)
 
-target_include_directories(named_type INTERFACE .)
-target_link_libraries(named_type INTERFACE tuple)
-
-add_executable(test-named_type tests.cc)
-set_target_properties(test-named_type PROPERTIES
-                                      CXX_STANDARD 17
-                                      CXX_STANDARD_REQUIRED YES
-                                      CXX_EXTENSIONS NO)
-target_link_libraries(test-named_type named_type Catch2)
-
-enable_testing()
-add_test(test-named_type test-named_type)
+ENABLE_TESTING()
+ADD_TEST(test-named_type test-named_type)
 

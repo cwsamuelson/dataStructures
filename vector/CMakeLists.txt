@@ -1,38 +1,24 @@
-cmake_minimum_required(VERSION 3.0)
-project(vector LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(vector LANGUAGES CXX)
 
-if(TARGET vector)
-	return()
-endif()
+ADD_LIBRARY(vector INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET vector)
-	add_subdirectory("../normal_iterator/" normal_iterator)
-endif()
-if(NOT TARGET allocator)
-	add_subdirectory("../allocator/" allocator)
-endif()
+SET_TARGET_PROPERTIES(vector PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(vector INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(vector INTERFACE header)
 
-set_target_properties(vector PROPERTIES
-                              INTERFACE_CXX_STANDARD 17
-                              INTERFACE_CXX_STANDARD_REQUIRED YES
-                              INTERFACE_CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(vector INTERFACE normal_iterator allocator)
 
-target_include_directories(vector INTERFACE .)
+ADD_EXECUTABLE(test-vector test/tests.cc)
+SET_TARGET_PROPERTIES(test-vector PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-vector vector Catch2)
 
-target_link_libraries(vector INTERFACE normal_iterator allocator)
-
-add_executable(test-vector tests.cc)
-set_target_properties(test-vector PROPERTIES
-                              CXX_STANDARD 17
-                              CXX_STANDARD_REQUIRED YES
-                              CXX_EXTENSIONS NO)
-target_link_libraries(test-vector vector Catch2)
-
-enable_testing()
-add_test(test-vector test-vector)
+ENABLE_TESTING()
+ADD_TEST(test-vector test-vector)
 

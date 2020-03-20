@@ -1,31 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
-project(json LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(json LANGUAGES CXX)
 
-if(TARGET json)
-	return()
-endif()
+ADD_LIBRARY(json INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(json PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(json INTERFACE)
-
-set_target_properties(json PROPERTIES
-                           INTERFACE_CXX_STANDARD 17
-                           INTERFACE_CXX_STANDARD_REQUIRED YES
-                           INTERFACE_CXX_EXTENSIONS NO)
-
-target_include_directories(json INTERFACE .)
+TARGET_INCLUDE_DIRECTORIES(json INTERFACE header)
 #target_link_libraries(json INTERFACE tuple)
 
-add_executable(test-json tests.cc)
-set_target_properties(test-json PROPERTIES
-                                CXX_STANDARD 17
-                                CXX_STANDARD_REQUIRED YES
-                                CXX_EXTENSIONS NO)
-target_link_libraries(test-json json Catch2)
+ADD_EXECUTABLE(test-json test/tests.cc)
+SET_TARGET_PROPERTIES(test-json PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-json json Catch2)
 
-enable_testing()
-add_test(test-json test-json)
+ENABLE_TESTING()
+ADD_TEST(test-json test-json)
 

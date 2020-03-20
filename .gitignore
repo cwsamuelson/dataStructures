@@ -9,4 +9,5 @@ depend/*
 *.stackdump
 documentation/*
 build/*
-
+.idea/*
+cmake-build-*/*
