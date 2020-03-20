@@ -34,6 +34,13 @@ public:
   basic_json()
     : mTypeTag(type_tag::none){
   }
+  basic_json(const basic_json&) = default;
+  basic_json(basic_json&&) noexcept = default;
+
+  basic_json& operator=(const basic_json&) = default;
+  basic_json& operator=(basic_json&&) noexcept = default;
+
+  ~basic_json() = default;
 
   explicit
   basic_json(object_t o)
