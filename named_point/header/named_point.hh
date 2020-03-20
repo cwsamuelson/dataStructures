@@ -1,15 +1,16 @@
 #ifndef __NAMED_POINT_HH__
 #define __NAMED_POINT_HH__
 
-#include <initializer_list>
-
 #include <named_type.hh>
 #include <array.hh>
+#include <additive.hh>
+
+#include <initializer_list>
 
 namespace gsw {
 
 template<unsigned long N, typename T = double>
-class vec {
+class vec : public additive<vec<N, T>>{
 public:
   using value_type = T;
   using w_type = named_type<value_type, struct w_struct>;
@@ -188,6 +189,22 @@ public:
   [[nodiscard]]
   bool operator==(const w_type& w) const {
     return mData[3] == w.get();
+  }
+
+  vec& operator+=(const vec& rhs){
+    for(size_t i = 0; i < mSize; ++i){
+      mData[i] += rhs.mData[i];
+    }
+
+    return *this;
+  }
+
+  vec& operator-=(const vec& rhs){
+    for(size_t i = 0; i < mSize; ++i){
+      mData[i] -= rhs.mData[i];
+    }
+
+    return *this;
   }
 };
 

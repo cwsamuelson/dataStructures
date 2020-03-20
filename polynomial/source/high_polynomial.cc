@@ -26,6 +26,16 @@ high_polynomial& high_polynomial::operator-=(const high_polynomial& hp) {
 }
 
 high_polynomial& high_polynomial::operator*=(const high_polynomial& hp) {
+  storage_type temp;
+
+  for(const auto& [lkey, lcoeff] : mCoeff){
+    for(const auto& [rkey, rcoeff] : hp.mCoeff){
+      temp[lkey + rkey] += lcoeff * rcoeff;
+    }
+  }
+
+  mCoeff = std::move(temp);
+
   return *this;
 }
 
