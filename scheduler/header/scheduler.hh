@@ -20,23 +20,9 @@ private:
   tick_rate mRate;
 
 public:
-  scheduler(callback cb, tick_rate rate)
-          : mCounter(0.0)
-          , mCall(std::move(cb))
-          , mRate(rate) {
-  }
+  scheduler(callback cb, tick_rate rate);
 
-  void update(time<double> t) {
-    mCounter += t;
-
-    //this allows t to trigger multiple events.
-    while((mCounter * mRate) > 1) {
-      //the amount of time for one tick, given mRate
-      mCounter -= ((1.0 / mRate) * tick<double>(1));
-
-      mCall();
-    }
-  }
+  void update(time<double> t);
 };
 
 }
