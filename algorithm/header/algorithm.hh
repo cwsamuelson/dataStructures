@@ -10,7 +10,7 @@
 
 //#include<vector.hh>
 
-namespace gsw{
+namespace gsw {
 
 /*! Floating point comparator algorithm
  *
@@ -23,14 +23,16 @@ namespace gsw{
  * @return The effective equality of f1 and f2
  *
  * Due to the nature of the floating point implementation if
- * a==b and b==c a might== c.  To account for this, a more rigorous comparison
+ * a==b and b==c a might!= c.  To account for this, a more rigorous comparison
  * must be utilized.
+ * The implementation uses the data type's epsilon value, and multiplies by the
+ * largest order of magnitude, and then compares it to the absolute difference
+ * of the parameters
  */
 template<typename T>
-static
-bool
-are_equal( T f1, T f2 ){
-  return ( std::fabs( f1 - f2 ) <= std::numeric_limits<T>::epsilon() * std::max( {1.0, std::fabs( f1 ), std::fabs( f2 )} ) );
+[[nodiscard]]
+static bool are_equal(T f1, T f2) {
+  return (std::fabs(f1 - f2) <= (std::numeric_limits<T>::epsilon() * std::max({ 1.0, std::fabs(f1), std::fabs(f2) })));
 }
 
 /*! Compare equality of floating point numbers
@@ -42,9 +44,10 @@ are_equal( T f1, T f2 ){
  * @return Whether f1 and f2 are approximately equal
  */
 template<>
-bool
-are_equal<float>( float f1, float f2 ){
-  return ( std::fabs( f1 - f2 ) <= std::numeric_limits<float>::epsilon() * std::max( {1.0f, std::fabs( f1 ), std::fabs( f2 )} ) );
+[[nodiscard]]
+bool are_equal<float>(float f1, float f2) {
+  return (std::fabs(f1 - f2) <=
+          std::numeric_limits<float>::epsilon() * std::max({ 1.0f, std::fabs(f1), std::fabs(f2) }));
 }
 
 /*! Invokes member function pointer
@@ -70,9 +73,8 @@ are_equal<float>( float f1, float f2 ){
  * };
  */
 template<typename OBJ, typename MEMBER_FN, typename ...Args>
-auto
-invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
-  return ( obj.*memfun )( std::forward( args... ) );
+auto invoke(OBJ obj, MEMBER_FN memfun, Args ...args) {
+  return (obj.*memfun)(std::forward(args...));
 }
 
 /*! Less than operator functor
@@ -80,9 +82,9 @@ invoke( OBJ obj, MEMBER_FN memfun, Args ...args ){
  * @tparam T  Type to be compared
  */
 template<typename T>
-struct less{
-  bool
-  operator()( const T& lhs, const T& rhs ){
+struct less {
+  [[nodiscard]]
+  bool operator()(const T& lhs, const T& rhs) {
     return lhs < rhs;
   }
 };
@@ -98,11 +100,11 @@ struct less{
  * @return The 'distance' between first and last
  */
 template<typename iter>
-unsigned long
-distance( iter first, iter last ){
-  unsigned long ret = 0;
+[[nodiscard]]
+size_t distance(iter first, iter last) {
+  size_t ret = 0;
 
-  while( first++ != last ){
+  while(first++ != last) {
     ++ret;
   }
 
@@ -118,8 +120,7 @@ distance( iter first, iter last ){
  * @param y Iterator to second swapping object
  */
 template<typename iter>
-void
-swap( iter x, iter y ){
+void swap(iter x, iter y) {
   auto z = *x;
   *x = *y;
   *y = z;

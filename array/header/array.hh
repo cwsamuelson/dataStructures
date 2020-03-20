@@ -11,7 +11,7 @@
 
 #include<normal_iterator.hh>
 
-namespace gsw{
+namespace gsw {
 
 //see mask_array and indirect array for indexing ideas
 //  one allows data[data > 5] = -1 kinda syntax,
@@ -30,8 +30,8 @@ class array;
  * @todo Performance testing on array splicing.  may be a faster way to do this
  */
 template<typename T>
-struct splice_index{
-  typedef std::function<bool( T, T )> opsig;
+struct splice_index {
+  typedef std::function<bool(T, T)> opsig;
 
   opsig mOp;
   unsigned int mIdx;
@@ -42,9 +42,9 @@ struct splice_index{
    *
    * @param idx
    */
-  splice_index( opsig op, unsigned int idx )
-    : mOp( op )
-    , mIdx( idx ){
+  splice_index(opsig op, unsigned int idx)
+          : mOp(op)
+          , mIdx(idx) {
   }
 };
 
@@ -58,23 +58,23 @@ struct splice_helper;
  * @tparam N
  */
 template<typename T, unsigned int N>
-struct splice_helper<T[N]>{
+struct splice_helper<T[N]> {
   array<T[N]>& mArr;
   std::vector<unsigned int> mIdxs;
 
   /*!
    * @param arr
    */
-  splice_helper( array<T[N]>& arr )
-    : mArr( arr ){
+  explicit
+  splice_helper(array<T[N]>& arr)
+          : mArr(arr) {
   }
 
   /*!
    * @param t
    */
-  array<T[N]>&
-  operator=( const T& t ){
-    for( auto it : mIdxs ){
+  array<T[N]>& operator=(const T& t) {
+    for(auto it : mIdxs) {
       mArr[it] = t;
     }
 
@@ -91,20 +91,21 @@ struct splice_helper<T[N]>{
  * @todo This class is a good candidate to implement constexpr-ness
  */
 template<typename T, unsigned int N>
-class array<T[N]>{
+class array<T[N]> {
 public:
   using value_type = T;
   using reference = value_type&;
   using const_reference = const value_type&;
   using array_t = T[N];
-  using index_t = unsigned int;
+  using index_t = size_t;
   using splicer = splice_index<value_type>;
   using helper = splice_helper<value_type[N]>;
   using iterator = normal_iterator<value_type, array>;
-  using const_iterator = const normal_iterator<value_type, array>;
+  using const_iterator = normal_iterator<const value_type, array>;
 
   static constexpr index_t mSize = N;
-  static constexpr unsigned int ptrdiff = sizeof( value_type );
+
+  static constexpr unsigned int ptrdiff = sizeof(value_type);
 
 private:
   array_t mArr;
@@ -112,13 +113,11 @@ private:
 public:
   /*! Default ctor
    */
-  constexpr
-  array() = default;
+  constexpr array() = default;
 
-  constexpr
-  array(array_t arr)
-    : mArr(arr)
-  {}
+  constexpr array(array_t arr)
+          : mArr(arr) {
+  }
 
   /*! List initialization ctor
    *
@@ -127,10 +126,11 @@ public:
    * @param args
    */
   template<typename ...Args>
-  constexpr
-  array( Args... args )
-    : mArr{ args...}
-  {}
+  constexpr array(Args... args)
+          : mArr{ args... } {
+  }
+
+  //! @todo add initializer list constructor
 
   /*! Get the size of the array
    *
@@ -138,9 +138,8 @@ public:
    *
    * Returns the number of elements stored in the array.
    */
-  constexpr
-  index_t
-  size() const{
+  [[nodiscard]]
+  constexpr index_t size() const {
     return mSize;
   }
 
@@ -183,8 +182,8 @@ public:
    *    }
    *  }
    */
-  reference
-  operator[]( index_t idx ){
+  [[nodiscard]]
+  reference operator[](index_t idx) {
     return mArr[idx];
   }
 
@@ -195,9 +194,8 @@ public:
    * Behaves the same as non-const version, but provides a const reference,
    * and can be used on const objects.
    */
-  constexpr
-  const_reference
-  operator[]( index_t idx ) const{
+  [[nodiscard]]
+  constexpr const_reference operator[](index_t idx) const {
     return mArr[idx];
   }
 
@@ -214,13 +212,13 @@ public:
    *
    * This will assign all elements at indexes 3 - 5 equal to 42.
    */
-  helper
-  operator[]( const splicer& spl ){
-    helper h( *this );
+  [[nodiscard]]
+  helper operator[](const splicer& spl) {
+    helper h(*this);
 
-    for( unsigned int i = 0; i < mSize; ++i ){
-      if( spl.mOp( i, spl.mIdx ) ){
-        h.mIdxs.push_back( i );
+    for(unsigned int i = 0; i < mSize; ++i) {
+      if(spl.mOp(i, spl.mIdx)) {
+        h.mIdxs.push_back(i);
       }
     }
 
@@ -236,6 +234,7 @@ public:
    * @return Helper to allow assignment to elements described by splicer argument
    *
    * @todo genericize to take other containers as well
+   * @todo allow different integral index types for the input array
    *
    * Utility operator to allow for more descriptive array modification.
    * Intended usage:
@@ -250,12 +249,12 @@ public:
    * This will assign elements at indexes 3 and 4 equal to 42.
    */
   template<unsigned int M>
-  helper
-  operator[]( array<unsigned int[M]>& a ){
-    helper h( *this );
+  [[nodiscard]]
+  helper operator[](array<size_t[M]>& a) {
+    helper h(*this);
 
-    for( auto it : a ){
-      h.mIdxs.push_back( it );
+    for(auto it : a) {
+      h.mIdxs.push_back(it);
     }
 
     return h;
@@ -266,9 +265,9 @@ public:
    * @param idx  Index, greater than which will be included in subsequent
    *             splicing operations
    */
-  splicer
-  operator>( index_t idx ){
-    return splicer( std::greater<value_type>(), idx );
+  [[nodiscard]]
+  splicer operator>(index_t idx) {
+    return splicer(std::greater<value_type>(), idx);
   }
 
   /*! GE operator for array splicing
@@ -276,9 +275,9 @@ public:
    * @param idx  Index, greater than and equal to which will be included in
    *             subsequent splicing operations
    */
-  splicer
-  operator>=( index_t idx ){
-    return splicer( std::greater_equal<value_type>(), idx );
+  [[nodiscard]]
+  splicer operator>=(index_t idx) {
+    return splicer(std::greater_equal<value_type>(), idx);
   }
 
   /*! LT operator for array splicing
@@ -286,9 +285,9 @@ public:
    * @param idx  Index, lesser than which will be included in subsequent
    *             splicing operations
    */
-  splicer
-  operator<( index_t idx ){
-    return splicer( std::less<value_type>(), idx );
+  [[nodiscard]]
+  splicer operator<(index_t idx) {
+    return splicer(std::less<value_type>(), idx);
   }
 
   /*! LE operator for array splicing
@@ -296,36 +295,36 @@ public:
    * @param idx  Index, less than or equal to which will be included in
    *             subsequent splicing operations
    */
-  splicer
-  operator<=( index_t idx ){
-    return splicer( std::less_equal<value_type>(), idx );
+  [[nodiscard]]
+  splicer operator<=(index_t idx) {
+    return splicer(std::less_equal<value_type>(), idx);
   }
 
   /*! Create an iterator to first element
    */
-  iterator
-  begin(){
-    return Iterator( 0 );
+  [[nodiscard]]
+  iterator begin() {
+    return Iterator(0);
   }
 
   /*! Create an iterator to final element
    */
-  iterator
-  end(){
-    return Iterator( mSize );
+  [[nodiscard]]
+  iterator end() {
+    return Iterator(mSize);
   }
 
   /*! Create a const iterator to first element
    */
-  const_iterator
-  cbegin() const{
+  [[nodiscard]]
+  const_iterator cbegin() const {
     return begin();
   }
 
   /*! Create a const iterator to final element
    */
-  const_iterator
-  cend() const{
+  [[nodiscard]]
+  const_iterator cend() const {
     return end();
   }
 
@@ -333,9 +332,9 @@ public:
    *
    * @param idx Index of element iterator will be directed to
    */
-  iterator
-  Iterator( index_t idx ){
-    return iterator( &mArr[idx] );
+  [[nodiscard]]
+  iterator Iterator(index_t idx) {
+    return iterator(&mArr[idx]);
   }
 };
 

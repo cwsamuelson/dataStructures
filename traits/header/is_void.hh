@@ -3,13 +3,13 @@
 
 #include<integral_constant.hh>
 
-namespace gsw{
+namespace gsw {
 
 template<typename T>
-class is_void : public bool_constant<false>{ };
+class is_void : public bool_constant<false> {};
 
 template<>
-class is_void<void> : public bool_constant<true>{ };
+class is_void<void> : public bool_constant<true> {};
 
 }
 

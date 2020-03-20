@@ -1,7 +1,7 @@
 #ifndef __INTEGRAL_CONSTANT_HH__
 #define __INTEGRAL_CONSTANT_HH__
 
-namespace gsw{
+namespace gsw {
 
 /*! Constant value wrapper
  *
@@ -13,27 +13,24 @@ namespace gsw{
  * parameter rules.
  */
 template<typename T, T v>
-class integral_constant{
+class integral_constant {
 public:
   using value_type = T;
   using type = integral_constant;
+
   static const T value = v;
 
   constexpr
-  operator
-  value_type() const noexcept{
+  operator value_type() const noexcept {
     return value;
   }
 
-  constexpr
-  T
-  operator()() const noexcept{
+  constexpr T operator()() const noexcept {
     return value;
   }
 };
 
-template<bool B>
-using bool_constant = integral_constant<bool, B>;
+template<bool B> using bool_constant = integral_constant<bool, B>;
 
 }
 

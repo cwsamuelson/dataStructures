@@ -5,6 +5,8 @@
 #include<map>
 #include<set>
 
+namespace gsw {
+
 //TODO: consider associating data with edges
 //associating data with a node is meaningless for this data structure; this
 //  information is more appropriately stored at the client.  However the data of
@@ -58,7 +60,7 @@
  * }
  */
 template<typename T>
-class graph{
+class graph {
 public:
   using value_type = T;
   using reference = T&;
@@ -67,11 +69,12 @@ public:
 
 private:
   //TODO:investigate multimap?
-  std::map<value_type, std::set<value_type> > mNodes;
+  std::map<value_type, std::set<value_type>> mNodes;
+
   //TODO:store a set of all known edges?
   // doing this may assist in removal of edges and nodes.
   // the mNodes map is effectively mOutEdges
-  std::map<value_type, std::set<value_type> > mInEdges;
+  std::map<value_type, std::set<value_type>> mInEdges;
 
 public:
   /*! Default ctor
@@ -82,8 +85,7 @@ public:
    *
    * @param ref value to refer to the new node by.
    */
-  void
-  add_node( const_reference ref ){
+  void add_node(const_reference ref) {
     mNodes[ref];
   }
 
@@ -91,23 +93,22 @@ public:
    *
    * @param ref node to remove
    */
-  void
-  remove_node( const_reference ref ){
-    auto outgoing = mNodes.at( ref );
-    auto incoming = mInEdges.at( ref );
+  void remove_node(const_reference ref) {
+    auto outgoing = mNodes.at(ref);
+    auto incoming = mInEdges.at(ref);
 
-    for( auto out : outgoing ){
-      auto& local = mInEdges.at( out );
-      local.erase( local.find( ref ) );
+    for(auto out : outgoing) {
+      auto& local = mInEdges.at(out);
+      local.erase(local.find(ref));
     }
 
-    for( auto in : incoming ){
-      auto& local = mNodes.at( in );
-      local.erase( local.find( ref ) );
+    for(auto in : incoming) {
+      auto& local = mNodes.at(in);
+      local.erase(local.find(ref));
     }
 
-    mInEdges.erase( mInEdges.find( ref ) );
-    mNodes.erase( mNodes.find( ref ) );
+    mInEdges.erase(mInEdges.find(ref));
+    mNodes.erase(mNodes.find(ref));
   }
 
   /*! Create a new edge between 2 nodes
@@ -118,17 +119,16 @@ public:
    *
    * @param is_directed whether the edge should be directed or not
    */
-  void
-  add_edge( const_reference refA, const_reference refB, bool is_directed = false ){
+  void add_edge(const_reference refA, const_reference refB, bool is_directed = false) {
     // test for existence of refB
-    mNodes.at( refB );
+    mNodes.at(refB);
 
-    mNodes.at( refA ).emplace( refB );
-    mInEdges[refB].emplace( refA );
+    mNodes.at(refA).emplace(refB);
+    mInEdges[refB].emplace(refA);
 
-    if( !is_directed ){
-      mNodes.at( refB ).emplace( refA );
-      mInEdges[refA].emplace( refB );
+    if(!is_directed) {
+      mNodes.at(refB).emplace(refA);
+      mInEdges[refA].emplace(refB);
     }
   }
 
@@ -138,13 +138,12 @@ public:
    *
    * @param refB node edge is to
    */
-  void
-  remove_edge( const_reference refA, const_reference refB ){
-    auto& outedges = mNodes.at( refA );
-    outedges.erase( outedges.find( refB ) );
+  void remove_edge(const_reference refA, const_reference refB) {
+    auto& outedges = mNodes.at(refA);
+    outedges.erase(outedges.find(refB));
 
-    auto& inedges = mInEdges.at( refB );
-    inedges.erase( inedges.find( refA ) );
+    auto& inedges = mInEdges.at(refB);
+    inedges.erase(inedges.find(refA));
   }
 
   /*! Emplace new edge
@@ -153,13 +152,12 @@ public:
    * @param refB
    * @param is_directed
    */
-  void
-  emplace_edge( const_reference refA, const_reference refB, bool is_directed = false ) {
-    mNodes[refA].emplace( refB );
+  void emplace_edge(const_reference refA, const_reference refB, bool is_directed = false) {
+    mNodes[refA].emplace(refB);
     mInEdges[refB] = refA;
 
-    if( !is_directed ){
-      mNodes[refB].emplace( refA );
+    if(!is_directed) {
+      mNodes[refB].emplace(refA);
       mInEdges[refA] = refB;
     }
   }
@@ -168,12 +166,12 @@ public:
    *
    * @return a set of all node names
    */
-  std::set<value_type>
-  get_nodes() const{
+  [[nodiscard]]
+  std::set<value_type> get_nodes() const {
     std::set<value_type> result;
 
-    for( auto pr : mNodes ){
-      result.emplace( pr.first );
+    for(auto pr : mNodes) {
+      result.emplace(pr.first);
     }
 
     return result;
@@ -183,13 +181,13 @@ public:
    *
    * @return set of all edges, expressed as a pair of node names {node_from, node_to}
    */
-  std::set<edge>
-  get_edges() const{
+  [[nodiscard]]
+  std::set<edge> get_edges() const {
     std::set<edge> edges;
 
-    for( auto node : mNodes ){
-      for( auto edg : node.second ){
-        edges.emplace( node.first, edg );
+    for(auto node : mNodes) {
+      for(auto edg : node.second) {
+        edges.emplace(node.first, edg);
       }
     }
 
@@ -202,13 +200,13 @@ public:
    *
    * @return set of edges to and from ref
    */
-  std::set<edge>
-  get_edges( const_reference ref ) const{
-    auto result = get_out_edges( ref );
+  [[nodiscard]]
+  std::set<edge> get_edges(const_reference ref) const {
+    auto result = get_out_edges(ref);
 
-    auto in = get_in_edges( ref );
+    auto in = get_in_edges(ref);
 
-    result.insert( in.begin(), in.end() );
+    result.insert(in.begin(), in.end());
 
     return result;
   }
@@ -219,12 +217,12 @@ public:
    *
    * @return set of edges from ref
    */
-  std::set<edge>
-  get_out_edges( const_reference ref ) const{
+  [[nodiscard]]
+  std::set<edge> get_out_edges(const_reference ref) const {
     std::set<edge> result;
 
-    for( auto node : mNodes.at( ref ) ){
-      result.emplace( ref, node );
+    for(auto node : mNodes.at(ref)) {
+      result.emplace(ref, node);
     }
 
     return result;
@@ -236,16 +234,16 @@ public:
    *
    * @return set of edges to ref
    */
-  std::set<edge>
-  get_in_edges( const_reference ref ) const{
+  [[nodiscard]]
+  std::set<edge> get_in_edges(const_reference ref) const {
     std::set<edge> result;
 
     // verify node exists
-    mNodes.at( ref );
+    mNodes.at(ref);
 
-    if( mInEdges.count( ref ) ){
-      for( auto node : mInEdges.at( ref ) ){
-        result.emplace( node, ref );
+    if(mInEdges.count(ref)) {
+      for(auto node : mInEdges.at(ref)) {
+        result.emplace(node, ref);
       }
     }
 
@@ -260,10 +258,10 @@ public:
    *
    * @return whether the refA and refB are adjacent
    */
-  bool
-  adjacent( const_reference refA, const_reference refB ) const{
+  [[nodiscard]]
+  bool adjacent(const_reference refA, const_reference refB) const {
     //return mNodes.at( refA ).contains( refB );//contains is c++20
-    return mNodes.at( refA ).count( refB ) > 0;
+    return mNodes.at(refA).count(refB) > 0;
     //!@todo should direction be accounted for here? guess is no
   }
 
@@ -273,17 +271,17 @@ public:
    *
    * @return set of neighbors to ref
    */
-  std::set<value_type>
-  neighbors( const_reference ref ) const{
-    return mNodes.at( ref );
+  [[nodiscard]]
+  std::set<value_type> neighbors(const_reference ref) const {
+    return mNodes.at(ref);
   }
 
   /*! Get the number of nodes in the graph
    *
    * @return the number of nodes in graph
    */
-  size_t
-  node_count() const{
+  [[nodiscard]]
+  size_t node_count() const {
     return mNodes.size();
   }
 
@@ -291,11 +289,11 @@ public:
    *
    * @return the number of edges in graph
    */
-  size_t
-  edge_count() const{
+  [[nodiscard]]
+  size_t edge_count() const {
     unsigned int count = 0;
 
-    for( auto pr : mNodes ){
+    for(auto pr : mNodes) {
       count += pr.second.size();
     }
 
@@ -304,18 +302,19 @@ public:
 
   /*! Empty the graph of all nodes and edges
    */
-  void
-  clear(){
+  void clear() {
     mNodes.clear();
     mInEdges.clear();
   }
 
   /*! Test whether the graph is empty
    */
-  bool
-  empty() const{
+  [[nodiscard]]
+  bool empty() const {
     return mNodes.empty();
   }
 };
+
+}
 
 #endif

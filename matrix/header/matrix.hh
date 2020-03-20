@@ -7,22 +7,22 @@
 #include<operators.hh>
 #include<normal_iterator.hh>
 
-namespace gsw{
+namespace gsw {
 
-class matrix : public gsw::multiplicative<matrix>,
-                      gsw::multiplicative<matrix, double>,
-                      gsw::multiplicative<double, matrix>,
-                      gsw::additive<matrix>{
+class matrix
+        : public gsw::multiplicative<matrix>
+          , gsw::multiplicative<matrix, double>
+          , gsw::multiplicative<double, matrix>
+          , gsw::additive<matrix> {
 public:
   using dim_t = unsigned long;
   using data_t = double;
   using iterator = normal_iterator<data_t, matrix>;
 
 private:
-  std::vector<std::vector<data_t> > mData;
+  std::vector<std::vector<data_t>> mData;
 
-  void
-  validate_matrixes( const gsw::matrix& two ) const;
+  void validate_matrixes(const gsw::matrix& two) const;
 
 public:
   /*!
@@ -31,13 +31,13 @@ public:
    *
    * @param height
    */
-  matrix( dim_t width, dim_t height );
+  matrix(dim_t width, dim_t height);
 
   /*!
    *
    * @param data
    */
-  matrix( std::vector<std::vector<data_t> > data );
+  matrix(std::vector<std::vector<data_t>> data);
 
   /*!
    *
@@ -45,8 +45,7 @@ public:
    *
    * @param height
    */
-  const data_t&
-  operator()( dim_t x, dim_t y ) const;
+  const data_t& operator()(dim_t x, dim_t y) const;
 
   /*!
    *
@@ -54,23 +53,19 @@ public:
    *
    * @param height
    */
-  data_t&
-  operator()( dim_t x, dim_t y );
+  data_t& operator()(dim_t x, dim_t y);
 
   /*!
    */
-  matrix
-  operator-() const;
+  matrix operator-() const;
 
   /*!
    */
-  matrix
-  transpose() const;
+  matrix transpose() const;
 
   /*!
    */
-  matrix
-  inverse() const;
+  matrix inverse() const;
 
   /*!
    *
@@ -78,8 +73,7 @@ public:
    *
    * @param height
    */
-  void
-  set_size( dim_t x, dim_t y );
+  void set_size(dim_t x, dim_t y);
 
   /*!
    *
@@ -87,49 +81,41 @@ public:
    *
    * @param height
    */
-  std::tuple<dim_t, dim_t>
-  size() const;
+  std::tuple<dim_t, dim_t> size() const;
 
   /*!
    */
-  matrix
-  splice( dim_t x, dim_t y ){
+  matrix splice(dim_t x, dim_t y) {
   }
 
   /*!
    */
-  iterator
-  begin(){
+  iterator begin() {
   }
 
   /*!
    */
-  iterator
-  end(){
+  iterator end() {
   }
 
   /*!
    */
-  iterator
-  xbegin(){
+  iterator xbegin() {
   }
 
   /*!
    */
-  iterator
-  xend(){
+  iterator xend() {
   }
 
   /*!
    */
-  iterator
-  ybegin(){
+  iterator ybegin() {
   }
 
   /*!
    */
-  iterator
-  yend(){
+  iterator yend() {
   }
 
   /*!
@@ -138,9 +124,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator*=( matrix& lhs, const matrix& rhs );
+  friend matrix& operator*=(matrix& lhs, const matrix& rhs);
 
   /*!
    *
@@ -148,9 +132,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator/=( matrix& lhs, const matrix& rhs );
+  friend matrix& operator/=(matrix& lhs, const matrix& rhs);
 
   /*!
    *
@@ -158,9 +140,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator*=( matrix& lhs, const data_t& rhs );
+  friend matrix& operator*=(matrix& lhs, const data_t& rhs);
 
   /*!
    *
@@ -168,9 +148,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator/=( matrix& lhs, const data_t& rhs );
+  friend matrix& operator/=(matrix& lhs, const data_t& rhs);
 
   /*!
    *
@@ -178,9 +156,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator*=( data_t lhs, const matrix& rhs );
+  friend matrix& operator*=(data_t lhs, const matrix& rhs);
 
   /*!
    *
@@ -188,9 +164,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator/=( data_t lhs, const matrix& rhs );
+  friend matrix& operator/=(data_t lhs, const matrix& rhs);
 
   /*!
    *
@@ -198,9 +172,7 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator+=( matrix& lhs, const matrix& rhs );
+  friend matrix& operator+=(matrix& lhs, const matrix& rhs);
 
   /*!
    *
@@ -208,34 +180,24 @@ public:
    *
    * @param rhs
    */
-  friend
-  matrix&
-  operator-=( matrix& lhs, const matrix& rhs );
+  friend matrix& operator-=(matrix& lhs, const matrix& rhs);
 };
 
-matrix&
-operator*=( matrix& lhs, const matrix& rhs );
+matrix& operator*=(matrix& lhs, const matrix& rhs);
 
-matrix&
-operator/=( matrix& lhs, const matrix& rhs );
+matrix& operator/=(matrix& lhs, const matrix& rhs);
 
-matrix&
-operator*=( matrix& lhs, const matrix::data_t& rhs );
+matrix& operator*=(matrix& lhs, const matrix::data_t& rhs);
 
-matrix&
-operator/=( matrix& lhs, const matrix::data_t& rhs );
+matrix& operator/=(matrix& lhs, const matrix::data_t& rhs);
 
-matrix&
-operator*=( matrix::data_t lhs, const matrix& rhs );
+matrix& operator*=(matrix::data_t lhs, const matrix& rhs);
 
-matrix&
-operator/=( matrix::data_t lhs, const matrix& rhs );
+matrix& operator/=(matrix::data_t lhs, const matrix& rhs);
 
-matrix&
-operator+=( matrix& lhs, const matrix& rhs );
+matrix& operator+=(matrix& lhs, const matrix& rhs);
 
-matrix&
-operator-=( matrix& lhs, const matrix& rhs );
+matrix& operator-=(matrix& lhs, const matrix& rhs);
 
 }
 

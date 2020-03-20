@@ -1,7 +1,7 @@
 #ifndef __REMOVE_CV_HH__
 #define __REMOVE_CV_HH__
 
-namespace gsw{
+namespace gsw {
 
 /*! Removes const qualifier
  *
@@ -11,7 +11,7 @@ namespace gsw{
  * a const qualifier, so the provided class is presented through type as is.
  */
 template<typename T>
-class remove_const{
+class remove_const {
 public:
   using type = T;
 };
@@ -22,10 +22,10 @@ public:
  *
  * This class is  a template specialization and is used when remove_const is
  * used with a class that does have a const qualifier, so the provided class is
- * presented through type with the const qualifier stripped. 
+ * presented through type with the const qualifier stripped.
  */
 template<typename T>
-class remove_const<const T>{
+class remove_const<const T> {
 public:
   using type = T;
 };
@@ -39,7 +39,7 @@ public:
  * as is.
  */
 template<typename T>
-class remove_volatile{
+class remove_volatile {
 public:
   using type = T;
 };
@@ -50,10 +50,10 @@ public:
  *
  * This class is a template specialization and is used when remove_volatile is
  * used with a class that does have a volatile qualifier, so the provided class
- * is presented through type with the volatile qualifier stripped. 
+ * is presented through type with the volatile qualifier stripped.
  */
 template<typename T>
-class remove_volatile<volatile T>{
+class remove_volatile<volatile T> {
 public:
   using type = T;
 };
@@ -66,7 +66,7 @@ public:
  * qualifiers.
  */
 template<typename T>
-class remove_cv{
+class remove_cv {
 public:
   using type = typename remove_const<typename remove_volatile<T>::type>::type;
 };
@@ -74,7 +74,7 @@ public:
 /*!
  */
 template<typename T>
-class remove_reference{
+class remove_reference {
 public:
   using type = T;
 };
@@ -82,7 +82,7 @@ public:
 /*!
  */
 template<typename T>
-class remove_reference<T&>{
+class remove_reference<T&> {
 public:
   using type = T;
 };
@@ -90,7 +90,7 @@ public:
 /*!
  */
 template<typename T>
-class remove_reference<T&&>{
+class remove_reference<T&&> {
 public:
   using type = T;
 };
@@ -98,7 +98,7 @@ public:
 /*!
  */
 template<typename T>
-class remove_extent{
+class remove_extent {
 public:
   using type = T;
 };
@@ -106,7 +106,7 @@ public:
 /*!
  */
 template<typename T, size_t N>
-class remove_extent<T[N]>{
+class remove_extent<T[N]> {
 public:
   using type = T*;
 };
@@ -114,7 +114,7 @@ public:
 /*!
  */
 template<typename T>
-class remove_pointer{
+class remove_pointer {
 public:
   using type = T;
 };
@@ -122,7 +122,7 @@ public:
 /*!
  */
 template<typename T>
-class remove_pointer<T*>{
+class remove_pointer<T*> {
 public:
   using type = T;
 };

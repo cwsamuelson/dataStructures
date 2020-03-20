@@ -1,13 +1,14 @@
 #include<string>
 
 #define CATCH_CONFIG_MAIN
+
 #include<catch2/catch.hpp>
 
 #include<event_handler.hh>
 
 using namespace std;
 
-struct foo{
+struct foo {
   int x;
 };
 
@@ -100,8 +101,7 @@ struct foo{
   CHECK( g_f.x == 69 );
 }*/
 
-class serial
-{
+class serial {
 public:
   using handler = gsw::event_trigger<string>::channel_t::handler;
   using channel_t = gsw::event_trigger<string>::channel_t;
@@ -110,15 +110,11 @@ private:
   gsw::event_trigger<string> mSendEvent;
 
 public:
-  auto
-  sendEvent() const
-  {
+  auto sendEvent() const {
     return mSendEvent.getChannel();
   }
 
-  void
-  send(const string& d)
-  {
+  void send(const string& d) {
     //do some things with the data
 
     //then fire the corresponding event!
@@ -126,14 +122,13 @@ public:
   }
 };
 
-TEST_CASE("In context usage", "[events]"){
+TEST_CASE("In context usage", "[events]") {
   string response;
   serial ser;
-  serial::handler serialRxHandler(
-    [&](const serial::channel_t&, unsigned long long, const string& str){
-      response = str + "response!";
-    }
-  );
+  serial::handler serialRxHandler([&](const serial::channel_t&, unsigned long long, const string& str)
+                                    {
+                                      response = str + "response!";
+                                    });
   auto eventChannel = ser.sendEvent().lock();
   eventChannel->subscribe(serialRxHandler);
 

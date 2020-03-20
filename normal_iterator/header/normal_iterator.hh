@@ -5,7 +5,7 @@
 
 #include"additive.hh"
 
-namespace gsw{
+namespace gsw {
 
 /*! Normalized iterator
  *
@@ -14,26 +14,28 @@ namespace gsw{
  * @tparam CONTAINER
  */
 template<typename TYPE, typename CONTAINER, typename PTR_T = TYPE*>
-class normal_iterator : public additive<normal_iterator<TYPE, CONTAINER>, long long>{
+class normal_iterator : public additive<normal_iterator<TYPE, CONTAINER>, long long> {
 public:
   using container = CONTAINER;
   using value_type = TYPE;
   using pointer = PTR_T;
   using reference = value_type&;
 
-  template<typename T1, typename C1, typename P1>
-  friend class normal_iterator;
+  template<typename T1, typename C1, typename P1> friend
+  class normal_iterator;
 
 protected:
   pointer mCurrent;
 
 public:
-  /*!
-   * @param ptr
-   *
-   */
-  normal_iterator( pointer ptr )
-    : mCurrent( ptr ){
+  normal_iterator()
+    : normal_iterator(nullptr)
+  {}
+  explicit normal_iterator(pointer ptr)
+          : mCurrent(ptr) {
+  }
+  explicit normal_iterator(std::nullptr_t)
+          : mCurrent(nullptr) {
   }
 
   /*!
@@ -52,23 +54,22 @@ public:
    * issue, and is probably something to be guarded against.
    */
   template<typename T1, typename C1, typename P1>
-  normal_iterator( const normal_iterator<T1, C1, P1>& iter )
-    : mCurrent( iter.mCurrent ){
+  normal_iterator(const normal_iterator<T1, C1, P1>& iter)
+          : mCurrent(iter.mCurrent) {
   }
 
   /*!
    * @param other
    */
-  unsigned int
-  operator-( const normal_iterator& other ) const{
+  [[nodiscard]]
+  unsigned int operator-(const normal_iterator& other) const {
     return mCurrent - other.mCurrent;
   }
 
   /*!
    * @param mod
    */
-  normal_iterator&
-  operator+=( long long mod ){
+  normal_iterator& operator+=(long long mod) {
     mCurrent += mod;
     return *this;
   }
@@ -76,8 +77,7 @@ public:
   /*!
    * @param mod
    */
-  normal_iterator&
-  operator-=( long long mod ){
+  normal_iterator& operator-=(long long mod) {
     mCurrent -= mod;
     return *this;
   }
@@ -85,56 +85,55 @@ public:
   /*!
    * @param iter
    */
-  bool
-  operator==( const normal_iterator& iter ) const{
+  [[nodiscard]]
+  bool operator==(const normal_iterator& iter) const {
     return mCurrent == iter.mCurrent;
   }
 
   /*!
    * @param iter
    */
-  bool
-  operator!=( const normal_iterator& iter ) const{
-    return !( ( *this ) == iter );
+  [[nodiscard]]
+  bool operator!=(const normal_iterator& iter) const {
+    return !((*this) == iter);
   }
 
   /*!
    * @param other
    */
-  bool
-  operator<( const normal_iterator& other ) const{
+  [[nodiscard]]
+  bool operator<(const normal_iterator& other) const {
     return mCurrent < other.mCurrent;
   }
 
   /*!
    * @param other
    */
-  bool
-  operator>( const normal_iterator& other )const{
+  [[nodiscard]]
+  bool operator>(const normal_iterator& other) const {
     return mCurrent > other.mCurrent;
   }
 
   /*!
    *
    */
-  reference
-  operator*() const{
+  [[nodiscard]]
+  reference operator*() const {
     return *mCurrent;
   }
 
   /*!
    *
    */
-  pointer
-  operator->() const{
+  [[nodiscard]]
+  pointer operator->() const {
     return mCurrent;
   }
 
   /*!
    *
    */
-  normal_iterator&
-  operator++(){
+  normal_iterator& operator++() {
     ++mCurrent;
     return *this;
   }
@@ -142,16 +141,14 @@ public:
   /*!
    *
    */
-  normal_iterator
-  operator++( int ){
-    return normal_iterator( mCurrent++ );
+  normal_iterator operator++(int) {
+    return normal_iterator(mCurrent++);
   }
 
   /*!
    *
    */
-  normal_iterator&
-  operator--(){
+  normal_iterator& operator--() {
     --mCurrent;
     return *this;
   }
@@ -159,18 +156,17 @@ public:
   /*!
    *
    */
-  normal_iterator
-  operator--( int ){
-    return normal_iterator( mCurrent-- );
+  normal_iterator operator--(int) {
+    return normal_iterator(mCurrent--);
   }
 };
 
 }
 
-namespace std{
+namespace std {
 
 template<typename TYPE, typename CONTAINER>
-struct iterator_traits<gsw::normal_iterator<TYPE, CONTAINER> >{
+struct iterator_traits<gsw::normal_iterator<TYPE, CONTAINER>> {
 public:
   typedef typename gsw::normal_iterator<TYPE, CONTAINER>::value_type value_type;
   typedef unsigned int difference_type;

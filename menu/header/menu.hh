@@ -12,7 +12,7 @@
 #include<memory>
 #include<utility>
 
-namespace gsw{
+namespace gsw {
 
 /*! menu utility class.
  *
@@ -47,7 +47,7 @@ namespace gsw{
  * @endcode
  */
 template<typename SELECTOR>
-class menu{
+class menu {
 public:
   using selector = SELECTOR;
   using pointer = std::shared_ptr<menu>;
@@ -56,19 +56,20 @@ public:
 
 private:
   std::string mMenuText;
-  std::map<selector, menu_item > mSubMenus;
+
+  std::map<selector, menu_item> mSubMenus;
 
 public:
+  explicit
   menu(const char* str)
-    : mMenuText(str)
-  {}
+          : mMenuText(str) {
+  }
 
   /*! Menu text and default ctor
    */
-  explicit
-  menu( std::string text = "")
-    : mMenuText( text )
-  {}
+  explicit menu(std::string text = "")
+          : mMenuText(std::move(text)) {
+  }
 
   /*! Copy/Move ctor
    *
@@ -77,9 +78,9 @@ public:
    * Copies/moves menu options from other
    */
   template<typename U>
-  menu( U&& other )
-    : mMenuText( std::forward<std::string>( other.mMenuText ) )
-    , mSubMenus( std::forward<decltype( mSubMenus )>( other.mSubMenus ) ){
+  menu(U&& other) noexcept
+          : mMenuText(std::forward<std::string>(other.mMenuText))
+          , mSubMenus(std::forward<decltype(mSubMenus)>(other.mSubMenus)) {
   }
 
   /*! Copy/move assignment
@@ -89,10 +90,9 @@ public:
    * Copies/moves menu options from other
    */
   template<typename U>
-  menu&
-  operator=( U&& other ){
-    mMenuText = std::forward<std::string>( other.mMenuText );
-    mSubMenus = std::forward<decltype( mSubMenus )>( other.mSubMenus );
+  menu& operator=(U&& other) {
+    mMenuText = std::forward<std::string>(other.mMenuText);
+    mSubMenus = std::forward<decltype(mSubMenus)>(other.mSubMenus);
   }
 
   /*! Menu text assignment operator
@@ -101,8 +101,7 @@ public:
    *
    * @return Updated menu
    */
-  menu&
-  operator=( const std::string& newText ){
+  menu& operator=(const std::string& newText) {
     mMenuText = newText;
 
     return *this;
@@ -114,16 +113,16 @@ public:
    *
    * @return The selected menu item
    */
-  menu_item&
-  operator[]( const selector& sel ){
+  [[nodiscard]]
+  menu_item& operator[](const selector& sel) {
     return mSubMenus[sel];
   }
 
   /*!
    * @return
    */
-  std::string&
-  prompt(){
+  [[nodiscard]]
+  std::string& prompt() {
     return mMenuText;
   }
 
@@ -140,13 +139,14 @@ public:
    * Describe a new option including number, text, next menu, and action to
    * take upon selection
    */
-  void
-  addOption( const selector& selection, const std::string& optText,
-             pointer nextMenu, optionCallback callback = optionCallback(
-                                                     []( selector ){
-                                                       return true;
-                                                     } ) ){
-    mSubMenus[selection] = std::make_tuple( optText, nextMenu, callback );
+  void addOption(const selector& selection,
+                 const std::string& optText,
+                 pointer nextMenu,
+                 optionCallback callback = optionCallback([](selector)
+                                                            {
+                                                              return true;
+                                                            })) {
+    mSubMenus[selection] = std::make_tuple(optText, nextMenu, callback);
   }
 
   /*! Select a menu option
@@ -157,23 +157,21 @@ public:
    *
    * Retrieve the selection, call its callback, and return next menu
    */
-  pointer
-  select( const selector& selection ){
-    auto it = mSubMenus.at( selection );
+  pointer select(const selector& selection) {
+    auto it = mSubMenus.at(selection);
 
     // call the callback; return next menu
-    if( std::get<2>( it )( selection ) ){
-      return std::get<1>( it );
+    if(std::get<2>(it)(selection)) {
+      return std::get<1>(it);
     } else {
-       return pointer( this );
+      return pointer(this);
     }
   }
 
   /*!
    */
   template<typename OSTREAM>
-  OSTREAM&
-  print_prompt( OSTREAM& os ) const{
+  OSTREAM& print_prompt(OSTREAM& os) const {
     os << mMenuText << '\n';
 
     return os;
@@ -184,10 +182,9 @@ public:
    * @param os  Output stream to provide menu information to
    */
   template<typename OSTREAM>
-  OSTREAM&
-  print_options( OSTREAM& os ) const{
-    for( auto it : mSubMenus ){
-      os << std::get<0>( it ) << '\t' << std::get<0>( std::get<1>( it ) ) << '\n';
+  OSTREAM& print_options(OSTREAM& os) const {
+    for(auto it : mSubMenus) {
+      os << std::get<0>(it) << '\t' << std::get<0>(std::get<1>(it)) << '\n';
     }
 
     return os;
@@ -200,11 +197,9 @@ public:
    * @param m  Menu printed options are to come from
    */
   template<typename OSTREAM>
-  friend
-  OSTREAM&
-  operator<<( OSTREAM& os, const menu& m ){
-    m.print_prompt( os );
-    m.print_options( os );
+  friend OSTREAM& operator<<(OSTREAM& os, const menu& m) {
+    m.print_prompt(os);
+    m.print_options(os);
 
     return os;
   }

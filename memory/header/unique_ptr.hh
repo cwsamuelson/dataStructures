@@ -1,7 +1,7 @@
 #ifndef __UNIQUE_PTR_HH__
 #define __UNIQUE_PTR_HH__
 
-namespace gsw{
+namespace gsw {
 
 /*! Enforced unique pointer to some data
  * @tparam T  Type to which a pointer will be stored
@@ -12,10 +12,12 @@ namespace gsw{
  * lifespan.
  */
 template<typename T>
-class unique_ptr{
+class unique_ptr {
 public:
   typedef T value_type;
+
   typedef value_type& reference;
+
   typedef value_type* pointer;
 
 private:
@@ -26,13 +28,14 @@ public:
    *
    * @param ptr  pointer to be stored
    */
-  unique_ptr( pointer ptr = nullptr )
-    : mData( ptr ){
+  explicit
+  unique_ptr(pointer ptr = nullptr)
+          : mData(ptr) {
   }
 
   /*!
    */
-  unique_ptr( const unique_ptr& ) = delete;
+  unique_ptr(const unique_ptr&) = delete;
 
   /*! Move ctor
    *
@@ -40,16 +43,17 @@ public:
    *
    * Performs a move operation
    */
-  unique_ptr( unique_ptr&& other )
-    : mData( other.mData ){
+  unique_ptr(unique_ptr&& other) noexcept
+          : mData(other.mData) {
     other.mData = nullptr;
   }
 
   /*!
    */
   template<typename U>
-  unique_ptr( unique_ptr<U>&& other )
-    : mData( other.mData ){
+  explicit
+  unique_ptr(unique_ptr<U>&& other) noexcept
+          : mData(other.mData) {
     other.mData = nullptr;
   }
 
@@ -58,8 +62,8 @@ public:
    * Delete data, if any still exists
    */
   virtual
-  ~unique_ptr(){
-    if( mData ){
+  ~unique_ptr() {
+    if(mData) {
       delete mData;
     }
   }
@@ -68,9 +72,8 @@ public:
    *
    * @param other pointer to take ownership of
    */
-  unique_ptr&
-  operator=( pointer other ){
-    if( mData ){
+  unique_ptr& operator=(pointer other) {
+    if(mData) {
       delete mData;
     }
     mData = other;
@@ -80,16 +83,14 @@ public:
 
   /*!
    */
-  unique_ptr&
-  operator=( const unique_ptr& ) = delete;
+  unique_ptr& operator=(const unique_ptr&) = delete;
 
   /*! Move assignment operator
    *
    * @param other unique_ptr to transfer ownership from
    */
-  unique_ptr&
-  operator=( unique_ptr&& other ){
-    if( mData != other.mData && mData ){
+  unique_ptr& operator=(unique_ptr&& other) noexcept {
+    if(mData != other.mData && mData) {
       delete mData;
 
       mData = other.mData;
@@ -105,9 +106,8 @@ public:
    *
    * @return whether other is equal to the stored pointer
    */
-  bool
-  operator==( pointer other ) const{
-    return ( mData == other );
+  bool operator==(pointer other) const {
+    return (mData == other);
   }
 
   /*! Equality operator
@@ -121,9 +121,8 @@ public:
    * store a unique instance to a pointer, another instance of the same pointer
    * is a contradiction.
    */
-  bool
-  operator==( const unique_ptr& other ) const{
-    return ( mData == other.mData );
+  bool operator==(const unique_ptr& other) const {
+    return (mData == other.mData);
   }
 
   /*! Dereference operator
@@ -132,15 +131,13 @@ public:
    *
    * Dereference stored pointer, and return reference to stored object
    */
-  reference
-  operator*(){
+  reference operator*() {
     return *mData;
   }
 
   /*!
    */
-  pointer
-  operator->(){
+  pointer operator->() {
     return mData;
   }
 
@@ -148,8 +145,7 @@ public:
    *
    * @return raw stored pointer/resource
    */
-  pointer
-  get(){
+  pointer get() {
     return mData;
   }
 
@@ -161,8 +157,7 @@ public:
    * is done; so if the return value is not captured, and subsequently deleted
    * a memory leak will occur.
    */
-  pointer
-  release(){
+  pointer release() {
     pointer ret = mData;
     mData = nullptr;
 
@@ -171,8 +166,8 @@ public:
 };
 
 template<typename T, typename ...Args>
-unique_ptr<T> make_unique( Args&&... args ){
-  return new T( std::forward<Args>( args )... );
+unique_ptr<T> make_unique(Args&& ... args) {
+  return unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
 }

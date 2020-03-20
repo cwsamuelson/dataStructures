@@ -9,7 +9,7 @@
 #include<allocator_traits.hh>
 #include<allocator.hh>
 
-namespace gsw{
+namespace gsw {
 
 /*! Associative data container type
  *
@@ -21,8 +21,11 @@ namespace gsw{
  *
  * @tparam ALLOC Type used to allocate key-value pairs
  */
-template<typename KEY, typename VALUE, typename HASH = std::hash<KEY>, typename ALLOC = allocator<std::tuple<KEY, VALUE> > >
-class hash_map{
+template<typename KEY,
+         typename VALUE,
+         typename HASH = std::hash<KEY>,
+         typename ALLOC = allocator<std::tuple<KEY, VALUE>>>
+class hash_map {
 public:
   using key_type = KEY;
   using value_type = VALUE;
@@ -31,7 +34,7 @@ public:
   using hash_fn = HASH;
 
 private:
-  using container = std::vector<std::optional<storage_type> >;
+  using container = std::vector<std::optional<storage_type>>;
 
   container mValues;
   hash_fn mHashFunc;
@@ -42,9 +45,9 @@ public:
    *
    * @param map_max Maximum number of buckets
    */
-  hash_map( size_t map_max = 16 )
-    : mValues( map_max )
-    , mMaxSize( map_max ){
+  hash_map(size_t map_max = 16)
+          : mValues(map_max)
+          , mMaxSize(map_max) {
   }
 
   /*! Move constructor
@@ -52,9 +55,9 @@ public:
    * @param other
    */
   template<typename U>
-  hash_map( U&& other )
-    : hash_map( other.mMaxSize ){
-    mValues = std::forward<container>( other.mValues );
+  hash_map(U&& other)
+          : hash_map(other.mMaxSize) {
+    mValues = std::forward<container>(other.mValues);
   }
 
   /*! Destructor
@@ -68,10 +71,9 @@ public:
    * @return Resulting *this
    */
   template<typename U>
-  hash_map&
-  operator=( U&& other ){
+  hash_map& operator=(U&& other) {
     mMaxSize = other.mMaxSize;
-    mValues = std::forward<container>( other.mValues );
+    mValues = std::forward<container>(other.mValues);
 
     return *this;
   }
@@ -82,25 +84,23 @@ public:
    *
    * @param value Value being inserted
    */
-  void
-  insert( const key_type& key, const value_type& value ){
-    mValues.at( mHashFunc( key ) % mMaxSize ) = {key, value};
+  void insert(const key_type& key, const value_type& value) {
+    mValues.at(mHashFunc(key) % mMaxSize) = { key, value };
   }
 
   /*! Erase data already in container
    *
    * @param key key to find value to erase from container
    */
-  void
-  erase( const key_type& key ){
-    mValues.at( mHashFunc( key ) % mMaxSize ).reset();
+  void erase(const key_type& key) {
+    mValues.at(mHashFunc(key) % mMaxSize).reset();
   }
 
   /*!
    */
   template<typename ...ARGS>
-  void
-  emplace( const key_type&, ARGS ...args ){}
+  void emplace(const key_type&, ARGS ...args) {
+  }
 
   /*!
    *
@@ -108,42 +108,41 @@ public:
    *
    * @return
    */
-  value_type&
-  operator[]( const key_type& key ){
-    auto hash = mHashFunc( key );
+  value_type& operator[](const key_type& key) {
+    auto hash = mHashFunc(key);
     auto idx = hash % mMaxSize;
 
-    if( !mValues.at( idx ) ){
-      mValues.at( idx ) = {key, value_type{}};
+    if(!mValues.at(idx)) {
+      mValues.at(idx) = { key, value_type{}};
     }
 
-    return std::get<0>( mValues.at( idx ).value() );
+    return std::get<0>(mValues.at(idx).value());
   }
 
   /*!
    *
    * @return
    */
-  iterator
-  begin(){
+  iterator begin() {
+    return {};
   }
 
   /*!
    *
    * @return
    */
-  iterator
-  end(){
+  iterator end() {
+    return {};
   }
 
   /*!
    *
    * @return
    */
-  bool
-  empty() const{
-    for( const auto& it : mValues ){
-      if( it ){
+  [[nodiscard]]
+  bool empty() const {
+    for(const auto& it : mValues) {
+      if(it) {
         return false;
       }
     }
@@ -155,12 +154,12 @@ public:
    *
    * @return
    */
-  size_t
-  size() const{
+  [[nodiscard]]
+  size_t size() const {
     size_t count = 0;
 
-    for( const auto& it : mValues ){
-      if( it ){
+    for(const auto& it : mValues) {
+      if(it) {
         ++count;
       }
     }

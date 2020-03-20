@@ -1,30 +1,22 @@
-cmake_minimum_required(VERSION 3.0)
-project(menu LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(menu LANGUAGES CXX)
 
-if(TARGET menu)
-	return()
-endif()
+ADD_LIBRARY(menu INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(menu PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(menu INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(menu INTERFACE header)
 
-set_target_properties(menu PROPERTIES
-                           INTERFACE_CXX_STANDARD 17
-                           INTERFACE_CXX_STANDARD_REQUIRED YES
-                           INTERFACE_CXX_EXTENSIONS NO)
+ADD_EXECUTABLE(test-menu test/tests.cc)
+SET_TARGET_PROPERTIES(test-menu PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-menu menu Catch2)
 
-target_include_directories(menu INTERFACE header)
-
-add_executable(test-menu test/tests.cc)
-set_target_properties(test-menu PROPERTIES
-                                CXX_STANDARD 17
-                                CXX_STANDARD_REQUIRED YES
-                                CXX_EXTENSIONS NO)
-target_link_libraries(test-menu menu Catch2)
-
-enable_testing()
-add_test(test-menu test-menu)
+ENABLE_TESTING()
+ADD_TEST(test-menu test-menu)
 

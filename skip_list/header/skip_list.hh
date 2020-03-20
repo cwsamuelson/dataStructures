@@ -6,7 +6,7 @@
 
 #include<normal_iterator.hh>
 
-namespace gsw{
+namespace gsw {
 
 #if 0
 template<typename KEY, typename VALUE>

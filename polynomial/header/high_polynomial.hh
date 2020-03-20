@@ -4,11 +4,12 @@
 #include <named_point.hh>
 #include <operators.hh>
 
-namespace gsw{
+namespace gsw {
 
-class high_polynomial : public additive<high_polynomial>
-                      , public multiplicative<high_polynomial>
-                      , public multiplicative<high_polynomial, double>{
+class high_polynomial
+        : public additive<high_polynomial>
+          , public multiplicative<high_polynomial>
+          , public multiplicative<high_polynomial, double> {
 public:
   using input_point = vec<3, signed long long>;
   using value_type = double;
@@ -21,69 +22,61 @@ private:
 
 public:
   high_polynomial() = default;
-
-  high_polynomial(std::initializer_list<input_point> il);
-
+  high_polynomial(std::initializer_list<storage_type::value_type> il);
   template<typename inputIter>
   high_polynomial(inputIter first, inputIter last)
-    : mCoeff(first, last){
+          : mCoeff(first, last) {
   }
+  high_polynomial(const high_polynomial& hp)
+    : mCoeff(hp.mCoeff)
+  {}
+  high_polynomial(high_polynomial&& hp) noexcept
+    : mCoeff(std::move(hp.mCoeff))
+  {}
+
+  std::set<value_type> solve(input_point hint = input_point::storage_t{ 1, 1 }, unsigned int iterations = 6) const;
 
   template<typename U>
-  high_polynomial(U&& eq){
+  high_polynomial& operator=(U&& eq) {
+    mCoeff = std::forward<storage_type>(eq.mCoeff);
+
+    return *this;
   }
 
-  std::set<value_type>
-  solve(input_point hint = input_point::storage_t{1, 1}, unsigned int iterations = 6) const;
+  high_polynomial& operator+=(const high_polynomial& hp);
 
-  template<typename U>
-  high_polynomial&
-  operator=( U&& eq){
-  }
+  high_polynomial& operator-=(const high_polynomial& hp);
 
-  high_polynomial&
-  operator+=(const high_polynomial& hp);
+  high_polynomial& operator*=(const high_polynomial& hp);
 
-  high_polynomial&
-  operator-=(const high_polynomial& hp);
+  high_polynomial& operator*=(value_type d);
 
-  high_polynomial&
-  operator*=(const high_polynomial& hp);
+  high_polynomial& operator/=(const high_polynomial& hp);
 
-  high_polynomial&
-  operator*=(value_type d);
+  high_polynomial& operator/=(value_type d);
 
-  high_polynomial&
-  operator/=(const high_polynomial& hp);
+  high_polynomial operator-() const;
 
-  high_polynomial&
-  operator/=(value_type d);
+  [[nodiscard]]
+  reference operator[](const input_point& point);
 
-  high_polynomial&
-  operator-() const;
+  [[nodiscard]]
+  const_reference operator[](const input_point& point) const;
 
-  reference
-  operator[](const input_point& point);
+  [[nodiscard]]
+  reference at(const input_point& point);
 
-  const_reference
-  operator[](const input_point& point) const;
+  [[nodiscard]]
+  const_reference at(const input_point& point) const;
 
-  reference
-  at(input_point point);
+  [[nodiscard]]
+  value_type operator()(input_point point) const;
 
-  const_reference
-  at(input_point point) const;
-
-  value_type
-  operator()(input_point point) const;
-
-  friend
-  bool
-  operator==(const high_polynomial& lhs, const high_polynomial& rhs);
+  friend bool operator==(const high_polynomial& lhs, const high_polynomial& rhs);
 };
 
-bool
-operator==(const high_polynomial& lhs, const high_polynomial& rhs);
+[[nodiscard]]
+bool operator==(const high_polynomial& lhs, const high_polynomial& rhs);
 
 }
 

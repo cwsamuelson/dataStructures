@@ -6,12 +6,17 @@
 
 #include<mem_exceptions.hh>
 
-namespace gsw{
+namespace gsw {
 
 /* In research for stateful allocators, I found this:
-  Do you have any suggestions for how to do the sort of thing I'm trying to do? That is, how do I include allocated-type-specific state in my allocator?
+  Do you have any suggestions for how to do the sort of thing I'm trying to do? That is, how do I include
+  allocated-type-specific state in my allocator?
 
-  Don't embed it directly in the allocator, store it separately and have the allocator refer to it by a pointer (possibly smart pointer, depending on how you design the lifetime management of the resource). The actual allocator object should be a lightweight handle on to some external source of memory (e.g. an arena, or pool, or something managing a freelist). Allocator objects that share the same source should compare equal, this is true even for allocators with different value types (see below).
+  Don't embed it directly in the allocator, store it separately and have the allocator refer to it by a pointer
+  (possibly smart pointer, depending on how you design the lifetime management of the resource). The actual allocator
+  object should be a lightweight handle on to some external source of memory (e.g. an arena, or pool, or something
+  managing a freelist). Allocator objects that share the same source should compare equal, this is true even for
+  allocators with different value types (see below).
 
   https://stackoverflow.com/questions/24278803/how-can-i-write-a-stateful-allocator-in-c11-given-requirements-on-copy-constr
 
@@ -39,55 +44,50 @@ namespace gsw{
  * allocation request is made in excess of N.
  */
 template<typename T, size_t N>
-class static_allocator{
+class static_allocator {
 public:
   using value_type = T;
   using pointer    = value_type*;
   using reference  = value_type&;
   using size_type  = unsigned long long;
+
   static const size_type storage_size = N;
 
 private:
-  static const size_type ptrdiff = sizeof( value_type );
+  static const size_type ptrdiff = sizeof(value_type);
+
   static const size_type block_size = storage_size * ptrdiff;
+
   using ind_type = std::bitset<storage_size>;
 
   std::array<unsigned char, block_size> mStorage;
   ind_type mIndicator;
 
 public:
-  /*! Default ctor
-   */
   static_allocator() = default;
-
-  /*! Copy ctor
-   */
-  static_allocator( const static_allocator& ) = default;
-
-  /*! Move ctor
-   */
-  static_allocator( static_allocator&& ) = default;
+  static_allocator(const static_allocator&) = default;
+  static_allocator(static_allocator&&) noexcept = default;
 
   /*!
    * @todo create subclasses of bad_alloc in order to provide values in throw statements
    */
-  pointer
-  allocate( size_type number ){
+  [[nodiscard]]
+  pointer allocate(size_type number) {
     size_type caveStart = 0;
     size_type caveSize = 0;
 
-    if( number > ( storage_size - mIndicator.count() ) ){
+    if(number > (storage_size - mIndicator.count())) {
       throw std::bad_alloc();
     }
 
-    for( size_type index = 0; index < storage_size; ++index ){
-      if( !mIndicator[index] ){
-        if( ++caveSize == number ){
-          for( size_type i = 0; i < number; ++i ){
-            mIndicator.set( i + caveStart );
+    for(size_type index = 0; index < storage_size; ++index) {
+      if(!mIndicator[index]) {
+        if(++caveSize == number) {
+          for(size_type i = 0; i < number; ++i) {
+            mIndicator.set(i + caveStart);
           }
 
-          return pointer( mStorage.data() + ( caveStart * ptrdiff ) );
+          return pointer(mStorage.data() + (caveStart * ptrdiff));
         }
       } else {
         caveStart = index + 1;
@@ -100,27 +100,26 @@ public:
 
   /*!
    */
-  void
-  deallocate( pointer ptr, size_type number ){
-    unsigned long start = ( ( unsigned char* )ptr - mStorage.data() ) / ptrdiff;
+  void deallocate(pointer ptr, size_type number) {
+    unsigned long start = ((unsigned char*) ptr - mStorage.data()) / ptrdiff;
 
-    for( unsigned int i = 0; i < number; ++i ){
-      mIndicator.reset( i + start );
+    for(unsigned int i = 0; i < number; ++i) {
+      mIndicator.reset(i + start);
     }
   }
 
   /*!
    */
-  pointer
-  storage(){
-    return pointer( mStorage.data() );
+  [[nodiscard]]
+  pointer storage() {
+    return pointer(mStorage.data());
   }
 
   /*!
    */
-  bool
-  free_space( size_type amount = 1 ){
-    return ( storage_size - mIndicator.count() ) >= amount;
+  [[nodiscard]]
+  bool free_space(size_type amount = 1) {
+    return (storage_size - mIndicator.count()) >= amount;
   }
 };
 

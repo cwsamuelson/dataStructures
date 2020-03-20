@@ -1,31 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
-project(error LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(error LANGUAGES CXX)
 
-if(TARGET error)
-    return()
-endif()
+ADD_LIBRARY(error INTERFACE)
 
-if(NOT TARGET Catch2)
-    add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(error PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(error INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(error INTERFACE header)
+TARGET_LINK_LIBRARIES(error INTERFACE tuple)
 
-set_target_properties(error PROPERTIES
-                            INTERFACE_CXX_STANDARD 17
-                            INTERFACE_CXX_STANDARD_REQUIRED YES
-                            INTERFACE_CXX_EXTENSIONS NO)
+ADD_EXECUTABLE(test-error test/tests.cc)
+SET_TARGET_PROPERTIES(test-error PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-error error Catch2)
 
-target_include_directories(error INTERFACE header)
-target_link_libraries(error INTERFACE tuple)
-
-add_executable(test-error test/tests.cc)
-set_target_properties(test-error PROPERTIES
-                                 CXX_STANDARD 17
-                                 CXX_STANDARD_REQUIRED YES
-                                 CXX_EXTENSIONS NO)
-target_link_libraries(test-error error Catch2)
-
-enable_testing()
-add_test(test-error test-error)
+ENABLE_TESTING()
+ADD_TEST(test-error test-error)
 

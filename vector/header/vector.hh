@@ -16,15 +16,11 @@
 #include<allocator_traits.hh>
 #include<allocator.hh>
 
-namespace gsw{
+namespace gsw {
 
-template<typename T>
-using requireInputIter =
-        typename std::enable_if<
-                   std::is_convertible<typename std::iterator_traits<T>::iterator_category,
-                                       std::input_iterator_tag
-                                      >::value
-                               >::type;
+template<typename T> using requireInputIter =
+typename std::enable_if<std::is_convertible<typename std::iterator_traits<T>::iterator_category,
+                                            std::input_iterator_tag>::value>::type;
 
 /*! Class that stores items of type T
  *
@@ -35,8 +31,8 @@ using requireInputIter =
  * This class stores a dynamic number of items of type T, allocating additional
  * space as it becomes necessary.
  */
-template<typename T, typename ALLOC = allocator<T> >
-class vector{
+template<typename T, typename ALLOC = allocator<T>>
+class vector {
 public:
   using value_type = T;
   using pointer = value_type*;
@@ -53,24 +49,21 @@ private:
   alloc mAlloc;
   size_type mSize;
   size_type mCapacity;
-  /* data is stored as char array, allowing constructors and destructors to be
-   * manually run */
   value_type* mData;
-  static const unsigned int datasize = sizeof( value_type );
+
   const float goldenRatio = 1.4;
 
-  void
-  reallocateTo( size_type size ){
+  void reallocateTo(size_type size) {
     value_type* bfr;
 
-    bfr = alloc_traits::allocate( mAlloc, size );
+    bfr = alloc_traits::allocate(mAlloc, size);
 
     // copy data to new buffer
-    for( size_type i = 0; i < mSize; ++i ){
-      bfr[i] = std::move( mData[i] );
+    for(size_type i = 0; i < mSize; ++i) {
+      bfr[i] = std::move(mData[i]);
     }
 
-    alloc_traits::deallocate( mAlloc, mData, mCapacity );
+    alloc_traits::deallocate(mAlloc, mData, mCapacity);
     mCapacity = size;
     mData = bfr;
   }
@@ -82,11 +75,12 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( size_type capacity = 1, const alloc& alc = alloc() )
-    : mAlloc( alc )
-    , mSize( 0 )
-    , mCapacity( capacity )
-    , mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
+  explicit
+  vector(size_type capacity = 1, const alloc& alc = alloc())
+          : mAlloc(alc)
+          , mSize(0)
+          , mCapacity(capacity)
+          , mData(alloc_traits::allocate(mAlloc, mCapacity)) {
   }
 
   /*! ctor, initialize with count copies of val
@@ -97,11 +91,11 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( const_reference val, size_type count, const alloc& alc = alloc() )
-    : vector( count, alc ){
+  vector(const_reference val, size_type count, const alloc& alc = alloc())
+          : vector(count, alc) {
 
-    while( count-- ){
-      push_back( val );
+    while(count--) {
+      push_back(val);
     }
   }
 
@@ -111,13 +105,13 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( const vector& other, const alloc& alc = alloc() )
-    : mAlloc( alc )
-    , mSize( other.mSize )
-    , mCapacity( mSize + 5 )
-    , mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
+  vector(const vector& other, const alloc& alc = alloc())
+          : mAlloc(alc)
+          , mSize(other.mSize)
+          , mCapacity(mSize + 5)
+          , mData(alloc_traits::allocate(mAlloc, mCapacity)) {
 
-    for( size_type i = 0; i < mSize; ++i ){
+    for(size_type i = 0; i < mSize; ++i) {
       mData[i] = other.mData[i];
     }
   }
@@ -128,11 +122,11 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( vector&& other, const alloc& alc = alloc() )
-    : mAlloc( alc )
-    , mSize( other.mSize )
-    , mCapacity( other.mCapacity )
-    , mData( other.mData ){
+  vector(vector&& other, const alloc& alc = alloc()) noexcept
+          : mAlloc(alc)
+          , mSize(other.mSize)
+          , mCapacity(other.mCapacity)
+          , mData(other.mData) {
 
     other.mSize = 0;
     other.mCapacity = 0;
@@ -147,13 +141,13 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  vector( pointer other, size_type size, const alloc& alc = alloc() )
-    : mAlloc( alc )
-    , mSize( size )
-    , mCapacity( mSize + 5 )
-    , mData( alloc_traits::allocate( mAlloc, mCapacity ) ){
+  vector(pointer other, size_type size, const alloc& alc = alloc())
+          : mAlloc(alc)
+          , mSize(size)
+          , mCapacity(mSize + 5)
+          , mData(alloc_traits::allocate(mAlloc, mCapacity)) {
 
-    for( size_type i = 0; i < mSize; ++i ){
+    for(size_type i = 0; i < mSize; ++i) {
       mData[i] = other[i];
     }
   }
@@ -168,12 +162,15 @@ public:
    *
    * @param alc Allocator object to allocate data
    */
-  template<typename inputIter, typename = requireInputIter<inputIter> >
-  vector( inputIter first, inputIter last, const alloc& alc = alloc() )
-    : mAlloc( alc ){
+  template<typename inputIter, typename = requireInputIter<inputIter>>
+  vector(inputIter first, inputIter last, const alloc& alc = alloc())
+          : mAlloc(alc)
+          , mSize(0)
+          , mCapacity(1)
+          , mData(alloc_traits::allocate(mAlloc, mCapacity)){
 
-    for( ; first != last; ++first ){
-      push_back( *first );
+    for(; first != last; ++first) {
+      push_back(*first);
     }
   }
 
@@ -182,9 +179,9 @@ public:
    * all data is cleared, destructors ran, and memory freed
    */
   virtual
-  ~vector(){
+  ~vector() {
     clear();
-    alloc_traits::deallocate( mAlloc, mData, mCapacity );
+    alloc_traits::deallocate(mAlloc, mData, mCapacity);
   }
 
   /*! copy assignment, copy data from other
@@ -195,21 +192,20 @@ public:
    *
    * @todo make this exception safe (i.e. don't delete mData until copy is safely complete)
    */
-  vector&
-  operator=( const vector& other ){
-    if( mData == other.mData ){
+  vector& operator=(const vector& other) {
+    if(mData == other.mData) {
       return *this;
     }
 
-    if( mCapacity < other.mSize ){
-      alloc_traits::deallocate( mAlloc, mData, mCapacity );
+    if(mCapacity < other.mSize) {
+      alloc_traits::deallocate(mAlloc, mData, mCapacity);
 
       mCapacity = other.mSize;
-      mData = alloc_traits::allocate( mAlloc, mCapacity );
+      mData = alloc_traits::allocate(mAlloc, mCapacity);
     }
 
     mSize = other.mSize;
-    for( size_type i = 0; i < mSize; ++i ){
+    for(size_type i = 0; i < mSize; ++i) {
       mData[i] = other.mData[i];
     }
 
@@ -222,9 +218,12 @@ public:
    *
    * @return reference to this container
    */
-  vector&
-  operator=( vector&& other ){
-    alloc_traits::deallocate( mAlloc, mData, mCapacity );
+  vector& operator=(vector&& other) {
+    if(mData == other.mData) {
+      return *this;
+    }
+
+    alloc_traits::deallocate(mAlloc, mData, mCapacity);
 
     mSize = other.mSize;
     mCapacity = other.mCapacity;
@@ -243,15 +242,16 @@ public:
    *
    * @return reference to data located at index idx
    */
-  reference
-  operator[]( size_type idx ){
+  [[nodiscard]]
+  reference operator[](size_type idx) {
     using namespace std::string_literals;
 
-    if( idx >= mSize ){
-      throw std::out_of_range( "Index "s + std::to_string( idx ) + " out of bounds! Maximum value:\t" + std::to_string( mSize ) );
+    if(idx >= mSize) {
+      throw std::out_of_range(
+              "Index "s + std::to_string(idx) + " out of bounds! Maximum value:\t" + std::to_string(mSize));
     }
 
-    return ( reference )( *( mData + idx ) );
+    return (reference) (*(mData + idx));
   }
 
   /*! indexed const getter, get const element at index idx
@@ -260,27 +260,27 @@ public:
    *
    * @return const reference to data located at index idx
    */
-  const_reference
-  operator[]( size_type idx ) const{
-    return ( *this )[idx];
+  [[nodiscard]]
+  const_reference operator[](size_type idx) const {
+    return (*this)[idx];
   }
 
   /*! first element getter
    *
    * @return reference to first element
    */
-  reference
-  front(){
-    return ( *this )[0];
+  [[nodiscard]]
+  reference front() {
+    return (*this)[0];
   }
 
   /*! last element getter
    *
    * @return reference to last element
    */
-  reference
-  back(){
-    return ( *this )[mSize - 1];
+  [[nodiscard]]
+  reference back() {
+    return (*this)[mSize - 1];
   }
 
   /*! add data to the end
@@ -289,13 +289,12 @@ public:
    *
    * Uses the copy constructor to copy data parameter into container
    */
-  void
-  push_back( const_reference data ){
-    if( mSize + 1 > mCapacity ){
-      reallocateTo( std::ceil( mCapacity * goldenRatio ) );
+  void push_back(const_reference data) {
+    if(mSize + 1 > mCapacity) {
+      reallocateTo(std::ceil(mCapacity * goldenRatio));
     }
 
-    alloc_traits::construct( mAlloc, mData + mSize, data );
+    alloc_traits::construct(mAlloc, mData + mSize, data);
     ++mSize;
   }
 
@@ -308,31 +307,28 @@ public:
    * Forwards args to value_type constructor.
    */
   template<typename ...Args>
-  void
-  emplace_back( Args&&... args ){
-    if( mSize + 1 > mCapacity ){
-      reallocateTo( std::ceil( mCapacity * goldenRatio ) );
+  void emplace_back(Args&& ... args) {
+    if(mSize + 1 > mCapacity) {
+      reallocateTo(std::ceil(mCapacity * goldenRatio));
     }
 
     //use placement new to call ctor
-    alloc_traits::construct( mAlloc, mData + mSize, std::forward<Args>( args )... );
+    alloc_traits::construct(mAlloc, mData + mSize, std::forward<Args>(args)...);
     ++mSize;
   }
 
   /*! removes and destructs element at end of container
    */
-  void
-  pop_back(){
+  void pop_back() {
     --mSize;
     //call dtor
-    alloc_traits::destroy( mAlloc, mData + mSize );
+    alloc_traits::destroy(mAlloc, mData + mSize);
   }
 
   /*! removes and destructs all elements in container
    */
-  void
-  clear(){
-    while( mSize > 0 ){
+  void clear() {
+    while(mSize > 0) {
       pop_back();
     }
   }
@@ -341,8 +337,8 @@ public:
    *
    * @return container size equal to zero
    */
-  bool
-  empty() const{
+  [[nodiscard]]
+  bool empty() const {
     return mSize == 0;
   }
 
@@ -350,8 +346,8 @@ public:
    *
    * @return count of currently stored elements
    */
-  size_type
-  size() const{
+  [[nodiscard]]
+  size_type size() const {
     return mSize;
   }
 
@@ -359,8 +355,8 @@ public:
    *
    * @return number of elements that can be stored before a resize is necessary
    */
-  size_type
-  capacity() const{
+  [[nodiscard]]
+  size_type capacity() const {
     return mCapacity;
   }
 
@@ -370,12 +366,11 @@ public:
    *
    * @param value  the value to use in filling additional elements
    */
-  void
-  resize( size_type count, value_type value = value_type() ){
-    while( mSize < count ){
-      push_back( value );
+  void resize(size_type count, value_type value = value_type()) {
+    while(mSize < count) {
+      push_back(value);
     }
-    while( mSize > count ){
+    while(mSize > count) {
       pop_back();
     }
   }
@@ -384,10 +379,9 @@ public:
    *
    * @param cap  new capacity
    */
-  void
-  reserve( size_type cap ){
-    if( ( cap > mCapacity ) && ( cap > 0 ) ){
-      reallocateTo( cap );
+  void reserve(size_type cap) {
+    if((cap > mCapacity) && (cap > 0)) {
+      reallocateTo(cap);
     }
   }
 
@@ -395,17 +389,17 @@ public:
    *
    * @return iterator to the first element of the container
    */
-  iterator
-  begin(){
-    return Iterator( 0 );
+  [[nodiscard]]
+  iterator begin() {
+    return Iterator(0);
   }
 
   /*! get const iterator to beginning
    *
    * @return const iterator to the first element of the container
    */
-  const iterator
-  cbegin() const{
+  [[nodiscard]]
+  const iterator cbegin() const {
     return begin();
   }
 
@@ -413,17 +407,17 @@ public:
    *
    * @return iterator to the last element of the container
    */
-  iterator
-  end(){
-    return Iterator( mSize );
+  [[nodiscard]]
+  iterator end() {
+    return Iterator(mSize);
   }
 
   /*! get const iterator to end
    *
    * @return const iterator to the last element of the container
    */
-  const
-  iterator cend() const{
+  [[nodiscard]]
+  const iterator cend() const {
     return end();
   }
 
@@ -433,9 +427,9 @@ public:
    *
    * @return iterator pointing to element at index idx
    */
-  iterator
-  Iterator( size_type idx ){
-    return iterator( pointer( mData + idx ) );
+  [[nodiscard]]
+  iterator Iterator(size_type idx) {
+    return iterator(pointer(mData + idx));
   }
 };
 

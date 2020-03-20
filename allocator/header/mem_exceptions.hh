@@ -3,13 +3,12 @@
 
 #include<exception>
 
-namespace gsw{
+namespace gsw {
 
-class bad_alloc : public std::exception{
+class bad_alloc : public std::exception {
 public:
-  virtual
-  const char*
-  what() const noexcept{
+  [[nodiscard]]
+  virtual const char* what() const noexcept override {
     return "Bad allocation!";
   }
 };

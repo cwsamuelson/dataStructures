@@ -3,15 +3,13 @@
 using namespace gsw;
 
 spline::spline()
-  : mPoly0{0, -1, 2, -1}
-  , mPoly1{2, 0, -5, 3}
-  , mPoly2{0, 1, 4, -3}
-  , mPoly3{0, 0, -1, 1}
-{}
+        : mPoly0{ 0, -1, 2, -1 }
+        , mPoly1{ 2, 0, -5, 3 }
+        , mPoly2{ 0, 1, 4, -3 }
+        , mPoly3{ 0, 0, -1, 1 } {
+}
 
-point2d
-spline::operator()(float p)
-{
+point2d spline::operator()(float p) {
   int p1 = int(p);
   int p0 = p1 - 1;
   int p2 = p1 + 1;
@@ -28,12 +26,10 @@ spline::operator()(float p)
   float tx = 0.5f * (mPoints[p0].x * q0 + mPoints[p1].x * q1 + mPoints[p2].x * q2 + mPoints[p3].x * q3);
   float ty = 0.5f * (mPoints[p0].y * q0 + mPoints[p1].y * q1 + mPoints[p2].y * q2 + mPoints[p3].y * q3);
 
-  return {tx, ty};
+  return { tx, ty };
 }
 
-point2d
-spline::gradient(float p)
-{
+point2d spline::gradient(float p) {
   int p1 = int(p);
   int p0 = p1 - 1;
   int p2 = p1 + 1;
@@ -50,6 +46,6 @@ spline::gradient(float p)
   float tx = 0.5f * (mPoints[p0].x * q0 + mPoints[p1].x * q1 + mPoints[p2].x * q2 + mPoints[p3].x * q3);
   float ty = 0.5f * (mPoints[p0].y * q0 + mPoints[p1].y * q1 + mPoints[p2].y * q2 + mPoints[p3].y * q3);
 
-  return {tx, ty};
+  return { tx, ty };
 }
 

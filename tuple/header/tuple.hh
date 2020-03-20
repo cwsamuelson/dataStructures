@@ -7,9 +7,9 @@
  * @example test-tuple.cc
  */
 
-namespace gsw{
+namespace gsw {
 
-namespace detail{
+namespace detail {
 
 /*!
  * @tparam N tuple size
@@ -28,7 +28,7 @@ class tuple_impl;
  * The tail end of a tuple chain.  Contains the tail's type and value.
  */
 template<size_t N, typename T>
-class tuple_impl<N, T>{
+class tuple_impl<N, T> {
 public:
   /*! Type of value stored here
    */
@@ -39,15 +39,16 @@ public:
   /*! Default ctor
    */
   tuple_impl()
-    : data( value_type() ){
+          : data(value_type()) {
   }
 
   /*! Basic init ctor
    *
    * @param vt Value of data to store in this unit
    */
-  tuple_impl( value_type vt )
-    : data( vt ){
+  explicit
+  tuple_impl(value_type vt)
+          : data(vt) {
   }
 };
 
@@ -63,7 +64,7 @@ public:
  * compile-time linked list
  */
 template<size_t N, typename T, typename ...Args>
-class tuple_impl<N, T, Args...> : public tuple_impl<N + 1, Args...>{
+class tuple_impl<N, T, Args...> : public tuple_impl<N + 1, Args...> {
 public:
   using value_type = T;
 
@@ -76,7 +77,7 @@ public:
   /*! Default ctor
    */
   tuple_impl()
-    : data( value_type() ){
+          : data(value_type()) {
   }
 
   /*! Basic init ctor
@@ -88,9 +89,10 @@ public:
    * @param args Arguments for future chain elements
    */
   template<typename ...ARGS>
-  tuple_impl( value_type vt, ARGS... args )
-    : base( std::forward<ARGS>( args )... )
-    , data( vt ){
+  explicit
+  tuple_impl(value_type vt, ARGS... args)
+          : base(std::forward<ARGS>(args)...)
+          , data(vt) {
   }
 };
 
@@ -105,7 +107,7 @@ public:
  * @tparam ...Args Remaining types in tuple
  */
 template<size_t M, size_t N, typename T, typename ...Args>
-class get_impl{
+class get_impl {
 public:
   /*! Get data from a provided tuple
    *
@@ -115,10 +117,8 @@ public:
    *
    * Crawl the tuple until the result is found
    */
-  static
-  auto&
-  get( tuple_impl<N, T, Args...>& tup ){
-    return get_impl<M - 1, N + 1, Args...>::get( static_cast<tuple_impl<N + 1, Args...>& >( tup ) );
+  static auto& get(tuple_impl<N, T, Args...>& tup) {
+    return get_impl<M - 1, N + 1, Args...>::get(static_cast<tuple_impl<N + 1, Args...>& >( tup ));
   }
 
   /*! Get data from a provided tuple
@@ -127,10 +127,8 @@ public:
    *
    * @return Const reference to requested value
    */
-  static
-  const auto&
-  get( const tuple_impl<N, T, Args...>& tup ){
-    return get_impl<M - 1, N + 1, Args...>::get( static_cast<const tuple_impl<N + 1, Args...>& >( tup ) );
+  static const auto& get(const tuple_impl<N, T, Args...>& tup) {
+    return get_impl<M - 1, N + 1, Args...>::get(static_cast<const tuple_impl<N + 1, Args...>& >( tup ));
   }
 };
 
@@ -146,7 +144,7 @@ public:
  * operation.
  */
 template<size_t N, typename T, typename ...Args>
-class get_impl<0, N, T, Args...>{
+class get_impl<0, N, T, Args...> {
 public:
   /*! Get data from a provided tuple
    *
@@ -156,9 +154,7 @@ public:
    *
    * Final location; where the requested value is stored.
    */
-  static
-  auto&
-  get( tuple_impl<N, T, Args...>& tup ){
+  static auto& get(tuple_impl<N, T, Args...>& tup) {
     return tup.data;
   }
 
@@ -170,9 +166,7 @@ public:
    *
    * Final location; where the requested value is stored.
    */
-  static
-  const auto&
-  get( const tuple_impl<N, T, Args...>& tup ){
+  static const auto& get(const tuple_impl<N, T, Args...>& tup) {
     return tup.data;
   }
 };
@@ -188,7 +182,7 @@ public:
  * the head.
  */
 template<typename ...Args>
-class tuple : public detail::tuple_impl<0, Args...>{
+class tuple : public detail::tuple_impl<0, Args...> {
 private:
   using base = detail::tuple_impl<0, Args...>;
 
@@ -196,7 +190,7 @@ public:
   /*! Default ctor
    */
   tuple()
-    : base(){
+          : base() {
   }
 
   /*! Basic init ctor
@@ -206,8 +200,9 @@ public:
    * @param args List af arguments to be passed into tuple implementation
    */
   template<typename ...ARGS>
-  tuple( ARGS... args )
-    : base( std::forward<ARGS>( args )... ){
+  explicit
+  tuple(ARGS... args)
+          : base(std::forward<ARGS>(args)...) {
   }
 };
 
@@ -222,9 +217,9 @@ public:
  * @return Reference to the data at M in tup
  */
 template<size_t M, typename ...Args>
-auto&
-get( tuple<Args...>& tup ){
-  return detail::get_impl<M, 0, Args...>::get( static_cast<detail::tuple_impl<0, Args...>& >( tup ) );
+[[nodiscard]]
+auto& get(tuple<Args...>& tup) {
+  return detail::get_impl<M, 0, Args...>::get(static_cast<detail::tuple_impl<0, Args...>& >( tup ));
 }
 
 /*! Tuple getter method
@@ -238,9 +233,9 @@ get( tuple<Args...>& tup ){
  * @return Const reference to the data at M in tup
  */
 template<size_t M, typename ...Args>
-const auto&
-get( const tuple<Args...>& tup ){
-  return detail::get_impl<M, 0, Args...>::get( static_cast<const detail::tuple_impl<0, Args...>& >( tup ) );
+[[nodiscard]]
+const auto& get(const tuple<Args...>& tup) {
+  return detail::get_impl<M, 0, Args...>::get(static_cast<const detail::tuple_impl<0, Args...>& >( tup ));
 }
 
 /*! Tuple factory method
@@ -254,9 +249,9 @@ get( const tuple<Args...>& tup ){
  * all of them.
  */
 template<typename ...Args>
-tuple<Args...>
-make_tuple( Args... args ){
-  return tuple<Args...>( std::forward<Args>( args )... );
+[[nodiscard]]
+tuple<Args...> make_tuple(Args... args) {
+  return tuple<Args...>(std::forward<Args>(args)...);
 }
 
 /*!
@@ -273,7 +268,7 @@ class tuple_element;
  * @tparam ...TAIL
  */
 template<typename HEAD, typename ...TAIL>
-class tuple_element<0, tuple<HEAD, TAIL...> >{
+class tuple_element<0, tuple<HEAD, TAIL...>> {
 public:
   using type = HEAD;
 };
@@ -286,7 +281,7 @@ public:
  * @tparam ...TAIL
  */
 template<size_t N, typename HEAD, typename ...TAIL>
-class tuple_element<N, tuple<HEAD, TAIL...> > : public tuple_element<N - 1, tuple<TAIL...> >{
+class tuple_element<N, tuple<HEAD, TAIL...>> : public tuple_element<N - 1, tuple<TAIL...>> {
 };
 
 }

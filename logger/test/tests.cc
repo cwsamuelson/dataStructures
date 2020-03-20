@@ -1,20 +1,21 @@
 #define CATCH_CONFIG_MAIN
+
 #include<catch2/catch.hpp>
 
 #include <logger.hh>
 #include <logging_context.hh>
 
-TEST_CASE("logger", "[]"){
+TEST_CASE("logger", "[]") {
   gsw::logger logger;
   logger << "test string";
 
-  SECTION("contexts prepend text to a log message"){
-    SECTION("Multiple contexts"){
-      SECTION("A"){
+  SECTION("contexts prepend text to a log message") {
+    SECTION("Multiple contexts") {
+      SECTION("A") {
         gsw::LoggingContext ctx(logger, "A");
 
         logger << "A message";
-        SECTION("B"){
+        SECTION("B") {
           gsw::LoggingContext ctx(logger, "B");
 
           logger << "B message";
@@ -22,7 +23,7 @@ TEST_CASE("logger", "[]"){
 
         logger << "A2 message";
 
-        SECTION("C"){
+        SECTION("C") {
           gsw::LoggingContext ctx(logger, "C");
 
           logger << "C message";
@@ -30,7 +31,7 @@ TEST_CASE("logger", "[]"){
 
         logger << "A3 message";
       }
-      SECTION("D"){
+      SECTION("D") {
         gsw::LoggingContext ctx(logger, "D");
 
         logger << "D message";

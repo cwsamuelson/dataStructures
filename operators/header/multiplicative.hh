@@ -5,7 +5,7 @@
  * @example test-operators.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! Multiplicative utility class to provide multiplication and division operators
  *
@@ -39,7 +39,7 @@ namespace gsw{
  * This will provide 'for free' the * and / operators as well.
  */
 template<typename LHS, typename RHS = LHS>
-class multiplicative{
+class multiplicative {
 public:
   using lhs_type = LHS;
   using rhs_type = RHS;
@@ -54,10 +54,9 @@ public:
    *
    * Multiplies together lhs and rhs using the *= operator of the derived class.
    */
-  constexpr friend
-  auto
-  operator*( lhs_type lhs, const rhs_type& rhs ) noexcept{
-    return ( lhs *= rhs );
+  [[nodiscard]]
+  constexpr friend auto operator*(lhs_type lhs, const rhs_type& rhs) noexcept {
+    return (lhs *= rhs);
   }
 
   /*! Division operator
@@ -70,10 +69,9 @@ public:
    *
    * Divides lhs by rhs using the /= operator of the derived class.
    */
-  constexpr friend
-  auto
-  operator/( lhs_type lhs, const rhs_type& rhs ) noexcept{
-    return ( lhs /= rhs );
+  [[nodiscard]]
+  constexpr friend auto operator/(lhs_type lhs, const rhs_type& rhs) noexcept {
+    return (lhs /= rhs);
   }
 };
 

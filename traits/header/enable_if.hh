@@ -5,7 +5,7 @@
  * @example test-traits.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! SFINAE utility
  *
@@ -17,7 +17,7 @@ namespace gsw{
  * enable_if template.
  */
 template<bool B, typename T = void>
-class enable_if{ };
+class enable_if {};
 
 /*! SFINAE enabled utility
  *
@@ -29,7 +29,7 @@ class enable_if{ };
  * substitution failure, eliminating that function from selection.
  */
 template<typename T>
-class enable_if<true, T>{
+class enable_if<true, T> {
 public:
   using type = T;
 };

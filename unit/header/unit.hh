@@ -11,7 +11,7 @@
 #include<ratio.hh>
 #include<operators.hh>
 
-namespace gsw{
+namespace gsw {
 
 /*!
  * @tparam LENGTH  Distance
@@ -54,10 +54,8 @@ namespace gsw{
  * will be using the defaults specified here.
  *
  */
-template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE,
-         int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK,
-         int MOLE, int BYTE>
-class meas{
+template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE, int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK, int MOLE, int BYTE>
+class meas {
 public:
   static constexpr int length = LENGTH;
   static constexpr int time = TIME;
@@ -72,66 +70,121 @@ public:
   static constexpr int mole = MOLE;
   static constexpr int byte = BYTE;
 
-  using inverse = meas<-LENGTH, -TIME, -MASS, -CURRENT, -TEMPERATURE, -CANDELA, -MONEY, -ANGLE, -PERCENTAGE, -TICK, -MOLE, -BYTE>;
+  using inverse = meas<-LENGTH,
+                       -TIME,
+                       -MASS,
+                       -CURRENT,
+                       -TEMPERATURE,
+                       -CANDELA,
+                       -MONEY,
+                       -ANGLE,
+                       -PERCENTAGE,
+                       -TICK,
+                       -MOLE,
+                       -BYTE>;
 };
 
 /*!
  */
-template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
-         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
-         int MOLE1, int BYTE1,
-         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
-         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
-         int MOLE2, int BYTE2>
-meas<LENGTH1 + LENGTH2, TIME1 + TIME2, MASS1 + MASS2, CURRENT1 + CURRENT2,
-     TEMPERATURE1 + TEMPERATURE2, CANDELA1 + CANDELA2, MONEY1 + MONEY2,
-     ANGLE1 + ANGLE2, PERCENTAGE1 + PERCENTAGE2, TICK1 + TICK2, MOLE1 + MOLE2,
-     BYTE1 + BYTE2>
-operator*( const meas<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
-                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, MOLE1, BYTE1>& lhs,
-           const meas<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
-                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, MOLE2, BYTE2>& rhs );
+template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1, int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1, int MOLE1, int BYTE1, int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2, int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2, int MOLE2, int BYTE2>
+meas<LENGTH1 + LENGTH2,
+     TIME1 + TIME2,
+     MASS1 + MASS2,
+     CURRENT1 + CURRENT2,
+     TEMPERATURE1 + TEMPERATURE2,
+     CANDELA1 + CANDELA2,
+     MONEY1 + MONEY2,
+     ANGLE1 + ANGLE2,
+     PERCENTAGE1 + PERCENTAGE2,
+     TICK1 + TICK2,
+     MOLE1 + MOLE2,
+     BYTE1 + BYTE2> operator*(const meas<LENGTH1,
+                                         TIME1,
+                                         MASS1,
+                                         CURRENT1,
+                                         TEMPERATURE1,
+                                         CANDELA1,
+                                         MONEY1,
+                                         ANGLE1,
+                                         PERCENTAGE1,
+                                         TICK1,
+                                         MOLE1,
+                                         BYTE1>& lhs,
+                              const meas<LENGTH2,
+                                         TIME2,
+                                         MASS2,
+                                         CURRENT2,
+                                         TEMPERATURE2,
+                                         CANDELA2,
+                                         MONEY2,
+                                         ANGLE2,
+                                         PERCENTAGE2,
+                                         TICK2,
+                                         MOLE2,
+                                         BYTE2>& rhs);
 
 /*!
  */
-template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1,
-         int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1,
-         int MOLE1, int BYTE1,
-         int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2,
-         int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2,
-         int MOLE2, int BYTE2>
-meas<LENGTH1 - LENGTH2, TIME1 - TIME2, MASS1 - MASS2, CURRENT1 - CURRENT2,
-     TEMPERATURE1 - TEMPERATURE2, CANDELA1 - CANDELA2, MONEY1 - MONEY2,
-     ANGLE1 - ANGLE2, PERCENTAGE1 - PERCENTAGE2, TICK1 - TICK2, MOLE1 - MOLE2,
-     BYTE1 - BYTE2>
-operator/( const meas<LENGTH1, TIME1, MASS1, CURRENT1, TEMPERATURE1,
-                      CANDELA1, MONEY1, ANGLE1, PERCENTAGE1, TICK1, MOLE1, BYTE1>& lhs,
-           const meas<LENGTH2, TIME2, MASS2, CURRENT2, TEMPERATURE2,
-                      CANDELA2, MONEY2, ANGLE2, PERCENTAGE2, TICK2, MOLE2, BYTE2>& rhs );
+template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1, int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1, int MOLE1, int BYTE1, int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2, int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2, int MOLE2, int BYTE2>
+meas<LENGTH1 - LENGTH2,
+     TIME1 - TIME2,
+     MASS1 - MASS2,
+     CURRENT1 - CURRENT2,
+     TEMPERATURE1 - TEMPERATURE2,
+     CANDELA1 - CANDELA2,
+     MONEY1 - MONEY2,
+     ANGLE1 - ANGLE2,
+     PERCENTAGE1 - PERCENTAGE2,
+     TICK1 - TICK2,
+     MOLE1 - MOLE2,
+     BYTE1 - BYTE2> operator/(const meas<LENGTH1,
+                                         TIME1,
+                                         MASS1,
+                                         CURRENT1,
+                                         TEMPERATURE1,
+                                         CANDELA1,
+                                         MONEY1,
+                                         ANGLE1,
+                                         PERCENTAGE1,
+                                         TICK1,
+                                         MOLE1,
+                                         BYTE1>& lhs,
+                              const meas<LENGTH2,
+                                         TIME2,
+                                         MASS2,
+                                         CURRENT2,
+                                         TEMPERATURE2,
+                                         CANDELA2,
+                                         MONEY2,
+                                         ANGLE2,
+                                         PERCENTAGE2,
+                                         TICK2,
+                                         MOLE2,
+                                         BYTE2>& rhs);
 
-//                              d   t   m   c   T  l  M  a  p  k, ml, B
-using none_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
-using length_msr      = meas< 1,  0,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
-using mass_msr        = meas< 0,  0,  1,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
-using current_msr     = meas< 0,  0,  0,  1, 0, 0, 0, 0, 0, 0,  0, 0>;
-using temperature_msr = meas< 0,  0,  0,  0, 1, 0, 0, 0, 0, 0,  0, 0>;
-using l_intensity_msr = meas< 0,  0,  0,  0, 0, 1, 0, 0, 0, 0,  0, 0>;
-using money_msr       = meas< 0,  0,  0,  0, 0, 0, 1, 0, 0, 0,  0, 0>;
-using time_msr        = meas< 0,  1,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
-using tick_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 1,  0, 0>;
-using percent_msr     = meas< 0,  0,  0,  0, 0, 0, 0, 0, 1, 0,  0, 0>;
-using frequency_msr   = meas< 0, -1,  0,  0, 0, 0, 0, 0, 0, 0,  0, 0>;
-using angle_msr       = meas< 0,  0,  0,  0, 0, 0, 0, 1, 0, 0,  0, 0>;
-using solid_angle_msr = meas< 0,  0,  0,  0, 0, 0, 0, 2, 0, 0,  0, 0>;
-using mole_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 0,  1, 0>;
-using byte_msr        = meas< 0,  0,  0,  0, 0, 0, 0, 0, 0, 0,  0, 1>;
-using voltage_msr     = meas< 2, -3,  1, -1, 0, 0, 0, 0, 0, 0,  0, 0>;
-using resistance_msr  = meas< 2, -3,  1, -2, 0, 0, 0, 0, 0, 0,  0, 0>;
-using capacitance_msr = meas<-2,  4, -1,  2, 0, 0, 0, 0, 0, 0,  0, 0>;
-using inductance_msr  = meas< 2, -2,  1, -2, 0, 0, 0, 0, 0, 0,  0, 0>;
-using charge_msr      = meas< 0,  1,  0,  1, 0, 0, 0, 0, 0, 0,  0, 0>;
-using mag_field_msr   = meas< 0, -2,  1,  1, 0, 0, 0, 0, 0, 0,  0, 0>;
-using elec_field_msr  = meas< 1, -3,  1, -1, 0, 0, 0, 0, 0, 0,  0, 0>;
+//                           d   t   m   c   T  l  M  a  p  k, ml, B
+using none_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using length_msr      = meas<1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using mass_msr        = meas<0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using current_msr     = meas<0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using temperature_msr = meas<0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0>;
+using l_intensity_msr = meas<0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0>;
+using money_msr       = meas<0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0>;
+using time_msr        = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using tick_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0>;
+using percent_msr     = meas<0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0>;
+using frequency_msr   = meas<0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using angle_msr       = meas<0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0>;
+using solid_angle_msr = meas<0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0>;
+using mole_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0>;
+using byte_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>;
+using voltage_msr     = meas<2, -3, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using resistance_msr  = meas<2, -3, 1, -2, 0, 0, 0, 0, 0, 0, 0, 0>;
+using capacitance_msr = meas<-2, 4, -1, 2, 0, 0, 0, 0, 0, 0, 0, 0>;
+using inductance_msr  = meas<2, -2, 1, -2, 0, 0, 0, 0, 0, 0, 0, 0>;
+using charge_msr      = meas<0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using mag_field_msr   = meas<0, -2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using elec_field_msr  = meas<1, -3, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0>;
 
 /*!
  * a unit_system is like metric or imperial.  a particular variable can be of
@@ -145,16 +198,15 @@ using elec_field_msr  = meas< 1, -3,  1, -1, 0, 0, 0, 0, 0, 0,  0, 0>;
  *
  * REQUIRE( feet == 3.28 );
  */
-class metric{};
-class english{};
+class metric {};
+
+class english {};
 
 template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
 class unit;
 
-template<typename M, typename Si, typename So,
-                     typename Ti, typename To,
-                     typename Fi, typename Fo>
-class converter_base{
+template<typename M, typename Si, typename So, typename Ti, typename To, typename Fi, typename Fo>
+class converter_base {
 public:
   using measure = M;
   using sys_in = Si;
@@ -163,48 +215,43 @@ public:
   using T_out = To;
   using factor_in = Fi;
   using factor_out = Fo;
-  using conversion_factor = decltype( factor_in() * factor_out().invert() );
+  using conversion_factor = decltype(factor_in() * factor_out().invert());
   using input = unit<measure, sys_in, T_in, factor_in>;
   using result = unit<measure, sys_out, T_out, factor_out>;
 
-  auto
-  conversion_ratio(){
+  auto conversion_ratio() {
     return conversion_factor();
   }
 };
 
-template<typename M, typename Si, typename So,
-                     typename Ti, typename To,
-                     typename Fi, typename Fo, typename Enable = void>
-class converter
-      : public converter_base<M, Si, So, Ti, To, Fi, Fo>{
+template<typename M,
+         typename Si,
+         typename So,
+         typename Ti,
+         typename To,
+         typename Fi,
+         typename Fo,
+         typename Enable = void>
+class converter : public converter_base<M, Si, So, Ti, To, Fi, Fo> {
 public:
   using base = converter_base<M, Si, So, Ti, To, Fi, Fo>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return unit<typename base::measure, typename base::sys_in,
-                typename base::T_out, typename base::factor_out>
-                  ( val.getValue() * base::conversion_ratio() );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return unit<typename base::measure, typename base::sys_in, typename base::T_out, typename base::factor_out>(
+            val.getValue() * base::conversion_ratio());
   }
 };
 
 template<typename M, typename S, typename T, typename F>
-class converter<M, S, S, T, T, F, F>
-      : public converter_base<M, S, S, T, T, F, F>{
+class converter<M, S, S, T, T, F, F> : public converter_base<M, S, S, T, T, F, F> {
 public:
   using base = converter_base<M, S, S, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
+  constexpr typename base::result operator()(const typename base::input& val) {
     return val;
   }
 };
@@ -235,10 +282,10 @@ public:
  *        Using the pimpl idiom also separates concerns of exception safety per
  *        http://www.gotw.ca/gotw/059.htm
  */
-template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR> >,
-                    additive<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>,
-                    multiplicative<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>{
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR>>
+             , additive<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>
+             , multiplicative<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL> {
 public:
   /*! Storage type
    */
@@ -250,31 +297,38 @@ public:
 
   /*! Convenience type used for conversion between storage and factor types
    */
-  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type>
-  using other_type = unit<MEAS, S_t, D_t, F_t>;
+  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type> using other_type = unit<MEAS,
+                                                                                                                 S_t,
+                                                                                                                 D_t,
+                                                                                                                 F_t>;
 
 private:
   value_type mValue;
 
   /*!
    */
-  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type>
-  using convert_type = converter<MEAS, S_t, SYSTEM, D_t, DBL, F_t, FACTOR>;
+  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type> using convert_type = converter<
+          MEAS,
+          S_t,
+          SYSTEM,
+          D_t,
+          DBL,
+          F_t,
+          FACTOR>;
 
 public:
   /*! Ctor sets initial internal value
    *
    * @param val  Value to initialize data, defaults to default ctor
    */
-  constexpr
-  unit( const value_type& val = value_type() )
-    : mValue( val ){
+  constexpr unit(const value_type& val = value_type())
+          : mValue(val) {
   }
 
   /*!
    */
   constexpr explicit
-  operator value_type() const{
+  operator value_type() const {
     return mValue;
   }
 
@@ -292,9 +346,8 @@ public:
    * based on the value in F.
    */
   template<typename D, typename F, typename S>
-  constexpr
-  unit( const other_type<S, D, F>& other )
-    : mValue( convert_type<S, D, F>()( other ).getRaw() ){
+  constexpr unit(const other_type<S, D, F>& other)
+          : mValue(convert_type<S, D, F>()(other).getValue()) {
   }
 
   /*! Copy-assignment operator
@@ -313,9 +366,8 @@ public:
    * based on the value in F.
    */
   template<typename D, typename F, typename S>
-  constexpr unit&
-  operator=( const other_type<S, D, F>& other ){
-    mValue = convert_type<S, D, F>()( other ).getRaw() * typename factor_type::invert_type();
+  constexpr unit& operator=(const other_type<S, D, F>& other) {
+    mValue = convert_type<S, D, F>()(other).getRaw() * typename factor_type::invert_type();
 
     return *this;
   }
@@ -328,8 +380,7 @@ public:
    *
    * Copies value raw as this' new value.
    */
-  constexpr unit&
-  operator=( value_type value ){
+  constexpr unit& operator=(value_type value) {
     mValue = value;
 
     return *this;
@@ -349,9 +400,9 @@ public:
    * @todo Allow small error in comparison to account for floating point math.
    */
   template<typename D, typename F, typename S>
-  constexpr bool
-  operator==( const other_type<S, D, F>& other ) const{
-    return getRaw() == converter<MEAS, S, SYSTEM, D, D, F, FACTOR>()( other ).getRaw();
+  [[nodiscard]]
+  constexpr bool operator==(const other_type<S, D, F>& other) const {
+    return getRaw() == converter<MEAS, S, SYSTEM, D, D, F, FACTOR>()(other).getRaw();
   }
 
   /*! Inequality comparison operator
@@ -368,9 +419,9 @@ public:
    * Compares this instance with another instance for inequality.
    */
   template<typename D, typename F, typename S>
-  constexpr bool
-  operator!=( const other_type<S, D, F>& other ) const{
-    return !( *this == other );
+  [[nodiscard]]
+  constexpr bool operator!=(const other_type<S, D, F>& other) const {
+    return !(*this == other);
   }
 
   /*! Less than comparison operator
@@ -385,9 +436,9 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F, typename S>
-  constexpr bool
-  operator<( const other_type<S, D, F>& other ) const{
-    return getRaw() < convert_type<S, D, F>()( other ).getRaw();
+  [[nodiscard]]
+  constexpr bool operator<(const other_type<S, D, F>& other) const {
+    return getRaw() < convert_type<S, D, F>()(other).getRaw();
   }
 
   /*! Greater than comparison operator
@@ -402,9 +453,9 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F, typename S>
-  constexpr bool
-  operator>( const other_type<S, D, F>& other ) const{
-    return getRaw() > convert_type<S, D, F>()( other ).getRaw();
+  [[nodiscard]]
+  constexpr bool operator>(const other_type<S, D, F>& other) const {
+    return getRaw() > convert_type<S, D, F>()(other).getRaw();
   }
 
   /*! LE comparison operator
@@ -419,9 +470,9 @@ public:
    * @return Result of comparison.
    */
   template<typename D, typename F, typename S>
-  constexpr bool
-  operator<=( const other_type<S, D, F>& other ) const{
-    return !( ( *this ) > other );
+  [[nodiscard]]
+  constexpr bool operator<=(const other_type<S, D, F>& other) const {
+    return !((*this) > other);
   }
 
   /*! GE comparison operator
@@ -436,9 +487,9 @@ public:
    * @return Result of comparison
    */
   template<typename D, typename F, typename S>
-  constexpr bool
-  operator>=( const other_type<S, D, F>& other ) const{
-    return !( ( *this ) < other );
+  [[nodiscard]]
+  constexpr bool operator>=(const other_type<S, D, F>& other) const {
+    return !((*this) < other);
   }
 
   /*! Equality comparison operator
@@ -447,8 +498,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool
-  operator==( value_type other ) const{
+  [[nodiscard]]
+  constexpr bool operator==(value_type other) const {
     return mValue == other;
   }
 
@@ -458,8 +509,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool
-  operator<( value_type other ) const{
+  [[nodiscard]]
+  constexpr bool operator<(value_type other) const {
     return mValue < other;
   }
 
@@ -469,8 +520,8 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool
-  operator>( value_type other ) const{
+  [[nodiscard]]
+  constexpr bool operator>(value_type other) const {
     return mValue > other;
   }
 
@@ -480,9 +531,9 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool
-  operator<=( value_type other ) const{
-    return !( ( *this ) > other );
+  [[nodiscard]]
+  constexpr bool operator<=(value_type other) const {
+    return !((*this) > other);
   }
 
   /*! GE comparison operator
@@ -491,9 +542,9 @@ public:
    *
    * @return Result of comparison
    */
-  constexpr bool
-  operator>=( value_type other ) const{
-    return !( ( *this ) < other );
+  [[nodiscard]]
+  constexpr bool operator>=(value_type other) const {
+    return !((*this) < other);
   }
 
   /*! Prefix increment operator
@@ -502,8 +553,7 @@ public:
    *
    * Increments value.
    */
-  constexpr unit&
-  operator++(){
+  constexpr unit& operator++() {
     ++mValue;
 
     return *this;
@@ -515,11 +565,10 @@ public:
    *
    * @return Value before increment
    */
-  constexpr unit
-  operator++( int ){
+  constexpr unit operator++(int) {
     unit u = *this;
 
-    ++( *this );
+    ++(*this);
 
     return u;
   }
@@ -530,8 +579,7 @@ public:
    *
    * Deccrements value.
    */
-  constexpr unit&
-  operator--(){
+  constexpr unit& operator--() {
     --mValue;
 
     return *this;
@@ -545,11 +593,10 @@ public:
    *
    * Deccrements value.
    */
-  constexpr unit
-  operator--( int ){
+  constexpr unit operator--(int) {
     unit u = *this;
 
-    --( *this );
+    --(*this);
 
     return u;
   }
@@ -564,9 +611,8 @@ public:
    * @return Reference to lhs, but with value of the addition
    */
   template<typename D, typename F, typename S>
-  constexpr unit&
-  operator+=( const other_type<S, D, F>& other ){
-    mValue = ( getRaw() + convert_type<S, D, F>()( other ).getRaw() ) / factor_type::value;
+  constexpr unit& operator+=(const other_type<S, D, F>& other) {
+    mValue = (getRaw() + convert_type<S, D, F>()(other).getRaw()) / factor_type::value;
 
     return *this;
   }
@@ -585,9 +631,9 @@ public:
    * be part of the class to be used in inheritance.
    */
   template<typename D, typename F, typename S>
-  constexpr auto
-  operator+( const other_type<S, D, F>& other ) const{
-    return unit( *this ) += convert_type<S, D, F>()( other );
+  [[nodiscard]]
+  constexpr auto operator+(const other_type<S, D, F>& other) const {
+    return unit(*this) += convert_type<S, D, F>()(other);
   }
 
   /*! Subtraction-assignment operator
@@ -600,9 +646,8 @@ public:
    * @return Reference to lhs, but with value of the subtraction
    */
   template<typename D, typename F, typename S>
-  constexpr unit&
-  operator-=( const other_type<S, D, F>& other ){
-    mValue = ( getRaw() - convert_type<S, D, F>()( other ).getRaw() ) / factor_type::value;
+  constexpr unit& operator-=(const other_type<S, D, F>& other) {
+    mValue = (getRaw() - convert_type<S, D, F>()(other).getRaw()) / factor_type::value;
 
     return *this;
   }
@@ -621,9 +666,9 @@ public:
    * be part of the class to be used in inheritance.
    */
   template<typename D, typename F, typename S>
-  constexpr auto
-  operator-( const other_type<S, D, F>& other ) const{
-    return unit( *this ) -= convert_type<S, D, F>()( other );
+  [[nodiscard]]
+  constexpr auto operator-(const other_type<S, D, F>& other) const {
+    return unit(*this) -= convert_type<S, D, F>()(other);
   }
 
   /*! Add-assignment operator
@@ -634,8 +679,7 @@ public:
    *
    * Stored value is increased by other, and saved
    */
-  constexpr unit&
-  operator+=( value_type other ){
+  constexpr unit& operator+=(value_type other) {
     mValue += other;
 
     return *this;
@@ -649,8 +693,7 @@ public:
    *
    * Stored value is reduced by other, and saved
    */
-  constexpr unit&
-  operator-=( value_type other ){
+  constexpr unit& operator-=(value_type other) {
     mValue -= other;
 
     return *this;
@@ -668,8 +711,7 @@ public:
    *
    * Stored value is multiplied by val, and saved
    */
-  constexpr unit&
-  operator*=( const value_type& val ){
+  constexpr unit& operator*=(const value_type& val) {
     mValue *= val;
 
     return *this;
@@ -683,8 +725,7 @@ public:
    *
    * Stored value is divided by val, and saved
    */
-  constexpr unit&
-  operator/=( const value_type& val ){
+  constexpr unit& operator/=(const value_type& val) {
     mValue /= val;
 
     return *this;
@@ -692,16 +733,16 @@ public:
 
   /*! Get factored, stored value
    */
-  constexpr value_type
-  getValue() const{
+  [[nodiscard]]
+  constexpr value_type getValue() const {
     return mValue;
   }
 
   /*! Retrieve actual raw value (factor is taken into account)
    */
-  constexpr value_type
-  getRaw() const{
-    return ( mValue * factor_type::value );
+  [[nodiscard]]
+  constexpr value_type getRaw() const {
+    return (mValue * factor_type::value);
   }
 };
 
@@ -709,10 +750,10 @@ public:
  * @param u
  * @param d
  */
-template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<MEAS, SYSTEM, DBL, FACTOR>
-operator*( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
-  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
+unit<MEAS, SYSTEM, DBL, FACTOR> operator*(const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d) {
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp(u);
 
   cp *= d;
 
@@ -723,10 +764,10 @@ operator*( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
  * @param d
  * @param u
  */
-template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<MEAS, SYSTEM, DBL, FACTOR>
-operator*( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
-  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
+unit<MEAS, SYSTEM, DBL, FACTOR> operator*(const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u) {
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp(u);
 
   cp *= d;
 
@@ -737,10 +778,10 @@ operator*( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
  * @param u
  * @param d
  */
-template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<MEAS, SYSTEM, DBL, FACTOR>
-operator/( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
-  unit<MEAS, SYSTEM, DBL, FACTOR> cp( u );
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
+unit<MEAS, SYSTEM, DBL, FACTOR> operator/(const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d) {
+  unit<MEAS, SYSTEM, DBL, FACTOR> cp(u);
 
   cp /= d;
 
@@ -751,9 +792,13 @@ operator/( const unit<MEAS, SYSTEM, DBL, FACTOR>& u, const DBL& d ){
  * @param d
  * @param u
  */
-template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1> >
-unit<typename MEAS::inverse, SYSTEM, DBL, typename FACTOR::invert_type>
-operator/( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
+template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
+[[nodiscard]]
+unit<typename MEAS::inverse, SYSTEM, DBL, typename FACTOR::invert_type> operator/(const DBL& d,
+                                                                                  const unit<MEAS,
+                                                                                             SYSTEM,
+                                                                                             DBL,
+                                                                                             FACTOR>& u) {
   return d / u.getValue();
 }
 
@@ -766,15 +811,24 @@ operator/( const DBL& d, const unit<MEAS, SYSTEM, DBL, FACTOR>& u ){
  * @return Returns a 3rd type, where each template parameter is the sum of the
  *         equivalent parameters of the lhs and rhs.
  */
-template<typename MEAS1, typename MEAS2,
-         typename S_t1, typename S_t2,
-         typename D_t1, typename D_t2,
-         typename F_t1, typename F_t2>
-constexpr
-unit<decltype( MEAS1() * MEAS2() ), S_t1, D_t1, decltype( F_t1() * F_t2() )>
-operator*( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
-           const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
-  return lhs.getValue() * converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t2, F_t2>()( rhs ).getValue();
+template<typename MEAS1,
+         typename MEAS2,
+         typename S_t1,
+         typename S_t2,
+         typename D_t1,
+         typename D_t2,
+         typename F_t1,
+         typename F_t2>
+[[nodiscard]]
+constexpr unit<decltype(MEAS1() * MEAS2()), S_t1, D_t1, decltype(F_t1() * F_t2())> operator*(const unit<MEAS1,
+                                                                                                        S_t1,
+                                                                                                        D_t1,
+                                                                                                        F_t1>& lhs,
+                                                                                             const unit<MEAS2,
+                                                                                                        S_t2,
+                                                                                                        D_t2,
+                                                                                                        F_t2>& rhs) {
+  return lhs.getValue() * converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t2, F_t2>()(rhs).getValue();
 }
 
 /*! Division operator
@@ -786,217 +840,264 @@ operator*( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
  * @return Returns a 3rd type, where each template parameter is the difference
  *         of the equivalent parameters of the lhs and rhs.
  */
-template<typename MEAS1, typename MEAS2,
-         typename S_t1, typename S_t2,
-         typename D_t1, typename D_t2,
-         typename F_t1, typename F_t2>
-constexpr
-unit<decltype( MEAS1() / MEAS2() ), S_t1, D_t1, decltype( F_t1() / F_t2() )>
-operator/( const unit<MEAS1, S_t1, D_t1, F_t1>& lhs,
-           const unit<MEAS2, S_t2, D_t2, F_t2>& rhs ){
-  return lhs.getValue() / converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t2, F_t2>()( rhs ).getValue();
+template<typename MEAS1,
+         typename MEAS2,
+         typename S_t1,
+         typename S_t2,
+         typename D_t1,
+         typename D_t2,
+         typename F_t1,
+         typename F_t2>
+[[nodiscard]]
+constexpr unit<decltype(MEAS1() / MEAS2()), S_t1, D_t1, decltype(F_t1() / F_t2())> operator/(const unit<MEAS1,
+                                                                                                        S_t1,
+                                                                                                        D_t1,
+                                                                                                        F_t1>& lhs,
+                                                                                             const unit<MEAS2,
+                                                                                                        S_t2,
+                                                                                                        D_t2,
+                                                                                                        F_t2>& rhs) {
+  return lhs.getValue() / converter<MEAS2, S_t2, S_t1, D_t2, D_t1, F_t2, F_t2>()(rhs).getValue();
 }
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using none          = unit<none_msr, S, T, F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using none          = unit<none_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using length        = unit<length_msr, S, T, F>;//meters
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using mass          = unit<mass_msr, S, T, F>;//kg
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using current       = unit<current_msr, S, T, F>;//amps
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using temperature   = unit<temperature_msr, S, T, F>;//kelvin
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using l_intensity   = unit<l_intensity_msr, S, T, F>;//luminous intensity, candela
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using money         = unit<money_msr, S, T, F>;//dolla dolla bills
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using time          = unit<time_msr, S, T, F>;//seconds
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using tick          = unit<tick_msr, S, T, F>;
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using percent       = unit<percent_msr, S, T, F>;//%
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using frequency     = unit<frequency_msr, S, T, F>;//hz
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using angle         = unit<angle_msr, S, T, F>;//degrees
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using solid_angle   = unit<solid_angle_msr, S, T, F>;
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using mole          = unit<mole_msr, S, T, F>;
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using byte          = unit<byte_msr, S, T, F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using length        = unit<length_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//meters
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using mass          = unit<mass_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//kg
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using current       = unit<current_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//amps
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using temperature   = unit<temperature_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//kelvin
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using l_intensity   = unit<l_intensity_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//luminous intensity, candela
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using money         = unit<money_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//dolla dolla bills
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using time          = unit<time_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//seconds
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using tick          = unit<tick_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using percent       = unit<percent_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//%
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using frequency     = unit<frequency_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//hz
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using angle         = unit<angle_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//degrees
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using solid_angle   = unit<solid_angle_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using mole          = unit<mole_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using byte          = unit<byte_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using area          = decltype( length<T, S, F>() * length<T, S, F>() );
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using volume        = decltype( length<T, S, F>() * length<T, S, F>() * length<T, S, F>() );
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using area          = decltype(
+length<T, S, F>() * length<T, S, F>());
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using volume        = decltype(
+length<T, S, F>() * length<T, S, F>() * length<T, S, F>());
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using l_flux        = decltype( l_intensity<T, S, F>() * solid_angle<T, S, F>() );//lumen
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using l_illuminance = decltype( l_flux<T, S, F>() / area<T, S, F>() );//lux
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using l_exposure    = decltype( l_illuminance<T, S, F>() * time<T, S, F>() );
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using l_energy      = decltype( l_flux<T, S, F>() * time<T, S, F>() );
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using l_flux        = decltype(
+l_intensity<T, S, F>() * solid_angle<T, S, F>());//lumen
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using l_illuminance = decltype(
+l_flux<T, S, F>() / area<T, S, F>());//lux
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using l_exposure    = decltype(
+l_illuminance<T, S, F>() * time<T, S, F>());
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using l_energy      = decltype(
+l_flux<T, S, F>() * time<T, S, F>());
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using speed         = decltype( length<T, S, F>() / time<T, S, F>() );
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using acceleration  = decltype( speed<T, S, F>() / time<T, S, F>() );
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using force         = decltype( mass<T, S, F>() * acceleration<T, S, F>() );//newtons
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using momentum      = decltype( mass<T, S, F>() * speed<T, S, F>() );
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using energy        = decltype( force<T, S, F>() * length<T, S, F>() );//joules
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using power         = decltype( energy<T, S, F>() / time<T, S, F>() );//watts
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using speed         = decltype(
+length<T, S, F>() / time<T, S, F>());
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using acceleration  = decltype(
+speed<T, S, F>() / time<T, S, F>());
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using force         = decltype(
+mass<T, S, F>() * acceleration<T, S, F>());//newtons
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using momentum      = decltype(
+mass<T, S, F>() * speed<T, S, F>());
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using energy        = decltype(
+force<T, S, F>() * length<T, S, F>());//joules
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using power         = decltype(
+energy<T, S, F>() / time<T, S, F>());//watts
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using voltage       = unit<voltage_msr, S, T, F>;//volts
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using resistance    = unit<resistance_msr, S, T, F>;//ohms
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using capacitance   = unit<capacitance_msr, S, T, F>;//farad
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using inductance    = unit<inductance_msr, S, T, F>;//henrys
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using charge        = unit<charge_msr, S, T, F>;//coulomb
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using resistivity   = decltype( resistance<T, S, F>() * length<T, S, F>() );//ohm*meter
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using conductivity  = decltype( none<T, S, F>() / resistivity<T, S, F>() );//siemens/meter
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using conductance   = decltype( conductivity<T, S, F>() * length<T, S, F>() );
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using voltage       = unit<voltage_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//volts
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using resistance    = unit<resistance_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//ohms
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using capacitance   = unit<capacitance_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//farad
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using inductance    = unit<inductance_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//henrys
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using charge        = unit<charge_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//coulomb
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using resistivity   = decltype(
+resistance<T, S, F>() * length<T, S, F>());//ohm*meter
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using conductivity  = decltype(
+none<T, S, F>() / resistivity<T, S, F>());//siemens/meter
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using conductance   = decltype(
+conductivity<T, S, F>() * length<T, S, F>());
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using mag_field     = unit<mag_field_msr, S, T, F>;//tesla
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using elec_field    = unit<elec_field_msr, S, T, F>;
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using mag_field     = unit<mag_field_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;//tesla
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using elec_field    = unit<elec_field_msr,
+                                                                                                        S,
+                                                                                                        T,
+                                                                                                        F>;
 
-template<typename T = double, typename S = metric, typename F = ratio<1, 1> >
-using specificHeat  = decltype( energy<T, S, F>() / temperature<T, S, F>() );
+template<typename T = double, typename S = metric, typename F = ratio<1, 1>> using specificHeat  = decltype(
+energy<T, S, F>() / temperature<T, S, F>());
 
 /* measurement system specific */
 /* metric */
-template<typename T = double, typename F = ratio<1, 1> >
-using meters = length<T, metric, F>;
+template<typename T = double, typename F = ratio<1, 1>> using meters = length<T, metric, F>;
 
-template<typename T = double, typename F = ratio<1, 1> >
-using gram = mass<T, metric, F>;
+template<typename T = double, typename F = ratio<1, 1>> using gram = mass<T, metric, F>;
 
-template<typename T = double, typename F = ratio<1, 1> >
-using celsius = temperature<T, metric, F>;
+template<typename T = double, typename F = ratio<1, 1>> using celsius = temperature<T, metric, F>;
 
 /* english */
-template<typename T = double, typename F = ratio<1, 1> >
-using feet = length<T, english, F>;
+template<typename T = double, typename F = ratio<1, 1>> using feet = length<T, english, F>;
 
-template<typename T = double, typename F = ratio<1, 1> >
-using slug = mass<T, english, F>;
+template<typename T = double, typename F = ratio<1, 1>> using slug = mass<T, english, F>;
 
-template<typename T = double, typename F = ratio<1, 1> >
-using fahrenheit = temperature<T, english, F>;
+template<typename T = double, typename F = ratio<1, 1>> using fahrenheit = temperature<T, english, F>;
 
 /* english->metric */
 template<typename T, typename F>
-class converter<length_msr, english, metric, T, T, F, F>
-      : public converter_base<length_msr, english, metric, T, T, F, F>{
+class converter<length_msr, english, metric, T, T, F, F> : public converter_base<length_msr,
+                                                                                 english,
+                                                                                 metric,
+                                                                                 T,
+                                                                                 T,
+                                                                                 F,
+                                                                                 F> {
 public:
   using base = converter_base<length_msr, english, metric, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() * 0.30481 );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw() * 0.30481);
   }
 };
 
 template<typename T, typename F>
-class converter<temperature_msr, english, metric, T, T, F, F>
-      : public converter_base<temperature_msr, english, metric, T, T, F, F>{
+class converter<temperature_msr, english, metric, T, T, F, F> : public converter_base<temperature_msr,
+                                                                                      english,
+                                                                                      metric,
+                                                                                      T,
+                                                                                      T,
+                                                                                      F,
+                                                                                      F> {
 public:
   using base = converter_base<temperature_msr, english, metric, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( ( val.getRaw() - 32.0 ) * ( 5.0 / 9.0 ) );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result((val.getRaw() - 32.0) * (5.0 / 9.0));
   }
 };
 
 template<typename T, typename F>
-class converter<mass_msr, english, metric, T, T, F, F>
-      : public converter_base<mass_msr, english, metric, T, T, F, F>{
+class converter<mass_msr, english, metric, T, T, F, F> : public converter_base<mass_msr, english, metric, T, T, F, F> {
 public:
   using base = converter_base<mass_msr, english, metric, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() * 14593.9 );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw() * 14593.9);
   }
 };
 
 /* metric->english */
 template<typename T, typename F>
-class converter<length_msr, metric, english, T, T, F, F>
-      : public converter_base<length_msr, metric, english, T, T, F, F>{
+class converter<length_msr, metric, english, T, T, F, F> : public converter_base<length_msr,
+                                                                                 metric,
+                                                                                 english,
+                                                                                 T,
+                                                                                 T,
+                                                                                 F,
+                                                                                 F> {
 public:
   using base = converter_base<length_msr, metric, english, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() * 3.28084 );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw() * 3.28084);
   }
 };
 
 template<typename T, typename F>
-class converter<temperature_msr, metric, english, T, T, F, F>
-      : public converter_base<temperature_msr, metric, english, T, T, F, F>{
+class converter<temperature_msr, metric, english, T, T, F, F> : public converter_base<temperature_msr,
+                                                                                      metric,
+                                                                                      english,
+                                                                                      T,
+                                                                                      T,
+                                                                                      F,
+                                                                                      F> {
 public:
   using base = converter_base<temperature_msr, metric, english, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( ( val.getRaw() * ( 9.0 / 5.0 ) ) + 32.0 );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result((val.getRaw() * (9.0 / 5.0)) + 32.0);
   }
 };
 
 template<typename T, typename F>
-class converter<mass_msr, metric, english, T, T, F, F>
-      : public converter_base<mass_msr, metric, english, T, T, F, F>{
+class converter<mass_msr, metric, english, T, T, F, F> : public converter_base<mass_msr, metric, english, T, T, F, F> {
 public:
   using base = converter_base<mass_msr, metric, english, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() / 14593.9 );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw() / 14593.9);
   }
 };
 
@@ -1004,170 +1105,150 @@ public:
 // probably not
 /* unity conversions */
 template<typename Si, typename So, typename T, typename F>
-class converter<tick_msr, Si, So, T, T, F, F,
-                typename std::enable_if<!std::is_same<Si, So>::value>::type>
-      : public converter_base<tick_msr, Si, So, T, T, F, F>{
+class converter<tick_msr, Si, So, T, T, F, F, typename std::enable_if<!std::is_same<Si, So>::value>::type>
+        : public converter_base<tick_msr, Si, So, T, T, F, F> {
 public:
   using base = converter_base<tick_msr, Si, So, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw());
   }
 };
 
 template<typename Si, typename So, typename T, typename F>
-class converter<time_msr, Si, So, T, T, F, F,
-                typename std::enable_if<!std::is_same<Si, So>::value>::type>
-      : public converter_base<time_msr, Si, So, T, T, F, F>{
+class converter<time_msr, Si, So, T, T, F, F, typename std::enable_if<!std::is_same<Si, So>::value>::type>
+        : public converter_base<time_msr, Si, So, T, T, F, F> {
 public:
   using base = converter_base<time_msr, Si, So, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw());
   }
 };
 
 template<typename Si, typename So, typename T, typename F>
-class converter<percent_msr, Si, So, T, T, F, F,
-                typename std::enable_if<!std::is_same<Si, So>::value>::type>
-      : public converter_base<percent_msr, Si, So, T, T, F, F>{
+class converter<percent_msr, Si, So, T, T, F, F, typename std::enable_if<!std::is_same<Si, So>::value>::type>
+        : public converter_base<percent_msr, Si, So, T, T, F, F> {
 public:
   using base = converter_base<percent_msr, Si, So, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw());
   }
 };
 
 template<typename Si, typename So, typename T, typename F>
-class converter<frequency_msr, Si, So, T, T, F, F,
-                typename std::enable_if<!std::is_same<Si, So>::value>::type>
-      : public converter_base<frequency_msr, Si, So, T, T, F, F>{
+class converter<frequency_msr, Si, So, T, T, F, F, typename std::enable_if<!std::is_same<Si, So>::value>::type>
+        : public converter_base<frequency_msr, Si, So, T, T, F, F> {
 public:
   using base = converter_base<frequency_msr, Si, So, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw());
   }
 };
 
 template<typename Si, typename So, typename T, typename F>
-class converter<current_msr, Si, So, T, T, F, F,
-                typename std::enable_if<!std::is_same<Si, So>::value>::type>
-      : public converter_base<current_msr, Si, So, T, T, F, F>{
+class converter<current_msr, Si, So, T, T, F, F, typename std::enable_if<!std::is_same<Si, So>::value>::type>
+        : public converter_base<current_msr, Si, So, T, T, F, F> {
 public:
   using base = converter_base<current_msr, Si, So, T, T, F, F>;
 
-  constexpr
-  converter() = default;
+  constexpr converter() = default;
 
-  constexpr
-  typename base::result
-  operator()( const typename base::input& val ){
-    return typename base::result( val.getRaw() );
+  constexpr typename base::result operator()(const typename base::input& val) {
+    return typename base::result(val.getRaw());
   }
 };
 
 /* floating point literals */
-constexpr auto operator""_0( long double val ){
-  return none<long double>( val );
+constexpr auto operator ""_0(long double val) {
+  return none<long double>(val);
 }
 
-constexpr auto operator""_len( long double val ){
-  return length<long double>( val );
+constexpr auto operator ""_len(long double val) {
+  return length<long double>(val);
 }
 
-constexpr auto operator""_mass( long double val ){
-  return mass<long double>( val );
+constexpr auto operator ""_mass(long double val) {
+  return mass<long double>(val);
 }
 
-constexpr auto operator""_A( long double val ){
-  return current<long double>( val );
+constexpr auto operator ""_A(long double val) {
+  return current<long double>(val);
 }
 
-constexpr auto operator""_temp( long double val ){
-  return temperature<long double>( val );
+constexpr auto operator ""_temp(long double val) {
+  return temperature<long double>(val);
 }
 
-constexpr auto operator""_t( long double val ){
-  return time<long double>( val );
+constexpr auto operator ""_t(long double val) {
+  return time<long double>(val);
 }
 
-constexpr auto operator""_V( long double val ){
-  return voltage<long double>( val );
+constexpr auto operator ""_V(long double val) {
+  return voltage<long double>(val);
 }
 
-constexpr auto operator""_R( long double val ){
-  return resistance<long double>( val );
+constexpr auto operator ""_R(long double val) {
+  return resistance<long double>(val);
 }
 
-constexpr auto operator""_mny( long double val ){
-  return money<long double>( val );
+constexpr auto operator ""_mny(long double val) {
+  return money<long double>(val);
 }
 
-constexpr auto operator""_tk( long double val ){
-  return tick<long double>( val );
+constexpr auto operator ""_tk(long double val) {
+  return tick<long double>(val);
 }
 
 /* integral literals */
-constexpr auto operator""_0( unsigned long long val ){
-  return none<unsigned long long>( val );
+constexpr auto operator ""_0(unsigned long long val) {
+  return none<unsigned long long>(val);
 }
 
-constexpr auto operator""_len( unsigned long long val ){
-  return length<unsigned long long>( val );
+constexpr auto operator ""_len(unsigned long long val) {
+  return length<unsigned long long>(val);
 }
 
-constexpr auto operator""_mass( unsigned long long val ){
-  return mass<unsigned long long>( val );
+constexpr auto operator ""_mass(unsigned long long val) {
+  return mass<unsigned long long>(val);
 }
 
-constexpr auto operator""_A( unsigned long long val ){
-  return current<unsigned long long>( val );
+constexpr auto operator ""_A(unsigned long long val) {
+  return current<unsigned long long>(val);
 }
 
-constexpr auto operator""_temp( unsigned long long val ){
-  return temperature<unsigned long long>( val );
+constexpr auto operator ""_temp(unsigned long long val) {
+  return temperature<unsigned long long>(val);
 }
 
-constexpr auto operator""_t( unsigned long long val ){
-  return time<unsigned long long>( val );
+constexpr auto operator ""_t(unsigned long long val) {
+  return time<unsigned long long>(val);
 }
 
-constexpr auto operator""_V( unsigned long long val ){
-  return voltage<unsigned long long>( val );
+constexpr auto operator ""_V(unsigned long long val) {
+  return voltage<unsigned long long>(val);
 }
 
-constexpr auto operator""_R( unsigned long long val ){
-  return resistance<unsigned long long>( val );
+constexpr auto operator ""_R(unsigned long long val) {
+  return resistance<unsigned long long>(val);
 }
 
-constexpr auto operator""_mny( unsigned long long val ){
-  return money<unsigned long long>( val );
+constexpr auto operator ""_mny(unsigned long long val) {
+  return money<unsigned long long>(val);
 }
 
-constexpr auto operator""_tk( unsigned long long val ){
-  return tick<unsigned long long>( val );
+constexpr auto operator ""_tk(unsigned long long val) {
+  return tick<unsigned long long>(val);
 }
 
 }

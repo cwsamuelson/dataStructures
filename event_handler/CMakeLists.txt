@@ -1,34 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
-project(event_handler LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(event_handler LANGUAGES CXX)
 
-if(TARGET event_handler)
-	return()
-endif()
+ADD_LIBRARY(event_handler INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
-if(NOT TARGET tuple)
-	add_subdirectory("../tuple/" tuple)
-endif()
+SET_TARGET_PROPERTIES(event_handler PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(event_handler INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(event_handler INTERFACE header)
+TARGET_LINK_LIBRARIES(event_handler INTERFACE tuple)
 
-set_target_properties(event_handler PROPERTIES
-                                    INTERFACE_CXX_STANDARD 17
-                                    INTERFACE_CXX_STANDARD_REQUIRED YES
-                                    INTERFACE_CXX_EXTENSIONS NO)
+ADD_EXECUTABLE(test-event_handler test/tests.cc)
+SET_TARGET_PROPERTIES(test-event_handler PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-event_handler event_handler Catch2)
 
-target_include_directories(event_handler INTERFACE header)
-target_link_libraries(event_handler INTERFACE tuple)
-
-add_executable(test-event_handler test/tests.cc)
-set_target_properties(test-event_handler PROPERTIES
-                                         CXX_STANDARD 17
-                                         CXX_STANDARD_REQUIRED YES
-                                         CXX_EXTENSIONS NO)
-target_link_libraries(test-event_handler event_handler Catch2)
-
-enable_testing()
-add_test(test-event_handler test-event_handler)
+ENABLE_TESTING()
+ADD_TEST(test-event_handler test-event_handler)
 

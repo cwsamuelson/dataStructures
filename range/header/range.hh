@@ -7,7 +7,7 @@
 
 #include<functional>
 
-namespace gsw{
+namespace gsw {
 
 template<typename>
 class range;
@@ -23,7 +23,7 @@ class range;
  * customized view into a storage container.
  */
 template<typename CONTAINER>
-class range_iterator{
+class range_iterator {
 public:
   using container   = CONTAINER;
   using value_type  = typename container::value_type;
@@ -34,6 +34,7 @@ public:
 
 private:
   const range<container>* mRange;
+
   /* made mutable such that it can be incremented when dereferencing in case of
    * an invalid value.
    */
@@ -42,98 +43,92 @@ private:
 public:
   /*!
    */
-  range_iterator( const range<container>* rang, iterator iter )
-    : mRange( rang )
-    , mIterator( iter ){
+  range_iterator(const range<container>* rang, iterator iter)
+          : mRange(rang)
+          , mIterator(iter) {
   }
 
   /*!
    */
-  range_iterator( const range_iterator& iter )
-    : mRange( iter.mRange )
-    , mIterator( iter.mIterator ){
+  range_iterator(const range_iterator& iter)
+          : mRange(iter.mRange)
+          , mIterator(iter.mIterator) {
   }
 
   /*!
    */
-  bool
-  operator==( const range_iterator& other ) const{
+  [[nodiscard]]
+  bool operator==(const range_iterator& other) const {
     return mIterator == other.mIterator;
   }
 
   /*!
    */
-  bool
-  operator==( const iterator& other ) const{
+  [[nodiscard]]
+  bool operator==(const iterator& other) const {
     return mIterator == other;
   }
 
   /*!
    */
-  bool
-  operator!=( const range_iterator& other ) const{
-    return !( ( *this ) == other );
+  [[nodiscard]]
+  bool operator!=(const range_iterator& other) const {
+    return !((*this) == other);
   }
 
   /*!
    */
-  bool
-  operator!=( const iterator& other ) const{
-    return !( mIterator == other );
+  [[nodiscard]]
+  bool operator!=(const iterator& other) const {
+    return !(mIterator == other);
   }
 
   /*!
    */
-  value_type
-  operator*() const{
-    while( !mRange->mFilter( *mIterator ) && ( mRange->end() != mIterator ) ){
+  [[nodiscard]]
+  value_type operator*() const {
+    while(!mRange->mFilter(*mIterator) && (mRange->end() != mIterator)) {
       ++mIterator;
     }
-    return mRange->mModifier( *mIterator );
+    return mRange->mModifier(*mIterator);
   }
 
   /*!
    */
-  pointer
-  operator->() const{
+  [[nodiscard]]
+  pointer operator->() const {
     return mIterator.operator->();
   }
 
   /*!
    */
-  range_iterator&
-  operator++(){
-    while( ( !mRange->mFilter( *++mIterator ) ) && ( mRange->end() != mIterator ) ){
-      ;
+  range_iterator& operator++() {
+    while((!mRange->mFilter(*++mIterator)) && (mRange->end() != mIterator)) {
     }
     return *this;
   }
 
   /*!
    */
-  range_iterator
-  operator++( int ){
-    range_iterator ret( *this );
-    ++( *this );
+  range_iterator operator++(int) {
+    range_iterator ret(*this);
+    ++(*this);
     return ret;
   }
 
   /*!
    */
-  range_iterator&
-  operator--(){
-    while( !mRange->mFilter( *--mIterator ) && ( mRange->begin() != mIterator ) ){
-      ;
+  range_iterator& operator--() {
+    while(!mRange->mFilter(*--mIterator) && (mRange->begin() != mIterator)) { ;
     }
     return *this;
   }
 
   /*!
    */
-  range_iterator
-  operator--( int ){
-    range_iterator ret( *this );
-    --( *this );
+  range_iterator operator--(int) {
+    range_iterator ret(*this);
+    --(*this);
     return ret;
   }
 };
@@ -147,15 +142,15 @@ public:
  * allow custom data filtering and data modification based on provided callbacks.
  */
 template<typename CONTAINER>
-class range{
+class range {
 public:
   using container  = CONTAINER;
   using value_type = typename container::value_type;
   using reference  = typename container::reference;
   using pointer    = typename container::pointer;
   using contIter   = typename container::iterator;
-  using filter     = std::function<bool( const reference )>;
-  using modifier   = std::function<value_type( const reference )>;
+  using filter     = std::function<bool(const reference)>;
+  using modifier   = std::function<value_type(const reference)>;
   using iterator   = range_iterator<container>;
 
 private:
@@ -180,14 +175,18 @@ public:
    * Takes iterator, filtering, and modification information that will be
    * needed when continuing to use range.
    */
-  range( contIter begin, contIter end,
-         filter filFN = []( const reference ){ return true; },
-         modifier modFN = []( const reference t ){ return t; } )
-    : mBegin( begin )
-    , mEnd( end )
-    , mFilter( filFN )
-    , mModifier( modFN )
-  {}
+  range(contIter begin, contIter end, filter filFN = [](const reference)
+    {
+      return true;
+    }, modifier modFN = [](const reference t)
+    {
+      return t;
+    })
+          : mBegin(begin)
+          , mEnd(end)
+          , mFilter(filFN)
+          , mModifier(modFN) {
+  }
 
   /*! Takes a container, and stores its beginning and ending iterators, and filtering callback, and modification callback
    *
@@ -200,28 +199,33 @@ public:
    * Takes container, filtering, and modification information that will be
    * needed when continuing to use range.
    */
-  range( container& cont,
-         filter filFN = []( const reference ){ return true; },
-         modifier modFN = []( const reference t ){ return t; } )
-    : range( cont.begin(), cont.end(), filFN, modFN )
-  {}
+  explicit
+  range(container& cont, filter filFN = [](const reference)
+    {
+      return true;
+    }, modifier modFN = [](const reference t)
+    {
+      return t;
+    })
+          : range(cont.begin(), cont.end(), filFN, modFN) {
+  }
 
   /*! Get beginning iterator
    *
    * @return Iterator pointing to beginning of container
    */
-  iterator
-  begin() const{
-    return iterator( this, mBegin );
+  [[nodiscard]]
+  iterator begin() const {
+    return iterator(this, mBegin);
   }
 
   /*! Get ending iterator
    *
    * @return Iterator pointing to past end of container
    */
-  iterator
-  end() const{
-    return iterator( this, mEnd );
+  [[nodiscard]]
+  iterator end() const {
+    return iterator(this, mEnd);
   }
 };
 

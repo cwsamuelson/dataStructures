@@ -10,7 +10,7 @@
 // json supports int, string, array/vector, and object/map
 /*!
  */
-class json{
+class json {
   using object_t = std::map<std::string, json>;
   using array_t = std::vector<json>;
   using string_t = std::string;

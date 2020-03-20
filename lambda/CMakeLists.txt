@@ -1,30 +1,22 @@
-cmake_minimum_required(VERSION 3.0)
-project(lambda LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(lambda LANGUAGES CXX)
 
-if(TARGET lambda)
-	return()
-endif()
+ADD_LIBRARY(lambda INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(lambda PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(lambda INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(lambda INTERFACE header)
 
-set_target_properties(lambda PROPERTIES
-                             INTERFACE_CXX_STANDARD 17
-                             INTERFACE_CXX_STANDARD_REQUIRED YES
-                             INTERFACE_CXX_EXTENSIONS NO)
+ADD_EXECUTABLE(test-lambda test/tests.cc)
+SET_TARGET_PROPERTIES(test-lambda PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-lambda lambda Catch2)
 
-target_include_directories(lambda INTERFACE header)
-
-add_executable(test-lambda test/tests.cc)
-set_target_properties(test-lambda PROPERTIES
-                                  CXX_STANDARD 17
-                                  CXX_STANDARD_REQUIRED YES
-                                  CXX_EXTENSIONS NO)
-target_link_libraries(test-lambda lambda Catch2)
-
-enable_testing()
-add_test(test-lambda test-lambda)
+ENABLE_TESTING()
+ADD_TEST(test-lambda test-lambda)
 

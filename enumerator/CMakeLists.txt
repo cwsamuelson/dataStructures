@@ -1,29 +1,21 @@
-cmake_minimum_required(VERSION 3.0)
-project(enumerator LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(enumerator LANGUAGES CXX)
 
-if(TARGET enumerator)
-	return()
-endif()
+ADD_LIBRARY(enumerator INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(enumerator PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
+TARGET_INCLUDE_DIRECTORIES(enumerator INTERFACE header)
 
-add_library(enumerator INTERFACE)
+ADD_EXECUTABLE(test-enumerator test/tests.cc)
+SET_TARGET_PROPERTIES(test-enumerator PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-enumerator enumerator Catch2)
 
-set_target_properties(enumerator PROPERTIES
-                                 INTERFACE_CXX_STANDARD 17
-                                 INTERFACE_CXX_STANDARD_REQUIRED YES
-                                 INTERFACE_CXX_EXTENSIONS NO)
-target_include_directories(enumerator INTERFACE header)
-
-add_executable(test-enumerator test/tests.cc)
-set_target_properties(test-enumerator PROPERTIES
-                                      CXX_STANDARD 17
-                                      CXX_STANDARD_REQUIRED YES
-                                      CXX_EXTENSIONS NO)
-target_link_libraries(test-enumerator enumerator Catch2)
-
-enable_testing()
-add_test(test-enumerator test-enumerator)
+ENABLE_TESTING()
+ADD_TEST(test-enumerator test-enumerator)
 

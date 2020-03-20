@@ -7,7 +7,7 @@
  * @example test-shared.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! Shared pointer class
  *
@@ -17,7 +17,7 @@ namespace gsw{
  * exist, object cleans itself up.
  */
 template<typename T>
-class shared_ptr{
+class shared_ptr {
 public:
   using value_type = T;
   using pointer = value_type*;
@@ -32,8 +32,8 @@ public:
   /*! basic ctor
    */
   shared_ptr()
-    : mData( nullptr )
-    , mCount( nullptr ){
+          : mData(nullptr)
+          , mCount(nullptr) {
   }
 
   /*! Ownership ctor
@@ -42,10 +42,11 @@ public:
    *
    * This constructor takes initial ownership of a provided pointer
    */
-  shared_ptr( pointer ptr )
-    : mData( ptr ){
-    if( mData != nullptr ){
-      mCount = new count_t( 1 );
+  explicit
+  shared_ptr(pointer ptr)
+          : mData(ptr) {
+    if(mData != nullptr) {
+      mCount = new count_t(1);
     } else {
       mCount = nullptr;
     }
@@ -57,10 +58,10 @@ public:
    *
    * The provided shared_ptr is copied, increasing the owner count
    */
-  shared_ptr( const shared_ptr& other )
-    : mData( other.mData )
-    , mCount( other.mCount ){
-    ++( *mCount );
+  shared_ptr(const shared_ptr& other)
+          : mData(other.mData)
+          , mCount(other.mCount) {
+    ++(*mCount);
   }
 
   /*! Move ctor
@@ -69,9 +70,9 @@ public:
    *
    * Takes ownership of pointer from other.
    */
-  shared_ptr( shared_ptr&& other )
-    : mData( other.mData )
-    , mCount( other.mCount ){
+  shared_ptr(shared_ptr&& other) noexcept
+          : mData(other.mData)
+          , mCount(other.mCount) {
 
     other.mData = nullptr;
     other.mCount = nullptr;
@@ -80,9 +81,8 @@ public:
   /*! destructor
    */
   virtual
-  ~shared_ptr(){
-    if( ( mCount != nullptr ) &&
-        ( --( *mCount ) == 0 ) ){
+  ~shared_ptr() {
+    if((mCount != nullptr) && (--(*mCount) == 0)) {
       delete mData;
       delete mCount;
     }
@@ -94,16 +94,14 @@ public:
    *
    * This constructor takes initial ownership of a provided pointer
    */
-  shared_ptr&
-  operator=( pointer other ){
-    if( mData != other ){
-      if( ( mCount != nullptr ) &&
-          ( --( *mCount ) == 0 ) ){
+  shared_ptr& operator=(pointer other) {
+    if(mData != other) {
+      if((mCount != nullptr) && (--(*mCount) == 0)) {
         delete mData;
         delete mCount;
       }
       mData = other;
-      mCount = new count_t( 1 );
+      mCount = new count_t(1);
     }
     return *this;
   }
@@ -114,16 +112,15 @@ public:
    *
    * The provided shared_ptr is copied, increasing the owner count
    */
-  shared_ptr&
-  operator=( shared_ptr& other ){
-    if( mData != other.mData ){
-      if( --( *mCount ) == 0 ){
+  shared_ptr& operator=(const shared_ptr& other) {
+    if(mData != other.mData) {
+      if(--(*mCount) == 0) {
         delete mData;
         delete mCount;
       }
       mData = other.mData;
       mCount = other.mCount;
-      ++( *mCount );
+      ++(*mCount);
     }
     return *this;
   }
@@ -134,12 +131,11 @@ public:
    *
    * Takes ownership of pointer from other.
    */
-  shared_ptr&
-  operator=( shared_ptr&& other ){
+  shared_ptr& operator=(shared_ptr&& other) noexcept {
     // cleanup current storage
-    if( mCount != nullptr ){
-      --( *mCount );
-      if( *mCount == 0 ){
+    if(mCount != nullptr) {
+      --(*mCount);
+      if(*mCount == 0) {
         delete mData;
         delete mCount;
       }
@@ -162,8 +158,7 @@ public:
    *
    * Compares provided pointer against stored pointer
    */
-  bool
-  operator==( pointer other ) const{
+  bool operator==(pointer other) const {
     return mData == other;
   }
 
@@ -173,17 +168,15 @@ public:
    *
    * Compares shared_ptrs
    */
-  bool
-  operator==( const shared_ptr& other ) const{
-    return ( mData == other.mData ) && ( mCount == other.mCount );
+  bool operator==(const shared_ptr& other) const {
+    return (mData == other.mData) && (mCount == other.mCount);
   }
 
   /*! Dereference operator
    *
    * Returns reference to stored object
    */
-  reference
-  operator*(){
+  reference operator*() {
     return *mData;
   }
 
@@ -199,8 +192,7 @@ public:
    *
    * sp->i = 3;
    */
-  pointer
-  operator->(){
+  pointer operator->() {
     return mData;
   }
 };
@@ -214,9 +206,8 @@ public:
  * @param ...args Arguments to be forwarded to objects constructor
  */
 template<typename T, typename ...Args>
-shared_ptr<T>
-make_shared( Args&&... args ){
-  return shared_ptr<T>( new T( std::forward<Args>( args )... ) );
+shared_ptr<T> make_shared(Args&& ... args) {
+  return shared_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
 }

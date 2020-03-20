@@ -5,7 +5,7 @@
  * @example test-operators.cc
  */
 
-namespace gsw{
+namespace gsw {
 
 /*! Additive utility class to provide addition and subtraction operators
  *
@@ -39,7 +39,7 @@ namespace gsw{
  * This will provide 'for free' the + and - operators as well.
  */
 template<typename LHS, typename RHS = LHS>
-class additive{
+class additive {
 public:
   using lhs_type = LHS;
   using rhs_type = RHS;
@@ -54,10 +54,9 @@ public:
    *
    * Adds together lhs and rhs using the += operator of the derived class.
    */
-  constexpr friend
-  auto
-  operator+( lhs_type lhs, const rhs_type& rhs ) noexcept{
-    return ( lhs += rhs );
+  [[nodiscard]]
+  constexpr friend auto operator+(lhs_type lhs, const rhs_type& rhs) noexcept {
+    return (lhs += rhs);
   }
 
   /*! Subtraction operator
@@ -70,10 +69,9 @@ public:
    *
    * Subtracts rhs from lhs using the -= operator of the derived class.
    */
-  constexpr friend
-  auto
-  operator-( lhs_type lhs, const rhs_type& rhs ) noexcept{
-    return ( lhs -= rhs );
+  [[nodiscard]]
+  constexpr friend auto operator-(lhs_type lhs, const rhs_type& rhs) noexcept {
+    return (lhs -= rhs);
   }
 };
 

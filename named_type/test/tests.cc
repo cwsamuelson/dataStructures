@@ -1,9 +1,10 @@
 #define CATCH_CONFIG_MAIN
+
 #include<catch2/catch.hpp>
 
 #include <named_type.hh>
 
-TEST_CASE("Named type testing", "[named]"){
+TEST_CASE("Named type testing", "[named]") {
   gsw::named_type<int, struct foo> x;
   CHECK(x == 0);
   CHECK(x.get() == 0);

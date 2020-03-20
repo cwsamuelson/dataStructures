@@ -1,31 +1,23 @@
-cmake_minimum_required(VERSION 3.0)
-project(prefix_tree LANGUAGES CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(prefix_tree LANGUAGES CXX)
 
-if(TARGET prefix_tree)
-	return()
-endif()
+ADD_LIBRARY(prefix_tree INTERFACE)
 
-if(NOT TARGET Catch2)
-	add_subdirectory("../catch/" Catch2)
-endif()
+SET_TARGET_PROPERTIES(prefix_tree PROPERTIES
+                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO)
 
-add_library(prefix_tree INTERFACE)
+TARGET_INCLUDE_DIRECTORIES(prefix_tree INTERFACE header)
+TARGET_LINK_LIBRARIES(prefix_tree INTERFACE tuple)
 
-set_target_properties(prefix_tree PROPERTIES
-		                          INTERFACE_CXX_STANDARD 17
-                                  INTERFACE_CXX_STANDARD_REQUIRED YES
-                                  INTERFACE_CXX_EXTENSIONS NO)
+ADD_EXECUTABLE(test-prefix_tree test/tests.cc)
+SET_TARGET_PROPERTIES(test-prefix_tree PROPERTIES
+                      CXX_STANDARD 17
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO)
+TARGET_LINK_LIBRARIES(test-prefix_tree prefix_tree Catch2)
 
-target_include_directories(prefix_tree INTERFACE header)
-target_link_libraries(prefix_tree INTERFACE tuple)
-
-add_executable(test-prefix_tree test/tests.cc)
-set_target_properties(test-prefix_tree PROPERTIES
-                                       CXX_STANDARD 17
-                                       CXX_STANDARD_REQUIRED YES
-                                       CXX_EXTENSIONS NO)
-target_link_libraries(test-prefix_tree prefix_tree Catch2)
-
-enable_testing()
-add_test(test-prefix_tree test-prefix_tree)
+ENABLE_TESTING()
+ADD_TEST(test-prefix_tree test-prefix_tree)
 

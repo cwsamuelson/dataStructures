@@ -5,20 +5,19 @@
 
 #include <string>
 
-namespace gsw{
+namespace gsw {
 
-class LoggingContext{
+class LoggingContext {
 private:
   logger& mLogger;
 
 public:
   LoggingContext(logger& lgr, std::string prefix)
-    : mLogger(lgr)
-  {
+          : mLogger(lgr) {
     mLogger.mContexts.emplace_back(std::move(prefix));
   }
 
-  ~LoggingContext(){
+  ~LoggingContext() {
     mLogger.mContexts.pop_back();
   }
 };
