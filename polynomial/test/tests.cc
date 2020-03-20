@@ -294,9 +294,18 @@ TEST_CASE("Polynomial can find its roots", "[poly]") {
     vector<double> v1{ 10, -7, 1 };
     gsw::polynomial e1(v1.begin(), v1.end());
     auto answers = e1.solve();
+    auto canon = set<double>({5, 2});
 
     CHECK(answers.size() == 2);
-    CHECK(answers == set<double>({ 5, 2 }));
+    auto answer_iter = answers.begin();
+    auto canon_iter = canon.begin();
+    while(answer_iter != answers.end() && canon_iter != canon.end()) {
+      CHECK(*answer_iter == Approx(*canon_iter));
+      ++answer_iter;
+      ++canon_iter;
+    }
+    CHECK(answer_iter == answers.end());
+    CHECK(canon_iter == canon.end());
   }
 }
 
