@@ -15,8 +15,10 @@ namespace Catch {
 }
 
 template<typename OSTREAM, typename T, typename Compare, typename Allocator>
-OSTREAM& operator<<(OSTREAM&, const std::set<T, Compare, Allocator>& s) {
-  return ::Catch::Detail::rangeToString(s.begin(), s.end());
+OSTREAM& operator<<(OSTREAM& os, const std::set<T, Compare, Allocator>& s) {
+  return os << ::Catch::Detail::rangeToString(s.begin(), s.end());
+}
+
 }
 
 #endif
