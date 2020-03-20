@@ -76,13 +76,13 @@ TEST_CASE("Units participate in arithmetic", "[unit]") {
     }
 
     using tick_rate = decltype(tick<double>() / gsw::time<double>());
-    gsw::time<double> mCounter(0.0);
-    tick_rate mRate(3.0);
+    gsw::time<double> counter(0.0);
+    tick_rate rate(3.0);
 
-    mCounter += gsw::time<double>(5.0);
+    counter += gsw::time<double>(5.0);
 
-    CHECK((mCounter * mRate) > 1);
-    CHECK((mCounter - ((1.0 / mRate) * tick<double>(1))) == 2);
+    CHECK((counter * rate) > 1);
+    CHECK((counter - ((1.0 / rate) * tick<double>(3))) == 4);
 
     SECTION("Units of same type can be value compared") {
       test_t X = 1.0;
