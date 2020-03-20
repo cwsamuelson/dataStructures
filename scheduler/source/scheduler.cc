@@ -12,7 +12,7 @@ void scheduler::update(gsw::time<double> t){
   mCounter += t;
 
   //this allows t to trigger multiple events.
-  while((mCounter * mRate) > 1) {
+  while((mCounter * mRate) >= 1) {
     //the amount of time for one tick, given mRate
     mCounter -= ((1.0 / mRate) * tick<double>(1));
 
