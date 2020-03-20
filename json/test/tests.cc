@@ -2,7 +2,11 @@
 
 #include<catch2/catch.hpp>
 
+#include <json.hh>
+
 TEST_CASE("", "") {
+  gsw::json j;
+
   SECTION("") {
     CHECK(false);
   }
