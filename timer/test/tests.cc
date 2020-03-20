@@ -31,15 +31,14 @@ TEST_CASE("", "[timer]") {
   SECTION("Scheduled execution") {
     gsw::timer t;
 
-    auto start = chrono::high_resolution_clock::now();
-    auto start_time = start + 10ms;
+    auto start_time = chrono::high_resolution_clock::now();
     decltype(start_time) end_time;
 
     auto f = t.schedule([&]()
                           {
                             end_time = chrono::high_resolution_clock::now();
                             return 2;
-                          }, start_time);
+                          }, start_time + 10ms);
 
     CHECK(f.get() == 2);
 
