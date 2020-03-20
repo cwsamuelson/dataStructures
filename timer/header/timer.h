@@ -94,13 +94,13 @@ public:
                 const std::chrono::time_point<clock, duration>& time) -> decltype(std::async(std::launch::async, fn)) {
     mCancel = false;
 
-    return std::async(std::launch::async, [=]()
+    return std::async(std::launch::async, [this, t = time, f = fn]()
       {
-        std::this_thread::sleep_until(time);
+        std::this_thread::sleep_until(t);
         if(!mCancel) {
-          return fn();
+          return f();
         } else {
-          return decltype(fn())();
+          return decltype(f())();
         }
       });
   }
