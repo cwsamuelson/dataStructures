@@ -7,6 +7,11 @@
 #include<skip_list.hh>
 
 using namespace std;
+
+TEST_CASE("", "[]"){
+  CHECK(false);
+}
+
 #if 0
 TEST_CASE( "skip_lists are associative containers", "[skip_list]" ){
   const int nIters = 10;
