@@ -32,7 +32,18 @@ TEST_CASE("", "[json]") {
   }
 
   SECTION("'array' type") {
-    gsw::json j;
+    SECTION("std::vector"){
+      gsw::json j(std::vector<int>{1, 2, 3, 4, 5});
+
+      CHECK(!j.is_object());
+      CHECK( j.is_array());
+      CHECK(!j.is_string());
+      CHECK(!j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
   }
 
   SECTION("'string' type") {
