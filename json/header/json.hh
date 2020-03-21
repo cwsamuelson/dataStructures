@@ -62,20 +62,22 @@ public:
   }
 
   template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, INT> = 0>
+
+  template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, int> = 0>
   explicit
   basic_json(INT i)
     : mTypeTag(type_tag::integer)
     , mData(std::move(i)){
   }
 
-  template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, UINT> = 0>
+  template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, int> = 0>
   explicit
   basic_json(UINT u)
     : mTypeTag(type_tag::u_integer)
     , mData(std::move(u)){
   }
 
-  template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, FLT>>
+  template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, int> = 0>
   explicit
   basic_json(FLT f)
     : mTypeTag(type_tag::floating)
