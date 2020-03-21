@@ -60,16 +60,61 @@ TEST_CASE("", "[json]") {
   }
 
   SECTION("'signed integer' type") {
-    gsw::json j(5LL);
+    SECTION("signed short"){
+      signed short i = 5;
+      gsw::json j(i);
 
-    CHECK(!j.is_object());
-    CHECK(!j.is_array());
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK( j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
+
+    SECTION("signed int"){
+      signed int i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK( j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
+
+    SECTION("signed long"){
+      signed long i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK( j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
+
+    SECTION("signed long long"){
+      signed long long i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
     CHECK(!j.is_string());
     CHECK( j.is_integer());
     CHECK(!j.is_floating());
     CHECK(!j.is_bool());
-    CHECK( j.is_signed());
-    CHECK(!j.is_unsigned());
+      CHECK( j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
   }
 
   SECTION("'unsigned integer' type") {
