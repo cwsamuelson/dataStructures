@@ -114,7 +114,13 @@ public:
   template<typename T>
   basic_json& operator=(array_t<T> a){
     mTypeTag = type_tag::array;
-    mData = std::move(a);
+    array_t<basic_json> v;
+
+    for(const auto& element : a){
+      v.emplace_back(element);
+    }
+
+    mData = std::move(v);
 
     return *this;
   }
@@ -126,23 +132,33 @@ public:
     return *this;
   }
 
-  basic_json& operator=(integer_t i){
+  basic_json& operator=(const char* arr){
+    mTypeTag = type_tag::string;
+    mData = string_t(arr);
+
+    return *this;
+  }
+
+  template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, int> = 0>
+  basic_json& operator=(INT i){
     mTypeTag = type_tag::integer;
-    mData = std::move(i);
+    mData = integer_t(i);
 
     return *this;
   }
 
-  basic_json& operator=(u_integer_t u){
+  template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, int> = 0>
+  basic_json& operator=(UINT u){
     mTypeTag = type_tag::u_integer;
-    mData = std::move(u);
+    mData = u_integer_t(u);
 
     return *this;
   }
 
-  basic_json& operator=(float_t f){
+  template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, int> = 0>
+  basic_json& operator=(FLT f){
     mTypeTag = type_tag::floating;
-    mData = std::move(f);
+    mData = float_t(f);
 
     return *this;
   }
