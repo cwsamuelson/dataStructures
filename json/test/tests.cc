@@ -222,12 +222,240 @@ TEST_CASE("", "[json]") {
 
     CHECK(!j.is_object());
     CHECK(!j.is_array());
-    CHECK(!j.is_string());
-    CHECK(!j.is_integer());
-    CHECK(!j.is_floating());
-    CHECK( j.is_bool());
-    CHECK(!j.is_signed());
-    CHECK(!j.is_unsigned());
+      CHECK(!j.is_string());
+      CHECK(!j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
+  }
+
+  SECTION("Assign from any"){
+    gsw::json j;
+
+    SECTION("from object/map"){
+
+      CHECK( j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK(!j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
+
+    SECTION("from array/vector"){
+      gsw::json j;
+
+      j = std::vector{1, 2, 3, 4, 5};
+
+      CHECK(!j.is_object());
+      CHECK( j.is_array());
+      CHECK(!j.is_string());
+      CHECK(!j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
+
+    SECTION("from string"){
+      SECTION("cstring"){
+        gsw::json j;
+
+        j = "test";
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK( j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+
+      SECTION("std::string"){
+        gsw::json j;
+
+        j = std::string("test");
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK( j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+    }
+
+    SECTION("from 'floating point' type") {
+      SECTION("float") {
+        gsw::json j;
+
+        j = 0.0f;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+
+      SECTION("double") {
+        gsw::json j;
+
+        j = 0.0;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+    }
+
+    SECTION("'unsigned integer' type") {
+      SECTION("unsigned short") {
+        unsigned short i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(j.is_unsigned());
+      }
+
+      SECTION("unsigned int") {
+        unsigned int i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(j.is_unsigned());
+      }
+
+      SECTION("unsigned long") {
+        unsigned long i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(j.is_unsigned());
+      }
+
+      SECTION("unsigned long long") {
+        unsigned long long i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(j.is_unsigned());
+      }
+    }
+
+    SECTION("'signed integer' type") {
+      SECTION("signed short") {
+        signed short i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+
+      SECTION("signed int") {
+        signed int i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+
+      SECTION("signed long") {
+        signed long i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+
+      SECTION("signed long long") {
+        signed long long i = 5;
+        gsw::json j;
+
+        j = i;
+
+        CHECK(!j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+    }
   }
 }
 
