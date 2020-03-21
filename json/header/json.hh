@@ -21,7 +21,8 @@ class basic_json {
 private:
   using string_t = STRING;
   using object_t = OBJECT<string_t, basic_json>;
-  using array_t = ARRAY<basic_json>;
+  template<typename T>
+  using array_t = ARRAY<T>;
   using integer_t = INTEGER;
   using u_integer_t = UINTEGER;
   using float_t = FLOAT;
@@ -29,7 +30,7 @@ private:
   enum class type_tag { none, object, array, string, integer, u_integer, floating, boolean };
 
   type_tag mTypeTag;
-  std::variant<integer_t, u_integer_t, float_t, bool_t, string_t, array_t, object_t> mData;
+  std::variant<integer_t, u_integer_t, float_t, bool_t, string_t, array_t<basic_json>, object_t> mData;
 
 public:
   basic_json()
@@ -49,10 +50,17 @@ public:
     , mData(std::move(o)){
   }
 
+  template<typename T>
   explicit
-  basic_json(array_t a)
-    : mTypeTag(type_tag::array)
-    , mData(std::move(a)){
+  basic_json(array_t<T> a)
+    : mTypeTag(type_tag::array){
+    array_t<basic_json> v;
+
+    for(const auto& element : a){
+      v.emplace_back(element);
+    }
+
+    mData = std::move(v);
   }
 
   explicit
@@ -103,7 +111,8 @@ public:
     return *this;
   }
 
-  basic_json& operator=(array_t a){
+  template<typename T>
+  basic_json& operator=(array_t<T> a){
     mTypeTag = type_tag::array;
     mData = std::move(a);
 
