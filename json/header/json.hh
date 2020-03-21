@@ -61,7 +61,11 @@ public:
     , mData(std::move(s)){
   }
 
-  template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, INT> = 0>
+  explicit
+  basic_json(const char* arr)
+          : mTypeTag(type_tag::string)
+          , mData(arr){
+  }
 
   template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, int> = 0>
   explicit
