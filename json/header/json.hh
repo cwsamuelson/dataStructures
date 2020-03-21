@@ -84,11 +84,10 @@ public:
     , mData(std::move(f)){
   }
 
-  template<typename BL, std::enable_if_t<std::is_same<BL, bool>::value, BL>>
   explicit
-  basic_json(BL b)
+  basic_json(bool b)
     : mTypeTag(type_tag::boolean)
-    , mData(std::move(b)){
+    , mData(b){
   }
 
   //templatize some of the constructors and assignment operators?
