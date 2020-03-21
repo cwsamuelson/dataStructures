@@ -11,12 +11,13 @@
 namespace gsw {
 
 template<template<typename, typename...> typename OBJECT = std::map,
-         template<typename...> typename ARRAY = std::vector,
-         typename STRING = std::string,
-         typename INTEGER = signed long long,
-         typename UINTEGER = unsigned long long,
-         typename FLOAT = double,
-         typename BOOL = bool>
+        template<typename...>
+                                         typename ARRAY = std::vector,
+                                         typename STRING = std::string,
+                                         typename INTEGER = signed long long,
+                                         typename UINTEGER = unsigned long long,
+                                         typename FLOAT = double,
+                                         typename BOOL = bool>
 class basic_json {
 private:
   using string_t = STRING;
@@ -34,7 +35,7 @@ private:
 
 public:
   basic_json()
-    : mTypeTag(type_tag::none){
+          : mTypeTag(type_tag::none) {
   }
   basic_json(const basic_json&) = default;
   basic_json(basic_json&&) noexcept = default;
@@ -44,67 +45,59 @@ public:
 
   ~basic_json() = default;
 
-  explicit
-  basic_json(object_t o)
-    :mTypeTag(type_tag::object)
-    , mData(std::move(o)){
+  explicit basic_json(object_t o)
+          : mTypeTag(type_tag::object)
+          , mData(std::move(o)) {
   }
 
   template<typename T>
-  explicit
-  basic_json(array_t<T> a)
-    : mTypeTag(type_tag::array){
+  explicit basic_json(array_t<T> a)
+          : mTypeTag(type_tag::array) {
     array_t<basic_json> v;
 
-    for(const auto& element : a){
+    for(const auto& element : a) {
       v.emplace_back(element);
     }
 
     mData = std::move(v);
   }
 
-  explicit
-  basic_json(string_t s)
-    : mTypeTag(type_tag::string)
-    , mData(std::move(s)){
+  explicit basic_json(string_t s)
+          : mTypeTag(type_tag::string)
+          , mData(std::move(s)) {
   }
 
-  explicit
-  basic_json(const char* arr)
+  explicit basic_json(const char* arr)
           : mTypeTag(type_tag::string)
-          , mData(arr){
+          , mData(arr) {
   }
 
   template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, int> = 0>
-  explicit
-  basic_json(INT i)
-    : mTypeTag(type_tag::integer)
-    , mData(integer_t(i)){
+  explicit basic_json(INT i)
+          : mTypeTag(type_tag::integer)
+          , mData(integer_t(i)) {
   }
 
   template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, int> = 0>
-  explicit
-  basic_json(UINT u)
-    : mTypeTag(type_tag::u_integer)
-    , mData(u_integer_t(u)){
+  explicit basic_json(UINT u)
+          : mTypeTag(type_tag::u_integer)
+          , mData(u_integer_t(u)) {
   }
 
   template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, int> = 0>
-  explicit
-  basic_json(FLT f)
-    : mTypeTag(type_tag::floating)
-    , mData(std::move(f)){
+  explicit basic_json(FLT f)
+          : mTypeTag(type_tag::floating)
+          , mData(float_t(f)) {
   }
 
-  explicit
-  basic_json(bool_t b)
-    : mTypeTag(type_tag::boolean)
-    , mData(b){
+  explicit basic_json(bool_t b)
+          : mTypeTag(type_tag::boolean)
+          , mData(b) {
   }
 
   //templatize some of the constructors and assignment operators?
 
-  basic_json& operator=(object_t o){
+  basic_json& operator=(object_t o) {
     mTypeTag = type_tag::object;
     mData = std::move(o);
 
@@ -112,11 +105,11 @@ public:
   }
 
   template<typename T>
-  basic_json& operator=(array_t<T> a){
+  basic_json& operator=(array_t<T> a) {
     mTypeTag = type_tag::array;
     array_t<basic_json> v;
 
-    for(const auto& element : a){
+    for(const auto& element : a) {
       v.emplace_back(element);
     }
 
@@ -125,14 +118,14 @@ public:
     return *this;
   }
 
-  basic_json& operator=(string_t s){
+  basic_json& operator=(string_t s) {
     mTypeTag = type_tag::string;
     mData = std::move(s);
 
     return *this;
   }
 
-  basic_json& operator=(const char* arr){
+  basic_json& operator=(const char* arr) {
     mTypeTag = type_tag::string;
     mData = string_t(arr);
 
@@ -140,7 +133,7 @@ public:
   }
 
   template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, int> = 0>
-  basic_json& operator=(INT i){
+  basic_json& operator=(INT i) {
     mTypeTag = type_tag::integer;
     mData = integer_t(i);
 
@@ -148,7 +141,7 @@ public:
   }
 
   template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, int> = 0>
-  basic_json& operator=(UINT u){
+  basic_json& operator=(UINT u) {
     mTypeTag = type_tag::u_integer;
     mData = u_integer_t(u);
 
@@ -156,14 +149,14 @@ public:
   }
 
   template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, int> = 0>
-  basic_json& operator=(FLT f){
+  basic_json& operator=(FLT f) {
     mTypeTag = type_tag::floating;
     mData = float_t(f);
 
     return *this;
   }
 
-  basic_json& operator=(bool_t b){
+  basic_json& operator=(bool_t b) {
     mTypeTag = type_tag::boolean;
     mData = std::move(b);
 
@@ -171,42 +164,42 @@ public:
   }
 
   [[nodiscard]]
-  bool is_object() const{
+  bool is_object() const {
     return mTypeTag == type_tag::object;
   }
 
   [[nodiscard]]
-  bool is_array() const{
+  bool is_array() const {
     return mTypeTag == type_tag::array;
   }
 
   [[nodiscard]]
-  bool is_string() const{
+  bool is_string() const {
     return mTypeTag == type_tag::string;
   }
 
   [[nodiscard]]
-  bool is_integer() const{
+  bool is_integer() const {
     return mTypeTag == type_tag::integer || mTypeTag == type_tag::u_integer;
   }
 
   [[nodiscard]]
-  bool is_signed() const{
+  bool is_signed() const {
     return mTypeTag == type_tag::integer || mTypeTag == type_tag::floating;
   }
 
   [[nodiscard]]
-  bool is_unsigned() const{
+  bool is_unsigned() const {
     return mTypeTag == type_tag::u_integer;
   }
 
   [[nodiscard]]
-  bool is_floating() const{
+  bool is_floating() const {
     return mTypeTag == type_tag::floating;
   }
 
   [[nodiscard]]
-  bool is_bool() const{
+  bool is_bool() const {
     return mTypeTag == type_tag::boolean;
   }
 };
