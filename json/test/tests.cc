@@ -56,9 +56,80 @@ TEST_CASE("", "[json]") {
     CHECK(!j.is_floating());
     CHECK(!j.is_bool());
     CHECK(!j.is_signed());
-    CHECK(!j.is_unsigned());
+      CHECK(!j.is_unsigned());
+    }
+
+    SECTION("std::string"){
+      gsw::json j(std::string(""));
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK( j.is_string());
+      CHECK(!j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK(!j.is_unsigned());
+    }
   }
 
+  SECTION("'unsigned integer' type") {
+    SECTION("unsigned short"){
+      unsigned short i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK( j.is_unsigned());
+    }
+
+    SECTION("unsigned int"){
+      unsigned int i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK( j.is_unsigned());
+    }
+
+    SECTION("unsigned long"){
+      unsigned long i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK( j.is_unsigned());
+    }
+
+    SECTION("unsigned long long"){
+      unsigned long long i = 5;
+      gsw::json j(i);
+
+      CHECK(!j.is_object());
+      CHECK(!j.is_array());
+      CHECK(!j.is_string());
+      CHECK( j.is_integer());
+      CHECK(!j.is_floating());
+      CHECK(!j.is_bool());
+      CHECK(!j.is_signed());
+      CHECK( j.is_unsigned());
+    }
+  }
   SECTION("'signed integer' type") {
     SECTION("signed short"){
       signed short i = 5;
@@ -115,19 +186,6 @@ TEST_CASE("", "[json]") {
       CHECK( j.is_signed());
       CHECK(!j.is_unsigned());
     }
-  }
-
-  SECTION("'unsigned integer' type") {
-    gsw::json j(5ULL);
-
-    CHECK(!j.is_object());
-    CHECK(!j.is_array());
-    CHECK(!j.is_string());
-    CHECK( j.is_integer());
-    CHECK(!j.is_floating());
-    CHECK(!j.is_bool());
-    CHECK(!j.is_signed());
-    CHECK( j.is_unsigned());
   }
 
   SECTION("'floating point' type") {
