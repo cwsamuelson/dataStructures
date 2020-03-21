@@ -79,14 +79,14 @@ public:
   explicit
   basic_json(INT i)
     : mTypeTag(type_tag::integer)
-    , mData(std::move(i)){
+    , mData(integer_t(i)){
   }
 
   template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, int> = 0>
   explicit
   basic_json(UINT u)
     : mTypeTag(type_tag::u_integer)
-    , mData(std::move(u)){
+    , mData(u_integer_t(u)){
   }
 
   template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, int> = 0>
