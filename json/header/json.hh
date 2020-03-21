@@ -97,7 +97,7 @@ public:
   }
 
   explicit
-  basic_json(bool b)
+  basic_json(bool_t b)
     : mTypeTag(type_tag::boolean)
     , mData(b){
   }
