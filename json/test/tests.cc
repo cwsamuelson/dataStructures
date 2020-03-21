@@ -20,6 +20,15 @@ TEST_CASE("", "[json]") {
 
   SECTION("'object' type") {
     gsw::json j;
+
+    CHECK( j.is_object());
+    CHECK(!j.is_array());
+    CHECK(!j.is_string());
+    CHECK(!j.is_integer());
+    CHECK(!j.is_floating());
+    CHECK(!j.is_bool());
+    CHECK(!j.is_signed());
+    CHECK(!j.is_unsigned());
   }
 
   SECTION("'array' type") {
