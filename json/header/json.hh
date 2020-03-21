@@ -1,6 +1,7 @@
 #ifndef __JSON_HH__
 #define __JSON_HH__
 
+#include <type_traits>
 #include <string>
 #include <vector>
 #include <map>
@@ -60,28 +61,32 @@ public:
     , mData(std::move(s)){
   }
 
+  template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, INT> = 0>
   explicit
-  basic_json(integer_t i)
+  basic_json(INT i)
     : mTypeTag(type_tag::integer)
     , mData(std::move(i)){
   }
 
+  template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, UINT> = 0>
   explicit
-  basic_json(u_integer_t u)
+  basic_json(UINT u)
     : mTypeTag(type_tag::u_integer)
-      , mData(std::move(u)){
+    , mData(std::move(u)){
   }
 
+  template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, FLT>>
   explicit
-  basic_json(float_t f)
+  basic_json(FLT f)
     : mTypeTag(type_tag::floating)
-        , mData(std::move(f)){
+    , mData(std::move(f)){
   }
 
+  template<typename BL, std::enable_if_t<std::is_same<BL, bool>::value, BL>>
   explicit
-  basic_json(bool_t b)
+  basic_json(BL b)
     : mTypeTag(type_tag::boolean)
-          , mData(std::move(b)){
+    , mData(std::move(b)){
   }
 
   //templatize some of the constructors and assignment operators?
@@ -157,7 +162,7 @@ public:
 
   [[nodiscard]]
   bool is_signed() const{
-    return mTypeTag == type_tag::integer;
+    return mTypeTag == type_tag::integer || mTypeTag == type_tag::floating;
   }
 
   [[nodiscard]]
