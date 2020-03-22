@@ -282,8 +282,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
     }
 
     SECTION("from array/vector") {
-      gsw::json j;
-
       j = std::vector{ 1, 2, 3, 4, 5 };
 
       CHECK(!j.is_object());
@@ -298,8 +296,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
     SECTION("from string") {
       SECTION("cstring") {
-        gsw::json j;
-
         j = "test";
 
         CHECK(!j.is_object());
@@ -313,8 +309,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
       }
 
       SECTION("std::string") {
-        gsw::json j;
-
         j = std::string("test");
 
         CHECK(!j.is_object());
@@ -330,8 +324,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
     SECTION("from 'floating point' type") {
       SECTION("float") {
-        gsw::json j;
-
         j = 0.0f;
 
         CHECK(!j.is_object());
@@ -345,8 +337,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
       }
 
       SECTION("double") {
-        gsw::json j;
-
         j = 0.0;
 
         CHECK(!j.is_object());
@@ -363,8 +353,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
     SECTION("'unsigned integer' type") {
       SECTION("unsigned short") {
         unsigned short i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -379,8 +367,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
       SECTION("unsigned int") {
         unsigned int i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -395,8 +381,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
       SECTION("unsigned long") {
         unsigned long i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -411,8 +395,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
       SECTION("unsigned long long") {
         unsigned long long i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -429,8 +411,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
     SECTION("'signed integer' type") {
       SECTION("signed short") {
         signed short i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -445,8 +425,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
       SECTION("signed int") {
         signed int i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -461,8 +439,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
       SECTION("signed long") {
         signed long i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
@@ -477,8 +453,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
       SECTION("signed long long") {
         signed long long i = 5;
-        gsw::json j;
-
         j = i;
 
         CHECK(!j.is_object());
