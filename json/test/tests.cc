@@ -35,7 +35,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
         CHECK(!j.is_unsigned());
       }
 
-      SECTION("By initializer list"){
+      SECTION("By initializer list") {
         gsw::json j;
         /*gsw::json j{{ "A", 1 },
                     { "B", 2 },
@@ -66,8 +66,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
         CHECK(!j.is_unsigned());
       }
 
-      SECTION("from initializer list"){
-        gsw::json j{1, 2, 3, 4, 5};
+      SECTION("from initializer list") {
+        gsw::json j{ 1, 2, 3, 4, 5 };
 
         CHECK(!j.is_object());
         CHECK(j.is_array());
@@ -270,7 +270,9 @@ TEST_CASE("Json objects do json like things!", "[json]") {
     gsw::json j;
 
     SECTION("from object/map") {
-      j = std::map<std::string, int>{{"A", 1}, {"B", 2}, {"C", 3}};
+      j = std::map<std::string, int>{{ "A", 1 },
+                                     { "B", 2 },
+                                     { "C", 3 }};
 
       CHECK(j.is_object());
       CHECK(!j.is_array());

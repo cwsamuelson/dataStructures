@@ -52,10 +52,10 @@ public:
 
   template<typename T>
   explicit basic_json(const object_t<T>& o)
-          : mTypeTag(type_tag::object){
+          : mTypeTag(type_tag::object) {
     object_t<basic_json> m;
 
-    for(const auto& [key, value] : o){
+    for(const auto&[key, value] : o) {
       m[key] = basic_json(value);
     }
 
@@ -114,7 +114,7 @@ public:
     mTypeTag = type_tag::object;
     object_t<basic_json> m;
 
-    for(const auto& [key, value] : o){
+    for(const auto&[key, value] : o) {
       m[key] = basic_json(value);
     }
 
