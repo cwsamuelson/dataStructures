@@ -45,6 +45,19 @@ TEST_CASE("", "[json]") {
         CHECK(!j.is_signed());
         CHECK(!j.is_unsigned());
       }
+
+      SECTION("from initializer list"){
+        gsw::json j{1, 2, 3, 4, 5};
+
+        CHECK(!j.is_object());
+        CHECK(j.is_array());
+        CHECK(!j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
     }
 
     SECTION("'string' type") {
