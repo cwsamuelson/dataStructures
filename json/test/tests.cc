@@ -270,6 +270,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
     gsw::json j;
 
     SECTION("from object/map") {
+      j = std::map<std::string, int>{{"A", 1}, {"B", 2}, {"C", 3}};
 
       CHECK(j.is_object());
       CHECK(!j.is_array());
