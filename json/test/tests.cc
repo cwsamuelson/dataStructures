@@ -20,16 +20,36 @@ TEST_CASE("", "[json]") {
     }
 
     SECTION("'object' type") {
-      gsw::json j;
+      SECTION("By std::map") {
+        gsw::json j(std::map<std::string, int>{{ "A", 1 },
+                                               { "B", 2 },
+                                               { "C", 3 }});
 
-      CHECK(j.is_object());
-      CHECK(!j.is_array());
+        CHECK(j.is_object());
+        CHECK(!j.is_array());
+        CHECK(!j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
+        CHECK(!j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
+
+      SECTION("By initializer list"){
+        gsw::json j;
+        /*gsw::json j{{ "A", 1 },
+                    { "B", 2 },
+                    { "C", 3 }};*/
+
+        CHECK(j.is_object());
+        CHECK(!j.is_array());
       CHECK(!j.is_string());
       CHECK(!j.is_integer());
       CHECK(!j.is_floating());
       CHECK(!j.is_bool());
-      CHECK(!j.is_signed());
-      CHECK(!j.is_unsigned());
+        CHECK(!j.is_signed());
+        CHECK(!j.is_unsigned());
+      }
     }
 
     SECTION("'array' type") {
