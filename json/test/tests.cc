@@ -4,7 +4,7 @@
 
 #include <json.hh>
 
-TEST_CASE("", "[json]") {
+TEST_CASE("Json objects do json like things!", "[json]") {
   SECTION("Construct from any") {
     SECTION("'uninit' type") {
       gsw::json j;
@@ -43,10 +43,10 @@ TEST_CASE("", "[json]") {
 
         CHECK(j.is_object());
         CHECK(!j.is_array());
-      CHECK(!j.is_string());
-      CHECK(!j.is_integer());
-      CHECK(!j.is_floating());
-      CHECK(!j.is_bool());
+        CHECK(!j.is_string());
+        CHECK(!j.is_integer());
+        CHECK(!j.is_floating());
+        CHECK(!j.is_bool());
         CHECK(!j.is_signed());
         CHECK(!j.is_unsigned());
       }
