@@ -21,7 +21,8 @@ template<template<typename, typename...> typename OBJECT = std::map,
 class basic_json {
 private:
   using string_t = STRING;
-  using object_t = OBJECT<string_t, basic_json>;
+  template<typename T>
+  using object_t = OBJECT<string_t, T>;
   template<typename T>
   using array_t = ARRAY<T>;
   using integer_t = INTEGER;
@@ -31,7 +32,7 @@ private:
   enum class type_tag { none, object, array, string, integer, u_integer, floating, boolean };
 
   type_tag mTypeTag;
-  std::variant<integer_t, u_integer_t, float_t, bool_t, string_t, array_t<basic_json>, object_t> mData;
+  std::variant<integer_t, u_integer_t, float_t, bool_t, string_t, array_t<basic_json>, object_t<basic_json>> mData;
 
 public:
   basic_json()
@@ -45,13 +46,24 @@ public:
 
   ~basic_json() = default;
 
-  explicit basic_json(object_t o)
-          : mTypeTag(type_tag::object)
-          , mData(std::move(o)) {
+  template<typename T>
+  basic_json(std::initializer_list<T> il){
   }
 
   template<typename T>
-  explicit basic_json(array_t<T> a)
+  explicit basic_json(const object_t<T>& o)
+          : mTypeTag(type_tag::object){
+    object_t<basic_json> m;
+
+    for(const auto& [key, value] : o){
+      m[key] = basic_json(value);
+    }
+
+    mData = std::move(m);
+  }
+
+  template<typename T>
+  explicit basic_json(const array_t<T>& a)
           : mTypeTag(type_tag::array) {
     array_t<basic_json> v;
 
@@ -97,9 +109,16 @@ public:
 
   //templatize some of the constructors and assignment operators?
 
-  basic_json& operator=(object_t o) {
+  template<typename T>
+  basic_json& operator=(object_t<T> o) {
     mTypeTag = type_tag::object;
-    mData = std::move(o);
+    object_t<T> m;
+
+    for(const auto& [key, value] : o){
+      m[key] = basic_json(value);
+    }
+
+    mData = std::move(m);
 
     return *this;
   }
