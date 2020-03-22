@@ -112,7 +112,7 @@ public:
   template<typename T>
   basic_json& operator=(object_t<T> o) {
     mTypeTag = type_tag::object;
-    object_t<T> m;
+    object_t<basic_json> m;
 
     for(const auto& [key, value] : o){
       m[key] = basic_json(value);
