@@ -622,6 +622,25 @@ TEST_CASE("Json objects do json like things!", "[json]") {
   }
 
   SECTION("Get what's available, cast as feasible"){
+    class foo{
+    private:
+      std::string data;
+
+    public:
+      explicit foo(std::string in) : data(std::move(in)){}
+
+      [[nodiscard]]
+      std::string get() const{
+        return data;
+      }
+    };
+
+    SECTION("string"){
+      gsw::json j("test string");
+
+      CHECK(j.get<foo>().get() == "test string");
+    }
+
     SECTION("Numbers"){
       gsw::json j = 5;
 
