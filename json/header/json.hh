@@ -47,7 +47,19 @@ public:
   ~basic_json() = default;
 
   template<typename T>
-  basic_json(std::initializer_list<T> il){
+  basic_json(std::initializer_list<std::pair<T, basic_json>> il) {
+  }
+
+  template<typename T>
+  basic_json(std::initializer_list<T> il)
+          : mTypeTag(type_tag::array) {
+    array_t<basic_json> a;
+
+    for(const auto& element : il) {
+      a.emplace_back(element);
+    }
+
+    mData = std::move(a);
   }
 
   template<typename T>
