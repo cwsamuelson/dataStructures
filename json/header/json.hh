@@ -226,6 +226,29 @@ public:
   bool is_bool() const {
     return mTypeTag == type_tag::boolean;
   }
+
+  template<typename T>
+  [[nodiscard]]
+  T get(){
+    switch(mTypeTag){
+    case type_tag::object:
+      return T(std::get<object_t<basic_json>>(mData));
+    case type_tag::array:
+      return T(std::get<array_t<basic_json>>(mData));
+    case type_tag::string:
+      return T(std::get<string_t>(mData));
+    case type_tag::integer:
+      return T(std::get<integer_t>(mData));
+    case type_tag::u_integer:
+      return T(std::get<u_integer_t>(mData));
+    case type_tag::floating:
+      return T(std::get<float_t>(mData));
+    case type_tag::boolean:
+      return T(std::get<bool_t>(mData));
+    case type_tag::none:
+      return std::get<-1>(mData);
+    }
+  }
 };
 
 using json = basic_json<>;
