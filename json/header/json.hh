@@ -198,6 +198,11 @@ public:
   }
 
   [[nodiscard]]
+  bool is_number() const{
+    return mTypeTag == type_tag::integer || mTypeTag == type_tag::u_integer || mTypeTag == type_tag::floating;
+  }
+
+  [[nodiscard]]
   bool is_integer() const {
     return mTypeTag == type_tag::integer || mTypeTag == type_tag::u_integer;
   }
