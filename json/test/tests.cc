@@ -501,5 +501,20 @@ TEST_CASE("Json objects do json like things!", "[json]") {
       }
     }
   }
+
+  SECTION("Get what's available, cast as feasible"){
+    SECTION("Numbers"){
+      gsw::json j = 5;
+
+      CHECK(j.get<int>() == 5);
+      CHECK(j.get<short>() == 5);
+      CHECK(j.get<long>() == 5);
+      CHECK(j.get<long long>() == 5);
+      CHECK(j.get<unsigned int>() == 5);
+      CHECK(j.get<unsigned short>() == 5);
+      CHECK(j.get<unsigned long>() == 5);
+      CHECK(j.get<unsigned long long>() == 5);
+    }
+  }
 }
 
