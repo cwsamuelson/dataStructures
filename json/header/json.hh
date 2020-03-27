@@ -63,7 +63,7 @@ public:
   }
 
   template<typename T>
-  explicit basic_json(const object_t<T>& o)
+  basic_json(const object_t<T>& o)
           : mTypeTag(type_tag::object) {
     object_t<basic_json> m;
 
@@ -75,7 +75,7 @@ public:
   }
 
   template<typename T>
-  explicit basic_json(const array_t<T>& a)
+  basic_json(const array_t<T>& a)
           : mTypeTag(type_tag::array) {
     array_t<basic_json> v;
 
@@ -86,7 +86,7 @@ public:
     mData = std::move(v);
   }
 
-  explicit basic_json(string_t s)
+  basic_json(string_t s)
           : mTypeTag(type_tag::string)
           , mData(std::move(s)) {
   }
@@ -97,24 +97,24 @@ public:
   }
 
   template<typename INT, std::enable_if_t<std::is_integral<INT>::value && std::is_signed<INT>::value, int> = 0>
-  explicit basic_json(INT i)
+  basic_json(INT i)
           : mTypeTag(type_tag::integer)
           , mData(integer_t(i)) {
   }
 
   template<typename UINT, std::enable_if_t<std::is_integral<UINT>::value && !std::is_signed<UINT>::value, int> = 0>
-  explicit basic_json(UINT u)
+  basic_json(UINT u)
           : mTypeTag(type_tag::u_integer)
           , mData(u_integer_t(u)) {
   }
 
   template<typename FLT, std::enable_if_t<std::is_floating_point<FLT>::value, int> = 0>
-  explicit basic_json(FLT f)
+  basic_json(FLT f)
           : mTypeTag(type_tag::floating)
           , mData(float_t(f)) {
   }
 
-  explicit basic_json(bool_t b)
+  basic_json(bool_t b)
           : mTypeTag(type_tag::boolean)
           , mData(b) {
   }
