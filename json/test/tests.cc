@@ -480,31 +480,93 @@ TEST_CASE("Json objects do json like things!", "[json]") {
 
     SECTION("'floating point' type") {
       SECTION("float") {
-        gsw::json j(0.0f);
+        SECTION("from var") {
+          float i = 5;
+          gsw::json j(i);
 
-        CHECK(!j.is_object());
-        CHECK(!j.is_array());
-        CHECK(!j.is_string());
-        CHECK(!j.is_integer());
-        CHECK(j.is_floating());
-        CHECK(!j.is_bool());
-        CHECK(j.is_signed());
-        CHECK(!j.is_unsigned());
-        CHECK(j.is_number());
+          CHECK(!j.is_object());
+          CHECK(!j.is_array());
+          CHECK(!j.is_string());
+          CHECK(!j.is_integer());
+          CHECK(j.is_floating());
+          CHECK(!j.is_bool());
+          CHECK(j.is_signed());
+          CHECK(!j.is_unsigned());
+          CHECK(j.is_number());
+        }
+
+        SECTION("direct initialized"){
+          gsw::json j((float)5);
+
+          CHECK(!j.is_object());
+          CHECK(!j.is_array());
+          CHECK(!j.is_string());
+          CHECK(!j.is_integer());
+          CHECK(j.is_floating());
+          CHECK(!j.is_bool());
+          CHECK(j.is_signed());
+          CHECK(!j.is_unsigned());
+          CHECK(j.is_number());
+        }
+
+        SECTION("by assign construction (copy elision)"){
+          gsw::json j = (float)5;
+
+          CHECK(!j.is_object());
+          CHECK(!j.is_array());
+          CHECK(!j.is_string());
+          CHECK(!j.is_integer());
+          CHECK(j.is_floating());
+          CHECK(!j.is_bool());
+          CHECK(j.is_signed());
+          CHECK(!j.is_unsigned());
+          CHECK(j.is_number());
+        }
       }
 
       SECTION("double") {
-        gsw::json j(0.0);
+        SECTION("from var") {
+          double i = 5;
+          gsw::json j(i);
 
-        CHECK(!j.is_object());
-        CHECK(!j.is_array());
-        CHECK(!j.is_string());
-        CHECK(!j.is_integer());
-        CHECK(j.is_floating());
-        CHECK(!j.is_bool());
-        CHECK(j.is_signed());
-        CHECK(!j.is_unsigned());
-        CHECK(j.is_number());
+          CHECK(!j.is_object());
+          CHECK(!j.is_array());
+          CHECK(!j.is_string());
+          CHECK(!j.is_integer());
+          CHECK(j.is_floating());
+          CHECK(!j.is_bool());
+          CHECK(j.is_signed());
+          CHECK(!j.is_unsigned());
+          CHECK(j.is_number());
+        }
+
+        SECTION("direct initialized"){
+          gsw::json j((double)5);
+
+          CHECK(!j.is_object());
+          CHECK(!j.is_array());
+          CHECK(!j.is_string());
+          CHECK(!j.is_integer());
+          CHECK(j.is_floating());
+          CHECK(!j.is_bool());
+          CHECK(j.is_signed());
+          CHECK(!j.is_unsigned());
+          CHECK(j.is_number());
+        }
+
+        SECTION("by assign construction (copy elision)"){
+          gsw::json j = (double)5;
+
+          CHECK(!j.is_object());
+          CHECK(!j.is_array());
+          CHECK(!j.is_string());
+          CHECK(!j.is_integer());
+          CHECK(j.is_floating());
+          CHECK(!j.is_bool());
+          CHECK(j.is_signed());
+          CHECK(!j.is_unsigned());
+          CHECK(j.is_number());
+        }
       }
     }
 
