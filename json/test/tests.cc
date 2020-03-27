@@ -741,7 +741,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
     }
   }
 
-  SECTION("Get what's available, cast as feasible"){
+  /*SECTION("Get what's available, cast as feasible"){
     class foo{
     private:
       std::string data;
@@ -773,6 +773,6 @@ TEST_CASE("Json objects do json like things!", "[json]") {
       CHECK(j.get<unsigned long>() == 5);
       CHECK(j.get<unsigned long long>() == 5);
     }
-  }
+  }*/
 }
 
