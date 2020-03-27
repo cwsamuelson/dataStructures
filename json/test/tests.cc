@@ -126,8 +126,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -140,8 +140,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -154,8 +154,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
       }
@@ -171,8 +171,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -185,8 +185,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -199,8 +199,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
       }
@@ -216,8 +216,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -230,8 +230,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -244,8 +244,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
       }
@@ -261,8 +261,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -275,8 +275,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
 
@@ -289,8 +289,8 @@ TEST_CASE("Json objects do json like things!", "[json]") {
           CHECK(j.is_integer());
           CHECK(!j.is_floating());
           CHECK(!j.is_bool());
-          CHECK(j.is_signed());
-          CHECK(!j.is_unsigned());
+          CHECK(!j.is_signed());
+          CHECK(j.is_unsigned());
           CHECK(j.is_number());
         }
       }
@@ -404,7 +404,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
         }
 
         SECTION("direct initialized"){
-          gsw::json j(5L);
+          gsw::json j((signed long)5);
 
           CHECK(!j.is_object());
           CHECK(!j.is_array());
@@ -418,7 +418,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
         }
 
         SECTION("by assign construction (copy elision)"){
-          gsw::json j = 5L;
+          gsw::json j = (signed long)5;
 
           CHECK(!j.is_object());
           CHECK(!j.is_array());
@@ -449,7 +449,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
         }
 
         SECTION("direct initialized"){
-          gsw::json j(5LL);
+          gsw::json j((signed long long)5);
 
           CHECK(!j.is_object());
           CHECK(!j.is_array());
@@ -463,7 +463,7 @@ TEST_CASE("Json objects do json like things!", "[json]") {
         }
 
         SECTION("by assign construction (copy elision)"){
-          gsw::json j = 5LL;
+          gsw::json j = (signed long long)5;
 
           CHECK(!j.is_object());
           CHECK(!j.is_array());
