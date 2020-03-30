@@ -4,10 +4,10 @@
 
 #include <errors.hh>
 
-inline static auto special_line_number = __LINE__;
+inline static auto special_line_number = 0;
 
 void thrower(bool should_throw) {
-  GSW_THROW(!should_throw, "bah, humbug");
+  GSW_CHECK(!should_throw, "bah, humbug");
   special_line_number = __LINE__ - 1;
 }
 
@@ -31,6 +31,7 @@ TEST_CASE("gsw::exception and GSW_THROW can be caught be std exception", "") {
 TEST_CASE("gsw::exception captures location information", "") {
   try {
     thrower(true);
+    REQUIRE(false);
   } catch(gsw::exception& e) {
     CHECK(e.line() == special_line_number);
     CHECK(e.message() == "bah, humbug");
@@ -39,7 +40,16 @@ TEST_CASE("gsw::exception captures location information", "") {
     CHECK(!w.empty());
     CHECK(w != e.message());
 #if __cpp_lib_starts_ends_with
-    w.ends_with("bah, humbug");
+    w.starts_with("bah, humbug");
+    w.ends_with("!should_throw");
 #endif
+    CHECK(e.expression() == "!should_throw");
+
+    std::cout << e.line() << std::endl;
+    std::cout << e.message() << std::endl;
+    std::cout << e.file() << std::endl;
+    std::cout << e.what() << std::endl;
+    std::cout << e.message() << std::endl;
+    std::cout << e.expression() << std::endl;
   }
 }
