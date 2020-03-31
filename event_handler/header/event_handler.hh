@@ -5,12 +5,11 @@
  * @example test-events.cc
  */
 
-#include<map>
-#include<functional>
-#include<utility>
+#include <map>
+#include <functional>
+#include <utility>
 #include <memory>
-
-#include<tuple.hh>
+#include <tuple>
 
 namespace gsw {
 
@@ -119,7 +118,7 @@ public:
   /*!
    * @tparam N
    */
-  template<size_t N> using arg_types = tuple_element<N, tuple<Args...>>;
+  template<size_t N> using arg_types = typename std::tuple_element<N, std::tuple<Args...>>::type;
 
 private:
   std::map<counter_t, event_handler> handlers;

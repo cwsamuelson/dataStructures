@@ -9,7 +9,6 @@ SET_TARGET_PROPERTIES(event_handler PROPERTIES
                       INTERFACE_CXX_EXTENSIONS NO)
 
 TARGET_INCLUDE_DIRECTORIES(event_handler INTERFACE header)
-TARGET_LINK_LIBRARIES(event_handler INTERFACE tuple)
 
 ADD_EXECUTABLE(test-event_handler test/tests.cc)
 SET_TARGET_PROPERTIES(test-event_handler PROPERTIES
