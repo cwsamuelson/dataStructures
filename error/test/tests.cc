@@ -2,7 +2,7 @@
 
 #include<catch2/catch.hpp>
 
-#include <errors.hh>
+#include <error_handling.hh>
 
 inline static auto special_line_number = 0;
 

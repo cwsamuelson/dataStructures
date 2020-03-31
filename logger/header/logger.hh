@@ -23,8 +23,8 @@ private:
   inline static std::mutex sConsoleMutex;
 
   //! @todo maybe use magic_enum?
-  static std::string level_string(level l) {
-    switch(l) {
+  static std::string level_string(level lvl) {
+    switch(lvl) {
     case level::INFO:
       return "INFO";
     case level::DIGANOSTIC:

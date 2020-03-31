@@ -1,5 +1,5 @@
-#ifndef GALACTICSTRUCTURES_ERRORS_HH
-#define GALACTICSTRUCTURES_ERRORS_HH
+#ifndef GALACTICSTRUCTURES_ERROR_HANDLING_HH
+#define GALACTICSTRUCTURES_ERROR_HANDLING_HH
 
 #include <exception>
 #include <string>
@@ -51,7 +51,7 @@ public:
   }
 };
 
-#define GSW_THROW(msg, expr) throw gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
+#define GSW_THROW(msg, expr) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
 #define GSW_WRAP(something) do{something;}while(false);
 #define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
 #define GSW_CHECK_AND(cond, action, msg) GSW_IF(!(cond), action; GSW_THROW(msg, #cond);)
@@ -59,4 +59,4 @@ public:
 
 }
 
-#endif //GALACTICSTRUCTURES_ERRORS_HH
+#endif //GALACTICSTRUCTURES_ERROR_HANDLING_HH
