@@ -88,22 +88,52 @@ TEST_CASE("Worker thread", "[]") {
   }
 
   SECTION("Forwarded constructor") {
-    workerThread<int> worker(0);
+    SECTION("Simple") {
+      workerThread<int> worker(0);
 
-    for(size_t idx = 0; idx < work_count; ++idx) {
+      for(size_t idx = 0; idx < work_count; ++idx) {
+        worker.addWork([&](int& i)
+                         {
+                           ++i;
+                         });
+      }
+
+      std::promise<int> p;
+      auto f = p.get_future();
       worker.addWork([&](int& i)
                        {
-                         ++i;
+                         p.set_value(i);
                        });
+      CHECK(f.get() == work_count);
     }
 
-    std::promise<int> p;
-    auto f = p.get_future();
-    worker.addWork([&](int& i)
-                     {
-                       p.set_value(i);
-                     });
-    CHECK(f.get() == work_count);
+    SECTION("Interesting example"){
+      struct foo{
+        int x, y, z;
+        foo(int a, int b, int c)
+          : x(a)
+          , y(b)
+          , z(c)
+        {}
+      };
+
+      workerThread<foo> worker(0, 1, 2);
+
+      for(size_t idx = 0; idx < work_count; ++idx) {
+        worker.addWork([&](foo& f)
+                         {
+                           ++f.x;
+                         });
+      }
+
+      std::promise<int> p;
+      auto f = p.get_future();
+      worker.addWork([&](foo& f)
+                       {
+                         p.set_value(f.x);
+                       });
+      CHECK(f.get() == work_count);
+    }
   }
 }
 
