@@ -135,10 +135,10 @@ public:
 
   workerThread(const workerThread&) = delete;
 
-  template<typename U>
-  explicit workerThread(U&& u)
-          : mContext(std::forward<U>(u))
-          , mWorkThread(std::bind(&workerThread::thread_func, this)) {
+  template<typename ...Args>
+  explicit workerThread(Args&& ...args)
+          : mContext(std::forward<Args>(args)...)
+          , mWorkThread(&workerThread::thread_func, this) {
   }
 
   workerThread& operator=(const workerThread&) = delete;
