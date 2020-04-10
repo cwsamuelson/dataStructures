@@ -7,8 +7,9 @@
 
 namespace gsw {
 
-//! @todo enable output to different streams?
+//! @todo enable output to different streams
 // it might not actually be testable without this..
+//! @todo change to use fmt for better output
 class logger {
 public:
   enum class level {
