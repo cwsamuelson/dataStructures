@@ -101,7 +101,7 @@ TEST_CASE("Logic operators behave as expected", "[logic]") {
     CHECK((foo ^ bar).solve({ "foo", "bar" }) == set<set<string>>{{ "foo" },
                                                                   { "bar" }});
 
-    CHECK((foo ^ !foo).solve({ "foo" }).empty());
+    CHECK((foo ^ !foo).solve({ "foo" }) == set<set<string>>{{"foo"}, {}});
 
     CHECK((foo ^ (foo || bar)).solve({ "foo", "bar" }) == set<set<string>>{{ "bar" }});
 
@@ -109,7 +109,7 @@ TEST_CASE("Logic operators behave as expected", "[logic]") {
     CHECK((foo ^ bar).solve2({ "foo", "bar" }) == set<set<string>>{{ "foo" },
                                                                    { "bar" }});
 
-    CHECK((foo ^ !foo).solve2({ "foo" }).empty());
+    CHECK((foo ^ !foo).solve2({ "foo" }) == set<set<string>>{{"foo"}, {}});
 
     CHECK((foo ^ (foo || bar)).solve2({ "foo", "bar" }) == set<set<string>>{{ "bar" }});
   }
@@ -128,11 +128,9 @@ TEST_CASE("Logic operators behave as expected", "[logic]") {
     CHECK((foo.implies(foo)).solve({ "foo" }) == set<set<string>>{{ "foo" },
                                                                   {}});
 
-    CHECK((foo.implies(!foo)).solve({ "foo" }) == set<set<string>>{{ "foo" },
-                                                                   {}});
+    CHECK((foo.implies(!foo)).solve({ "foo" }) == set<set<string>>{{}});
 
-    CHECK(((!foo).implies(foo)).solve({ "foo" }) == set<set<string>>{{ "foo" },
-                                                                     {}});
+    CHECK(((!foo).implies(foo)).solve({ "foo" }) == set<set<string>>{{ "foo" }});
 
 
     CHECK((foo.implies(bar)).solve2({ "foo", "bar" }) == set<set<string>>{{ "foo", "bar" },
@@ -142,11 +140,9 @@ TEST_CASE("Logic operators behave as expected", "[logic]") {
     CHECK((foo.implies(foo)).solve2({ "foo" }) == set<set<string>>{{ "foo" },
                                                                    {}});
 
-    CHECK((foo.implies(!foo)).solve2({ "foo" }) == set<set<string>>{{ "foo" },
-                                                                    {}});
+    CHECK((foo.implies(!foo)).solve2({ "foo" }) == set<set<string>>{{}});
 
-    CHECK(((!foo).implies(foo)).solve2({ "foo" }) == set<set<string>>{{ "foo" },
-                                                                      {}});
+    CHECK(((!foo).implies(foo)).solve2({ "foo" }) == set<set<string>>{{ "foo" }});
   }
 
   SECTION("Tautology (equivalence, iff)") {
@@ -166,19 +162,25 @@ TEST_CASE("Logic operators behave as expected", "[logic]") {
   SECTION("Can form logic sentences") {
     auto prop = ("A"_lvar && !"B"_lvar).implies("C"_lvar) && (!"A"_lvar).iff("B"_lvar && "C"_lvar);
 
-    int i = 0;
-    for(const auto& solution : prop.solve({ "A", "B", "C" })) {
-      CHECK(prop(solution));
-      ++i;
-    }
-    CHECK(i == 3);
+    SECTION("Base solve") {
+      auto solutions = prop.solve({"A", "B", "C"});
 
-    i = 0;
-    for(const auto& solution : prop.solve2({ "A", "B", "C" })) {
-      CHECK(prop(solution));
-      ++i;
+      for(const auto& solution : solutions) {
+        CHECK(prop(solution));
+      }
+
+      CHECK(solutions.size() == 3);
     }
-    CHECK(i == 3);
+
+    SECTION("Solve2") {
+      auto solutions = prop.solve2({"A", "B", "C"});
+
+      for(const auto& solution : solutions) {
+        CHECK(prop(solution));
+      }
+
+      CHECK(solutions.size() == 3);
+    }
   }
 
   SECTION("Can solve compound propositions") {
