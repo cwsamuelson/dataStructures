@@ -196,7 +196,7 @@ public:
    * @return The new modified channel
    */
   event_channel& operator+=(const handler& handle) {
-    enlist(handle);
+    subscribe(handle);
 
     return *this;
   }
@@ -205,7 +205,7 @@ public:
    * @todo implement handler de-registration
    */
   event_channel& operator-=(const event_handler& handler) {
-    delist(handler);
+    unsubscribe(handler);
 
     return *this;
   }

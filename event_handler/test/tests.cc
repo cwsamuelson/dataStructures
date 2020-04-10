@@ -12,7 +12,7 @@ struct foo {
   int x;
 };
 
-/*TEST_CASE( "Basic event control flow", "[events]" )
+TEST_CASE( "Basic event control flow", "[events]" )
 {
   int g_i = 0;
   int g_j = 0;
@@ -99,7 +99,7 @@ struct foo {
   CHECK( g_l   == 6 );
   CHECK( g_m   == 9 );
   CHECK( g_f.x == 69 );
-}*/
+}
 
 class serial {
 public:
