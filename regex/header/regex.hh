@@ -23,7 +23,7 @@ private:
   std::string mExpression;
 
   [[nodiscard]]
-  bool matches(char x, char y);
+  static bool matches(char x, char y);
 
 public:
   explicit regex(std::string expression);
