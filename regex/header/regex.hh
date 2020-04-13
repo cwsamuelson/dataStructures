@@ -1,0 +1,12 @@
+#ifndef GALACTICSTRUCTURES_REGEX_HH
+#define GALACTICSTRUCTURES_REGEX_HH
+
+namespace gsw {
+
+class regex {
+
+};
+
+}
+
+#endif //GALACTICSTRUCTURES_REGEX_HH
