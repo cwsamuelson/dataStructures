@@ -10,31 +10,62 @@ TEST_CASE("Simple string", "[]"){
   regex re("abcd");
 
   SECTION("Exact match") {
-    re("abcd");
+    auto answer = re("abcd");
+
+    REQUIRE(answer.size() == 1);
+    CHECK(answer.front().view == "abcd");
+    CHECK(answer.front().index == 0);
   }
 
   SECTION("No match"){
     SECTION("No match exists") {
-      re("htns");
+      auto answer = re("htns");
+
+      CHECK(answer.empty());
     }
 
     SECTION("Partial matches"){
-      re("ahtns");
-      re("abchtns");
+      auto answer0 = re("ahtns");
+      CHECK(answer0.empty());
+
+      auto answer1 = re("abchtns");
+      CHECK(answer1.empty());
     }
   }
 
   SECTION("Full matches"){
     SECTION("Exact"){
-      re("abcd");
+      auto answer = re("abcd");
+
+      REQUIRE(answer.size() == 1);
+      CHECK(answer.front().view == "abcd");
+      CHECK(answer.front().index == 0);
     }
 
     SECTION("partway through"){
-      re("aoeuabcdhtns");
+      auto answer = re("aoeuabcdhtns");
+
+      REQUIRE(answer.size() == 1);
+      CHECK(answer.front().view == "abcd");
+      CHECK(answer.front().index == 4);
     }
 
     SECTION("end"){
-      re("aoeuabcd");
+      auto answer = re("aoeuabcd");
+
+      REQUIRE(answer.size() == 1);
+      CHECK(answer.front().view == "abcd");
+      CHECK(answer.front().index == 4);
     }
+  }
+
+  SECTION("Multiple matches"){
+    auto answer = re("abcdabcd");
+
+    REQUIRE(answer.size() == 2);
+    CHECK(answer[0].view == "abcd");
+    CHECK(answer[0].index == 0);
+    CHECK(answer[1].view == "abcd");
+    CHECK(answer[1].index == 4);
   }
 }
