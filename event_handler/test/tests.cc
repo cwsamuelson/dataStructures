@@ -101,10 +101,11 @@ TEST_CASE( "Basic event control flow", "[events]" )
   CHECK( g_f.x == 69 );
 }
 
-class serial {
+class serial_sender {
 public:
-  using handler = gsw::event_trigger<string>::channel_t::handler;
-  using channel_t = gsw::event_trigger<string>::channel_t;
+  using trigger_t = gsw::event_trigger<string>;
+  using channel_t = trigger_t::channel_t;
+  using handler = channel_t::handler;
 
 private:
   gsw::event_trigger<string> mSendEvent;
@@ -124,8 +125,8 @@ public:
 
 TEST_CASE("In context usage", "[events]") {
   string response;
-  serial ser;
-  serial::handler serialRxHandler([&](const serial::channel_t&, unsigned long long, const string& str)
+  serial_sender ser;
+  serial_sender::handler serialRxHandler([&](const serial_sender::channel_t&, unsigned long long, const string& str)
                                     {
                                       response = str + "response!";
                                     });
