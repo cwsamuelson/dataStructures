@@ -163,7 +163,7 @@ protected:
    * @param args Arguments to pass on to handlers
    */
   void operator()(Args... args) {
-    fire(args...);
+    fire(std::forward<Args>(args)...);
   }
 
   event_channel() = default;
