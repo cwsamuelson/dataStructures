@@ -166,14 +166,14 @@ protected:
     fire(args...);
   }
 
-  event_channel() noexcept = default;
+  event_channel() = default;
 
   event_channel(const event_channel&) = default;
 
   event_channel(event_channel&&) noexcept = default;
 
 public:
-  ~event_channel() noexcept = default;
+  ~event_channel() = default;
 
   event_channel& operator=(const event_channel&) = default;
 
