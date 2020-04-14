@@ -27,12 +27,30 @@ namespace gsw {
  * this dummy might look like struct OnMousePressed, to help distinguish between different posseble events
  */
 template<typename ...Args>
-class event_trigger;
-
-template<typename ...Args>
 class event_channel {
 public:
-  friend class event_trigger<Args...>;
+  class event_trigger {
+  public:
+    using channel_t = event_channel<Args...>;
+
+  private:
+    std::shared_ptr<channel_t> mChannel;
+
+  public:
+    void fire(Args... args) {
+      mChannel->fire(args...);
+    }
+
+    event_trigger()
+            : mChannel(new channel_t) {
+    }
+
+    std::weak_ptr<channel_t> getChannel() const {
+      return mChannel;
+    }
+  };
+
+  friend class event_trigger;
 
   /*! Container for handling events
    */
@@ -227,26 +245,7 @@ public:
 };
 
 template<typename ...Args>
-class event_trigger {
-public:
-  using channel_t = event_channel<Args...>;
-
-private:
-  std::shared_ptr<channel_t> mChannel;
-
-public:
-  void fire(Args... args) {
-    mChannel->fire(args...);
-  }
-
-  event_trigger()
-          : mChannel(new channel_t) {
-  }
-
-  std::weak_ptr<channel_t> getChannel() const {
-    return mChannel;
-  }
-};
+using event_trigger = typename event_channel<Args...>::event_trigger;
 
 }
 
