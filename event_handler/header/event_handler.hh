@@ -151,6 +151,10 @@ protected:
    * places at once.
    *
    * @todo find a nice way to fire handlers in parallel
+   * @todo should event parameters be forwarded
+   * the initial reaction is "obviously yes", but then moved/gutted objects
+   * could not be used for the second handler.  I'm not yet 100% sure if the
+   * answer should continue to be 'no'(seems as though it should).
    */
   void fire(Args... args) {
     for(auto&[id, handler] : handlers) {
