@@ -27,12 +27,30 @@ namespace gsw {
  * this dummy might look like struct OnMousePressed, to help distinguish between different posseble events
  */
 template<typename ...Args>
-class event_trigger;
-
-template<typename ...Args>
 class event_channel {
 public:
-  friend class event_trigger<Args...>;
+  class event_trigger {
+  public:
+    using channel_t = event_channel<Args...>;
+
+  private:
+    std::shared_ptr<channel_t> mChannel;
+
+  public:
+    void fire(Args... args) {
+      mChannel->fire(args...);
+    }
+
+    event_trigger()
+            : mChannel(new channel_t) {
+    }
+
+    std::weak_ptr<channel_t> getChannel() const {
+      return mChannel;
+    }
+  };
+
+  friend class event_trigger;
 
   /*! Container for handling events
    */
@@ -133,6 +151,10 @@ protected:
    * places at once.
    *
    * @todo find a nice way to fire handlers in parallel
+   * @todo should event parameters be forwarded
+   * the initial reaction is "obviously yes", but then moved/gutted objects
+   * could not be used for the second handler.  I'm not yet 100% sure if the
+   * answer should continue to be 'no'(seems as though it should).
    */
   void fire(Args... args) {
     for(auto&[id, handler] : handlers) {
@@ -145,17 +167,17 @@ protected:
    * @param args Arguments to pass on to handlers
    */
   void operator()(Args... args) {
-    fire(args...);
+    fire(std::forward<Args>(args)...);
   }
 
-  event_channel() noexcept = default;
+  event_channel() = default;
 
   event_channel(const event_channel&) = default;
 
   event_channel(event_channel&&) noexcept = default;
 
 public:
-  ~event_channel() noexcept = default;
+  ~event_channel() = default;
 
   event_channel& operator=(const event_channel&) = default;
 
@@ -227,26 +249,7 @@ public:
 };
 
 template<typename ...Args>
-class event_trigger {
-public:
-  using channel_t = event_channel<Args...>;
-
-private:
-  std::shared_ptr<channel_t> mChannel;
-
-public:
-  void fire(Args... args) {
-    mChannel->fire(args...);
-  }
-
-  event_trigger()
-          : mChannel(new channel_t) {
-  }
-
-  std::weak_ptr<channel_t> getChannel() const {
-    return mChannel;
-  }
-};
+using event_trigger = typename event_channel<Args...>::event_trigger;
 
 }
 
