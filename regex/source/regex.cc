@@ -96,7 +96,7 @@ std::vector<regex_result> regex::operator()(const std::string& input) {
         found_match = false;
         break;
       } else {
-        found_match = true;
+        found_match = token_index == mTokens.size() - 1;//only complete match if we reached the end of regex tokens
         continue;
       }
     }
