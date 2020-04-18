@@ -111,3 +111,15 @@ TEST_CASE("Matches numbers", "[]"){
   }
 }
 
+TEST_CASE("Multiple categories"){
+  gsw::regex re("a\\d\\w.\\.b");
+
+  SECTION(""){
+    auto answer = re("abcda4aa4 ha5\t6.bhtnsa7 AAAa7\t");
+
+    REQUIRE(answer.size() == 1);
+    CHECK(answer[0].view == "a5\t6.b");
+    CHECK(answer[0].index == 11);
+  }
+}
+
