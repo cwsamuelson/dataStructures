@@ -99,3 +99,15 @@ TEST_CASE("Simple Regex", "[]"){
   }
 }
 
+TEST_CASE("Matches numbers", "[]"){
+  gsw::regex re("\\d\\d");
+
+  SECTION(""){
+    auto answer = re("the answer to life the universe and everything is: 42");
+
+    REQUIRE(answer.size() == 1);
+    CHECK(answer[0].view == "42");
+    CHECK(answer[0].index == 51);
+  }
+}
+
