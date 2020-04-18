@@ -64,7 +64,7 @@ TEST_CASE("Units participate in arithmetic", "[unit]") {
 
       test_t X = 2.0;
       test_t Y = 3.0;
-      unit<meas<2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>> Z;
+      unit<measure<2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>> Z;
 
       Z = X * Y;
 
@@ -188,7 +188,7 @@ TEST_CASE("Arithmetic doesn't confuse prefixes.", "[unit]") {
 
 TEST_CASE("Scheduler test", "[unit]") {
   using int_time = gsw::time<unsigned long long, metric, milli>;
-  using tick_rate = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0>;
+  using tick_rate = measure<0, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0>;
   using sched_tick_rate = unit<tick_rate, metric, unsigned long long, milli>;
   const tick<unsigned long long, metric> t = int_time(50) / sched_tick_rate(5);
 

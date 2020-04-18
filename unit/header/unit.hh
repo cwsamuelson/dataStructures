@@ -55,7 +55,7 @@ namespace gsw {
  *
  */
 template<int LENGTH, int TIME, int MASS, int CURRENT, int TEMPERATURE, int CANDELA, int MONEY, int ANGLE, int PERCENTAGE, int TICK, int MOLE, int BYTE>
-class meas {
+class measure {
 public:
   static constexpr int length = LENGTH;
   static constexpr int time = TIME;
@@ -70,24 +70,24 @@ public:
   static constexpr int mole = MOLE;
   static constexpr int byte = BYTE;
 
-  using inverse = meas<-LENGTH,
-                       -TIME,
-                       -MASS,
-                       -CURRENT,
-                       -TEMPERATURE,
-                       -CANDELA,
-                       -MONEY,
-                       -ANGLE,
-                       -PERCENTAGE,
-                       -TICK,
-                       -MOLE,
-                       -BYTE>;
+  using inverse = measure<-LENGTH,
+                          -TIME,
+                          -MASS,
+                          -CURRENT,
+                          -TEMPERATURE,
+                          -CANDELA,
+                          -MONEY,
+                          -ANGLE,
+                          -PERCENTAGE,
+                          -TICK,
+                          -MOLE,
+                          -BYTE>;
 };
 
 /*!
  */
 template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1, int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1, int MOLE1, int BYTE1, int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2, int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2, int MOLE2, int BYTE2>
-meas<LENGTH1 + LENGTH2,
+measure<LENGTH1 + LENGTH2,
      TIME1 + TIME2,
      MASS1 + MASS2,
      CURRENT1 + CURRENT2,
@@ -98,35 +98,35 @@ meas<LENGTH1 + LENGTH2,
      PERCENTAGE1 + PERCENTAGE2,
      TICK1 + TICK2,
      MOLE1 + MOLE2,
-     BYTE1 + BYTE2> operator*(const meas<LENGTH1,
-                                         TIME1,
-                                         MASS1,
-                                         CURRENT1,
-                                         TEMPERATURE1,
-                                         CANDELA1,
-                                         MONEY1,
-                                         ANGLE1,
-                                         PERCENTAGE1,
-                                         TICK1,
-                                         MOLE1,
-                                         BYTE1>& lhs,
-                              const meas<LENGTH2,
-                                         TIME2,
-                                         MASS2,
-                                         CURRENT2,
-                                         TEMPERATURE2,
-                                         CANDELA2,
-                                         MONEY2,
-                                         ANGLE2,
-                                         PERCENTAGE2,
-                                         TICK2,
-                                         MOLE2,
-                                         BYTE2>& rhs);
+     BYTE1 + BYTE2> operator*(const measure<LENGTH1,
+                                            TIME1,
+                                            MASS1,
+                                            CURRENT1,
+                                            TEMPERATURE1,
+                                            CANDELA1,
+                                            MONEY1,
+                                            ANGLE1,
+                                            PERCENTAGE1,
+                                            TICK1,
+                                            MOLE1,
+                                            BYTE1>& lhs,
+                              const measure<LENGTH2,
+                                            TIME2,
+                                            MASS2,
+                                            CURRENT2,
+                                            TEMPERATURE2,
+                                            CANDELA2,
+                                            MONEY2,
+                                            ANGLE2,
+                                            PERCENTAGE2,
+                                            TICK2,
+                                            MOLE2,
+                                            BYTE2>& rhs);
 
 /*!
  */
 template<int LENGTH1, int TIME1, int MASS1, int CURRENT1, int TEMPERATURE1, int CANDELA1, int MONEY1, int ANGLE1, int PERCENTAGE1, int TICK1, int MOLE1, int BYTE1, int LENGTH2, int TIME2, int MASS2, int CURRENT2, int TEMPERATURE2, int CANDELA2, int MONEY2, int ANGLE2, int PERCENTAGE2, int TICK2, int MOLE2, int BYTE2>
-meas<LENGTH1 - LENGTH2,
+measure<LENGTH1 - LENGTH2,
      TIME1 - TIME2,
      MASS1 - MASS2,
      CURRENT1 - CURRENT2,
@@ -137,54 +137,54 @@ meas<LENGTH1 - LENGTH2,
      PERCENTAGE1 - PERCENTAGE2,
      TICK1 - TICK2,
      MOLE1 - MOLE2,
-     BYTE1 - BYTE2> operator/(const meas<LENGTH1,
-                                         TIME1,
-                                         MASS1,
-                                         CURRENT1,
-                                         TEMPERATURE1,
-                                         CANDELA1,
-                                         MONEY1,
-                                         ANGLE1,
-                                         PERCENTAGE1,
-                                         TICK1,
-                                         MOLE1,
-                                         BYTE1>& lhs,
-                              const meas<LENGTH2,
-                                         TIME2,
-                                         MASS2,
-                                         CURRENT2,
-                                         TEMPERATURE2,
-                                         CANDELA2,
-                                         MONEY2,
-                                         ANGLE2,
-                                         PERCENTAGE2,
-                                         TICK2,
-                                         MOLE2,
-                                         BYTE2>& rhs);
+     BYTE1 - BYTE2> operator/(const measure<LENGTH1,
+                                            TIME1,
+                                            MASS1,
+                                            CURRENT1,
+                                            TEMPERATURE1,
+                                            CANDELA1,
+                                            MONEY1,
+                                            ANGLE1,
+                                            PERCENTAGE1,
+                                            TICK1,
+                                            MOLE1,
+                                            BYTE1>& lhs,
+                              const measure<LENGTH2,
+                                            TIME2,
+                                            MASS2,
+                                            CURRENT2,
+                                            TEMPERATURE2,
+                                            CANDELA2,
+                                            MONEY2,
+                                            ANGLE2,
+                                            PERCENTAGE2,
+                                            TICK2,
+                                            MOLE2,
+                                            BYTE2>& rhs);
 
 //                           d   t   m   c   T  l  M  a  p  k, ml, B
-using none_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
-using length_msr      = meas<1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
-using mass_msr        = meas<0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
-using current_msr     = meas<0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
-using temperature_msr = meas<0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0>;
-using l_intensity_msr = meas<0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0>;
-using money_msr       = meas<0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0>;
-using time_msr        = meas<0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
-using tick_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0>;
-using percent_msr     = meas<0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0>;
-using frequency_msr   = meas<0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
-using angle_msr       = meas<0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0>;
-using solid_angle_msr = meas<0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0>;
-using mole_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0>;
-using byte_msr        = meas<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>;
-using voltage_msr     = meas<2, -3, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0>;
-using resistance_msr  = meas<2, -3, 1, -2, 0, 0, 0, 0, 0, 0, 0, 0>;
-using capacitance_msr = meas<-2, 4, -1, 2, 0, 0, 0, 0, 0, 0, 0, 0>;
-using inductance_msr  = meas<2, -2, 1, -2, 0, 0, 0, 0, 0, 0, 0, 0>;
-using charge_msr      = meas<0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
-using mag_field_msr   = meas<0, -2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
-using elec_field_msr  = meas<1, -3, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using none_msr        = measure<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using length_msr      = measure<1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using mass_msr        = measure<0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using current_msr     = measure<0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using temperature_msr = measure<0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0>;
+using l_intensity_msr = measure<0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0>;
+using money_msr       = measure<0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0>;
+using time_msr        = measure<0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using tick_msr        = measure<0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0>;
+using percent_msr     = measure<0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0>;
+using frequency_msr   = measure<0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0>;
+using angle_msr       = measure<0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0>;
+using solid_angle_msr = measure<0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0>;
+using mole_msr        = measure<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0>;
+using byte_msr        = measure<0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1>;
+using voltage_msr     = measure<2, -3, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using resistance_msr  = measure<2, -3, 1, -2, 0, 0, 0, 0, 0, 0, 0, 0>;
+using capacitance_msr = measure<-2, 4, -1, 2, 0, 0, 0, 0, 0, 0, 0, 0>;
+using inductance_msr  = measure<2, -2, 1, -2, 0, 0, 0, 0, 0, 0, 0, 0>;
+using charge_msr      = measure<0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using mag_field_msr   = measure<0, -2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0>;
+using elec_field_msr  = measure<1, -3, 1, -1, 0, 0, 0, 0, 0, 0, 0, 0>;
 
 /*!
  * a unit_system is like metric or imperial.  a particular variable can be of
@@ -284,37 +284,37 @@ public:
  */
 template<typename MEAS, typename SYSTEM = metric, typename DBL = double, typename FACTOR = ratio<1, 1>>
 class unit : public additive<unit<MEAS, SYSTEM, DBL, FACTOR>>
-             , additive<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>
-             , multiplicative<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL> {
+           , public additive<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL>
+           , public multiplicative<unit<MEAS, SYSTEM, DBL, FACTOR>, DBL> {
 public:
-  /*! Storage type
-   */
+  using measure_t = MEAS;
+  using system_t = SYSTEM;
   using value_type = DBL;
-
-  /*! Type storing the order of magnitude of the type(mega, giga etc)
-   */
   using factor_type = FACTOR;
 
   /*! Convenience type used for conversion between storage and factor types
    */
-  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type> using other_type = unit<MEAS,
-                                                                                                                 S_t,
-                                                                                                                 D_t,
-                                                                                                                 F_t>;
+  template<typename S_t = system_t, typename D_t = value_type, typename F_t = factor_type>
+  using other_type = unit<
+          measure_t,
+          S_t,
+          D_t,
+          F_t>;
 
 private:
   value_type mValue;
 
   /*!
    */
-  template<typename S_t = SYSTEM, typename D_t = value_type, typename F_t = factor_type> using convert_type = converter<
-          MEAS,
+  template<typename S_t = system_t, typename D_t = value_type, typename F_t = factor_type>
+  using convert_type = converter<
+          measure_t,
           S_t,
-          SYSTEM,
+          system_t,
           D_t,
-          DBL,
+          value_type,
           F_t,
-          FACTOR>;
+          factor_type>;
 
 public:
   /*! Ctor sets initial internal value
@@ -402,7 +402,7 @@ public:
   template<typename D, typename F, typename S>
   [[nodiscard]]
   constexpr bool operator==(const other_type<S, D, F>& other) const {
-    return getRaw() == converter<MEAS, S, SYSTEM, D, D, F, FACTOR>()(other).getRaw();
+    return getRaw() == converter<measure_t, S, system_t, D, D, F, factor_type>()(other).getRaw();
   }
 
   /*! Inequality comparison operator
