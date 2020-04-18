@@ -69,3 +69,33 @@ TEST_CASE("Simple string", "[]"){
     CHECK(answer[1].index == 4);
   }
 }
+
+TEST_CASE("Simple Regex", "[]"){
+  regex re("m.x");
+
+  SECTION("Single answers"){
+    auto answer = re("mix");
+    REQUIRE(answer.size() == 1);
+    CHECK(answer[0].view == "mix");
+    CHECK(answer[0].index == 0);
+  }
+
+  SECTION("Multiple answers"){
+    auto answer = re("mixmax");
+
+    REQUIRE(answer.size() == 2);
+    if(answer[0].view == "mix"){
+      CHECK(answer[0].index == 0);
+
+      CHECK(answer[1].view == "max");
+      CHECK(answer[1].index == 3);
+    } else {
+      CHECK(answer[0].view == "max");
+      CHECK(answer[0].index == 3);
+
+      CHECK(answer[1].view == "mix");
+      CHECK(answer[1].index == 0);
+    }
+  }
+}
+

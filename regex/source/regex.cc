@@ -29,6 +29,9 @@ std::vector<regex_result> regex::operator()(const std::string& input) {
 }
 
 bool regex::matches(char x, char y) {
+  if(x == '.' || y == '.'){
+    return true;
+  }
   return x == y;
 }
 
