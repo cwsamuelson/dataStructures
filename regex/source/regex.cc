@@ -75,6 +75,9 @@ regex::regex(std::string expression)
       case 'w':
         mTokens.emplace_back('w', token_category::whitespace);
         break;
+      case '.':
+        mTokens.emplace_back('.', token_category::literal);
+        break;
       }
     } else if(mExpression[i] == '.') {
       mTokens.emplace_back(mExpression[i], token_category::any);
