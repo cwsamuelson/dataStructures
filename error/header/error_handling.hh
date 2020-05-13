@@ -54,7 +54,9 @@ public:
 #define GSW_THROW(msg, expr) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
 #define GSW_WRAP(something) do{something;}while(false);
 #define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
-#define GSW_CHECK_AND(cond, action, msg) GSW_IF(!(cond), action; GSW_THROW(msg, #cond);)
+#define GSW_VERIFY_AND(cond, action, msg) GSW_IF(!(cond), action; GSW_THROW(msg, #cond);)
+#define GSW_VERIFY(cond, msg) GSW_VERIFY_AND(cond, , msg);
+#define GSW_CHECK_AND(cond, action, msg) GSW_IF(!(cond), action; return false;)
 #define GSW_CHECK(cond, msg) GSW_CHECK_AND(cond, , msg);
 
 }

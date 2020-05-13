@@ -7,7 +7,7 @@
 inline static auto special_line_number = 0;
 
 void thrower(bool should_throw) {
-  GSW_CHECK(!should_throw, "bah, humbug");
+  GSW_VERIFY(!should_throw, "bah, humbug");
   special_line_number = __LINE__ - 1;
 }
 
