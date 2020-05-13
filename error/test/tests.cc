@@ -19,11 +19,12 @@ TEST_CASE("Simple GSW_THROW macro checks", "") {
 TEST_CASE("gsw::exception and GSW_THROW can be caught be std exception", "") {
   try {
     thrower(true);
+    REQUIRE(false);
   } catch(std::exception& e) {
     std::string w(e.what());
     CHECK(!w.empty());
 #if __cpp_lib_starts_ends_with
-    w.ends_with("bah, humbug");
+    CHECK(w.starts_with("bah, humbug"));
 #endif
   }
 }
@@ -40,16 +41,15 @@ TEST_CASE("gsw::exception captures location information", "") {
     CHECK(!w.empty());
     CHECK(w != e.message());
 #if __cpp_lib_starts_ends_with
-    w.starts_with("bah, humbug");
-    w.ends_with("!should_throw");
+    CHECK(w.starts_with("bah, humbug"));
+    CHECK(w.ends_with("!should_throw"));
 #endif
     CHECK(e.expression() == "!should_throw");
 
     std::cout << e.line() << std::endl;
     std::cout << e.message() << std::endl;
+    std::cout << e.expression() << std::endl;
     std::cout << e.file() << std::endl;
     std::cout << e.what() << std::endl;
-    std::cout << e.message() << std::endl;
-    std::cout << e.expression() << std::endl;
   }
 }
