@@ -20,7 +20,7 @@ private:
 public:
   exception(std::string file, std::string function, size_t line, std::string message, std::string expression)
           : std::runtime_error(
-          message + " on line: " + std::to_string(line) + " in function " + function + " and file " + file + " while executing expression:" + expression)
+          message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\" while executing expression:\t" + expression)
           , mFile(std::move(file))
           , mFunction(std::move(function))
           , mLine(line)
