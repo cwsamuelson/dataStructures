@@ -3,11 +3,14 @@
 
 #include <exception>
 #include <string>
+//! @todo use source_location when available in C++20
+//#include <source_location>//when available
 
 namespace gsw {
 
 class exception : public std::runtime_error {
 private:
+  //std::source_location mLocation; //when available
   std::string mFile;
   std::string mFunction;
   size_t mLine;
