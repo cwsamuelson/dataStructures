@@ -3,21 +3,34 @@
 
 #include <exception>
 #include <string>
-//! @todo use source_location when available in C++20
-//#include <source_location>//when available
+#if __cpp_lib_source_location
+#include <source_location>
+#endif
 
 namespace gsw {
 
 class exception : public std::runtime_error {
 private:
-  //std::source_location mLocation; //when available
+#if __cpp_lib_source_location
+  std::source_location mLocation;
+#else
   std::string mFile;
   std::string mFunction;
   size_t mLine;
+#endif
   std::string mMessage;
   std::string mExpression;
 
 public:
+#if __cpp_lib_source_location
+exception(std::string message, std::string expression, std::source_location location = std::source_location::current())
+          : std::runtime_error(
+          message + " in function \"" + location.function_name() + "\" in file \"" + location.file_name() + ":" + std::to_string(location.line()) + ":" + std::to_string(location.column()) + "\" while executing expression:\t" + expression)
+          , mLocation(location)
+          , mMessage(std::move(message))
+          , mExpression(std::move(expression)){
+  }
+#else
   exception(std::string file, std::string function, size_t line, std::string message, std::string expression)
           : std::runtime_error(
           message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\" while executing expression:\t" + expression)
@@ -27,21 +40,41 @@ public:
           , mMessage(std::move(message))
           , mExpression(std::move(expression)){
   }
+#endif
 
   [[nodiscard]]
   auto file() const {
+#if __cpp_lib_source_location
+    return mLocation.file_name();
+#else
     return mFile;
+#endif
   }
 
   [[nodiscard]]
   auto function() const {
+#if __cpp_lib_source_location
+    return mLocation.function_name();
+#else
     return mFunction;
+#endif
   }
 
   [[nodiscard]]
   auto line() const {
+#if __cpp_lib_source_location
+    return mLocation.line();
+#else
     return mLine;
+#endif
   }
+
+#if __cpp_lib_source_location
+  [[nodiscard]]
+  auto column() const{
+    return mLocation.column();
+  }
+#endif
 
   [[nodiscard]]
   auto message() const {
@@ -54,7 +87,11 @@ public:
   }
 };
 
+#if __cpp_lib_source_location
+#define GSW_THROW(msg, expr) throw ::gsw::exception(msg, expr);
+#else
 #define GSW_THROW(msg, expr) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
+#endif
 #define GSW_WRAP(something) do{something;}while(false);
 #define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
 #define GSW_VERIFY_AND(cond, action, msg) GSW_IF(!(cond), action; GSW_THROW(msg, #cond);)
