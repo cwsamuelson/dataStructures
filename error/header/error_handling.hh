@@ -23,12 +23,20 @@ private:
 
 public:
 #if __cpp_lib_source_location
-exception(std::string message, std::string expression, std::source_location location = std::source_location::current())
+  exception(std::string message, std::string expression, std::source_location location = std::source_location::current())
           : std::runtime_error(
           message + " in function \"" + location.function_name() + "\" in file \"" + location.file_name() + ":" + std::to_string(location.line()) + ":" + std::to_string(location.column()) + "\" while executing expression:\t" + expression)
           , mLocation(location)
           , mMessage(std::move(message))
-          , mExpression(std::move(expression)){
+          , mExpression(""){
+  }
+
+  exception(std::string message, std::source_location location = std::source_location::current())
+          : std::runtime_error(
+          message + " in function \"" + location.function_name() + "\" in file \"" + location.file_name() + ":" + std::to_string(location.line()) + ":" + std::to_string(location.column()) + "\"")
+          , mLocation(location)
+          , mMessage(std::move(message))
+          , mExpression(""){
   }
 #else
   exception(std::string file, std::string function, size_t line, std::string message, std::string expression)
@@ -39,6 +47,16 @@ exception(std::string message, std::string expression, std::source_location loca
           , mLine(line)
           , mMessage(std::move(message))
           , mExpression(std::move(expression)){
+  }
+
+  exception(std::string file, std::string function, size_t line, std::string message)
+          : std::runtime_error(
+          message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\"")
+          , mFile(std::move(file))
+          , mFunction(std::move(function))
+          , mLine(line)
+          , mMessage(std::move(message))
+          , mExpression(""){
   }
 #endif
 
@@ -89,10 +107,11 @@ exception(std::string message, std::string expression, std::source_location loca
 
 #if __cpp_lib_source_location
 #define GSW_EXPR_THROW(msg, expr) throw ::gsw::exception(msg, expr);
+#define GSW_THROW(msg) throw ::gsw::exception(msg);
 #else
 #define GSW_EXPR_THROW(msg, expr) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
+#define GSW_THROW(msg) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__);
 #endif
-#define GSW_THROW(msg) GSW_EXPR_THROW(msg, "");
 #define GSW_WRAP(something) do{something;}while(false);
 #define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
 #define GSW_VERIFY_AND(cond, action, msg) GSW_IF(!(cond), action; GSW_EXPR_THROW(msg, #cond);)
