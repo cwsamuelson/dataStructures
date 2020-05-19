@@ -21,43 +21,45 @@ private:
   std::string mMessage;
   std::string mExpression;
 
+#if __cpp_lib_source_location
+  exception(std::source_location location, std::string message, std::string expression, std::string longMessage)
+    : std::runtime_error(std::move(longMessage))
+    , mLocation(location)
+    , mMessage(std::move(message))
+    , mExpression(std::move(expression))
+  {}
+#else
+  exception(std::string file, std::string function, size_t line, std::string message, std::string expression, const std::string& longMessage)
+    : std::runtime_error(longMessage)
+    , mFile(std::move(file))
+    , mFunction(std::move(function))
+    , mLine(line)
+    , mMessage(std::move(message))
+    , mExpression(std::move(expression))
+  {}
+#endif
+
 public:
 #if __cpp_lib_source_location
   exception(std::string message, std::string expression, std::source_location location = std::source_location::current())
-          : std::runtime_error(
-          message + " in function \"" + location.function_name() + "\" in file \"" + location.file_name() + ":" + std::to_string(location.line()) + ":" + std::to_string(location.column()) + "\" while executing expression:\t" + expression)
-          , mLocation(location)
-          , mMessage(std::move(message))
-          , mExpression(""){
-  }
+    : exception(location, std::move(message), std::move(expression),
+      (message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\" while executing expression:\t" + expression)
+  {}
 
   exception(std::string message, std::source_location location = std::source_location::current())
-          : std::runtime_error(
-          message + " in function \"" + location.function_name() + "\" in file \"" + location.file_name() + ":" + std::to_string(location.line()) + ":" + std::to_string(location.column()) + "\"")
-          , mLocation(location)
-          , mMessage(std::move(message))
-          , mExpression(""){
-  }
+    : exception(location, std::move(message), "",
+      (message + " in function \"" + location.function_name() + "\" in file \"" + location.file_name() + ":" + std::to_string(location.line()) + ":" + std::to_string(location.column()) + "\"")
+  {}
 #else
   exception(std::string file, std::string function, size_t line, std::string message, std::string expression)
-          : std::runtime_error(
-          message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\" while executing expression:\t" + expression)
-          , mFile(std::move(file))
-          , mFunction(std::move(function))
-          , mLine(line)
-          , mMessage(std::move(message))
-          , mExpression(std::move(expression)){
-  }
+    : exception(std::move(file), std::move(function), line, std::move(message), std::move(expression),
+      (message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\" while executing expression:\t" + expression))
+  {}
 
   exception(std::string file, std::string function, size_t line, std::string message)
-          : std::runtime_error(
-          message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\"")
-          , mFile(std::move(file))
-          , mFunction(std::move(function))
-          , mLine(line)
-          , mMessage(std::move(message))
-          , mExpression(""){
-  }
+    : exception(std::move(file), std::move(function), line, std::move(message), "",
+      (message + " in function \"" + function + "\" in file \"" + file + ":" + std::to_string(line) + "\""))
+  {}
 #endif
 
   [[nodiscard]]
@@ -105,12 +107,14 @@ public:
   }
 };
 
+}
+
 #if __cpp_lib_source_location
 #define GSW_EXPR_THROW(msg, expr) throw ::gsw::exception(msg, expr);
 #define GSW_THROW(msg) throw ::gsw::exception(msg);
 #else
 #define GSW_EXPR_THROW(msg, expr) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
-#define GSW_THROW(msg) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__);
+#define GSW_THROW(msg) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg);
 #endif
 #define GSW_WRAP(something) do{something;}while(false);
 #define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
@@ -118,7 +122,5 @@ public:
 #define GSW_VERIFY(cond, msg) GSW_VERIFY_AND(cond, , msg);
 #define GSW_CHECK_AND(cond, action, msg) GSW_IF(!(cond), action; return false;)
 #define GSW_CHECK(cond, msg) GSW_CHECK_AND(cond, , msg);
-
-}
 
 #endif //GALACTICSTRUCTURES_ERROR_HANDLING_HH
