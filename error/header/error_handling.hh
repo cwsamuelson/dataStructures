@@ -1,6 +1,7 @@
 #ifndef GALACTICSTRUCTURES_ERROR_HANDLING_HH
 #define GALACTICSTRUCTURES_ERROR_HANDLING_HH
 
+#include <stdexcept>
 #include <exception>
 #include <string>
 #if __cpp_lib_source_location
