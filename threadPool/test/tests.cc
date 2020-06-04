@@ -11,24 +11,46 @@
 using namespace gsw;
 
 TEST_CASE("Executes work given to it", "[]") {
-  bool finished1 = false;
-  bool finished2 = false;
+  SECTION("Simple work") {
+    bool finished1 = false;
+    bool finished2 = false;
 
-  {
-    threadPool pool;
+    {
+      threadPool pool;
 
-    pool.addWork([&]()
-                   {
-                     finished1 = true;
-                   });
-    pool.addWork([&]()
-                   {
-                     finished2 = true;
-                   });
+      pool.addWork([&]()
+                     {
+                       finished1 = true;
+                     });
+      pool.addWork([&]()
+                     {
+                       finished2 = true;
+                     });
+    }
+
+    CHECK(finished1);
+    CHECK(finished2);
   }
 
-  CHECK(finished1);
-  CHECK(finished2);
+  SECTION("threaded vector increment"){
+    threadPool pool;
+    std::vector<std::vector<int>> vecs(100);
+
+    for(auto& ints : vecs){
+      for(auto& value : ints) {
+        pool.addWork([&]()
+                       {
+                         ++value;
+                       });
+      }
+    }
+
+    for(const auto& ints : vecs) {
+      for(const auto& value : ints) {
+        CHECK(value == 1);
+      }
+    }
+  }
 }
 
 TEST_CASE("several threads", "[]") {
@@ -156,18 +178,18 @@ TEST_CASE("default resultsPool", "[]") {
 TEST_CASE("sized resultsPool", "[]") {
   constexpr size_t work_size = 13;
 
-  resultsPool<int> pool(5);
-  std::vector<std::future<int>> futures;
+  resultsPool<size_t> pool(5);
+  std::vector<std::future<size_t>> futures;
 
   for(size_t i = 0; i < work_size; ++i) {
-    futures.emplace_back(pool.addWork([=]() -> int
+    futures.emplace_back(pool.addWork([=]() -> size_t
                                         {
                                           return i;
                                         }));
   }
 
   size_t counter = 0;
-  CHECK(std::all_of(futures.begin(), futures.end(), [&](std::future<int>& f)
+  CHECK(std::all_of(futures.begin(), futures.end(), [&](std::future<size_t>& f)
     {
       return f.get() == counter++;
     }));
