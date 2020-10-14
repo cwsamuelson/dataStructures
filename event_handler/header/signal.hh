@@ -36,6 +36,10 @@ private:
   action_t mAction;
 
 public:
+  /*signal(R(*p)(Args...))
+    : signal(p)
+  {}*/
+
   signal(action_t action)
     : mAction(std::move(action))
   {}

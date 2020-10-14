@@ -4,6 +4,8 @@
 
 using namespace gsw;
 
+//void method_impl(int){};
+
 TEST_CASE("Signal tests", ""){
   bool pre_fired = false;
   bool post_fired = false;
@@ -12,6 +14,7 @@ TEST_CASE("Signal tests", ""){
   int post_value = 0;
   int action_value = 0;
 
+  //signal m(method_impl);// I'd like to be able to do this, too
   signal<void(int)> method(
           [&action_taken, &action_value, &pre_fired, &post_fired](auto value){
             action_value = value;
