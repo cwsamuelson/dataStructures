@@ -11,7 +11,7 @@ SET_TARGET_PROPERTIES(event_handler PROPERTIES
 
 TARGET_INCLUDE_DIRECTORIES(event_handler PUBLIC header)
 
-ADD_EXECUTABLE(test-event_handler test/tests.cc)
+ADD_EXECUTABLE(test-event_handler test/events.cc test/signals.cc)
 SET_TARGET_PROPERTIES(test-event_handler PROPERTIES
                       CXX_STANDARD 20
                       CXX_STANDARD_REQUIRED YES
