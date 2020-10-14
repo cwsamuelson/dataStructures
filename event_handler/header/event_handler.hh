@@ -239,13 +239,7 @@ public:
     idCounter = 0;
   }
 
-  bool operator==(const event_channel& channel) const {
-    return (handlers == channel.handlers) && (idCounter == channel.idCounter);
-  }
-
-  bool operator!=(const event_channel& channel) const {
-    return !((*this) == channel);
-  }
+  friend auto operator<=>(const event_channel&, const event_channel&) = default;
 };
 
 template<typename ...Args>
