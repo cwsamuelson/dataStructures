@@ -13,19 +13,25 @@ TEST_CASE("Signal tests", ""){
   int action_value = 0;
 
   signal<void(int)> method(
-          [&action_taken, &action_value](auto value){
+          [&action_taken, &action_value, &pre_fired, &post_fired](auto value){
             action_value = value;
             action_taken = true;
+            CHECK(pre_fired);
+            CHECK_FALSE(post_fired);
           });
   method.post().subscribe(
-          [&post_fired, &post_value](auto value){
+          [&post_fired, &post_value, &action_taken, &pre_fired](auto value){
             post_value = value;
             post_fired = true;
+            CHECK(pre_fired);
+            CHECK(action_taken);
           });
   method.pre().subscribe(
-          [&pre_fired, &pre_value](auto value){
+          [&pre_fired, &pre_value, &action_taken, &post_fired](auto value){
             pre_value = value;
             pre_fired = true;
+            CHECK_FALSE(action_taken);
+            CHECK_FALSE(post_fired);
           });
 
   method(42);
