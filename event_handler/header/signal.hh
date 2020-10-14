@@ -71,6 +71,10 @@ public:
   auto& post(){
     return *mPostTrigger.getChannel().lock();
   }
+  
+  void subscribe(handler_t handler){
+    post().subscribe(handler);
+  }
 };
 
 }
