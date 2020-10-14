@@ -1,20 +1,22 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(event_handler LANGUAGES CXX)
 
-ADD_LIBRARY(event_handler INTERFACE)
+ADD_LIBRARY(event_handler header/signal.hh header/event_handler.hh)
 
 SET_TARGET_PROPERTIES(event_handler PROPERTIES
-                      INTERFACE_CXX_STANDARD 17
-                      INTERFACE_CXX_STANDARD_REQUIRED YES
-                      INTERFACE_CXX_EXTENSIONS NO)
+                      CXX_STANDARD 20
+                      CXX_STANDARD_REQUIRED YES
+                      CXX_EXTENSIONS NO
+                      LINKER_LANGUAGE CXX)
 
-TARGET_INCLUDE_DIRECTORIES(event_handler INTERFACE header)
+TARGET_INCLUDE_DIRECTORIES(event_handler PUBLIC header)
 
 ADD_EXECUTABLE(test-event_handler test/tests.cc)
 SET_TARGET_PROPERTIES(test-event_handler PROPERTIES
-                      CXX_STANDARD 17
+                      CXX_STANDARD 20
                       CXX_STANDARD_REQUIRED YES
-                      CXX_EXTENSIONS NO)
+                      CXX_EXTENSIONS NO
+                      LINKER_LANGUAGE CXX)
 TARGET_LINK_LIBRARIES(test-event_handler event_handler Catch2)
 
 ENABLE_TESTING()
