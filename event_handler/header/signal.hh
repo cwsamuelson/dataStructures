@@ -18,10 +18,12 @@ public:
   using after_trigger_t = gsw::event_trigger<Args...>;
   using trigger_t = after_trigger_t;
 
+private:
   using before_channel_t = typename before_trigger_t::channel_t;
   using after_channel_t = typename after_trigger_t::channel_t;
   using channel_t = after_channel_t;
 
+public:
   using before_handler_t = typename before_channel_t::handler;
   using after_handler_t = typename after_channel_t::handler;
   using handler_t = after_handler_t;
@@ -38,7 +40,7 @@ public:
     : mAction(std::move(action))
   {}
 
-  //! @TODO should this be forwarded?
+  //! @TODO should args... be forwarded?
   // reflex says yes, but which gets forwarded?
   // optimally the action would be forwarded, but that could invalidate vars for
   // the post operation.
