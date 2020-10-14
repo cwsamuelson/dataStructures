@@ -1,6 +1,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(event_handler LANGUAGES CXX)
 
+FIND_PACKAGE(Threads REQUIRED)
+
 ADD_LIBRARY(event_handler header/signal.hh header/event_handler.hh)
 
 SET_TARGET_PROPERTIES(event_handler PROPERTIES
@@ -10,6 +12,8 @@ SET_TARGET_PROPERTIES(event_handler PROPERTIES
                       LINKER_LANGUAGE CXX)
 
 TARGET_INCLUDE_DIRECTORIES(event_handler PUBLIC header)
+
+TARGET_LINK_LIBRARIES(event_handler PUBLIC Threads::Threads)
 
 ADD_EXECUTABLE(test-event_handler test/events.cc test/signals.cc)
 SET_TARGET_PROPERTIES(test-event_handler PROPERTIES

@@ -4,6 +4,7 @@
 #include <event_handler.hh>
 
 #include <functional>
+#include <future>
 
 namespace gsw{
 
@@ -44,14 +45,17 @@ public:
   //! @TODO should R be required to be copyable?
   // it's pretty much treated as guaranteed copyable here, but maybe there's
   // another solution to forward its result after the post trigger is fired
+  //
+  // not sure, but using futures may be better than explict copy?
   auto operator()(Args... args){
     mPreTrigger.fire(args...);
 
-    auto r = mAction(args...);
+    auto f = std::async(mAction, args...);
+    f.wait();
 
     mPostTrigger.fire(args...);
 
-    return r;
+    return f.get();
   }
 
   auto& pre(){
