@@ -17,7 +17,14 @@ template<typename T, typename U>
 class event_channel_impl;
 
 template<typename T>
-class void_combiner{};
+class void_combiner{
+public:
+  //!@TODO ranges?
+  //!@TODO make some constraints about types/iter types here?
+  template<typename Iter>
+  void operator()(Iter begin, Iter end){
+  }
+};
 
 template<typename T>
 using default_combiner = void_combiner<T>;
@@ -160,10 +167,14 @@ protected:
    * could not be used for the second handler.  I'm not yet 100% sure if the
    * answer should continue to be 'no'(seems as though it should).
    */
-  void fire(Args... args) {
+  auto fire(Args... args) {
+    std::vector<decltype(std::declval<COMBINER>())> results;
+
     for(auto&[id, handler] : handlers) {
-      handler(args...);
+      results.emplace_back(handler(args...));
     }
+
+    return COMBINER()(results.begin(), results.end());
   }
 
   /*! Fire the event!
