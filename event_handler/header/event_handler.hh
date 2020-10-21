@@ -13,6 +13,15 @@
 
 namespace gsw {
 
+template<typename T, typename U>
+class event_channel_impl;
+
+template<typename T>
+class void_combiner{};
+
+template<typename T>
+using default_combiner = void_combiner<T>;
+
 /*! Event channel system
  *
  * @tparam Args...
@@ -26,12 +35,12 @@ namespace gsw {
  * another parameter might be a dummy, kinda like what's used in the named_type system
  * this dummy might look like struct OnMousePressed, to help distinguish between different posseble events
  */
-template<typename ...Args>
-class event_channel {
+template<typename COMBINER, typename R, typename ...Args>
+class event_channel_impl<R(Args...), COMBINER> {
 public:
   class event_trigger {
   public:
-    using channel_t = event_channel<Args...>;
+    using channel_t = event_channel_impl;
 
   private:
     std::shared_ptr<channel_t> mChannel;
@@ -57,6 +66,7 @@ public:
   class event_handler {
   public:
     using counter_t = unsigned long long;
+    using event_channel = event_channel_impl;
     using handler = std::function<void(event_channel&, counter_t, Args...)>;
     using simple_handler = std::function<void(Args...)>;
     friend event_channel;
@@ -164,18 +174,18 @@ protected:
     fire(std::forward<Args>(args)...);
   }
 
-  event_channel() = default;
+  event_channel_impl() = default;
 
-  event_channel(const event_channel&) = default;
+  event_channel_impl(const event_channel_impl&) = default;
 
-  event_channel(event_channel&&) noexcept = default;
+  event_channel_impl(event_channel_impl&&) noexcept = default;
 
 public:
   ~event_channel() = default;
 
-  event_channel& operator=(const event_channel&) = default;
+  event_channel_impl& operator=(const event_channel_impl&) = default;
 
-  event_channel& operator=(event_channel&&) noexcept = default;
+  event_channel_impl& operator=(event_channel_impl&&) noexcept = default;
 
   /*! Register new handler
    *
@@ -211,7 +221,7 @@ public:
    *
    * @return The new modified channel
    */
-  event_channel& operator+=(const handler& handle) {
+  event_channel_impl& operator+=(const handler& handle) {
     subscribe(handle);
 
     return *this;
@@ -220,7 +230,7 @@ public:
   /*!
    * @todo implement handler de-registration
    */
-  event_channel& operator-=(const event_handler& handler) {
+  event_channel_impl& operator-=(const event_handler& handler) {
     unsubscribe(handler);
 
     return *this;
@@ -233,11 +243,14 @@ public:
     idCounter = 0;
   }
 
-  friend auto operator<=>(const event_channel&, const event_channel&) = default;
+  friend auto operator<=>(const event_channel_impl&, const event_channel_impl&) = default;
 };
 
 template<typename ...Args>
 using event_trigger = typename event_channel<Args...>::event_trigger;
+
+template<typename Signature, typename COMBINER = default_combiner<Signature>>
+using event_channel = event_channel_impl<Signature, COMBINER>;
 
 }
 

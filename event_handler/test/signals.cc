@@ -14,6 +14,7 @@ TEST_CASE("Signal tests", ""){
   int post_value = 0;
   int action_value = 0;
 
+  //signal foo([](){});
   //signal m(method_impl);// I'd like to be able to do this, too
   signal<void(int)> method(
           [&action_taken, &action_value, &pre_fired, &post_fired](auto value){
