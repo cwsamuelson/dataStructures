@@ -113,13 +113,7 @@ public:
      */
     event_handler& operator=(const event_handler& handler) = default;
 
-    bool operator==(event_handler other) const {
-      return (mCounter == other.mCounter) && (mChannel == other.mChannel);
-    }
-
-    bool operator!=(event_handler other) const {
-      return !(*this == other);
-    }
+    friend auto operator<=>(const event_handler&, const event_handler&) = default;
   };
 
   /*!
