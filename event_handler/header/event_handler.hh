@@ -268,9 +268,8 @@ public:
 template<typename Signature, typename COMBINER = default_combiner<Signature>>
 using event_channel = event_channel_impl<Signature, COMBINER>;
 
-//! @TODO specify the combiner here, too?
-template<typename ...Args>
-using event_trigger = typename event_channel<void(Args...)>::event_trigger;
+template<typename Signature, typename COMBINER = default_combiner<Signature>>
+using event_trigger = typename event_channel<Signature, COMBINER>::event_trigger;
 
 }
 

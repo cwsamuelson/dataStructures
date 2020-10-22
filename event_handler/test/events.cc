@@ -22,22 +22,22 @@ TEST_CASE( "Basic event control flow", "[events]" )
   foo g_f;
   g_f.x = 0;
 
-  class trigg0 : public gsw::event_trigger<int>
+  class trigg0 : public gsw::event_trigger<void(int)>
   {
   public:
-    using base_t = gsw::event_trigger<int>;
+    using base_t = gsw::event_trigger<void(int)>;
     using base_t::fire;
   };
-  class trigg1 : public gsw::event_trigger<foo>
+  class trigg1 : public gsw::event_trigger<void(foo)>
   {
     public:
-    using base_t = gsw::event_trigger<foo>;
+    using base_t = gsw::event_trigger<void(foo)>;
     using base_t::fire;
   };
-  class trigg2 : public gsw::event_trigger<int, int>
+  class trigg2 : public gsw::event_trigger<void(int, int)>
   {
   public:
-    using base_t = gsw::event_trigger<int, int>;
+    using base_t = gsw::event_trigger<void(int, int)>;
     using base_t::fire;
   };
   trigg0 t0;
@@ -103,12 +103,12 @@ TEST_CASE( "Basic event control flow", "[events]" )
 
 class serial_sender {
 public:
-  using trigger_t = gsw::event_trigger<string>;
+  using trigger_t = gsw::event_trigger<void(string)>;
   using channel_t = trigger_t::channel_t;
   using handler = channel_t::handler;
 
 private:
-  gsw::event_trigger<string> mSendEvent;
+  gsw::event_trigger<void(string)> mSendEvent;
 
 public:
   auto sendEvent() const {

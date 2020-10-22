@@ -14,8 +14,8 @@ class signal;
 template<typename R, typename ...Args>
 class signal<R(Args...)>{
 public:
-  using before_trigger_t = gsw::event_trigger<Args...>;
-  using after_trigger_t = gsw::event_trigger<Args...>;
+  using before_trigger_t = gsw::event_trigger<void(Args...)>;
+  using after_trigger_t = gsw::event_trigger<void(Args...)>;
   using trigger_t = after_trigger_t;
 
 private:
@@ -56,7 +56,7 @@ public:
   auto operator()(Args... args){
     mPreTrigger.fire(args...);
 
-    auto f = std::async(mAction, args...);
+    auto f = std::async(std::launch::deferred, mAction, args...);
     f.wait();
 
     mPostTrigger.fire(args...);
