@@ -15,7 +15,7 @@ TARGET_INCLUDE_DIRECTORIES(event_handler PUBLIC header)
 
 TARGET_LINK_LIBRARIES(event_handler PUBLIC Threads::Threads)
 
-ADD_EXECUTABLE(test-event_handler test/events.cc test/signals.cc)
+ADD_EXECUTABLE(test-event_handler test/events.cc test/signals.cc test/combiners.cc)
 SET_TARGET_PROPERTIES(test-event_handler PROPERTIES
                       CXX_STANDARD 20
                       CXX_STANDARD_REQUIRED YES
