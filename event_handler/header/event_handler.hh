@@ -168,13 +168,21 @@ protected:
    * answer should continue to be 'no'(seems as though it should).
    */
   auto fire(Args... args) {
-    std::vector<decltype(std::declval<COMBINER>())> results;
+    if constexpr (std::is_same_v<decltype(std::declval<COMBINER>()), void>){
+      std::vector<decltype(std::declval<COMBINER>())> results;
 
-    for(auto&[id, handler] : handlers) {
-      results.emplace_back(handler(args...));
+      for(auto&[id, handler] : handlers) {
+        results.emplace_back(handler(args...));
+      }
+
+      return COMBINER()(results.begin(), results.end());
+    } else {
+      for(auto& [id, handler] : handlers){
+        handler(args...);
+      }
+
+      return;
     }
-
-    return COMBINER()(results.begin(), results.end());
   }
 
   /*! Fire the event!
@@ -192,7 +200,7 @@ protected:
   event_channel_impl(event_channel_impl&&) noexcept = default;
 
 public:
-  ~event_channel() = default;
+  ~event_channel_impl() = default;
 
   event_channel_impl& operator=(const event_channel_impl&) = default;
 
@@ -257,11 +265,12 @@ public:
   friend auto operator<=>(const event_channel_impl&, const event_channel_impl&) = default;
 };
 
-template<typename ...Args>
-using event_trigger = typename event_channel<Args...>::event_trigger;
-
 template<typename Signature, typename COMBINER = default_combiner<Signature>>
 using event_channel = event_channel_impl<Signature, COMBINER>;
+
+//! @TODO specify the combiner here, too?
+template<typename ...Args>
+using event_trigger = typename event_channel<void(Args...)>::event_trigger;
 
 }
 
