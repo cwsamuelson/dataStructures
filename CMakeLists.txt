@@ -1,6 +1,12 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 PROJECT(GalacticStructures LANGUAGES CXX)
 
+if(MSVC)
+    ADD_COMPILE_OPTIONS(/W4 /WX)
+else()
+    ADD_COMPILE_OPTIONS(-Wall -Wextra -pedantic)
+endif()
+
 ADD_SUBDIRECTORY(catch)
 ADD_SUBDIRECTORY(accessor)
 ADD_SUBDIRECTORY(algorithm)
