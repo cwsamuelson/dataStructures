@@ -37,10 +37,8 @@ using default_combiner = void_combiner<T>;
  *
  * @TODO could add a couple special type parameters to distinguish different event_channels within the type system
  *
- * One might be the owner type.  Doing that would allow the channel to friend the owner, and then make the fire method private,
- * that way the owner is the only one that's allowed to fire an event! (this feature is somewhat desired)
- * another parameter might be a dummy, kinda like what's used in the named_type system
- * this dummy might look like struct OnMousePressed, to help distinguish between different posseble events
+ * parameter might be a dummy, kinda like what's used in the named_type system
+ * this dummy might look like struct OnMousePressed, to help distinguish between different possible events
  */
 template<template<typename> typename COMBINER, typename R, typename ...Args>
 class event_channel_impl<R(Args...), COMBINER> {
