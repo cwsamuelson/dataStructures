@@ -62,3 +62,15 @@ TEST_CASE("Sum combiner", "[combiners]"){
 
   CHECK(trigger.fire() == 54);
 }
+
+TEST_CASE("void/default combiner", "[combiners]"){
+  event_trigger<int(int), default_combiner> trigger;
+  auto& channel = *trigger.getChannel().lock();
+  int counter = 0;
+  channel.subscribe([&counter](auto a){ ++counter; return 42 + a; });
+  channel.subscribe([&counter](auto a){ ++counter; return 12 + a; });
+
+  trigger.fire(1);
+  CHECK(std::is_same_v<decltype(trigger.fire(1)), void>);
+  CHECK(counter == 2);
+}
