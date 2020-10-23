@@ -53,8 +53,8 @@ public:
     std::shared_ptr<channel_t> mChannel;
 
   public:
-    void fire(Args... args) {
-      mChannel->fire(args...);
+    auto fire(Args... args) {
+      return mChannel->fire(args...);
     }
 
     event_trigger()
@@ -74,8 +74,8 @@ public:
   public:
     using counter_t = unsigned long long;
     using event_channel = event_channel_impl;
-    using handler = std::function<void(event_channel&, counter_t, Args...)>;
-    using simple_handler = std::function<void(Args...)>;
+    using handler = std::function<R(event_channel&, counter_t, Args...)>;
+    using simple_handler = std::function<R(Args...)>;
     friend event_channel;
 
   private:
@@ -108,13 +108,14 @@ public:
      *
      * Made private so that only the channel triggers events
      */
-    void operator()(Args... args) {
+    auto operator()(Args... args) {
       if(mHandler) {
-        mHandler(mChannel, mCounter, args...);
+        return mHandler(mChannel, mCounter, args...);
       }
       if(mSHandler) {
-        mSHandler(args...);
+        return mSHandler(args...);
       }
+      throw std::runtime_error("Handler called with no handler assigned.  (idiot..)");
     }
 
   public:
@@ -168,20 +169,21 @@ protected:
    * answer should continue to be 'no'(seems as though it should).
    */
   auto fire(Args... args) {
-    if constexpr (std::is_same_v<decltype(std::declval<COMBINER>()), void>){
-      std::vector<decltype(std::declval<COMBINER>())> results;
-
-      for(auto&[id, handler] : handlers) {
-        results.emplace_back(handler(args...));
-      }
-
-      return COMBINER()(results.begin(), results.end());
-    } else {
+    using handler_result = typename event_handler::handler::result_type;
+    if constexpr (std::is_same_v<handler_result, void>){
       for(auto& [id, handler] : handlers){
         handler(args...);
       }
 
       return;
+    } else {
+      std::vector<handler_result> results;
+
+      for(auto& [id, handler] : handlers) {
+        results.emplace_back(handler(args...));
+      }
+
+      return COMBINER<handler_result>()(results.begin(), results.end());
     }
   }
 
