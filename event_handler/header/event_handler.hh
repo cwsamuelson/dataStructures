@@ -22,8 +22,7 @@ public:
   //!@TODO ranges?
   //!@TODO make some constraints about types/iter types here?
   template<typename Iter>
-  void operator()(Iter begin, Iter end){
-  }
+  void operator()(Iter, Iter){}
 };
 
 template<typename T>
@@ -34,6 +33,7 @@ using default_combiner = void_combiner<T>;
  * @tparam Args...
  *
  * @TODO non-blocking event handling
+ * probably return a future
  *
  * @TODO could add a couple special type parameters to distinguish different event_channels within the type system
  *
