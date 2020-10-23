@@ -13,7 +13,7 @@
 
 namespace gsw {
 
-template<typename T, typename U>
+template<typename T, template<typename> typename U>
 class event_channel_impl;
 
 template<typename T>
@@ -42,7 +42,7 @@ using default_combiner = void_combiner<T>;
  * another parameter might be a dummy, kinda like what's used in the named_type system
  * this dummy might look like struct OnMousePressed, to help distinguish between different posseble events
  */
-template<typename COMBINER, typename R, typename ...Args>
+template<template<typename> typename COMBINER, typename R, typename ...Args>
 class event_channel_impl<R(Args...), COMBINER> {
 public:
   class event_trigger {
@@ -119,17 +119,11 @@ public:
     }
 
   public:
-    /*! Copy ctor
-     *
-     * @param handler Event handler to copy from
-     */
-    event_handler(const event_handler& handler) = default;
+    event_handler(const event_handler&) = default;
+    event_handler(event_handler&&) noexcept = default;
 
-    /*! Copy assignment
-     *
-     * @param handler Event handler to copy from
-     */
-    event_handler& operator=(const event_handler& handler) = default;
+    event_handler& operator=(const event_handler&) = default;
+    event_handler& operator=(event_handler&&) noexcept = default;
 
     friend auto operator<=>(const event_handler&, const event_handler&) = default;
   };
@@ -267,10 +261,10 @@ public:
   friend auto operator<=>(const event_channel_impl&, const event_channel_impl&) = default;
 };
 
-template<typename Signature, typename COMBINER = default_combiner<Signature>>
+template<typename Signature, template<typename> typename COMBINER = default_combiner>
 using event_channel = event_channel_impl<Signature, COMBINER>;
 
-template<typename Signature, typename COMBINER = default_combiner<Signature>>
+template<typename Signature, template<typename> typename COMBINER = default_combiner>
 using event_trigger = typename event_channel<Signature, COMBINER>::event_trigger;
 
 }
