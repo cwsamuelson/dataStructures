@@ -33,6 +33,15 @@ public:
   }
 };
 
+template<typename T>
+class AverageCombiner{
+public:
+  template<typename Iter>
+  auto operator()(Iter begin, Iter end){
+    return std::accumulate(begin, end, T()) / std::distance(begin, end);
+  }
+};
+
 TEST_CASE("Aggregate combiner", "[combiners]"){
   event_trigger<int(), AggregateCombiner> trigger;
   auto& channel = *trigger.getChannel().lock();
@@ -73,4 +82,13 @@ TEST_CASE("void/default combiner", "[combiners]"){
   trigger.fire(1);
   CHECK(std::is_same_v<decltype(trigger.fire(1)), void>);
   CHECK(counter == 2);
+}
+
+TEST_CASE("Average combiner", "[combiners]"){
+  event_trigger<int(), AverageCombiner> trigger;
+  auto& channel = *trigger.getChannel().lock();
+  channel.subscribe([](){ return 6; });
+  channel.subscribe([](){ return 12; });
+
+  CHECK(trigger.fire() == 9);
 }
