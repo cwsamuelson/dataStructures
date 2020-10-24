@@ -11,6 +11,10 @@ namespace gsw{
 template<typename T>
 class signal;
 
+//! @TODO It might be cool to use combiners in signals?
+// this is tricky/weird since there's 2 events to be combined
+// and where do the results go?  currently the return value is the result of
+// the actual action, so where do the combined results belong?
 template<typename R, typename ...Args>
 class signal<R(Args...)>{
 public:
