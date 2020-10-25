@@ -40,6 +40,8 @@ using default_combiner = void_combiner<T>;
  *
  * @TODO could add a couple special type parameters to distinguish different event_channels within the type system
  *
+ * @TODO Might be able to replace COMBINER with std::function?
+ *
  * parameter might be a dummy, kinda like what's used in the named_type system
  * this dummy might look like struct OnMousePressed, to help distinguish between different possible events
  */
@@ -192,6 +194,8 @@ public:
   event_channel_impl& operator=(const event_channel_impl&) = default;
   event_channel_impl& operator=(event_channel_impl&&) noexcept = default;
 
+  friend auto operator<=>(const event_channel_impl&, const event_channel_impl&) = default;
+
   /*! Register new handler
    *
    * @param handler Handler to enlist
@@ -247,8 +251,6 @@ public:
     handlers.clear();
     idCounter = 0;
   }
-
-  friend auto operator<=>(const event_channel_impl&, const event_channel_impl&) = default;
 };
 
 template<typename Signature, template<typename> typename COMBINER = default_combiner>
