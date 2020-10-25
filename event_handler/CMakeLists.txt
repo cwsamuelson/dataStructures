@@ -3,7 +3,7 @@ PROJECT(event_handler LANGUAGES CXX)
 
 FIND_PACKAGE(Threads REQUIRED)
 
-ADD_LIBRARY(event_handler header/signal.hh header/event_handler.hh)
+ADD_LIBRARY(event_handler header/signal.hh header/event_handler.hh header/event_combiners.hh)
 
 SET_TARGET_PROPERTIES(event_handler PROPERTIES
                       CXX_STANDARD 20
