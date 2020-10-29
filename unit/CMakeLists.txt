@@ -4,7 +4,7 @@ PROJECT(unit LANGUAGES CXX)
 ADD_LIBRARY(unit INTERFACE)
 
 SET_TARGET_PROPERTIES(unit PROPERTIES
-                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD 20
                       INTERFACE_CXX_STANDARD_REQUIRED YES
                       INTERFACE_CXX_EXTENSIONS NO)
 
@@ -13,7 +13,7 @@ TARGET_LINK_LIBRARIES(unit INTERFACE operators INTERFACE ratio)
 
 ADD_EXECUTABLE(test-unit test/tests.cc)
 SET_TARGET_PROPERTIES(test-unit PROPERTIES
-                      CXX_STANDARD 17
+                      CXX_STANDARD 20
                       CXX_STANDARD_REQUIRED YES
                       CXX_EXTENSIONS NO)
 TARGET_LINK_LIBRARIES(test-unit stringify unit Catch2)

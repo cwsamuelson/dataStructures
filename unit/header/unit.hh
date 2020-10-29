@@ -205,7 +205,13 @@ class english {};
 template<typename MEAS, typename SYSTEM, typename DBL, typename FACTOR>
 class unit;
 
+template<typename INPUT, typename OUTPUT>
+concept convertible = requires{
+  std::is_convertible_v<INPUT, OUTPUT>;
+};
+
 template<typename M, typename Si, typename So, typename Ti, typename To, typename Fi, typename Fo>
+  requires convertible<Ti, To>
 class converter_base {
 public:
   using measure = M;
@@ -232,7 +238,7 @@ template<typename M,
          typename Fi,
          typename Fo,
          typename Enable = void>
-class converter : public converter_base<M, Si, So, Ti, To, Fi, Fo> {
+class converter : public converter_base<M, Si, So, Ti, To, Fi, Fo>{
 public:
   using base = converter_base<M, Si, So, Ti, To, Fi, Fo>;
 
