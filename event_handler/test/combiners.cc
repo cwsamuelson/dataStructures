@@ -1,46 +1,10 @@
-#include <event_handler.hh>
+#include <event_combiners.hh>
 
 #include <catch2/catch.hpp>
 
 #include <vector>
 
 using namespace gsw;
-
-template <typename T>
-class AggregateCombiner{
-public:
-  template<typename Iter>
-  std::vector<T> operator()(Iter begin, Iter end){
-    return {begin, end};
-  }
-};
-
-template<typename T>
-class MaximumCombiner{
-public:
-  template<typename Iter>
-  T operator()(Iter begin, Iter end){
-    return *std::max_element(begin, end);
-  }
-};
-
-template<typename T>
-class SumCombiner{
-public:
-  template<typename Iter>
-  decltype(std::declval<T>() + std::declval<T>()) operator()(Iter begin, Iter end){
-    return std::accumulate(begin, end, T());
-  }
-};
-
-template<typename T>
-class AverageCombiner{
-public:
-  template<typename Iter>
-  auto operator()(Iter begin, Iter end){
-    return std::accumulate(begin, end, T()) / std::distance(begin, end);
-  }
-};
 
 TEST_CASE("Aggregate combiner", "[combiners]"){
   event_trigger<int(), AggregateCombiner> trigger;
@@ -85,10 +49,21 @@ TEST_CASE("void/default combiner", "[combiners]"){
 }
 
 TEST_CASE("Average combiner", "[combiners]"){
-  event_trigger<int(), AverageCombiner> trigger;
-  auto& channel = *trigger.getChannel().lock();
-  channel.subscribe([](){ return 6; });
-  channel.subscribe([](){ return 12; });
+  SECTION("Integral"){
+    event_trigger<int(), AverageCombiner> trigger;
+    auto& channel = *trigger.getChannel().lock();
+    channel.subscribe([](){ return 6; });
+    channel.subscribe([](){ return 12; });
 
-  CHECK(trigger.fire() == 9);
+    CHECK(trigger.fire() == 9);
+  }
+
+  SECTION("Floating point") {
+    event_trigger<double(), AverageCombiner> trigger;
+    auto& channel = *trigger.getChannel().lock();
+    channel.subscribe([](){ return 7; });
+    channel.subscribe([](){ return 12; });
+
+    CHECK(trigger.fire() == 9.5);
+  }
 }
