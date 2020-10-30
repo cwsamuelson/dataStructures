@@ -22,108 +22,88 @@ public:
  * this might actually call for factory pattern, where timers are created by the factory, and the only method
  * on timer is just cancel, or maybe a 'time until' counter
  */
+template<typename T>
 class timer {
 private:
   bool mCancel = false;
   std::mutex mMutex;
   std::condition_variable mConVar;
+  std::shared_future<T> mFuture;
 
+  template<typename clock, typename duration, typename callback_function>
+  friend auto schedule_timer(const std::chrono::time_point<clock, duration>&, callback_function);
+  template<typename clock, typename duration>
+  friend auto schedule_timer(const std::chrono::time_point<clock, duration>& tp);
+
+  template<typename Rep, typename Period, typename callback_function>
+  friend auto schedule_timer(const std::chrono::duration<Rep, Period>&, callback_function);
+  template<typename Rep, typename Period>
+  friend auto schedule_timer(const std::chrono::duration<Rep, Period>& d);
 
 public:
-  template<typename T> using callback = std::function<T()>;
+  using callback = std::function<T()>;
 
-  /*! Call a function repeatedly at an interval until cancelled
-   *
-   * @tparam Rep type forwarded to duration
-   *
-   * @tparam Period type forwarded to duration
-   *
-   * @param fn Callback to be called repeatedly at an interval
-   *
-   * @param duration The interval at which fn will be called
-   */
-  template<typename Rep, typename Period>
-  void interval(callback<void> fn, const std::chrono::duration<Rep, Period>& duration) {
-    mCancel = false;
+  template<typename clock, typename duration, typename signature>
+  explicit
+  timer(const std::chrono::time_point<clock, duration>& time, signature fn)
+    : mCancel(false){
 
-    std::thread t([this, fn = std::move(fn), duration]()
-                    {
-                      while(true) {
-                        std::this_thread::sleep_for(duration);
-                        if(mCancel) {
-                          break;
-                        }
-                        fn();
-                      }
-                    });
-    t.detach();
-  }
-
-  /*! Call a function at some relative time in the future
-   *
-   * @tparam Rep type forwarded to duration
-   *
-   * @tparam Period type forwarded to duration
-   *
-   * @tparam callback_function Function callback type
-   *
-   * @param fn Function that will be called later
-   *
-   * @param duration time to wait until calling fn
-   *
-   * @return A future with which the result of fn can be retrieved
-   */
-  template<typename Rep, typename Period, typename callback_function>
-  auto delayed(callback_function fn,
-               const std::chrono::duration<Rep, Period>& duration){
-    mCancel = false;
-
-    return std::async(std::launch::async, [this, fn = std::move(fn), duration]()
+    auto f = std::async(std::launch::async, [this, fn = std::move(fn), time]()
       {
         std::unique_lock lk(mMutex);
-        if(!mConVar.wait_for(lk, duration, [this](){ return mCancel; })){
+        if(!mConVar.wait_until(lk, time, [this]()
+          {
+            return mCancel;
+          })) {
           return fn();
         } else {
           throw TimerCancelled();
         }
       });
+
+    mFuture = f.share();
   }
 
-  /*! Call a function at some specified time in the future
-   *
-   * @tparam clock Type forwarded to time_point
-   *
-   * @tparam duration Type forwarded to time_point
-   *
-   * @tparam callback_function Function callback type
-   *
-   * @param fn Function that will be called at time
-   *
-   * @param time point in time to call fn
-   *
-   * @return A future with which the result of fn can be retrieved
-   */
-  template<typename clock, typename duration, typename callback_function>
-  auto schedule(callback_function fn,
-                const std::chrono::time_point<clock, duration>& time){
-    mCancel = false;
-
-    return std::async(std::launch::async, [this, fn = std::move(fn), time]()
-      {
-        std::unique_lock lk(mMutex);
-        if(!mConVar.wait_until(lk, time, [this](){ return mCancel; })){
-          return fn();
-        } else {
-          throw TimerCancelled();
-        }
-      });
+  auto future() const noexcept{
+    return mFuture;
   }
 
-  void cancel(){
+  void cancel() noexcept{
     mCancel = true;
     mConVar.notify_all();
   }
+
+  void wait() const{
+    mFuture.wait();
+  }
+
+  auto get() const{
+    return mFuture.get();
+  }
 };
+
+template<typename clock, typename duration, typename signature>
+timer(const std::chrono::time_point<clock, duration>& time, signature fn) -> timer<decltype(fn())>;
+
+template<typename clock, typename duration, typename callback_function>
+auto schedule_timer(const std::chrono::time_point<clock, duration>& time, callback_function fn){
+  return timer(time, fn);
+}
+
+template<typename Rep, typename Period, typename callback_function>
+auto schedule_timer(const std::chrono::duration<Rep, Period>& duration, callback_function fn){
+  return timer(std::chrono::steady_clock::now() + duration, fn);
+}
+
+template<typename clock, typename duration>
+auto schedule_timer(const std::chrono::time_point<clock, duration>& tp){
+  return schedule_timer(tp, [](){});
+}
+
+template<typename Rep, typename Period>
+auto schedule_timer(const std::chrono::duration<Rep, Period>& d){
+  return schedule_timer(d, [](){});
+}
 
 }
 

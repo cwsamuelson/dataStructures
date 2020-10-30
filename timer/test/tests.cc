@@ -10,39 +10,40 @@ using namespace std;
 using namespace std::chrono_literals;
 
 TEST_CASE("", "[timer]") {
-  SECTION("Delayed execution") {
-    gsw::timer t;
-
+  SECTION("Wait for it"){
     auto start = chrono::high_resolution_clock::now();
-    decltype(start) end;
-
-    auto f = t.delayed([&]()
-                         {
-                           end = chrono::high_resolution_clock::now();
-                           return 1;
-                         }, 5ms);
-
-    CHECK(f.get() == 1);
+    gsw::schedule_timer(5ms).wait();
+    auto end = chrono::high_resolution_clock::now();
 
     CHECK(end - start <= 7ms);
     CHECK(end - start >= 3ms);
   }
 
-  SECTION("Scheduled execution") {
-    gsw::timer t;
+  SECTION("Delayed behavior"){
+    auto start = chrono::high_resolution_clock::now();
+    decltype(start) end;
+    auto t = gsw::schedule_timer(5ms, [&end](){
+      end = chrono::high_resolution_clock::now();
+      return 1;
+    });
 
-    auto start_time = chrono::high_resolution_clock::now();
-    decltype(start_time) end_time;
+    CHECK(t.get() == 1);
 
-    auto f = t.schedule([&]()
-                          {
-                            end_time = chrono::high_resolution_clock::now();
-                            return 2;
-                          }, start_time + 10ms);
+    CHECK(end - start <= 7ms);
+    CHECK(end - start >= 3ms);
+  }
 
-    CHECK(f.get() == 2);
+  SECTION("Scheduled behaviour") {
+    auto start = chrono::high_resolution_clock::now();
+    decltype(start) end;
+    auto t = gsw::schedule_timer(start + 5ms, [&end](){
+        end = chrono::high_resolution_clock::now();
+        return 1;
+      });
 
-    CHECK(end_time - start_time <= 12ms);
-    CHECK(end_time - start_time >= 8ms);
+    CHECK(t.get() == 1);
+
+    CHECK(end - start <= 7ms);
+    CHECK(end - start >= 3ms);
   }
 }
