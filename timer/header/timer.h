@@ -4,16 +4,30 @@
 #include<functional>
 #include<thread>
 #include<future>
+#include <condition_variable>
 
 namespace gsw {
+
+class TimerCancelled : public std::runtime_error{
+public:
+  TimerCancelled()
+    : std::runtime_error("Timer was cancelled before it completed, and before delayed action could be taken.")
+  {}
+};
 
 /*! Timer facility for delayed and scheduled function calls
  *
  * @todo see notes in cppreference async about multiple sequential async calls
+ * @todo might be nice to have a cancel per event, so that I can schedule 2 events, and cancel them independently
+ * this might actually call for factory pattern, where timers are created by the factory, and the only method
+ * on timer is just cancel, or maybe a 'time until' counter
  */
 class timer {
 private:
   bool mCancel = false;
+  std::mutex mMutex;
+  std::condition_variable mConVar;
+
 
 public:
   template<typename T> using callback = std::function<T()>;
@@ -32,7 +46,7 @@ public:
   void interval(callback<void> fn, const std::chrono::duration<Rep, Period>& duration) {
     mCancel = false;
 
-    std::thread t([=, fn = std::move(fn)]()
+    std::thread t([this, fn = std::move(fn), duration]()
                     {
                       while(true) {
                         std::this_thread::sleep_for(duration);
@@ -61,16 +75,16 @@ public:
    */
   template<typename Rep, typename Period, typename callback_function>
   auto delayed(callback_function fn,
-               const std::chrono::duration<Rep, Period>& duration) -> decltype(std::async(std::launch::async, fn)) {
+               const std::chrono::duration<Rep, Period>& duration){
     mCancel = false;
 
-    return std::async(std::launch::async, [=]()
+    return std::async(std::launch::async, [this, fn = std::move(fn), duration]()
       {
-        std::this_thread::sleep_for(duration);
-        if(!mCancel) {
+        std::unique_lock lk(mMutex);
+        if(!mConVar.wait_for(lk, duration, [this](){ return mCancel; })){
           return fn();
         } else {
-          return decltype(fn())();
+          throw TimerCancelled();
         }
       });
   }
@@ -91,18 +105,23 @@ public:
    */
   template<typename clock, typename duration, typename callback_function>
   auto schedule(callback_function fn,
-                const std::chrono::time_point<clock, duration>& time) -> decltype(std::async(std::launch::async, fn)) {
+                const std::chrono::time_point<clock, duration>& time){
     mCancel = false;
 
-    return std::async(std::launch::async, [this, t = time, f = fn]()
+    return std::async(std::launch::async, [this, fn = std::move(fn), time]()
       {
-        std::this_thread::sleep_until(t);
-        if(!mCancel) {
-          return f();
+        std::unique_lock lk(mMutex);
+        if(!mConVar.wait_until(lk, time, [this](){ return mCancel; })){
+          return fn();
         } else {
-          return decltype(f())();
+          throw TimerCancelled();
         }
       });
+  }
+
+  void cancel(){
+    mCancel = true;
+    mConVar.notify_all();
   }
 };
 

@@ -6,7 +6,7 @@ FIND_PACKAGE(Threads REQUIRED)
 ADD_LIBRARY(timer INTERFACE)
 
 SET_TARGET_PROPERTIES(timer PROPERTIES
-                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD 20
                       INTERFACE_CXX_STANDARD_REQUIRED YES
                       INTERFACE_CXX_EXTENSIONS NO)
 TARGET_INCLUDE_DIRECTORIES(timer INTERFACE header)
@@ -14,7 +14,7 @@ TARGET_LINK_LIBRARIES(timer INTERFACE Threads::Threads)
 
 ADD_EXECUTABLE(test-timer test/tests.cc)
 SET_TARGET_PROPERTIES(test-timer PROPERTIES
-                      CXX_STANDARD 17
+                      CXX_STANDARD 20
                       CXX_STANDARD_REQUIRED YES
                       CXX_EXTENSIONS NO)
 TARGET_LINK_LIBRARIES(test-timer timer Catch2)
