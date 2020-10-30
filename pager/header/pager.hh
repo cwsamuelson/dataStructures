@@ -14,6 +14,9 @@ namespace gsw {
  * @todo generalize the page file
  * ultimately the user should decide exactly what happens when data is paged in and out
  * and possibly how victim pages are chosen?
+ * @NOTE const access is currently not being provided to prevent the API from being deceptively simple:
+ *   even a const access can cause page faults etc, and makes the pagers insides a little messy because
+ *   the meaningful data members will be mutable
  */
 template<typename T, typename F = std::fstream>
 class pager {
@@ -49,7 +52,7 @@ private:
 
   void save_page(size_t page_id) {
     std::FILE* f;
-    if(mFileMap.count(page_id) == 0) {
+    if(!mFileMap.contains(page_id)) {
       mFileMap[page_id] = tmpfile();
     }
 
@@ -69,7 +72,7 @@ private:
   }
 
   void load_page(size_t dst_page_id, size_t src_page_id) {
-    if(mFileMap.count(src_page_id) == 0) {
+    if(!mFileMap.contains(src_page_id)) {
       return;
     }
 
@@ -128,7 +131,7 @@ public:
   [[nodiscard]]
   value_type& operator[](index_t idx) {
     auto page_id = getPageId(idx);
-    if(mMemoryMap.count(page_id) > 0) {
+    if(mMemoryMap.contains(page_id)) {
       mMetaData[page_id].last_access = std::chrono::system_clock::now();
       return mPageMemory[mMemoryMap[page_id] + getPageOffset(idx)];
     } else {

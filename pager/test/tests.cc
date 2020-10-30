@@ -35,13 +35,14 @@ TEST_CASE("Not enough room", "[pager]") {
 }
 
 TEST_CASE("Multiple pages", "[pager]") {
-  gsw::pager<unsigned int> p(10, 2, 3);
+  constexpr size_t object_count = 10;
+  gsw::pager<unsigned int> p(object_count, 2, 3);
 
-  for(size_t i = 0; i < 10; ++i) {
+  for(size_t i = 0; i < object_count; ++i) {
     p[i] = i;
   }
 
-  for(size_t i = 0; i < 10; ++i) {
+  for(size_t i = 0; i < object_count; ++i) {
     CHECK(p[i] == i);
   }
 }
