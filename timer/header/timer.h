@@ -18,16 +18,11 @@ public:
 /*! Timer facility for delayed and scheduled function calls
  *
  * @todo see notes in cppreference async about multiple sequential async calls
- * @todo might be nice to have a cancel per event, so that I can schedule 2 events, and cancel them independently
- * this might actually call for factory pattern, where timers are created by the factory, and the only method
- * on timer is just cancel, or maybe a 'time until' counter
  */
 template<typename T>
 class timer {
 private:
-  bool mCancel = false;
-  std::mutex mMutex;
-  std::condition_variable mConVar;
+  std::atomic<bool> mCancel = false;
   std::shared_future<T> mFuture;
 
   template<typename clock, typename duration, typename callback_function>
@@ -50,11 +45,8 @@ public:
 
     auto f = std::async(std::launch::async, [this, fn = std::move(fn), time]()
       {
-        std::unique_lock lk(mMutex);
-        if(!mConVar.wait_until(lk, time, [this]()
-          {
-            return mCancel;
-          })) {
+        std::this_thread::sleep_until(time);
+        if(!mCancel) {
           return fn();
         } else {
           throw TimerCancelled();
@@ -70,7 +62,6 @@ public:
 
   void cancel() noexcept{
     mCancel = true;
-    mConVar.notify_all();
   }
 
   void wait() const{

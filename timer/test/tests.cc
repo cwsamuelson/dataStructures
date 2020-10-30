@@ -49,7 +49,6 @@ TEST_CASE("", "[timer]") {
 
   SECTION("Cancellable"){
     bool function_called = false;
-    auto start = chrono::high_resolution_clock::now();
     auto t = gsw::schedule_timer(5s, [&function_called](){
       function_called = true;
     });
@@ -58,7 +57,5 @@ TEST_CASE("", "[timer]") {
 
     CHECK(!function_called);
     CHECK_THROWS_AS(t.get(), gsw::TimerCancelled);
-    auto end = chrono::high_resolution_clock::now();
-    CHECK(end - start < 5s);
   }
 }
