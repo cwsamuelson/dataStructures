@@ -29,6 +29,33 @@ TEST_CASE("gsw::exception and GSW_THROW can be caught be std exception", "") {
   }
 }
 
+void throw_with_format1(){
+  GSW_VERIFY(false, "{}", 42);
+}
+
+void throw_with_format2(){
+  GSW_VERIFY(false, "{}, {}", 42, 24);
+}
+
+TEST_CASE("Formattable error message", ""){
+  CHECK_THROWS_AS(throw_with_format1(), gsw::exception);
+  try {
+    throw_with_format1();
+    REQUIRE(false);
+  } catch(gsw::exception& e){
+    CHECK(e.message() == "42");
+  }
+
+  CHECK_THROWS_AS(throw_with_format2(), gsw::exception);
+  try {
+    throw_with_format2();
+    REQUIRE(false);
+  } catch(gsw::exception& e){
+    CHECK(e.message() == "42, 24");
+  }
+
+}
+
 TEST_CASE("gsw::exception captures location information", "") {
   try {
     thrower(true);
