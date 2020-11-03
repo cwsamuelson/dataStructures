@@ -4,6 +4,12 @@
 #include <stdexcept>
 #include <exception>
 #include <string>
+#if !__cpp_lib_format
+#include <fmt/core.h>
+#define FMT fmt::
+#else
+#define FMT std::
+#endif
 #if __cpp_lib_source_location
 #include <source_location>
 #endif
@@ -114,14 +120,14 @@ public:
 #define GSW_EXPR_THROW(msg, expr) throw ::gsw::exception(msg, expr);
 #define GSW_THROW(msg) throw ::gsw::exception(msg);
 #else
-#define GSW_EXPR_THROW(msg, expr) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg, expr);
-#define GSW_THROW(msg) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, msg);
+#define GSW_EXPR_THROW(expr, ...) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, FMT format(__VA_ARGS__), expr);
+#define GSW_THROW(...) throw ::gsw::exception(__FILE__, __FUNCTION__, __LINE__, FMT format(__VA_ARGS__));
 #endif
 #define GSW_WRAP(something) do{something;}while(false);
 #define GSW_IF(cond, action) GSW_WRAP(if((cond)){action;});
-#define GSW_VERIFY_AND(cond, action, msg) GSW_IF(!(cond), action; GSW_EXPR_THROW(msg, #cond);)
-#define GSW_VERIFY(cond, msg) GSW_VERIFY_AND(cond, , msg);
-#define GSW_CHECK_AND(cond, action, msg) GSW_IF(!(cond), action; return false;)
-#define GSW_CHECK(cond, msg) GSW_CHECK_AND(cond, , msg);
+#define GSW_VERIFY_AND(cond, action, ...) GSW_IF(!(cond), action; GSW_EXPR_THROW(#cond, __VA_ARGS__);)
+#define GSW_VERIFY(cond, ...) GSW_VERIFY_AND(cond, , __VA_ARGS__);
+#define GSW_CHECK_AND(cond, action, ...) GSW_IF(!(cond), action; return false;)
+#define GSW_CHECK(cond, ...) GSW_CHECK_AND(cond, , __VA_ARGS__);
 
 #endif //GALACTICSTRUCTURES_ERROR_HANDLING_HH
