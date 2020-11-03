@@ -4,10 +4,12 @@
 #include <stdexcept>
 #include <exception>
 #include <string>
+// this should enable support for c++ native format library, whenever it's added
 #if !__cpp_lib_format
 #include <fmt/core.h>
 #define FMT fmt::
 #else
+#warning "Format library now supported native for your compiler, feel free to remove related macros and submit PR"
 #define FMT std::
 #endif
 #if __cpp_lib_source_location
