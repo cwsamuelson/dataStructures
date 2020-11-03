@@ -1,3 +1,6 @@
 [submodule "catch"]
 	path = catch
 	url = https://github.com/philsquared/catch
+[submodule "fmt"]
+	path = fmt
+	url = https://github.com/fmtlib/fmt

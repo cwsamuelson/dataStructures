@@ -8,6 +8,8 @@ else()
 endif()
 
 ADD_SUBDIRECTORY(catch)
+ADD_SUBDIRECTORY(fmt)
+
 ADD_SUBDIRECTORY(accessor)
 ADD_SUBDIRECTORY(algorithm)
 ADD_SUBDIRECTORY(allocator)
