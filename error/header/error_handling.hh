@@ -17,6 +17,11 @@
 #endif
 
 namespace gsw {
+  
+template<typename T>
+struct NameTrait{ static inline const char* name = typeid(T).name(); };
+#define REGISTER_NAME_TRAIT(T) template<> struct NameTrait<T> \
+  { static inline const char* name = #T; };
 
 class exception : public std::runtime_error {
 private:
