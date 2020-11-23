@@ -4,7 +4,7 @@ PROJECT(error LANGUAGES CXX)
 ADD_LIBRARY(error INTERFACE)
 
 SET_TARGET_PROPERTIES(error PROPERTIES
-                      INTERFACE_CXX_STANDARD 17
+                      INTERFACE_CXX_STANDARD 20
                       INTERFACE_CXX_STANDARD_REQUIRED YES
                       INTERFACE_CXX_EXTENSIONS NO)
 
@@ -14,7 +14,7 @@ TARGET_LINK_LIBRARIES(error
 
 ADD_EXECUTABLE(test-error test/tests.cc)
 SET_TARGET_PROPERTIES(test-error PROPERTIES
-                      CXX_STANDARD 17
+                      CXX_STANDARD 20
                       CXX_STANDARD_REQUIRED YES
                       CXX_EXTENSIONS NO)
 TARGET_LINK_LIBRARIES(test-error error Catch2)

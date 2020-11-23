@@ -10,6 +10,7 @@
 #include <utility>
 #include <memory>
 #include <tuple>
+#include <stdexcept>
 
 namespace gsw {
 
