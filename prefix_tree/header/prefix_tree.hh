@@ -36,9 +36,7 @@ private:
     node* curr = &mRoot;
 
     for(auto ch : key) {
-      //c++20 provides a contains facility
-      //if( curr->mChildren.contains( ch ) ){
-      if(curr->mChildren.count(ch) > 0) {
+      if( curr->mChildren.contains( ch ) ){
         curr = &curr->mChildren.at(ch);
       } else {
         return nullptr;
@@ -92,6 +90,9 @@ private:
 
 public:
   prefix_tree() = default;
+  prefix_tree(const prefix_tree&) = default;
+  prefix_tree(prefix_tree&&) noexcept = default;
+  friend auto operator<=>(const prefix_tree&, const prefix_tree&) = default;
 
   void insert(const key_type& key, const value_type& value) {
     node* curr = &mRoot;
@@ -107,7 +108,7 @@ public:
   bool contains(const key_type& key) const {
     auto nod = c_seek_node(key);
 
-    return nod ? nod->mData.has_value() : false;
+    return nod && nod->mData.has_value();
   }
 
   void erase(const key_type& key) {
@@ -147,7 +148,7 @@ public:
   }
 
   /*value_type get
-    value_type getBest
+    value_type match
     iterator begin
     iterator end*/
 

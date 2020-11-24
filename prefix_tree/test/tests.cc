@@ -34,6 +34,7 @@ TEST_CASE("", "[prefix_tree]") {
   REQUIRE(tree.count("123") == 0);
   CHECK(tree.find("1").size() == 2);
   CHECK(tree.find("1") == set<int>{ 2, 3 });
+  CHECK(tree.find("12") == set<int>{ 3 });
   CHECK(tree.contains("1"));
   CHECK(tree.contains("12"));
   CHECK(!tree.contains("123"));
