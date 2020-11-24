@@ -127,20 +127,10 @@ public:
     friend auto operator<=>(const event_handler&, const event_handler&) = default;
   };
 
-  /*!
-   */
   using counter_t = unsigned long long;
-
-  /*!
-   * @todo wrap std::function into something that contains counter
-   *    this will allow operator -= to identify which handler to use
-   */
   using handler = typename event_handler::handler;
   using simple_handler = typename event_handler::simple_handler;
 
-  /*!
-   * @tparam N
-   */
   template<size_t N> using arg_types = typename std::tuple_element<N, std::tuple<Args...>>::type;
 
 private:
@@ -191,14 +181,12 @@ protected:
   event_channel_impl() = default;
 
   event_channel_impl(const event_channel_impl&) = default;
-
   event_channel_impl(event_channel_impl&&) noexcept = default;
 
 public:
   ~event_channel_impl() = default;
 
   event_channel_impl& operator=(const event_channel_impl&) = default;
-
   event_channel_impl& operator=(event_channel_impl&&) noexcept = default;
 
   /*! Register new handler
