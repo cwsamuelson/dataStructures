@@ -4,46 +4,57 @@
 
 #include <pager.hh>
 
+using namespace gsw;
+
 TEST_CASE("It's basically just an array", "[pager]") {
-  constexpr size_t object_count = 5;
-  constexpr size_t page_size = object_count;
+  for(size_t i = 0; i < 100; ++i) {
+    size_t object_count = i;
+    size_t page_size = object_count;
 
-  gsw::pager<unsigned int> p(object_count, page_size);
+    pager<unsigned int> p(object_count, page_size);
 
-  for(size_t i = 0; i < object_count; ++i) {
-    p[i] = i;
-  }
+    for(size_t i = 0; i < object_count; ++i) {
+      p[i] = i;
+    }
 
-  for(size_t i = 0; i < object_count; ++i) {
-    CHECK(p[i] == i);
+    for(size_t i = 0; i < object_count; ++i) {
+      CHECK(p[i] == i);
+    }
   }
 }
 
 TEST_CASE("Not enough room", "[pager]") {
-  constexpr size_t object_count = 5;
-  constexpr size_t page_size = 1;
+  for(size_t i = 0; i < 100; ++i) {
+    for(size_t j = 1; j < 100; ++j) {
+      size_t object_count = i;
+      size_t page_size = j;
 
-  gsw::pager<unsigned int> p(object_count, page_size);
+      pager<unsigned int> p(object_count, page_size);
 
-  for(size_t i = 0; i < object_count; ++i) {
-    p[i] = i;
-  }
+      for(size_t i = 0; i < object_count; ++i) {
+        p[i] = i;
+      }
 
-  for(size_t i = 0; i < object_count; ++i) {
-    CHECK(p[i] == i);
+      for(size_t i = 0; i < object_count; ++i) {
+        CHECK(p[i] == i);
+      }
+    }
   }
 }
 
 TEST_CASE("Multiple pages", "[pager]") {
-  constexpr size_t object_count = 10;
-  gsw::pager<unsigned int> p(object_count, 2, 3);
+  for(size_t i = 1; i < 100; ++i) {//page size must be at least 1
+    for(size_t j = 0; j < 100; ++j) {
+      pager<unsigned int> p(10, i, j);
 
-  for(size_t i = 0; i < object_count; ++i) {
-    p[i] = i;
-  }
+      for(size_t i = 0; i < 10; ++i) {
+        p[i] = i;
+      }
 
-  for(size_t i = 0; i < object_count; ++i) {
-    CHECK(p[i] == i);
+      for(size_t i = 0; i < 10; ++i) {
+        CHECK(p[i] == i);
+      }
+    }
   }
 }
 
