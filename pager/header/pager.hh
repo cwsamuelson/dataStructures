@@ -122,6 +122,9 @@ public:
           : mPageSize(page_size)
           , mPageCount(page_count)
           , mPageMemory(std::make_unique<value_type[]>(allocatedMemory())) {
+    if(page_size <= 0){
+      throw std::runtime_error("Page size must be >= 1, else no data can be stored");
+    }
     //! @todo check for allocating more objects than requested
     for(size_t i = 0; i < mPageCount; ++i) {
       mMemoryMap[i] = i * page_size;
