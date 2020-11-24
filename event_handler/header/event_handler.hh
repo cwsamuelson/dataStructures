@@ -20,6 +20,8 @@ class event_channel_impl;
 template<typename T>
 class void_combiner{
 public:
+  using result_type = void;
+
   //!@TODO ranges?
   //!@TODO make some constraints about types/iter types here?
   template<typename Iter>
@@ -138,6 +140,9 @@ private:
   counter_t idCounter = 0;
 
 protected:
+  using handler_result = typename handler::result_type;
+  using combiner_result = typename COMBINER<handler_result>::result_type;
+
   /*! Fire the event!
    *
    * @param args Arguments to pass on to handlers
@@ -151,8 +156,7 @@ protected:
    * could not be used for the second handler.  I'm not yet 100% sure if the
    * answer should continue to be 'no'(seems as though it should).
    */
-  auto fire(Args... args) {
-    using handler_result = typename event_handler::handler::result_type;
+  combiner_result fire(Args... args) {
     if constexpr (std::is_same_v<handler_result, void>){
       for(auto& [id, handler] : handlers){
         handler(args...);
@@ -179,7 +183,6 @@ protected:
   }
 
   event_channel_impl() = default;
-
   event_channel_impl(const event_channel_impl&) = default;
   event_channel_impl(event_channel_impl&&) noexcept = default;
 
