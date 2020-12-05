@@ -111,15 +111,17 @@ private:
   gsw::event_trigger<void(string)> mSendEvent;
 
 public:
-  auto sendEvent() const {
-    return mSendEvent.getChannel();
-  }
+  channel_t& send_channel;
 
   void send(const string& d) {
     //do some things with the data
 
     //then fire the corresponding event!
     mSendEvent.fire(d);
+  }
+
+  serial_sender()
+    : send_channel(*mSendEvent.getChannel().lock()){
   }
 };
 
@@ -130,8 +132,7 @@ TEST_CASE("In context usage", "[events]") {
                                     {
                                       response = str + "response!";
                                     });
-  auto eventChannel = ser.sendEvent().lock();
-  eventChannel->subscribe(serialRxHandler);
+  ser.send_channel.subscribe(serialRxHandler);
 
   ser.send("data!");
 
