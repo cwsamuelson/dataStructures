@@ -42,13 +42,22 @@ public:
 
 template<typename T>
 class SumCombiner{
+private:
+  T start;
+
 public:
   using result_type = decltype(std::declval<T>() + std::declval<T>());
 
   template<typename Iter>
-  decltype(std::declval<T>() + std::declval<T>()) operator()(Iter begin, Iter end){
-    return std::accumulate(begin, end, T());
+  result_type operator()(Iter begin, Iter end){
+    return std::accumulate(begin, end, start);
   }
+
+  SumCombiner() = default;
+  explicit
+  SumCombiner(T t)
+    : start(t)
+  {}
 };
 
 template<typename T>
