@@ -11,6 +11,10 @@ namespace gsw{
 template<typename T>
 class signal;
 
+// the signal class does well to simulate a public method/function
+// to do this as a private method, currently you should use triggers/channels
+// private trigger, and public (or public access to) the channel
+
 //! @TODO It might be cool to use combiners in signals?
 // this is tricky/weird since there's 2 events to be combined
 // and where do the results go?  currently the return value is the result of
@@ -60,6 +64,10 @@ public:
   auto operator()(Args... args){
     mPreTrigger.fire(args...);
 
+    //!@NOTE using futures here works well to handle void results
+    // I originally did this to work with copyable types before realizing
+    // worrying about that before it occurred may be silly, however the case of
+    // void results is clear/necessary, and occurs in unit tests
     auto f = std::async(std::launch::deferred, mAction, args...);
     f.wait();
 
