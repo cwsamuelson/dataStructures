@@ -10,6 +10,8 @@ namespace gsw{
 template <typename T>
 class AggregateCombiner{
 public:
+  using result_type = std::vector<T>;
+
   template<typename Iter>
   std::vector<T> operator()(Iter begin, Iter end){
     return {begin, end};
@@ -19,6 +21,8 @@ public:
 template<typename T>
 class MaximumCombiner{
 public:
+  using result_type = T;
+
   template<typename Iter>
   T operator()(Iter begin, Iter end){
     return *std::max_element(begin, end);
@@ -28,6 +32,8 @@ public:
 template<typename T>
 class SumCombiner{
 public:
+  using result_type = decltype(std::declval<T>() + std::declval<T>());
+
   template<typename Iter>
   decltype(std::declval<T>() + std::declval<T>()) operator()(Iter begin, Iter end){
     return std::accumulate(begin, end, T());
@@ -37,6 +43,8 @@ public:
 template<typename T>
 class AverageCombiner{
 public:
+  using result_type = decltype(std::declval<T>() + std::declval<T>());
+
   template<typename Iter>
   auto operator()(Iter begin, Iter end){
     if constexpr (std::is_floating_point_v<T>) {
