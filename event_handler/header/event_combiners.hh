@@ -30,6 +30,17 @@ public:
 };
 
 template<typename T>
+class MinimumCombiner{
+public:
+  using result_type = T;
+
+  template<typename Iter>
+  T operator()(Iter begin, Iter end){
+    return *std::min_element(begin, end);
+  }
+};
+
+template<typename T>
 class SumCombiner{
 public:
   using result_type = decltype(std::declval<T>() + std::declval<T>());
