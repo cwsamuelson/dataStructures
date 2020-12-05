@@ -166,13 +166,13 @@ protected:
 
       return;
     } else {
-      std::vector<handler_result> results;
+      std::vector<R> results;
 
       for(auto& [id, handler] : handlers) {
         results.emplace_back(handler(args...));
       }
 
-      return COMBINER<handler_result>()(results.begin(), results.end());
+      return COMBINER<R>()(results.begin(), results.end());
     }
   }
 
