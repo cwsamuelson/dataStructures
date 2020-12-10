@@ -3,17 +3,19 @@ PROJECT(event_handler LANGUAGES CXX)
 
 FIND_PACKAGE(Threads REQUIRED)
 
-ADD_LIBRARY(event_handler header/signal.hh header/event_handler.hh header/event_combiners.hh)
+ADD_LIBRARY(event_handler INTERFACE)
 
 SET_TARGET_PROPERTIES(event_handler PROPERTIES
-                      CXX_STANDARD 20
-                      CXX_STANDARD_REQUIRED YES
-                      CXX_EXTENSIONS NO
-                      LINKER_LANGUAGE CXX)
+                      INTERFACE_CXX_STANDARD 20
+                      INTERFACE_CXX_STANDARD_REQUIRED YES
+                      INTERFACE_CXX_EXTENSIONS NO
+                      INTERFACE_LINKER_LANGUAGE CXX)
 
-TARGET_INCLUDE_DIRECTORIES(event_handler PUBLIC header)
+TARGET_INCLUDE_DIRECTORIES(event_handler
+                           INTERFACE header)
 
-TARGET_LINK_LIBRARIES(event_handler PUBLIC Threads::Threads)
+TARGET_LINK_LIBRARIES(event_handler
+                      INTERFACE Threads::Threads)
 
 ADD_EXECUTABLE(test-event_handler test/events.cc test/signals.cc test/combiners.cc)
 SET_TARGET_PROPERTIES(test-event_handler PROPERTIES
