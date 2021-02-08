@@ -11,6 +11,7 @@
 #include <memory>
 #include <tuple>
 #include <stdexcept>
+#include <compare>
 
 namespace gsw {
 
@@ -128,7 +129,9 @@ public:
     event_handler& operator=(const event_handler&) = default;
     event_handler& operator=(event_handler&&) noexcept = default;
 
+#ifdef __cpp_lib_three_way_comparison
     friend auto operator<=>(const event_handler&, const event_handler&) = default;
+#endif
   };
 
   using counter_t = unsigned long long;
@@ -194,7 +197,9 @@ public:
   event_channel_impl& operator=(const event_channel_impl&) = default;
   event_channel_impl& operator=(event_channel_impl&&) noexcept = default;
 
+#ifdef __cpp_lib_three_way_comparison
   friend auto operator<=>(const event_channel_impl&, const event_channel_impl&) = default;
+#endif
 
   /*! Register new handler
    *

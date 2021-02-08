@@ -4,6 +4,7 @@
 #include <event_handler.hh>
 
 #include <numeric>
+#include <algorithm>
 
 namespace gsw{
 
