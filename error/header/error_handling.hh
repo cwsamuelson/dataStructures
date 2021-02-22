@@ -9,6 +9,7 @@
 #include <fmt/core.h>
 #define FMT fmt::
 #else
+#include <format>
 #warning "Format library now supported native for your compiler, feel free to remove related macros and submit PR"
 #define FMT std::
 #endif
