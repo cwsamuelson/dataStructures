@@ -51,6 +51,18 @@ public:
   signal(action_t action)
     : mAction(std::move(action))
   {}
+  // this type is intended to be part of a public interface to interact with, but
+  // we don't want the signal removed/moved off an object it was created for,
+  // BUT we don't want to prevent the containing type to not be movable/copyable
+  // solution may be 'weird' copy/move.
+  // maybe normal move, but copy will clear out handlers in the new copy, so that
+  // the new one doesn't notify objects that don't care?
+  // or should we expect those objects to care?
+  // food for thought; for now we prevent all
+  signal(const signal&) = delete;
+  signal(signal&&) = delete;
+  signal& operator=(const signal&) = delete;
+  signal& operator=(signal&&) = delete;
 
   //! @TODO should args... be forwarded?
   // reflex says yes, but which gets forwarded?
