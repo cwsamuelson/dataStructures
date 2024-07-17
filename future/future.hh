@@ -134,6 +134,11 @@ private:
     }
 };
 
+/* Multiple continuations?
+ * how should that be managed...
+ * raises questions about future ownership/shared_future etc
+ * https://youtu.be/zULU6Hhp42w?si=_R4mO6XUeqDtbPNc&t=3520
+ */
 template<typename Type>
 struct Future {
     template<typename Functor, typename ...Args>
