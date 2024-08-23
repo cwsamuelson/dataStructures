@@ -360,12 +360,9 @@ struct Matrix {
 
 // matrix_ops.hpp
 
-template<typename OP, typename LType, Dimensions Ldimensions, Allocator Lallocator, typename RType, Dimensions Rdimensions, Allocator Rallocator>
-    requires (std::convertible_to<RType, LType>)
+template<typename OP, MatrixLike LHS, MatrixLike RHS>
+    requires (std::convertible_to<typename RHS::value_type, typename LHS::value_type>)
 struct Operation {
-    using LHS = const Matrix<LType, Ldimensions, Lallocator>&;
-    using RHS = const Matrix<RType, Rdimensions, Rallocator>&;
-
     LHS lhs;
     RHS rhs;
 
@@ -380,7 +377,7 @@ struct Operation {
     }
 };
 
-template<typename LType, Dimensions Ldimensions, Allocator Lallocator, typename RType, Dimensions Rdimensions, Allocator Rallocator>
+/*template<typename LType, Dimensions Ldimensions, Allocator Lallocator, typename RType, Dimensions Rdimensions, Allocator Rallocator>
 constexpr decltype(auto) operator+(const Matrix<LType, Ldimensions, Lallocator>& lhs, const Matrix<RType, Rdimensions, Rallocator>& rhs) {
     using MatrixAddition = Operation<std::plus<>, LType, Ldimensions, Lallocator, RType, Rdimensions, Rallocator>;
     return MatrixAddition{lhs, rhs};
@@ -402,6 +399,30 @@ template<typename LType, Dimensions Ldimensions, Allocator Lallocator, typename 
 constexpr decltype(auto) operator/(const Matrix<LType, Ldimensions, Lallocator>& lhs, const Matrix<RType, Rdimensions, Rallocator>& rhs) {
     using MatrixDivision = Operation<std::divides<>, LType, Ldimensions, Lallocator, RType, Rdimensions, Rallocator>;
     return MatrixDivision{lhs, rhs};
+}*/
+
+template<MatrixLike LHS, MatrixLike RHS>
+constexpr decltype(auto) operator+(const LHS& lhs, const RHS& rhs) {
+    using MatrixAddition = Operation<std::plus<>, LHS, RHS>;
+    return MatrixAddition{lhs, rhs};
+}
+
+template<MatrixLike LHS, MatrixLike RHS>
+constexpr decltype(auto) operator-(const LHS& lhs, const RHS& rhs) {
+    using MatrixSubtraction = Operation<std::minus<>, LHS, RHS>;
+    return MatrixSubtraction{lhs, rhs};
+}
+
+template<MatrixLike LHS, MatrixLike RHS>
+constexpr decltype(auto) operator*(const LHS& lhs, const RHS& rhs) {
+    using MatrixMultiplication = Operation<std::multiplies<>, LHS, RHS>;
+    return MatrixMultiplication{lhs, rhs};
+}
+
+template<MatrixLike LHS, MatrixLike RHS>
+constexpr decltype(auto) operator/(const LHS& lhs, const RHS& rhs) {
+    using MatrixDivision = Operation<std::divides<>, LHS, RHS>;
+    return MatrixDivision{lhs, rhs};
 }
 
 struct S{};
@@ -413,10 +434,6 @@ static_assert(MatrixLike<Matrix<int, {1, 1}, StaticAllocator>>);
 static_assert(MatrixLike<Matrix<unsigned int, {1, 1}, StaticAllocator>>);
 static_assert(MatrixLike<Matrix<float, {1, 1}, StaticAllocator>>);
 static_assert(MatrixLike<Matrix<S, {1, 1}, StaticAllocator>>);
-
-/*template<typename LType, Dimensions Ldimensions, Allocator Lallocator, typename RType, Dimensions Rdimensions, Allocator Rallocator>
-constexpr decltype(auto) operator+(const Matrix<LType, Ldimensions, Lallocator>& lhs, const Matrix<RType, Rdimensions, Rallocator>& rhs) {
-}*/
 
 // matrix_aliases.hpp
 // none of these aliases specify an allocation type?
