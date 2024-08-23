@@ -1,3 +1,7 @@
+// https://eigen.tuxfamily.org/dox/group__TutorialSlicingIndexing.html
+//! @TODO compare against the other interface, too..
+// the mixins might be valuable...
+
 #include <array>
 #include <iostream>
 #include <vector>
