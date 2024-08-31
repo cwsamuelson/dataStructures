@@ -13,7 +13,7 @@ add_subdirectory(core)
 #add_subdirectory(operators)
 #add_subdirectory(optional)
 #add_subdirectory(ProducerConsumer)
-#add_subdirectory(vector)
+add_subdirectory(vector)
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
@@ -25,7 +25,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_operators
   #${PROJECT_NAME}_optional
   #${PROJECT_NAME}_ProducerConsumer
-  #${PROJECT_NAME}_vector
+  ${PROJECT_NAME}_vector
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES

@@ -48,9 +48,13 @@ private:
 
   void ensure_size(const size_type ensured_size) noexcept {
     if (ensured_size > current_capacity) {
-      reserve(static_cast<float>(current_size) * std::numbers::phi_v<float>);
+      if (current_size == 0) {
+        reserve(4);
+      } else {
+        reserve(static_cast<float>(current_size) * std::numbers::phi_v<float>);
+      }
     }
-    VERIFY(current_capacity >= current_size + 1, "Insufficient capacity available");
+    VERIFY(current_capacity >= current_size + 1, "Insufficient capacity available ({}).  Required: {}", current_capacity, current_size + 1);
   }
 
 public:
