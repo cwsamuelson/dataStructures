@@ -117,12 +117,49 @@ TEST_CASE("Vectors can be resized") {
   }
 
   SECTION("Resizing bigger changes size and capacity") {
+    Vector<RAIISignaler> vector;
+
+    const auto initial_capacity = vector.capacity();
+    const auto desired_size = initial_capacity + 1;
+
+    vector.resize(desired_size);
+    REQUIRE(vector.capacity() > initial_capacity);
+
+    CHECK(vector.size() == desired_size);
+    CHECK(vector.capacity() >= desired_size);
+    CHECK(vector.back().default_constructor);
   }
 
   SECTION("Resizing smaller changes size but not capacity") {
+    Vector<RAIISignaler> vector;
+    constexpr size_t initial_size = 12;
+
+    while (vector.size() < initial_size) {
+      vector.emplace_back();
+    }
+
+    const auto initial_capacity = vector.capacity();
+
+    CHECK(vector.size() == initial_size);
+
+    constexpr size_t target_size = initial_size / 2;
+    REQUIRE(target_size < initial_size);
+
+    vector.resize(target_size);
+    CHECK(vector.size() == target_size);
+    CHECK(vector.capacity() == initial_capacity);
   }
 
   SECTION("Reserving bigger changes capacity but not size") {
+    Vector<RAIISignaler> vector;
+    CHECK(vector.empty());
+
+    const auto initial_capacity = vector.capacity();
+    const auto target_capacity = initial_capacity + 100;
+
+    vector.reserve(target_capacity);
+    CHECK(vector.empty());
+    CHECK(vector.capacity() >= target_capacity);
   }
 
   SECTION("Reserving smaller does not change size or capacity") {

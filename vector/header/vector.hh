@@ -156,14 +156,18 @@ public:
   }
 
   void resize(const size_type count) /*is default constructible*/ {
-    resize(count, {});
+    resize(count, value_type{});
   }
 
-  void resize(const size_type count, const value_type value) {
-    reserve(count);
+  void resize(const size_type count_target, const value_type value) {
+    reserve(count_target);
 
-    for(size_t i = size(); i < count; ++i) {
+    while (size() < count_target) {
       push_back(value);
+    }
+
+    while(size() > count_target) {
+      pop_back();
     }
   }
 
