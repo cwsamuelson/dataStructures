@@ -1,438 +1,219 @@
-#ifndef __VECTOR_HH__
-#define __VECTOR_HH__
+#pragma once
 
-/*!
- * @example test-vector.cc
- */
+#include <core/normal_iterator.hh>
 
-#include<cmath>
-#include<exception>
-#include<string>
-#include<utility>
-#include<type_traits>
-#include<memory>
+#include <error_help.hh>
 
-#include<normal_iterator.hh>
-#include<allocator_traits.hh>
-#include<allocator.hh>
+#include <memory>
+#include <numbers>
 
-namespace gsw {
+namespace flp {
 
-template<typename T> using requireInputIter =
-typename std::enable_if<std::is_convertible<typename std::iterator_traits<T>::iterator_category,
-                                            std::input_iterator_tag>::value>::type;
-
-/*! Class that stores items of type T
- *
- * @tparam T Type of items to be stored
- *
- * @tparam ALLOC type of allocator to use
- *
- * This class stores a dynamic number of items of type T, allocating additional
- * space as it becomes necessary.
- */
-template<typename T, typename ALLOC = allocator<T>>
-class vector {
+template<typename Type>
+class Vector {
 public:
-  using value_type = T;
+  using value_type = Type;
   using pointer = value_type*;
   using reference = value_type&;
   using const_reference = const value_type&;
   using const_pointer = const value_type*;
-  using iterator = normal_iterator<value_type, vector>;
-  using size_type = unsigned long;
-  using alloc = ALLOC;
+  using iterator = normal_iterator<value_type, Vector>;
+  using size_type = size_t;
+
+  static constexpr size_type value_alignment = alignof(value_type);
+  static constexpr size_type value_size = sizeof(value_type);
 
 private:
-  using alloc_traits = allocator_traits<alloc>;
-
-  alloc mAlloc;
-  size_type mSize;
-  size_type mCapacity;
-  value_type* mData;
-
-  const float goldenRatio = 1.4;
-
-  void reallocateTo(size_type size) {
-    value_type* bfr;
-
-    bfr = alloc_traits::allocate(mAlloc, size);
-
-    // copy data to new buffer
-    for(size_type i = 0; i < mSize; ++i) {
-      bfr[i] = std::move(mData[i]);
+  struct BufferDeleter {
+    void operator()(void* pointer) {
+      std::free(pointer);
     }
+  };
+  using Buffer = std::unique_ptr<std::byte[], BufferDeleter>;
+  Buffer buffer;
+  size_t current_size{};
+  size_t current_capacity{};
 
-    alloc_traits::deallocate(mAlloc, mData, mCapacity);
-    mCapacity = size;
-    mData = bfr;
+  static reference get_reference(std::byte* buffer, const size_t index) {
+    return *get_pointer(buffer, index);
+  }
+  static pointer get_pointer(std::byte* buffer, const size_t index) {
+    VERIFY(buffer != nullptr, "Buffer is null");
+    return reinterpret_cast<pointer>(&buffer[index * value_size]);
+  }
+
+  static Buffer create_buffer(const size_type element_count) {
+    return Buffer{reinterpret_cast<std::byte*>(std::aligned_alloc(value_alignment, element_count * value_size))};
+  }
+
+  void ensure_size(const size_type ensured_size) noexcept {
+    if (ensured_size > current_capacity) {
+      reserve(static_cast<float>(current_size) * std::numbers::phi_v<float>);
+    }
+    VERIFY(current_capacity >= current_size + 1, "Insufficient capacity available");
   }
 
 public:
-  /*! ctor, initialize with given capacity
-   *
-   * @param capacity  the value the capacity will be initialized to
-   *
-   * @param alc Allocator object to allocate data
-   */
-  explicit
-  vector(size_type capacity = 1, const alloc& alc = alloc())
-          : mAlloc(alc)
-          , mSize(0)
-          , mCapacity(capacity)
-          , mData(alloc_traits::allocate(mAlloc, mCapacity)) {
-  }
-
-  /*! ctor, initialize with count copies of val
-   *
-   * @param val  data to be copied
-   *
-   * @param count  the number of copies of val to be made
-   *
-   * @param alc Allocator object to allocate data
-   */
-  vector(const_reference val, size_type count, const alloc& alc = alloc())
-          : vector(count, alc) {
-
-    while(count--) {
-      push_back(val);
+  Vector() = default;
+  Vector(const Vector& other) /*noexcept(std::is_noexcept_copy_constructible_v<value_type>)*/ {
+    reserve(other.size());
+    for (const auto& element : other) {
+      push_back(element);
     }
   }
+  Vector(Vector&&) /*noexcept(std::is_noexcept_move_constructible_v<value_type>)*/ = default;
 
-  /*! copy ctor, copy other
-   *
-   * @param other  vector to copy data from
-   *
-   * @param alc Allocator object to allocate data
-   */
-  vector(const vector& other, const alloc& alc = alloc())
-          : mAlloc(alc)
-          , mSize(other.mSize)
-          , mCapacity(mSize + 5)
-          , mData(alloc_traits::allocate(mAlloc, mCapacity)) {
-
-    for(size_type i = 0; i < mSize; ++i) {
-      mData[i] = other.mData[i];
+  Vector& operator=(const Vector& other) /*noexcept(std::is_noexcept_copy_assignable_v<value_type>)*/ {
+    reserve(other.size());
+    for (const auto& element : other) {
+      push_back(element);
     }
   }
+  Vector& operator=(Vector&&) /*noexcept(std::is_noexcept_move_constructible_v<value_type>)*/ = default;
 
-  /*! move ctor, move other to this container
-   *
-   * @param other  vector to be moved here
-   *
-   * @param alc Allocator object to allocate data
-   */
-  vector(vector&& other, const alloc& alc = alloc()) noexcept
-          : mAlloc(alc)
-          , mSize(other.mSize)
-          , mCapacity(other.mCapacity)
-          , mData(other.mData) {
+  ~Vector() /*noexcept(std::is_noexcept_destructible_v<value_type>)*/ = default;
 
-    other.mSize = 0;
-    other.mCapacity = 0;
-    other.mData = nullptr;
+  Vector(const size_type capacity) {
+    reserve(capacity);
   }
 
-  /*! copy array of elements
-   *
-   * @param other  array to copy values from
-   *
-   * @param size   the number of elements in other
-   *
-   * @param alc Allocator object to allocate data
-   */
-  vector(pointer other, size_type size, const alloc& alc = alloc())
-          : mAlloc(alc)
-          , mSize(size)
-          , mCapacity(mSize + 5)
-          , mData(alloc_traits::allocate(mAlloc, mCapacity)) {
+  Vector(const_reference val, size_type count);
 
-    for(size_type i = 0; i < mSize; ++i) {
-      mData[i] = other[i];
-    }
-  }
+  template<typename inputIter/*, typename = requireInputIter<inputIter>*/>
+  Vector(inputIter first, inputIter last);
 
-  /*! copy ctor, copy elements from an arbitrary container
-   *
-   * @tparam inputIter  Iterator type to be read from
-   *
-   * @param first  first element to be copied
-   *
-   * @param last   one past the end of the container to be copied from
-   *
-   * @param alc Allocator object to allocate data
-   */
-  template<typename inputIter, typename = requireInputIter<inputIter>>
-  vector(inputIter first, inputIter last, const alloc& alc = alloc())
-          : mAlloc(alc)
-          , mSize(0)
-          , mCapacity(1)
-          , mData(alloc_traits::allocate(mAlloc, mCapacity)){
-
-    for(; first != last; ++first) {
-      push_back(*first);
-    }
-  }
-
-  /*! Destructor
-   *
-   * all data is cleared, destructors ran, and memory freed
-   */
-  virtual
-  ~vector() {
-    clear();
-    alloc_traits::deallocate(mAlloc, mData, mCapacity);
-  }
-
-  /*! copy assignment, copy data from other
-   *
-   * @param other  vector from which data will be copied
-   *
-   * @return reference to this container
-   *
-   * @todo make this exception safe (i.e. don't delete mData until copy is safely complete)
-   */
-  vector& operator=(const vector& other) {
-    if(mData == other.mData) {
-      return *this;
-    }
-
-    if(mCapacity < other.mSize) {
-      alloc_traits::deallocate(mAlloc, mData, mCapacity);
-
-      mCapacity = other.mSize;
-      mData = alloc_traits::allocate(mAlloc, mCapacity);
-    }
-
-    mSize = other.mSize;
-    for(size_type i = 0; i < mSize; ++i) {
-      mData[i] = other.mData[i];
-    }
-
-    return *this;
-  }
-
-  /*! move assignment, move data from other
-   *
-   * @param other  vector from which data will be moved
-   *
-   * @return reference to this container
-   */
-  vector& operator=(vector&& other) {
-    if(mData == other.mData) {
-      return *this;
-    }
-
-    alloc_traits::deallocate(mAlloc, mData, mCapacity);
-
-    mSize = other.mSize;
-    mCapacity = other.mCapacity;
-    mData = other.mData;
-
-    other.mSize = 0;
-    other.mCapacity = 0;
-    other.mData = nullptr;
-
-    return *this;
-  }
-
-  /*! indexed getter, get element at index idx
-   *
-   * @param idx  index into container, from which data will be returned
-   *
-   * @return reference to data located at index idx
-   */
   [[nodiscard]]
-  reference operator[](size_type idx) {
-    using namespace std::string_literals;
-
-    if(idx >= mSize) {
-      throw std::out_of_range(
-              "Index "s + std::to_string(idx) + " out of bounds! Maximum value:\t" + std::to_string(mSize));
-    }
-
-    return (reference) (*(mData + idx));
+  decltype(auto) operator[](this auto&& self, const size_type index) {
+    VERIFY(index < self.size(), "Index ({}) beyond bounds ({})", index, self.size());
+    return get_reference(self.buffer.get(), index);
   }
 
-  /*! indexed const getter, get const element at index idx
-   *
-   * @param idx  index into container, from which const data will be returned
-   *
-   * @return const reference to data located at index idx
-   */
+  // deliberately excluding this
+  // bounds safe by default
+  /*[[nodiscard]]
+  decltype(auto) at(this auto&& self, const size_type index) {
+  }*/
+
   [[nodiscard]]
-  const_reference operator[](size_type idx) const {
-    return (*this)[idx];
+  decltype(auto) front(this auto&& self) noexcept {
+    return get_reference(self.buffer.get(), 0);
   }
 
-  /*! first element getter
-   *
-   * @return reference to first element
-   */
   [[nodiscard]]
-  reference front() {
-    return (*this)[0];
+  decltype(auto) back(this auto&& self) noexcept {
+    return get_reference(self.buffer.get(), self.size() - 1);
   }
 
-  /*! last element getter
-   *
-   * @return reference to last element
-   */
-  [[nodiscard]]
-  reference back() {
-    return (*this)[mSize - 1];
+  reference push_back(const_reference data) {
+    ensure_size(current_size + 1);
+    auto* ptr = get_pointer(buffer.get(), size());
+    new (ptr) value_type(data);
+    ++current_size;
+    return *ptr;
   }
 
-  /*! add data to the end
-   *
-   * @param data  data to be copied at the end of container
-   *
-   * Uses the copy constructor to copy data parameter into container
-   */
-  void push_back(const_reference data) {
-    if(mSize + 1 > mCapacity) {
-      reallocateTo(std::ceil(mCapacity * goldenRatio));
-    }
-
-    alloc_traits::construct(mAlloc, mData + mSize, data);
-    ++mSize;
-  }
-
-  /*! construct new object at the end of container
-   *
-   * @tparam ...Args  Parameter pack of types of parameters to forward to constructor
-   *
-   * @param args  arguments to be passed to ctor of new object
-   *
-   * Forwards args to value_type constructor.
-   */
   template<typename ...Args>
-  void emplace_back(Args&& ... args) {
-    if(mSize + 1 > mCapacity) {
-      reallocateTo(std::ceil(mCapacity * goldenRatio));
-    }
+  // requires constructible
+  reference emplace_back(Args&& ...args) {
+    ensure_size(current_size + 1);
 
-    //use placement new to call ctor
-    alloc_traits::construct(mAlloc, mData + mSize, std::forward<Args>(args)...);
-    ++mSize;
+    auto* ptr = get_pointer(buffer.get(), size());
+    new (ptr) value_type(std::forward<Args>(args)...);
+    ++current_size;
+
+    return *ptr;
   }
 
-  /*! removes and destructs element at end of container
-   */
   void pop_back() {
-    --mSize;
-    //call dtor
-    alloc_traits::destroy(mAlloc, mData + mSize);
+    auto* ptr = get_pointer(buffer.get(), size() - 1);
+    ptr->~value_type();
+    --current_size;
   }
 
-  /*! removes and destructs all elements in container
-   */
   void clear() {
-    while(mSize > 0) {
+    while (not empty()) {
       pop_back();
     }
   }
 
-  /*! get whether the container is empty
-   *
-   * @return container size equal to zero
-   */
   [[nodiscard]]
-  bool empty() const {
-    return mSize == 0;
+  bool empty() const noexcept {
+    return size() == 0;
   }
 
-  /*! get current container size
-   *
-   * @return count of currently stored elements
-   */
   [[nodiscard]]
-  size_type size() const {
-    return mSize;
+  size_type size() const noexcept {
+    return current_size;
   }
 
-  /*! get current container capacity
-   *
-   * @return number of elements that can be stored before a resize is necessary
-   */
   [[nodiscard]]
-  size_type capacity() const {
-    return mCapacity;
+  size_type capacity() const noexcept {
+    return current_capacity;
   }
 
-  /*! request container to be a certain size
-   *
-   * @param count  new size
-   *
-   * @param value  the value to use in filling additional elements
-   */
-  void resize(size_type count, value_type value = value_type()) {
-    while(mSize < count) {
+  void resize(const size_type count) /*is default constructible*/ {
+    resize(count, {});
+  }
+
+  void resize(const size_type count, const value_type value) {
+    reserve(count);
+
+    for(size_t i = size(); i < count; ++i) {
       push_back(value);
     }
-    while(mSize > count) {
-      pop_back();
+  }
+
+  void reserve(const size_type new_capacity) /*notrhow move assign?*/ {
+    if (new_capacity <= current_capacity) {
+      return;
     }
-  }
 
-  /*! request container capacity be a certain size
-   *
-   * @param cap  new capacity
-   */
-  void reserve(size_type cap) {
-    if((cap > mCapacity) && (cap > 0)) {
-      reallocateTo(cap);
+    auto new_buffer = create_buffer(new_capacity);
+    // exception safety here?
+    // if one of these move operations fails, we're in a sad, but I believe valid, state
+    for (size_t i{}; i < current_size; ++i) {
+      const auto buffer_index = i * value_size;
+      *reinterpret_cast<pointer>(&new_buffer[buffer_index]) = std::move(*reinterpret_cast<pointer>(&buffer[buffer_index]));
     }
+    buffer = std::move(new_buffer);
+    current_capacity = new_capacity;
+    VERIFY(current_capacity >= new_capacity, "Failed to allocate new capacity ({})", new_capacity);
   }
 
-  /*! get iterator to beginning
-   *
-   * @return iterator to the first element of the container
-   */
-  [[nodiscard]]
-  iterator begin() {
-    return Iterator(0);
+  void shrink_to_fit() {
+    auto new_buffer = create_buffer(current_size);
+    // copy buffer over
+    buffer = std::move(new_buffer);
+    current_capacity = current_size;
   }
 
-  /*! get const iterator to beginning
-   *
-   * @return const iterator to the first element of the container
-   */
   [[nodiscard]]
-  const iterator cbegin() const {
-    return begin();
-  }
+  decltype(auto) begin(this auto&& self) noexcept;
 
-  /*! get iterator to end
-   *
-   * @return iterator to the last element of the container
-   */
   [[nodiscard]]
-  iterator end() {
-    return Iterator(mSize);
-  }
+  decltype(auto) cbegin(this const auto&& self) noexcept;
 
-  /*! get const iterator to end
-   *
-   * @return const iterator to the last element of the container
-   */
   [[nodiscard]]
-  const iterator cend() const {
-    return end();
-  }
+  decltype(auto) rbegin(this auto&& self) noexcept;
 
-  /*! get general iterator
-   *
-   * @param idx  index iterator will point to
-   *
-   * @return iterator pointing to element at index idx
-   */
   [[nodiscard]]
-  iterator Iterator(size_type idx) {
-    return iterator(pointer(mData + idx));
-  }
+  decltype(auto) crbegin(this const auto&& self) noexcept;
+
+  [[nodiscard]]
+  decltype(auto) end(this auto&& self) noexcept;
+
+  [[nodiscard]]
+  decltype(auto) cend(this const auto&& self) noexcept;
+
+  [[nodiscard]]
+  decltype(auto) rend(this auto&& self) noexcept;
+
+  [[nodiscard]]
+  decltype(auto) crend(this const auto&& self) noexcept;
+
+  [[nodiscard]]
+  iterator Iterator(size_type idx);
 };
 
 }
 
-#endif

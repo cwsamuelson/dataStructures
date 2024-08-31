@@ -1,53 +1,47 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
-PROJECT(GalacticStructures LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.21)
+project(GalacticStructures LANGUAGES CXX)
 
-ADD_SUBDIRECTORY(catch)
-ADD_SUBDIRECTORY(accessor)
-ADD_SUBDIRECTORY(algorithm)
-ADD_SUBDIRECTORY(allocator)
-ADD_SUBDIRECTORY(array)
-ADD_SUBDIRECTORY(date_time)
-ADD_SUBDIRECTORY(enumerator)
-ADD_SUBDIRECTORY(error)
-ADD_SUBDIRECTORY(equation)
-ADD_SUBDIRECTORY(event_handler)
-ADD_SUBDIRECTORY(function)
-ADD_SUBDIRECTORY(graph)
-ADD_SUBDIRECTORY(hash_map)
-ADD_SUBDIRECTORY(json)
-ADD_SUBDIRECTORY(lambda)
-ADD_SUBDIRECTORY(list)
-ADD_SUBDIRECTORY(locked_resource)
-ADD_SUBDIRECTORY(logger)
-ADD_SUBDIRECTORY(logic)
-ADD_SUBDIRECTORY(long)
-ADD_SUBDIRECTORY(map)
-ADD_SUBDIRECTORY(matrix)
-ADD_SUBDIRECTORY(memory)
-ADD_SUBDIRECTORY(menu)
-ADD_SUBDIRECTORY(named_point)
-ADD_SUBDIRECTORY(named_type)
-ADD_SUBDIRECTORY(normal_iterator)
-ADD_SUBDIRECTORY(operators)
-ADD_SUBDIRECTORY(pager)
-ADD_SUBDIRECTORY(polynomial)
-ADD_SUBDIRECTORY(prefix_tree)
-ADD_SUBDIRECTORY(range)
-ADD_SUBDIRECTORY(ratio)
-ADD_SUBDIRECTORY(reference_wrapper)
-ADD_SUBDIRECTORY(remote)
-ADD_SUBDIRECTORY(scheduler)
-ADD_SUBDIRECTORY(segment_tree)
-ADD_SUBDIRECTORY(skip_list)
-ADD_SUBDIRECTORY(spline)
-ADD_SUBDIRECTORY(string)
-ADD_SUBDIRECTORY(stringify)
-ADD_SUBDIRECTORY(threadPool)
-ADD_SUBDIRECTORY(timer)
-ADD_SUBDIRECTORY(traits)
-ADD_SUBDIRECTORY(tuple)
-ADD_SUBDIRECTORY(unit)
-ADD_SUBDIRECTORY(vector)
+include(cmake/common.cmake)
 
-ENABLE_TESTING()
+common_library(${PROJECT_NAME} INTERFACE)
+
+add_subdirectory(core)
+#add_subdirectory(future)
+#add_subdirectory(lifetime)
+#add_subdirectory(matrix)
+#add_subdirectory(normal_iterator)
+#add_subdirectory(operators)
+#add_subdirectory(optional)
+#add_subdirectory(ProducerConsumer)
+#add_subdirectory(vector)
+
+target_link_libraries(${PROJECT_NAME}
+  INTERFACE
+  ${PROJECT_NAME}_core
+  #${PROJECT_NAME}_future
+  #${PROJECT_NAME}_lifetime
+  #${PROJECT_NAME}_matrix
+  #${PROJECT_NAME}_normal_iterator
+  #${PROJECT_NAME}_operators
+  #${PROJECT_NAME}_optional
+  #${PROJECT_NAME}_ProducerConsumer
+  #${PROJECT_NAME}_vector
+)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+  INSTALL_RPATH "\$ORIGIN/../lib"
+  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+)
+
+#install(TARGETS
+  #${PROJECT_NAME}_core
+  #${PROJECT_NAME}_future
+  #${PROJECT_NAME}_lifetime
+  #${PROJECT_NAME}_matrix
+  #${PROJECT_NAME}_normal_iterator
+  #${PROJECT_NAME}_operators
+  #${PROJECT_NAME}_optional
+  #${PROJECT_NAME}_ProducerConsumer
+  #${PROJECT_NAME}_vector
+  #)
 

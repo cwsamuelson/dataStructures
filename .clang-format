@@ -1,0 +1,101 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+AccessModifierOffset: -2
+AlignArrayOfStructures: Left
+AlignConsecutiveAssignments: Consecutive
+AlignConsecutiveDeclarations: Consecutive
+AlignOperands: AlignAfterOperator
+AlignTrailingComments: false
+AllowAllArgumentsOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLambdasOnASingleLine: Empty
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BracedInitializerIndentWidth: 2
+BraceWrapping:
+  AfterCaseLabel: false
+  AfterClass: false
+  AfterControlStatement: MultiLine
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
+  AfterStruct: false
+  AfterUnion: false
+  AfterExternBlock: false
+  BeforeCatch: false
+  BeforeElse: false
+  BeforeLambdaBody: false
+  BeforeWhile: false
+  SplitEmptyFunction: false
+  IndentBraces: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakAfterAttributes: Always
+BreakBeforeBinaryOperators: All
+BreakBeforeConceptDeclarations: Always
+BreakBeforeBraces: Custom
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+ColumnLimit: 120
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+Cpp11BracedListStyle: false
+IncludeBlocks: Regroup
+IncludeCategories:
+  # Headers in <> without extension.
+  - Regex: '<[A-Za-z0-9/_-]+>'
+    Priority: 5
+  # Headers in <> from external libraries.
+  - Regex: '<(catch2|boost|magic_enum|grpc|spdlog|bitflags|opencv2|nlohmann|Eigen)\/'
+    Priority: 4
+  # Headers in <> for general use internal libraries.
+  - Regex: '<(Core|CoreLogging|CoreAssert)\/'
+    Priority: 3
+  # Headers in <> from specific internal libraries.
+  - Regex: '<(X|Y|Z|Core)\/'
+    Priority: 2
+  # Headers in <> with extension.
+  - Regex: '<[A-Za-z0-9./_-]+\.[a-zA-Z]+>'
+    Priority: 1
+  # Headers in "" with extension.
+  - Regex: '"[A-Za-z0-9./_-]+\.[a-zA-Z]+"'
+    Priority: 0
+IncludeIsMainRegex: '([-_](test|unittest))?$'
+IndentAccessModifiers: false
+IndentRequiresClause: true
+IndentWidth: 2
+InsertNewlineAtEOF: true
+LambdaBodyIndentation: Signature
+MacroBlockBegin: ''
+MacroBlockEnd: ''
+MaxEmptyLinesToKeep: 2
+NamespaceIndentation: None
+PackConstructorInitializers: Never
+PointerAlignment: Left
+QualifierAlignment: Left
+SortIncludes: CaseInsensitive
+SpaceAfterCStyleCast: false
+SpaceAfterTemplateKeyword: false
+SpaceAfterLogicalNot: true
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterFunctionDeclarationName: false
+  AfterFunctionDefinitionName: false
+  AfterOverloadedOperator: false
+SpacesInAngles: false
+SpacesInConditionalStatement: false
+SpacesInParens: Custom
+SpacesInParensOptions:
+  InEmptyParentheses: false
+  InCStyleCasts: false
+  InConditionalStatements: false
+  Other: false
+Standard: c++20
+TabWidth: 2
+UseTab: Never
+...
