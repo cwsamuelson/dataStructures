@@ -20,6 +20,7 @@ class galactic_structures(ConanFile):
         "aligned_buffer/*",
         "core/*",
         "future/*",
+        "lifetime/*",
         "optional/*",
         "vector/*",
         "cmake/*",

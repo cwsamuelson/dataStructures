@@ -6,7 +6,7 @@ include(cmake/common.cmake)
 add_subdirectory(aligned_buffer)
 add_subdirectory(core)
 add_subdirectory(future)
-#add_subdirectory(lifetime)
+add_subdirectory(lifetime)
 #add_subdirectory(matrix)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(operators)
@@ -21,7 +21,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_aligned_buffer
   ${PROJECT_NAME}_core
   ${PROJECT_NAME}_future
-  #${PROJECT_NAME}_lifetime
+  ${PROJECT_NAME}_lifetime
   #${PROJECT_NAME}_matrix
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_operators
