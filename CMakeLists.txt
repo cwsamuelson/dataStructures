@@ -5,6 +5,7 @@ include(cmake/common.cmake)
 
 common_library(${PROJECT_NAME} INTERFACE)
 
+add_subdirectory(aligned_buffer)
 add_subdirectory(core)
 #add_subdirectory(future)
 #add_subdirectory(lifetime)
@@ -17,6 +18,7 @@ add_subdirectory(vector)
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
+  ${PROJECT_NAME}_aligned_buffer
   ${PROJECT_NAME}_core
   #${PROJECT_NAME}_future
   #${PROJECT_NAME}_lifetime
@@ -34,6 +36,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 #install(TARGETS
+  #${PROJECT_NAME}_aligned_buffer
   #${PROJECT_NAME}_core
   #${PROJECT_NAME}_future
   #${PROJECT_NAME}_lifetime

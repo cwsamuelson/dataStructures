@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.21)
+set(BASE_PROJECT ${PROJECT_NAME})
+project(${BASE_PROJECT}_aligned_buffer LANGUAGES CXX)
+
+find_package(error_support REQUIRED)
+
+set(HEADERS
+  header/aligned_buffer.hh
+)
+set(SOURCES
+)
+
+common_library(${PROJECT_NAME} INTERFACE
+  ${HEADERS}
+  ${SOURCES}
+)
+
+target_include_directories(${PROJECT_NAME}
+  INTERFACE
+  header
+)
+
+target_link_libraries(${PROJECT_NAME}
+  INTERFACE
+  ${BASE_PROJECT}_core
+  error_support::error_support
+)
+
+enable_testing()
+add_subdirectory(test)
+
