@@ -6,6 +6,7 @@
 
 using namespace flp;
 
+// this struct should maybe be put into a shared location?
 struct RAIISignaler {
   bool parameterized1_constructor = false;
   bool parameterized2_constructor = false;
