@@ -50,3 +50,5 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   #${PROJECT_NAME}_vector
   #)
 
+enable_testing()
+

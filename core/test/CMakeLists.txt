@@ -4,7 +4,13 @@ project(${PROJECT_NAME}_test)
 find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
-  tests.cc
+  additive.cc
+  comparative.cc
+  concepts.cc
+  multiplicative.cc
+  normal_iterator.cc
+  operators.cc
+  #tests.cc# this is more a template..
 )
 
 target_link_libraries(${PROJECT_NAME}

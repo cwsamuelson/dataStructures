@@ -1,5 +1,4 @@
 *.o
-*core
 *main
 lib*.a
 *.gch
