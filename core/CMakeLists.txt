@@ -9,6 +9,7 @@ set(HEADERS
   header/core/multiplicative.hh
   header/core/normal_iterator.hh
   header/core/operators.hh
+  header/core/traits.hh
 )
 set(SOURCES
 )
@@ -30,6 +31,7 @@ target_sources(${PROJECT_NAME}
   header/core/multiplicative.hh
   header/core/normal_iterator.hh
   header/core/operators.hh
+  header/core/traits.hh
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
