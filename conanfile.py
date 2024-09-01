@@ -19,6 +19,7 @@ class galactic_structures(ConanFile):
     exports_sources = (
         "aligned_buffer/*",
         "core/*",
+        "optional/*",
         "vector/*",
         "cmake/*",
         "CMakeLists.txt",

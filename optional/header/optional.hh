@@ -1,22 +1,24 @@
 #include <aligned_buffer.hh>
 #include <error_help.hh>
 
+#include <core/traits.hh>
+
 #include <concepts>
-#include <condition_variable>
-#include <functional>
+#include <cstring>
 #include <mutex>
 #include <optional>
 #include <type_traits>
 
 namespace flp {
 
-struct NullOptional{};
+struct NullOptional_t {};
+constexpr NullOptional_t NullOptional {};
 
 template<typename Type>
 class Optional {
 public:
-  Optional() noexcept = default;
-  Optional(const Optional& other)
+           Optional() noexcept = default;
+  explicit Optional(const Optional& other)
     requires std::copy_constructible<Type>
   {
     if (other.initialized) {
@@ -39,9 +41,16 @@ public:
       initialized = false;
     }
   }
-  Optional(const NullOptional)
-    : Optional()
-  {}
+  Optional(const NullOptional_t)
+    : Optional() {}
+  Optional(const Type& value) {
+    buffer.construct(value);
+    initialized = true;
+  }
+  Optional(Type&& value) {
+    buffer.construct(std::move(value));
+    initialized = true;
+  }
   ~Optional() {
     if (initialized) {
       buffer.destruct();
@@ -68,10 +77,16 @@ public:
     if (other.initialized) {
       std::memcpy(buffer.storage.data(), other.buffer.storage.data(), sizeof(buffer.storage));
       other.initialized = false;
-      initialized = true;
+      initialized       = true;
     }
 
     return *this;
+  }
+  Optional& operator=(const NullOptional_t) {
+    if (initialized) {
+      buffer.destruct();
+      initialized = false;
+    }
   }
 
   [[nodiscard]]
@@ -79,8 +94,23 @@ public:
     return initialized;
   }
 
-  [[nodiscard]] operator bool() const noexcept {
+  [[nodiscard]]
+  explicit
+  operator bool() const noexcept {
     return has_value();
+  }
+
+  template<typename... Args>
+  Type& emplace(Args&&... args) {
+    if (initialized) {
+      buffer.destruct();
+      initialized = false;
+    }
+
+    buffer.construct(std::forward<Args>(args)...);
+    initialized = true;
+
+    return buffer.get();
   }
 
   [[nodiscard]]
@@ -89,12 +119,13 @@ public:
     return self.buffer.get();
   }
 
-  template<typename Functor>
-  Optional<std::invoke_result_t<std::decay_t<Functor>, std::decay_t<Type>>> and_then(Functor&& functor) {
-    if (has_value()) {
-      return std::forward<Functor>(functor)(value());
+  template<typename T = Type>
+    requires std::same_as<std::decay_t<T>, std::decay_t<Type>>
+  T value_or(this auto&& self, T&& alternative) {
+    if (self.initialized) {
+      return self.value();
     } else {
-      return {};
+      return std::forward<T>(alternative);
     }
   }
 
@@ -108,27 +139,12 @@ public:
       }
   }*/
 
-  template<std::invocable Functor>
-  Optional or_else(Functor&& functor) {
-    if (not has_value()) {
-      return std::forward<Functor>(functor)();
-    } else {
-      return *this;
-    }
-  }
-
-  template<typename ElseType>
-    requires(not std::invocable<ElseType>)
-  Optional or_else(ElseType&& value) {
-    if (not has_value()) {
-      return std::forward<ElseType>(value());
-    } else {
-      return *this;
-    }
-  }
-
   template<typename Functor>
-  Optional<std::invoke_result_t<std::decay_t<Functor>, std::decay_t<Type>>> transform(Functor&& functor) {
+    requires flp::is_specialization_of<
+      std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>,
+      Optional>
+  std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>
+  and_then(Functor&& functor) {
     if (has_value()) {
       return std::forward<Functor>(functor)(value());
     } else {
@@ -136,7 +152,26 @@ public:
     }
   }
 
-  void clear() {
+  template<std::invocable Functor>
+  Optional or_else(Functor&& functor) {
+    if (not has_value()) {
+      return std::forward<Functor>(functor)();
+    } else {
+      return value();
+    }
+  }
+
+  template<typename Functor>
+  Optional<std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>>
+  transform(Functor&& functor) {
+    if (has_value()) {
+      return std::forward<Functor>(functor)(value());
+    } else {
+      return {};
+    }
+  }
+
+  void reset() {
     initialized = false;
     buffer.destruct();
   }
