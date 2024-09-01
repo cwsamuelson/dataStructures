@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/normal_iterator.hh>
+#include <aligned_buffer.hh>
 
 #include <error_help.hh>
 
@@ -24,29 +25,16 @@ public:
   static constexpr size_type value_size = sizeof(value_type);
 
 private:
-  struct BufferDeleter {
-    void operator()(void* pointer) {
-      std::free(pointer);
-    }
-  };
-  using Buffer = std::unique_ptr<std::byte[], BufferDeleter>;
+  using Buffer = std::unique_ptr<AlignedBuffer<Type>[]>;
   Buffer buffer;
   size_t current_size{};
   size_t current_capacity{};
 
-  static reference get_reference(std::byte* buffer, const size_t index) {
-    return *get_pointer(buffer, index);
-  }
-  static pointer get_pointer(std::byte* buffer, const size_t index) {
-    VERIFY(buffer != nullptr, "Buffer is null");
-    return reinterpret_cast<pointer>(&buffer[index * value_size]);
-  }
-
   static Buffer create_buffer(const size_type element_count) {
-    return Buffer{reinterpret_cast<std::byte*>(std::aligned_alloc(value_alignment, element_count * value_size))};
+    return Buffer{new AlignedBuffer<Type>[element_count]};
   }
 
-  void ensure_size(const size_type ensured_size) noexcept {
+  void ensure_size(const size_type ensured_size) {
     if (ensured_size > current_capacity) {
       if (current_size == 0) {
         reserve(4);
@@ -75,7 +63,9 @@ public:
   }
   Vector& operator=(Vector&&) /*noexcept(std::is_noexcept_move_constructible_v<value_type>)*/ = default;
 
-  ~Vector() /*noexcept(std::is_noexcept_destructible_v<value_type>)*/ = default;
+  ~Vector() /*noexcept(std::is_noexcept_destructible_v<value_type>)*/ {
+    clear();
+  }
 
   Vector(const size_type capacity) {
     reserve(capacity);
@@ -89,7 +79,7 @@ public:
   [[nodiscard]]
   decltype(auto) operator[](this auto&& self, const size_type index) {
     VERIFY(index < self.size(), "Index ({}) beyond bounds ({})", index, self.size());
-    return get_reference(self.buffer.get(), index);
+    return self.buffer[index].get();
   }
 
   // deliberately excluding this
@@ -100,20 +90,22 @@ public:
 
   [[nodiscard]]
   decltype(auto) front(this auto&& self) noexcept {
-    return get_reference(self.buffer.get(), 0);
+    VERIFY(not self.empty(), "Accessing front element, but no data allocated");
+    return self.buffer[0].get();
   }
 
   [[nodiscard]]
   decltype(auto) back(this auto&& self) noexcept {
-    return get_reference(self.buffer.get(), self.size() - 1);
+    VERIFY(not self.empty(), "Accessing back element, but no data allocated");
+    return self.buffer[self.size() - 1].get();
   }
 
   reference push_back(const_reference data) {
     ensure_size(current_size + 1);
-    auto* ptr = get_pointer(buffer.get(), size());
-    new (ptr) value_type(data);
+    auto& aligned_buffer = buffer[size()];
+    aligned_buffer.construct(data);
     ++current_size;
-    return *ptr;
+    return aligned_buffer.get();
   }
 
   template<typename ...Args>
@@ -121,16 +113,16 @@ public:
   reference emplace_back(Args&& ...args) {
     ensure_size(current_size + 1);
 
-    auto* ptr = get_pointer(buffer.get(), size());
-    new (ptr) value_type(std::forward<Args>(args)...);
+    auto& aligned_buffer = buffer[size()];
+    aligned_buffer.construct(std::forward<Args>(args)...);
     ++current_size;
 
-    return *ptr;
+    return aligned_buffer.get();
   }
 
   void pop_back() {
-    auto* ptr = get_pointer(buffer.get(), size() - 1);
-    ptr->~value_type();
+    auto& aligned_buffer = buffer[size() - 1];
+    aligned_buffer.destruct();
     --current_size;
   }
 
@@ -155,8 +147,16 @@ public:
     return current_capacity;
   }
 
-  void resize(const size_type count) /*is default constructible*/ {
-    resize(count, value_type{});
+  void resize(const size_type count_target) /*is default constructible*/ {
+    reserve(count_target);
+
+    while (size() < count_target) {
+      emplace_back();
+    }
+
+    while(size() > count_target) {
+      pop_back();
+    }
   }
 
   void resize(const size_type count_target, const value_type value) {
@@ -180,8 +180,8 @@ public:
     // exception safety here?
     // if one of these move operations fails, we're in a sad, but I believe valid, state
     for (size_t i{}; i < current_size; ++i) {
-      const auto buffer_index = i * value_size;
-      *reinterpret_cast<pointer>(&new_buffer[buffer_index]) = std::move(*reinterpret_cast<pointer>(&buffer[buffer_index]));
+      new_buffer[i].construct(std::move(buffer[i].get()));
+      buffer[i].destruct();
     }
     buffer = std::move(new_buffer);
     current_capacity = new_capacity;
@@ -190,7 +190,10 @@ public:
 
   void shrink_to_fit() {
     auto new_buffer = create_buffer(current_size);
-    // copy buffer over
+    for (size_t i{}; i < current_size; ++i) {
+      new_buffer[i].construct(std::move(buffer[i].get()));
+      buffer[i].destruct();
+    }
     buffer = std::move(new_buffer);
     current_capacity = current_size;
   }

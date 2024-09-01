@@ -117,14 +117,10 @@ TEST_CASE("Vectors can be resized") {
   SECTION("Resizing bigger changes size and capacity") {
     Vector<RAIISignaler> vector;
 
-    const auto initial_capacity = vector.capacity();
-    const auto desired_size = initial_capacity + 1;
+    vector.resize(1);
 
-    vector.resize(desired_size);
-    REQUIRE(vector.capacity() > initial_capacity);
-
-    CHECK(vector.size() == desired_size);
-    CHECK(vector.capacity() >= desired_size);
+    CHECK(vector.size() == 1);
+    CHECK(vector.capacity() >= 1);
     CHECK(vector.back().default_constructor);
   }
 
