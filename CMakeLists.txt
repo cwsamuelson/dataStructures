@@ -3,8 +3,6 @@ project(GalacticStructures LANGUAGES CXX)
 
 include(cmake/common.cmake)
 
-common_library(${PROJECT_NAME} INTERFACE)
-
 add_subdirectory(aligned_buffer)
 add_subdirectory(core)
 #add_subdirectory(future)
@@ -15,6 +13,10 @@ add_subdirectory(core)
 #add_subdirectory(optional)
 #add_subdirectory(ProducerConsumer)
 add_subdirectory(vector)
+
+#add_subdirectory(test)
+
+common_library(${PROJECT_NAME} INTERFACE)
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE

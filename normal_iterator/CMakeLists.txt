@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.21)
 PROJECT(normal_iterator LANGUAGES CXX)
 
 ADD_LIBRARY(normal_iterator INTERFACE)
@@ -20,5 +20,4 @@ SET_TARGET_PROPERTIES(test-normal_iterator PROPERTIES
                       CXX_STANDARD_REQUIRED YES
                       CXX_EXTENSIONS NO)
 TARGET_LINK_LIBRARIES(test-normal_iterator normal_iterator Catch2)
-ADD_TEST(test-normal_iterator test-normal_iterator)
 

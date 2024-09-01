@@ -3,8 +3,8 @@ from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
 from conan.tools.files import copy
 from conans.errors import ConanInvalidConfiguration
 
-class data_structures(ConanFile):
-    name = "data_structures"
+class galactic_structures(ConanFile):
+    name = "galactic_structures"
     package_type = "library"
     version = "1.0.0"
     description = "Useful data structures"
@@ -101,8 +101,6 @@ class data_structures(ConanFile):
         cmake.configure()
         cmake.build()
 
-        # it doesn't look like the tests are running?
-        # noticed at least during create
         if self.options.run_tests:
             cmake.test()
 
@@ -115,7 +113,7 @@ class data_structures(ConanFile):
 
     # use components
     def package_info(self):
-        self.cpp_info.libs = ["data_structures"]
+        self.cpp_info.libs = ["galactic_structures"]
         self.cpp_info.includedirs = ["include"]
 
     def deploy(self):

@@ -15,5 +15,4 @@ target_link_libraries(${PROJECT_NAME}
 
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
-add_test(ALL ${PROJECT_NAME})
 
