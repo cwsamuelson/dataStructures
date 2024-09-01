@@ -10,7 +10,7 @@ add_subdirectory(core)
 #add_subdirectory(matrix)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(operators)
-#add_subdirectory(optional)
+add_subdirectory(optional)
 #add_subdirectory(ProducerConsumer)
 add_subdirectory(vector)
 
@@ -25,7 +25,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_matrix
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_operators
-  #${PROJECT_NAME}_optional
+  ${PROJECT_NAME}_optional
   #${PROJECT_NAME}_ProducerConsumer
   ${PROJECT_NAME}_vector
 )
