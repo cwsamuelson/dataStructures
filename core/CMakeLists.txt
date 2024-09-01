@@ -24,14 +24,7 @@ target_sources(${PROJECT_NAME}
   FILE_SET public_headers
   TYPE HEADERS
   BASE_DIRS header
-  FILES
-  header/core/additive.hh
-  header/core/comparative.hh
-  header/core/concepts.hh
-  header/core/multiplicative.hh
-  header/core/normal_iterator.hh
-  header/core/operators.hh
-  header/core/traits.hh
+  FILES ${HEADERS}
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)

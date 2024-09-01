@@ -20,7 +20,7 @@ target_sources(${PROJECT_NAME}
   FILE_SET public_headers
   TYPE HEADERS
   BASE_DIRS header
-  FILES header/vector.hh
+  FILES ${HEADERS}
 )
 
 target_link_libraries(${PROJECT_NAME}
