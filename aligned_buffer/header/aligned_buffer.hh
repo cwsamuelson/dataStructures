@@ -1,6 +1,6 @@
 #pragma once
 
-#include <error_help.hh>
+#include <array>
 
 namespace flp {
 
@@ -9,7 +9,7 @@ struct AlignedBuffer {
   static constexpr size_t Size = sizeof(Type);
 
   alignas(alignment)
-  std::byte storage[Size];
+  std::array<std::byte, Size> storage;
 
   template<typename ...Args>
   void construct(Args&& ...args) {
