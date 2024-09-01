@@ -17,8 +17,10 @@ class galactic_structures(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     exports_sources = (
+        "aligned_buffer/*",
+        "core/*",
+        "vector/*",
         "cmake/*",
-        "test_package/*",
         "CMakeLists.txt",
         "!.devbox/*",
         "!build*/*",
@@ -28,7 +30,6 @@ class galactic_structures(ConanFile):
     )
 
     requires = [
-      "error_support/1.0.0",
     ]
 
     # it appears that the test_package is picking up this dependency
@@ -63,8 +64,9 @@ class galactic_structures(ConanFile):
     #        del self.options.fuzz
     #        del self.options.sanitize
 
-    #def requirements(self):
+    def requirements(self):
     #    self.requires(".../...", override=True)
+        self.requires("error_support/1.0.0", transitive_headers=True, transitive_libs=True)
 
     # running the tests doesn't affect the results
     # if this produces an invalid package, that package would always have been invalid, regardless of if the tests were run
@@ -113,7 +115,8 @@ class galactic_structures(ConanFile):
 
     # use components
     def package_info(self):
-        self.cpp_info.libs = ["galactic_structures"]
+        # no built binaries yet
+        #self.cpp_info.libs = ["galactic_structures"]
         self.cpp_info.includedirs = ["include"]
 
     def deploy(self):

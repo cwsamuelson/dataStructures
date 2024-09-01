@@ -14,8 +14,6 @@ add_subdirectory(core)
 #add_subdirectory(ProducerConsumer)
 add_subdirectory(vector)
 
-#add_subdirectory(test)
-
 common_library(${PROJECT_NAME} INTERFACE)
 
 target_link_libraries(${PROJECT_NAME}
@@ -31,24 +29,6 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_ProducerConsumer
   ${PROJECT_NAME}_vector
 )
-
-set_target_properties(${PROJECT_NAME} PROPERTIES
-  INSTALL_RPATH "\$ORIGIN/../lib"
-  RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
-
-#install(TARGETS
-  #${PROJECT_NAME}_aligned_buffer
-  #${PROJECT_NAME}_core
-  #${PROJECT_NAME}_future
-  #${PROJECT_NAME}_lifetime
-  #${PROJECT_NAME}_matrix
-  #${PROJECT_NAME}_normal_iterator
-  #${PROJECT_NAME}_operators
-  #${PROJECT_NAME}_optional
-  #${PROJECT_NAME}_ProducerConsumer
-  #${PROJECT_NAME}_vector
-  #)
 
 enable_testing()
 

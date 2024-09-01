@@ -15,9 +15,12 @@ common_library(${PROJECT_NAME} INTERFACE
   ${SOURCES}
 )
 
-target_include_directories(${PROJECT_NAME}
-  INTERFACE
-  header
+target_sources(${PROJECT_NAME}
+  PUBLIC
+  FILE_SET public_headers
+  TYPE HEADERS
+  BASE_DIRS header
+  FILES header/vector.hh
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -26,6 +29,8 @@ target_link_libraries(${PROJECT_NAME}
   ${BASE_PROJECT}_aligned_buffer
   error_support::error_support
 )
+
+install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
