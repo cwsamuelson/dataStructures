@@ -110,14 +110,6 @@ struct Storage<Type, dimensions, StaticAllocator> {
 };
 
 template<typename Type, Dimensions dimensions>
-  requires(((dimensions.width * dimensions.height) * sizeof(Type)) <= (1024 * 1024))
-struct Storage<Type, dimensions, DeducedAllocator> {
-  template<typename T = Type>
-  using value_type = std::array<T, dimensions.width * dimensions.height>;
-};
-
-template<typename Type, Dimensions dimensions>
-  requires(((dimensions.width * dimensions.height) * sizeof(Type)) > (1024 * 1024))
 struct Storage<Type, dimensions, DeducedAllocator> {
   template<typename T = Type>
   using value_type = std::vector<T>;
@@ -186,10 +178,14 @@ constexpr size_t to_1D(const Width width, const XIndex xindex, const YIndex yind
 template<typename Type, Dimensions Dimensions = Dynamic, Allocator = DynamicAllocator>
 struct MatrixStore;
 
-template<typename Type, Dimensions dimensions>
-  requires(dimensions != Dynamic)
-struct MatrixStore<Type, dimensions, StaticAllocator> {
-  using Storage = typename Storage<Type, dimensions, StaticAllocator>::value_type;
+template<typename Type, Dimensions dims>
+  requires(dims != Dynamic)
+struct MatrixStore<Type, dims, StaticAllocator> {
+  constexpr static Dimensions dimensions = dims;
+
+  using value_type = Type;
+  using Alloc_t    = StaticAllocator;
+  using Storage    = typename Storage<Type, dimensions, StaticAllocator>::value_type;
 
   constexpr MatrixStore() noexcept(std::is_nothrow_default_constructible_v<Storage>)                        = default;
   constexpr MatrixStore(const MatrixStore&) noexcept(std::is_nothrow_copy_constructible_v<Storage>)         = default;
@@ -242,7 +238,11 @@ struct MatrixStore<Type, dimensions, StaticAllocator> {
 
 template<typename Type>
 struct MatrixStore<Type, Dynamic, DynamicAllocator> {
-  using Storage = Storage<Type, Dynamic, DynamicAllocator>::value_type;
+  constexpr static Dimensions dimensions = Dynamic;
+
+  using value_type = Type;
+  using Alloc_t    = DynamicAllocator;
+  using Storage    = Storage<Type, Dynamic, DynamicAllocator>::value_type;
 
   // constexpr MatrixStore()
 
@@ -277,17 +277,31 @@ struct MatrixStore<Type, Dynamic, DynamicAllocator> {
   Storage data;
 };
 
-template<typename Type, Dimensions dimensions = Dynamic, Allocator allocator = DynamicAllocator>
+constexpr size_t StaticLimit = 4096;
+
+template<typename Type>
+struct MatrixStore<Type, Dynamic, DeducedAllocator> : MatrixStore<Type, Dynamic, DynamicAllocator> {};
+template<typename Type, Dimensions dimensions>
+  requires((dimensions.width * dimensions.height) * sizeof(Type) <= StaticLimit)
+struct MatrixStore<Type, dimensions, DeducedAllocator> : MatrixStore<Type, dimensions, StaticAllocator> {};
+template<typename Type, Dimensions dimensions>
+  requires((dimensions.width * dimensions.height) * sizeof(Type) > StaticLimit)
+struct MatrixStore<Type, dimensions, DeducedAllocator> : MatrixStore<Type, Dynamic, DynamicAllocator> {};
+
+template<typename Type, Dimensions dimensions = Dynamic, Allocator alloc = DeducedAllocator>
 struct Matrix {
   using value_type = Type;
-  using Storage    = MatrixStore<value_type, dimensions, allocator>;
+  using Storage    = MatrixStore<value_type, dimensions, alloc>;
+  using allocator  = typename Storage::Alloc_t;
 
-  constexpr         Matrix() noexcept(std::is_nothrow_default_constructible_v<Storage>)           = default;
-  constexpr         Matrix(const Matrix&) noexcept(std::is_nothrow_copy_constructible_v<Storage>) = default;
-  constexpr         Matrix(Matrix&&) noexcept(std::is_nothrow_move_constructible_v<Storage>)      = default;
+  constexpr Matrix() noexcept(std::is_nothrow_default_constructible_v<Storage>)           = default;
+  constexpr Matrix(const Matrix&) noexcept(std::is_nothrow_copy_constructible_v<Storage>) = default;
+  constexpr Matrix(Matrix&&) noexcept(std::is_nothrow_move_constructible_v<Storage>)      = default;
+
   constexpr Matrix& operator=(const Matrix&) noexcept(std::is_nothrow_copy_assignable_v<Storage>) = default;
   constexpr Matrix& operator=(Matrix&&) noexcept(std::is_nothrow_move_assignable_v<Storage>)      = default;
-  constexpr ~       Matrix() noexcept(std::is_nothrow_destructible_v<Storage>)                    = default;
+
+  constexpr ~Matrix() noexcept(std::is_nothrow_destructible_v<Storage>) = default;
 
   constexpr Matrix(Dimensions dims, const Type value) noexcept
     : storage(dims, value) {}
