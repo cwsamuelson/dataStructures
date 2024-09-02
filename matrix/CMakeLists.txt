@@ -1,22 +1,36 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.21)
-PROJECT(matrix LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.21)
+set(BASE_PROJECT ${PROJECT_NAME})
+project(${BASE_PROJECT}_matrix LANGUAGES CXX)
 
-ADD_LIBRARY(matrix INTERFACE)
+find_package(error_support REQUIRED)
 
-SET_TARGET_PROPERTIES(matrix PROPERTIES
-                      INTERFACE_CXX_STANDARD 17
-                      INTERFACE_CXX_STANDARD_REQUIRED YES
-                      INTERFACE_CXX_EXTENSIONS NO)
+set(HEADERS
+        header/matrix.hh
+)
+set(SOURCES
+)
 
-TARGET_INCLUDE_DIRECTORIES(matrix INTERFACE header)
-TARGET_LINK_LIBRARIES(matrix INTERFACE tuple)
+common_library(${PROJECT_NAME} INTERFACE
+        ${HEADERS}
+        ${SOURCES}
+)
 
-ADD_EXECUTABLE(test-matrix test/tests.cc)
-SET_TARGET_PROPERTIES(test-matrix PROPERTIES
-                      CXX_STANDARD 17
-                      CXX_STANDARD_REQUIRED YES
-                      CXX_EXTENSIONS NO)
-TARGET_LINK_LIBRARIES(test-matrix matrix Catch2)
+target_sources(${PROJECT_NAME}
+        PUBLIC
+        FILE_SET public_headers
+        TYPE HEADERS
+        BASE_DIRS header
+        FILES ${HEADERS}
+)
 
-ENABLE_TESTING()
+target_link_libraries(${PROJECT_NAME}
+        INTERFACE
+        ${BASE_PROJECT}_core
+        error_support::error_support
+)
+
+install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
+
+enable_testing()
+add_subdirectory(test)
 

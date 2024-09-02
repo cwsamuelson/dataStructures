@@ -3,28 +3,29 @@ set(BASE_PROJECT ${PROJECT_NAME})
 project(${BASE_PROJECT}_core LANGUAGES CXX)
 
 set(HEADERS
-  header/core/additive.hh
-  header/core/comparative.hh
-  header/core/concepts.hh
-  header/core/multiplicative.hh
-  header/core/normal_iterator.hh
-  header/core/operators.hh
-  header/core/traits.hh
+        header/core/additive.hh
+        header/core/comparative.hh
+        header/core/concepts.hh
+        header/core/multiplicative.hh
+        header/core/normal_iterator.hh
+        header/core/operators.hh
+        header/core/tagged_type.hh
+        header/core/traits.hh
 )
 set(SOURCES
 )
 
 common_library(${PROJECT_NAME} INTERFACE
-  ${HEADERS}
-  ${SOURCES}
+        ${HEADERS}
+        ${SOURCES}
 )
 
 target_sources(${PROJECT_NAME}
-  PUBLIC
-  FILE_SET public_headers
-  TYPE HEADERS
-  BASE_DIRS header
-  FILES ${HEADERS}
+        PUBLIC
+        FILE_SET public_headers
+        TYPE HEADERS
+        BASE_DIRS header
+        FILES ${HEADERS}
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
