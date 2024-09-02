@@ -14,8 +14,17 @@ TEST_CASE("using a matrix") {
     CHECK(matrix.width() == 5);
     CHECK(matrix.height() == 5);
 
-    matrix[0, 0] = 10;
-    CHECK(matrix[0, 0] == 10);
+    for (size_t i {}; i < 5; ++i) {
+      for (size_t j {}; j < 5; ++j) {
+        matrix[i, j] = (i * 5) + j;
+      }
+    }
+
+    for (size_t i {}; i < 5; ++i) {
+      for (size_t j {}; j < 5; ++j) {
+        CHECK(matrix[i, j] == (i * 5) + j);
+      }
+    }
   }
 
   SECTION("Static dimensions") {
@@ -23,19 +32,17 @@ TEST_CASE("using a matrix") {
     CHECK(matrix.width() == 5);
     CHECK(matrix.height() == 5);
     // matrix.resize(10, 10);// not a thing
+
+    for (size_t i {}; i < 5; ++i) {
+      for (size_t j {}; j < 5; ++j) {
+        matrix[i, j] = (i * 5) + j;
+      }
+    }
+
+    for (size_t i {}; i < 5; ++i) {
+      for (size_t j {}; j < 5; ++j) {
+        CHECK(matrix[i, j] == (i * 5) + j);
+      }
+    }
   }
-
-  Matrix<size_t>                         int_mat;
-  Matrix<float>                          float_mat;
-  Matrix<int, { 5, 5 }, StaticAllocator> s_mat;
-  // s_mat.resize(1,1);
-  s_mat[0];
-  // s_mat[100];
-
-  int_mat.resize(1, 2);
-
-  int_mat[0] = 5;
-  int_mat[1] = 5;
-
-  (void)(int_mat[0] * int_mat[1]);
 }
