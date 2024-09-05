@@ -101,5 +101,12 @@ TEST_CASE("Add/remove pointer") {
   STATIC_CHECK(std::same_as<flp::AddPointer<const int>,   const int*>);
   STATIC_CHECK(std::same_as<flp::AddPointer<const int*>,  const int**>);
   STATIC_CHECK(std::same_as<flp::AddPointer<const int**>, const int***>);
+
+  STATIC_CHECK(std::same_as<flp::RemovePointer<      int* const>,           int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<const int* const>,     const int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<      int* volatile>,        int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<const int* volatile>,  const int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<      int* const volatile>,        int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<const int* const volatile>,  const int>);
 }
 

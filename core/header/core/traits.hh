@@ -83,6 +83,21 @@ struct RemovePointerImpl<Type*> {
 };
 
 template<typename Type>
+struct RemovePointerImpl<Type* const> {
+  using type = Type;
+};
+
+template<typename Type>
+struct RemovePointerImpl<Type* const volatile> {
+  using type = Type;
+};
+
+template<typename Type>
+struct RemovePointerImpl<Type* volatile> {
+  using type = Type;
+};
+
+template<typename Type>
 using RemovePointer = RemovePointerImpl<Type>::type;
 
 template<typename Type>
