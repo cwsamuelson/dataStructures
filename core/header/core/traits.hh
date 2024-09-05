@@ -71,5 +71,22 @@ using AddLValueReference = Type&;
 template<typename Type>
 using AddRValueReference = Type&&;
 
+// --- pointer
+template<typename Type>
+struct RemovePointerImpl {
+  using type = Type;
+};
+
+template<typename Type>
+struct RemovePointerImpl<Type*> {
+  using type = Type;
+};
+
+template<typename Type>
+using RemovePointer = RemovePointerImpl<Type>::type;
+
+template<typename Type>
+using AddPointer = Type*;
+
 } // namespace flp
 

@@ -85,3 +85,21 @@ TEST_CASE("Add/remove reference") {
   STATIC_CHECK(std::same_as<flp::AddRValueReference<const volatile int>, const volatile int&&>);
 }
 
+TEST_CASE("Add/remove pointer") {
+  STATIC_CHECK(std::same_as<flp::RemovePointer<int>,   int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<int*>,  int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<int**>, int*>);
+
+  STATIC_CHECK(std::same_as<flp::AddPointer<int>,   int*>);
+  STATIC_CHECK(std::same_as<flp::AddPointer<int*>,  int**>);
+  STATIC_CHECK(std::same_as<flp::AddPointer<int**>, int***>);
+
+  STATIC_CHECK(std::same_as<flp::RemovePointer<const int>,   const int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<const int*>,  const int>);
+  STATIC_CHECK(std::same_as<flp::RemovePointer<const int**>, const int*>);
+
+  STATIC_CHECK(std::same_as<flp::AddPointer<const int>,   const int*>);
+  STATIC_CHECK(std::same_as<flp::AddPointer<const int*>,  const int**>);
+  STATIC_CHECK(std::same_as<flp::AddPointer<const int**>, const int***>);
+}
+
