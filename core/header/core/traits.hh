@@ -46,5 +46,30 @@ using RemoveCV = RemoveConst<RemoveVolatile<Type>>;
 template<typename Type>
 using AddCV = AddConst<AddVolatile<Type>>;
 
+// --- reference
+template<typename Type>
+struct RemoveReferenceImpl {
+  using type = Type;
+};
+
+template<typename Type>
+struct RemoveReferenceImpl<Type&> {
+  using type = Type;
+};
+
+template<typename Type>
+struct RemoveReferenceImpl<Type&&> {
+  using type = Type;
+};
+
+template<typename Type>
+using RemoveReference = RemoveReferenceImpl<Type>::type;
+
+template<typename Type>
+using AddLValueReference = Type&;
+
+template<typename Type>
+using AddRValueReference = Type&&;
+
 } // namespace flp
 
