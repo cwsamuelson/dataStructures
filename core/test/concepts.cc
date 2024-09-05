@@ -162,3 +162,11 @@ TEST_CASE("Basis") {
 TEST_CASE("Nothrow") {
 }
 
+template<typename>
+struct Template {};
+
+TEST_CASE("Is Specialization") {
+  CHECK(flp::IsSpecializationOf<Template<int>, Template>);
+  CHECK(not flp::IsSpecializationOf<int, Template>);
+}
+

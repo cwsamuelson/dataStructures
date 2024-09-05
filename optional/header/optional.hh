@@ -1,7 +1,7 @@
 #include <aligned_buffer.hh>
 #include <error_help.hh>
 
-#include <core/traits.hh>
+#include <core/concepts.hh>
 
 #include <concepts>
 #include <cstring>
@@ -140,7 +140,7 @@ public:
   }*/
 
   template<typename Functor>
-    requires flp::is_specialization_of<
+    requires flp::IsSpecializationOf<
       std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>,
       Optional>
   std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>

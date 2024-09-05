@@ -4,17 +4,47 @@
 
 namespace flp {
 
-template<typename, template<typename...> class>
-inline constexpr bool is_specialization_helper = false;
+// --- const
 
-template<template<typename...> class Target, typename... Args>
-inline constexpr bool is_specialization_helper<Target<Args...>, Target> = true;
+template<typename Type>
+struct RemoveConstImpl {
+  using type = Type;
+};
 
-// using the wrapper and decay handles refs and cv-qual
-template<typename Query, template<typename...> typename Target>
-inline constexpr bool is_specialization_of = is_specialization_helper<std::decay_t<Query>, Target>;
+template<typename Type>
+struct RemoveConstImpl<const Type> {
+  using type = Type;
+};
 
-template<typename Type, template<typename...> typename Target>
-concept instance_of = is_specialization_of<Type, Target>;
+template<typename Type>
+using RemoveConst = RemoveConstImpl<Type>::type;
+
+template<typename Type>
+using AddConst = const Type;
+
+// --- volatile
+template<typename Type>
+struct RemoveVolatileImpl {
+  using type = Type;
+};
+
+template<typename Type>
+struct RemoveVolatileImpl<volatile Type> {
+  using type = Type;
+};
+
+template<typename Type>
+using RemoveVolatile = RemoveVolatileImpl<Type>::type;
+
+template<typename Type>
+using AddVolatile = volatile Type;
+
+// --- CV
+template<typename Type>
+using RemoveCV = RemoveConst<RemoveVolatile<Type>>;
+
+template<typename Type>
+using AddCV = AddConst<AddVolatile<Type>>;
 
 } // namespace flp
+
