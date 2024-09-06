@@ -12,6 +12,7 @@ add_subdirectory(matrix)
 #add_subdirectory(operators)
 add_subdirectory(optional)
 #add_subdirectory(ProducerConsumer)
+add_subdirectory(ranged_int)
 add_subdirectory(vector)
 
 common_library(${PROJECT_NAME} INTERFACE)
@@ -27,6 +28,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
   #${PROJECT_NAME}_ProducerConsumer
+  ${PROJECT_NAME}_ranged_int
   ${PROJECT_NAME}_vector
 )
 

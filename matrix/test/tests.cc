@@ -46,3 +46,24 @@ TEST_CASE("using a matrix") {
     }
   }
 }
+
+TEST_CASE("Linear algebra") {
+  Matrix<float, Dynamic> matrix1(5, 5);
+  Matrix<float, Dynamic> matrix2(5, 5);
+  Matrix<float, Dynamic> matrix3(5, 5);
+
+  for (size_t i {}; i < 5; ++i) {
+    for (size_t j {}; j < 5; ++j) {
+      matrix3[i, j] = 10;
+    }
+  }
+
+  for (size_t i {}; i < 5; ++i) {
+    for (size_t j {}; j < 5; ++j) {
+      matrix1[i, j] = (((i * 5) + j) % 2) * 10;
+      matrix2[i, j] = (((i * 5) + j + 1) % 2) * 10;
+    }
+  }
+
+  //CHECK(Matrix<float, Dynamic>(matrix1 + matrix2) == matrix3);
+}

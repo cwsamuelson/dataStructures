@@ -3,7 +3,7 @@
 // the mixins might be valuable...
 
 #include <core/tagged_type.hh>
-#include <core/traits.hh>
+#include <core/concepts.hh>
 
 #include <array>
 #include <limits>
@@ -83,10 +83,10 @@ template<typename>
 struct Allocator_t {};
 
 template<typename Type>
-inline constexpr bool is_allocator = flp::is_specialization_of<Type, Allocator_t>;
+inline constexpr bool is_allocator = flp::IsSpecializationOf<Type, Allocator_t>;
 
 template<typename Type>
-concept Allocator = flp::is_specialization_of<Type, Allocator_t>;
+concept Allocator = flp::IsSpecializationOf<Type, Allocator_t>;
 
 struct DynamicTag;
 struct StaticTag;
@@ -195,6 +195,8 @@ struct MatrixStore<Type, dims, StaticAllocator> {
 
   constexpr ~MatrixStore() noexcept(std::is_nothrow_destructible_v<Storage>) = default;
 
+  friend auto operator<=>(const MatrixStore&, const MatrixStore&) noexcept = default;
+
   // assignment from dynamic matrices
   constexpr MatrixStore& operator=(const MatrixStore<Type, Dynamic, DynamicAllocator>& other) noexcept {
     assert(other.width == width);
@@ -244,7 +246,26 @@ struct MatrixStore<Type, Dynamic, DynamicAllocator> {
   using Alloc_t    = DynamicAllocator;
   using Storage    = Storage<Type, Dynamic, DynamicAllocator>::value_type;
 
-  // constexpr MatrixStore()
+  constexpr MatrixStore() noexcept(std::is_nothrow_default_constructible_v<Storage>)                        = default;
+  constexpr MatrixStore(const MatrixStore&) noexcept(std::is_nothrow_copy_constructible_v<Storage>)         = default;
+  constexpr MatrixStore(MatrixStore&&) noexcept(std::is_nothrow_move_constructible_v<Storage>)              = default;
+  constexpr MatrixStore& operator=(const MatrixStore&) noexcept(std::is_nothrow_copy_assignable_v<Storage>) = default;
+  constexpr MatrixStore& operator=(MatrixStore&&) noexcept(std::is_nothrow_move_assignable_v<Storage>)      = default;
+
+  constexpr ~MatrixStore() noexcept(std::is_nothrow_destructible_v<Storage>) = default;
+
+  constexpr MatrixStore(const Dimensions dims, const Type value) noexcept
+    : width(dims.width)
+    , height(dims.height)
+    , data(width * height, value) {}
+  constexpr MatrixStore(const Dimensions dims) noexcept
+    : MatrixStore(dims, {}) {}
+  constexpr MatrixStore(const Width wdt, const Height heit, const Type value) noexcept
+    : MatrixStore({ wdt, heit }, value) {}
+  constexpr MatrixStore(const Width wdt, const Height heit) noexcept
+    : MatrixStore({ wdt, heit }, {}) {}
+
+  friend auto operator<=>(const MatrixStore&, const MatrixStore&) noexcept = default;
 
   // assignment from other dynamic matrices
 
@@ -280,13 +301,19 @@ struct MatrixStore<Type, Dynamic, DynamicAllocator> {
 constexpr size_t StaticLimit = 4096;
 
 template<typename Type>
-struct MatrixStore<Type, Dynamic, DeducedAllocator> : MatrixStore<Type, Dynamic, DynamicAllocator> {};
+struct MatrixStore<Type, Dynamic, DeducedAllocator> : MatrixStore<Type, Dynamic, DynamicAllocator> {
+  using MatrixStore<Type, Dynamic, DynamicAllocator>::MatrixStore;
+};
 template<typename Type, Dimensions dimensions>
   requires((dimensions.width * dimensions.height) * sizeof(Type) <= StaticLimit)
-struct MatrixStore<Type, dimensions, DeducedAllocator> : MatrixStore<Type, dimensions, StaticAllocator> {};
+struct MatrixStore<Type, dimensions, DeducedAllocator> : MatrixStore<Type, dimensions, StaticAllocator> {
+  using MatrixStore<Type, dimensions, StaticAllocator>::MatrixStore;
+};
 template<typename Type, Dimensions dimensions>
   requires((dimensions.width * dimensions.height) * sizeof(Type) > StaticLimit)
-struct MatrixStore<Type, dimensions, DeducedAllocator> : MatrixStore<Type, Dynamic, DynamicAllocator> {};
+struct MatrixStore<Type, dimensions, DeducedAllocator> : MatrixStore<Type, Dynamic, DynamicAllocator> {
+  using MatrixStore<Type, Dynamic, DynamicAllocator>::MatrixStore;
+};
 
 template<typename Type, Dimensions dimensions = Dynamic, Allocator alloc = DeducedAllocator>
 struct Matrix {
@@ -303,14 +330,18 @@ struct Matrix {
 
   constexpr ~Matrix() noexcept(std::is_nothrow_destructible_v<Storage>) = default;
 
-  constexpr Matrix(Dimensions dims, const Type value) noexcept
+  constexpr Matrix(const Dimensions dims, const Type value) noexcept
+    requires(dimensions == Dynamic)
     : storage(dims, value) {}
-  constexpr Matrix(Dimensions dims) noexcept
+  constexpr Matrix(const Dimensions dims) noexcept
+    requires(dimensions == Dynamic)
     : Matrix(dims, {}) {}
   constexpr Matrix(const Width width, const Height height, const Type value) noexcept
     : Matrix({ width, height }, value) {}
   constexpr Matrix(const Width width, const Height height) noexcept
     : Matrix(width, height, {}) {}
+
+  friend auto operator<=>(const Matrix&, const Matrix&) noexcept = default;
 
   // assignment from other dynamic matrices
 
@@ -390,7 +421,7 @@ struct Operation {
   }
 
   [[nodiscard]]
-  constexpr
+  constexpr explicit
   operator LHS() const {
     return (*this)();
   }

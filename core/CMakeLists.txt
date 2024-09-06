@@ -9,6 +9,7 @@ set(HEADERS
         header/core/multiplicative.hh
         header/core/normal_iterator.hh
         header/core/operators.hh
+        header/core/range.hh
         header/core/tagged_type.hh
         header/core/traits.hh
 )
