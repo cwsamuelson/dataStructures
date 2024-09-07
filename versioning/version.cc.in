@@ -1,0 +1,48 @@
+#include "versioning/version.hh"
+
+#include <format>
+
+const Versioning::Version Versioning::version {
+  .major       = ${VERSION_MAJOR},
+  .minor       = ${VERSION_MINOR},
+  .patch       = ${VERSION_PATCH},
+  .build_id    = "${CI_BUILD_ID}",
+  .git_commit  = "${GIT_FULL_HASH}",
+  .branch_name = "${BRANCH_NAME}",
+  .base_tag    = "${GIT_TAG}",
+  .description = "${DESCRIPTION}",
+  .distance    = ${GIT_DISTANCE},
+  .is_dirty    = not std::string_view("${GIT_DIRTY}").empty(),
+};
+
+namespace Versioning {
+
+Version::operator std::string() const {
+  if (distance == 0) {
+    return std::format("v{}.{}.{}{}", major, minor, patch, is_dirty ? "+" : "");
+  } else {
+    std::string distance_string;
+    std::string id_string;
+
+    if (distance > 0) {
+      distance_string = std::to_string(distance) + "-";
+    }
+
+    if (not build_id.empty()) {
+      id_string = std::string(build_id) + "-";
+    }
+
+    return std::format("v{}.{}.{}-{}{}{}@g{}{}",
+        major,
+        minor,
+        patch,
+        distance_string,
+        id_string,
+        branch_name,
+        git_commit.substr(0, 7),
+        is_dirty ? "+" : "");
+  }
+}
+
+}
+
