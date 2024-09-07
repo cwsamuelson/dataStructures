@@ -1,5 +1,7 @@
+#pragma once
+
 #include <compare>
-#include <cstddef>
+#include <utility>
 
 namespace flp {
 
@@ -9,25 +11,29 @@ struct Range {
   Type finish;
 
   constexpr friend auto operator<=>(const Range&, const Range&) noexcept = default;
+  constexpr friend bool operator==(const Range&, const Range&) noexcept  = default;
 
-  constexpr friend auto operator<=>(const Type point, const Range& range) noexcept {
-    if (point < range.start) {
+  constexpr friend auto operator<=>(const auto point, const Range& range) noexcept {
+    if (std::cmp_less(point, range.start)) {
       return std::strong_ordering::less;
     }
 
-    if (point < range.finish) {
+    if (std::cmp_greater(point, range.finish)) {
       return std::strong_ordering::greater;
     }
 
     return std::strong_ordering::equivalent;
   }
+  constexpr friend bool operator==(const auto point, const Range& range) noexcept {
+    return std::cmp_greater_equal(point, range.start) and std::cmp_less_equal(point, range.finish);
+  }
 
   constexpr friend auto operator+(const Range& lhs, const Range& rhs) noexcept {
-    return { lhs.start + rhs.start, lhs.finish + rhs.inish };
+    return { lhs.start + rhs.start, lhs.finish + rhs.finish };
   }
 
   constexpr friend auto operator-(const Range& lhs, const Range& rhs) noexcept {
-    return { lhs.start - rhs.start, lhs.finish - rhs.inish };
+    return { lhs.start - rhs.start, lhs.finish - rhs.finish };
   }
 };
 

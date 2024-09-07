@@ -10,3 +10,6 @@ documentation/*
 build/*
 .idea/*
 cmake-build-*/*
+CMakeUserPresets.json
+conan_provider.cmake
+

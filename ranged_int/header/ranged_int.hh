@@ -8,6 +8,8 @@
 
 namespace flp {
 
+namespace {
+
 template<Range>
 struct DeducedTypeImpl;
 
@@ -67,6 +69,8 @@ struct DeducedTypeImpl<range> {
   using type = int64_t;
 };
 
+} // namespace
+
 template<Range range>
 using DeducedType = typename DeducedTypeImpl<range>::type;
 
@@ -78,7 +82,9 @@ struct RangedInt {
 
   template<typename InputType>
   constexpr RangedInt(const InputType& input)
-    : value(input) {}
+    : value(input) {
+    VERIFY(input >= ValueRange.start and input <= ValueRange.finish, "");
+  }
 
   template<Range OtherRange>
   constexpr RangedInt operator=(const RangedInt<OtherRange>& other) noexcept {
@@ -87,28 +93,37 @@ struct RangedInt {
 
     value = other.value;
 
+    VERIFY(other.value >= ValueRange.start and other.value <= ValueRange.finish, "");
+
     return *this;
   }
 
   template<Range OtherRange>
   constexpr auto operator+(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange + OtherRange>(value + other);
+    return RangedInt<ValueRange + OtherRange>(value + other, unconstrained);
   }
 
   template<Range OtherRange>
   constexpr auto operator-(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange - OtherRange>(value - other);
+    return RangedInt<ValueRange - OtherRange>(value - other, unconstrained);
   }
 
   template<Range OtherRange>
   constexpr auto operator*(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange * OtherRange>(value * other);
+    return RangedInt<ValueRange * OtherRange>(value * other, unconstrained);
   }
 
   template<Range OtherRange>
   constexpr auto operator/(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange / OtherRange>(value / other);
+    return RangedInt<ValueRange / OtherRange>(value / other, unconstrained);
   }
+
+private:
+  struct Unconstrained_t {};
+  constexpr static Unconstrained_t unconstrained {};
+
+  constexpr RangedInt(const Type input, Unconstrained_t)
+    : value(input) {}
 };
 
 template<typename Type>
