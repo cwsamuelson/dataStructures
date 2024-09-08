@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(GalacticStructures LANGUAGES CXX)
 
-include(cmake/common.cmake)
+find_package(cmake_scripts REQUIRED)
 
 add_subdirectory(aligned_buffer)
 add_subdirectory(core)

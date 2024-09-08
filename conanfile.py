@@ -42,6 +42,10 @@ class galactic_structures(ConanFile):
         "catch2/3.7.0"
     ]
 
+    tool_requires = [
+        "cmake_scripts/1.0.0"
+    ]
+
     options = {
         "shared": [True, False],
         "sanitize" : [True, False],
@@ -99,6 +103,8 @@ class galactic_structures(ConanFile):
         tool_chain.generate()
 
         deps = CMakeDeps(self)
+        deps.build_context_activated = [ "cmake_scripts" ]
+        deps.build_context_build_modules = [ "cmake_scripts" ]
         deps.generate()
 
     def build(self):
