@@ -4,7 +4,9 @@
 
 #include <core/range.hh>
 
+#include <algorithm>
 #include <limits>
+#include <type_traits>
 
 namespace flp {
 
@@ -69,6 +71,18 @@ struct DeducedTypeImpl<range> {
   using type = int64_t;
 };
 
+template<Range op1_range, Range op2_range, typename Op>
+struct WorstCaseRange {
+  constexpr static std::array values { Op {}(op1_range.start, op2_range.start),
+                                       Op {}(op1_range.start, op2_range.finish),
+                                       Op {}(op1_range.finish, op2_range.start),
+                                       Op {}(op1_range.finish, op2_range.finish) };
+  constexpr static Range      range = {
+    *std::ranges::min_element(values),
+    *std::ranges::max_element(values),
+  };
+};
+
 } // namespace
 
 template<Range range>
@@ -76,9 +90,12 @@ using DeducedType = typename DeducedTypeImpl<range>::type;
 
 template<Range ValueRange>
 struct RangedInt {
-  using Type = DeducedType<ValueRange>;
+  using Type                  = DeducedType<ValueRange>;
+  constexpr static auto range = ValueRange;
 
-  Type value;
+  Type value = ValueRange.start;
+
+  constexpr RangedInt() noexcept = default;
 
   template<typename InputType>
   constexpr RangedInt(const InputType& input)
@@ -108,7 +125,7 @@ struct RangedInt {
     return RangedInt<ValueRange - OtherRange>(value - other, unconstrained);
   }
 
-  template<Range OtherRange>
+  /*template<Range OtherRange>
   constexpr auto operator*(const RangedInt<OtherRange>& other) noexcept {
     return RangedInt<ValueRange * OtherRange>(value * other, unconstrained);
   }
@@ -116,7 +133,7 @@ struct RangedInt {
   template<Range OtherRange>
   constexpr auto operator/(const RangedInt<OtherRange>& other) noexcept {
     return RangedInt<ValueRange / OtherRange>(value / other, unconstrained);
-  }
+  }*/
 
 private:
   struct Unconstrained_t {};
@@ -139,3 +156,12 @@ using s32 = RangedInt<{ std::numeric_limits<int32_t>::min(), std::numeric_limits
 using s64 = RangedInt<{ std::numeric_limits<int64_t>::min(), std::numeric_limits<int64_t>::max() }>;
 
 } // namespace flp
+
+namespace std {
+
+template<flp::Range range1, flp::Range range2>
+struct common_type<flp::RangedInt<range1>, flp::RangedInt<range2>> {
+  using type = flp::RangedInt<flp::CommonRange<range1, range2>::Value>;
+};
+
+} // namespace std
