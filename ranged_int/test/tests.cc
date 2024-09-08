@@ -117,11 +117,11 @@ TEST_CASE("Using ranged integers") {
 
   SECTION("Math with no risk of overflow") {
     SECTION("Safe type promotion guarantee") {
-      // STATIC_CHECK(std::same_as<decltype(u8 {} + u8 {}), u16>);
-      /*STATIC_CHECK(std::same_as<decltype(u16 {} + u16 {}), u32>);
-      STATIC_CHECK(std::same_as<decltype(u32 {} + u32 {}), u64>);
-      // STATIC_CHECK(std::same_as<decltype(u64{} + u64{}), ...>);
-      STATIC_CHECK(std::same_as<decltype(s8 {} + s8 {}), u16>);
+      STATIC_CHECK(std::same_as<decltype(u8 {} + u8 {})::Type, u16::Type>);
+      // STATIC_CHECK(std::same_as<decltype(u16 {} + u16 {})::Type, u32::Type>);
+      // STATIC_CHECK(std::same_as<decltype(u32 {} + u32 {})::Type, u64::Type>);
+      // STATIC_CHECK(std::same_as<decltype(u64{} + u64{})::Type, ...::Type>);
+      /*STATIC_CHECK(std::same_as<decltype(s8 {} + s8 {}), u16>);
       STATIC_CHECK(std::same_as<decltype(s16 {} + s16 {}), u32>);
       STATIC_CHECK(std::same_as<decltype(s32 {} + s32 {}), u64>);
       // STATIC_CHECK(std::same_as<decltype(s64{} + s64{}), ...>);

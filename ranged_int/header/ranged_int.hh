@@ -88,6 +88,9 @@ struct WorstCaseRange {
 template<Range range>
 using DeducedType = typename DeducedTypeImpl<range>::type;
 
+struct Unconstrained_t {};
+constexpr static Unconstrained_t unconstrained {};
+
 template<Range ValueRange>
 struct RangedInt {
   using Type                  = DeducedType<ValueRange>;
@@ -117,27 +120,31 @@ struct RangedInt {
 
   template<Range OtherRange>
   constexpr auto operator+(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange + OtherRange>(value + other, unconstrained);
+    return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::plus<>>::range>(std::plus<> {}(value, other.value),
+                                                                                 unconstrained);
   }
 
   template<Range OtherRange>
   constexpr auto operator-(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange - OtherRange>(value - other, unconstrained);
-  }
-
-  /*template<Range OtherRange>
-  constexpr auto operator*(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<ValueRange * OtherRange>(value * other, unconstrained);
+    return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::minus<>>::range>(std::minus {}(value, other.value),
+                                                                                  unconstrained);
   }
 
   template<Range OtherRange>
+  constexpr auto operator*(const RangedInt<OtherRange>& other) noexcept {
+    return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::multiplies<>>::range>(
+      std::multiplies<> {}(value, other.value), unconstrained);
+  }
+
+  // the problem with integer division, is that the result is not even remotely likely to be integral
+  /*template<Range OtherRange>
   constexpr auto operator/(const RangedInt<OtherRange>& other) noexcept {
     return RangedInt<ValueRange / OtherRange>(value / other, unconstrained);
   }*/
 
 private:
-  struct Unconstrained_t {};
-  constexpr static Unconstrained_t unconstrained {};
+  template<Range OtherRange>
+  friend struct RangedInt;
 
   constexpr RangedInt(const Type input, Unconstrained_t)
     : value(input) {}
