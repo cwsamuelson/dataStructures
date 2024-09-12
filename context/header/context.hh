@@ -1,3 +1,5 @@
+#pragma once
+
 #include <error_help.hh>
 
 #include <memory>
@@ -11,12 +13,11 @@ struct LoggerTrait {
     quiet = low,
     noisy = high,
   };
-  enum class LogCategory {
-  };
+  enum class LogCategory {};
 
   struct LogMessage {
-    LogNoise level;
-    LogCategory category;
+    LogNoise         level;
+    LogCategory      category;
     std::string_view message;
   };
 
@@ -35,18 +36,18 @@ struct LoggerTrait {
     }
   };
 
-  LoggerTrait() = default;
-  LoggerTrait(const LoggerTrait&) = delete;
+  LoggerTrait()                       = default;
+  LoggerTrait(const LoggerTrait&)     = delete;
   LoggerTrait(LoggerTrait&&) noexcept = default;
-  LoggerTrait& operator=(const LoggerTrait&) = delete;
+
+  LoggerTrait& operator=(const LoggerTrait&)     = delete;
   LoggerTrait& operator=(LoggerTrait&&) noexcept = default;
 
   ~LoggerTrait() = default;
 
   template<typename Type>
   explicit LoggerTrait(Type&& logger)
-    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger)))
-  {}
+    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger))) {}
 
   template<typename Type>
   LoggerTrait& operator=(Type&& logger) {
@@ -55,8 +56,8 @@ struct LoggerTrait {
     return *this;
   }
 
-  template<typename Logger, typename ...Args>
-  void emplace(Args&& ...args) {
+  template<typename Logger, typename... Args>
+  void emplace(Args&&... args) {
     implementation = std::make_unique<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
@@ -65,7 +66,7 @@ struct LoggerTrait {
   }
 
   void log(const LogNoise level, const LogCategory category, const std::string_view message) {
-    implementation->log({level, category, message});
+    implementation->log({ level, category, message });
   }
 
   // asynchronous???
@@ -90,18 +91,18 @@ struct AllocatorTrait {
     Type logger;
   };
 
-  AllocatorTrait() = default;
-  AllocatorTrait(const AllocatorTrait&) = delete;
+  AllocatorTrait()                          = default;
+  AllocatorTrait(const AllocatorTrait&)     = delete;
   AllocatorTrait(AllocatorTrait&&) noexcept = default;
-  AllocatorTrait& operator=(const AllocatorTrait&) = delete;
+
+  AllocatorTrait& operator=(const AllocatorTrait&)     = delete;
   AllocatorTrait& operator=(AllocatorTrait&&) noexcept = default;
 
   ~AllocatorTrait() = default;
 
   template<typename Type>
   explicit AllocatorTrait(Type&& logger)
-    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger)))
-  {}
+    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger))) {}
 
   template<typename Type>
   AllocatorTrait& operator=(Type&& logger) {
@@ -110,8 +111,8 @@ struct AllocatorTrait {
     return *this;
   }
 
-  template<typename Logger, typename ...Args>
-  void emplace(Args&& ...args) {
+  template<typename Logger, typename... Args>
+  void emplace(Args&&... args) {
     implementation = std::make_unique<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
@@ -129,18 +130,18 @@ struct ErrorCategoryTrait {
     Type logger;
   };
 
-  ErrorCategoryTrait() = default;
-  ErrorCategoryTrait(const ErrorCategoryTrait&) = delete;
+  ErrorCategoryTrait()                              = default;
+  ErrorCategoryTrait(const ErrorCategoryTrait&)     = delete;
   ErrorCategoryTrait(ErrorCategoryTrait&&) noexcept = default;
-  ErrorCategoryTrait& operator=(const ErrorCategoryTrait&) = delete;
+
+  ErrorCategoryTrait& operator=(const ErrorCategoryTrait&)     = delete;
   ErrorCategoryTrait& operator=(ErrorCategoryTrait&&) noexcept = default;
 
   ~ErrorCategoryTrait() = default;
 
   template<typename Type>
   explicit ErrorCategoryTrait(Type&& logger)
-    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger)))
-  {}
+    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger))) {}
 
   template<typename Type>
   ErrorCategoryTrait& operator=(Type&& logger) {
@@ -149,8 +150,8 @@ struct ErrorCategoryTrait {
     return *this;
   }
 
-  template<typename Logger, typename ...Args>
-  void emplace(Args&& ...args) {
+  template<typename Logger, typename... Args>
+  void emplace(Args&&... args) {
     implementation = std::make_unique<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
@@ -158,10 +159,29 @@ private:
   std::unique_ptr<Interface> implementation;
 };
 
+// should the context be a trait, too?
+// just expecting getters to be available?
+// that prevents editing the context
 struct Context {
-  LoggerTrait logger;
-  AllocatorTrait allocator;
+  LoggerTrait        logger;
+  AllocatorTrait     allocator;
   ErrorCategoryTrait default_error_category;
 };
+
+struct ScopedContext {
+  explicit ScopedContext(Context context);
+
+  ScopedContext(const ScopedContext&) = delete;
+  ScopedContext(ScopedContext&&)      = delete;
+
+  ScopedContext& operator=(const ScopedContext&) = delete;
+  ScopedContext& operator=(ScopedContext&&)      = delete;
+
+  ~ScopedContext();
+};
+
+void           PushContext(Context context);
+void           PopContext();
+const Context& GetContext();
 
 } // namespace flp

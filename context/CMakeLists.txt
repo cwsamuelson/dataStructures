@@ -8,9 +8,10 @@ set(HEADERS
   header/context.hh
 )
 set(SOURCES
+  source/context.cc
 )
 
-common_library(${PROJECT_NAME} INTERFACE
+common_library(${PROJECT_NAME}
   ${HEADERS}
   ${SOURCES}
 )
@@ -24,7 +25,7 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  INTERFACE
+  PUBLIC
   error_support::error_support
 )
 
