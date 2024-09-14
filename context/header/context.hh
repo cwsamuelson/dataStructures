@@ -1,24 +1,32 @@
 #pragma once
 
-#include <error_help.hh>
-
 #include <memory>
+#include <source_location>
 
 namespace flp {
-struct LoggerTrait {
-  enum class LogNoise {
+namespace trait {
+struct Logger {
+  enum class NoiseLevel : uint8_t {
     low,
     medium,
     high,
     quiet = low,
     noisy = high,
   };
-  enum class LogCategory {};
+
+  enum class Category : uint8_t {
+    trace,
+    info,
+    debug,
+    warn,
+    error,
+  };
 
   struct LogMessage {
-    LogNoise         level;
-    LogCategory      category;
-    std::string_view message;
+    NoiseLevel           level;
+    Category             category;
+    std::string_view     message;
+    std::source_location location = std::source_location::current();
   };
 
   struct Interface {
@@ -31,63 +39,95 @@ struct LoggerTrait {
   struct Implementation : Interface {
     Type logger;
 
+    explicit Implementation(const Type& value)
+      : logger(value) {}
+    explicit Implementation(Type&& value)
+      : logger(std::move(value)) {}
+
+    Implementation& operator=(const Type& value) {
+      logger = value;
+      return *this;
+    }
+    Implementation& operator=(Type&& value) {
+      logger = std::move(value);
+      return *this;
+    }
+
+    ~Implementation() = default;
+
     void log(const LogMessage& message) override {
       logger.log(message);
     }
   };
 
-  LoggerTrait()                       = default;
-  LoggerTrait(const LoggerTrait&)     = delete;
-  LoggerTrait(LoggerTrait&&) noexcept = default;
+  Logger()                  = default;
+  Logger(const Logger&)     = default;
+  Logger(Logger&&) noexcept = default;
 
-  LoggerTrait& operator=(const LoggerTrait&)     = delete;
-  LoggerTrait& operator=(LoggerTrait&&) noexcept = default;
+  Logger& operator=(const Logger&)     = default;
+  Logger& operator=(Logger&&) noexcept = default;
 
-  ~LoggerTrait() = default;
-
-  template<typename Type>
-  explicit LoggerTrait(Type&& logger)
-    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger))) {}
+  ~Logger() = default;
 
   template<typename Type>
-  LoggerTrait& operator=(Type&& logger) {
-    implementation = std::make_unique<Implementation<Type>>(std::forward<Type>(logger));
+    requires(not std::same_as<Type, Logger>)
+  Logger(const Type& logger)
+    : implementation(std::make_shared<Implementation<std::decay_t<Type>>>(std::forward<Type>(logger))) {}
+
+  template<typename Type>
+    requires(not std::same_as<Type, Logger>)
+  Logger(Type&& logger)
+    : implementation(std::make_shared<Implementation<std::decay_t<Type>>>(std::forward<Type>(logger))) {}
+
+  template<typename Type>
+    requires(not std::same_as<Type, Logger>)
+  Logger& operator=(const Type& logger) {
+    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(logger));
+
+    return *this;
+  }
+
+  template<typename Type>
+    requires(not std::same_as<Type, Logger>)
+  Logger& operator=(Type&& logger) {
+    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(logger));
 
     return *this;
   }
 
   template<typename Logger, typename... Args>
   void emplace(Args&&... args) {
-    implementation = std::make_unique<Implementation<Logger>>(std::forward<Args>(args)...);
+    implementation = std::make_shared<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
   // similar to contracts, we could have logger categories that are asked whether they're active
-  // and then an actual logger handles dispatching the results, but not necessarily controlling whether it's sent, or it's content?
-  // perhaps all 3 of these (allocator, logger, contracts) should have similar semantics
+  // and then an actual logger handles dispatching the results, but not necessarily controlling whether it's sent, or
+  // it's content? perhaps all 3 of these (allocator, logger, contracts) should have similar semantics
 
-  void log(const LogMessage& message) {
-    implementation->log(message);
-  }
-
-  void log(const LogNoise level, const LogCategory category, const std::string_view message) {
-    implementation->log({ level, category, message });
+  void log(const NoiseLevel           level,
+           const Category             category,
+           const std::string_view     message,
+           const std::source_location location = std::source_location::current()) {
+    implementation->log({ level, category, message, location });
   }
 
   // asynchronous???
   //  - due to forking, a context may be cleaned up while a given scope continues to hold a handle to it
   //  - to prevent this, a shared_ptr could be used.  I'd rather use the heap less, but this  may be unavoidable
+  //  - this is, of course, incredibly ironic
+  //  - we could also decouple the return type and allocation scheme..?
   // co_await log?
   // co_spawn log? to make it less-blocking
 
 private:
-  std::unique_ptr<Interface> implementation;
+  std::shared_ptr<Interface> implementation;
 };
 
 // Log wrappers
 // buffered logger
 // timestamped logger
 
-struct AllocatorTrait {
+struct Allocator {
   struct Interface {
     virtual ~Interface() noexcept = default;
 
@@ -132,29 +172,30 @@ struct AllocatorTrait {
     }
   };
 
-  AllocatorTrait()                          = default;
-  AllocatorTrait(const AllocatorTrait&)     = delete;
-  AllocatorTrait(AllocatorTrait&&) noexcept = default;
+  Allocator()                     = default;
+  Allocator(const Allocator&)     = default;
+  Allocator(Allocator&&) noexcept = default;
 
-  AllocatorTrait& operator=(const AllocatorTrait&)     = delete;
-  AllocatorTrait& operator=(AllocatorTrait&&) noexcept = default;
+  Allocator& operator=(const Allocator&)     = default;
+  Allocator& operator=(Allocator&&) noexcept = default;
 
-  ~AllocatorTrait() = default;
-
-  template<typename Type>
-  explicit AllocatorTrait(Type&& logger)
-    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger))) {}
+  ~Allocator() = default;
 
   template<typename Type>
-  AllocatorTrait& operator=(Type&& logger) {
-    implementation = std::make_unique<Implementation<Type>>(std::forward<Type>(logger));
+    requires(not std::same_as<Type, Allocator>)
+  explicit Allocator(Type&& logger)
+    : implementation(std::make_shared<Implementation<Type>>(std::forward<Type>(logger))) {}
+
+  template<typename Type>
+  Allocator& operator=(Type&& logger) {
+    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(logger));
 
     return *this;
   }
 
   template<typename Logger, typename... Args>
   void emplace(Args&&... args) {
-    implementation = std::make_unique<Implementation<Logger>>(std::forward<Args>(args)...);
+    implementation = std::make_shared<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
   template<typename AllocationType>
@@ -168,10 +209,22 @@ struct AllocatorTrait {
   }
 
 private:
-  std::unique_ptr<Interface> implementation;
+  std::shared_ptr<Interface> implementation;
 };
 
-struct ErrorContractTrait {
+// manual allocators
+// allocator wrappers
+// stack
+// arena
+
+struct ErrorContract {
+  enum class Category : uint8_t {
+    verbose,
+    strict,
+    permissive,
+  };
+
+  // capture file location?
   struct Interface {
     virtual ~Interface() noexcept = default;
 
@@ -200,29 +253,30 @@ struct ErrorContractTrait {
     }
   };
 
-  ErrorContractTrait()                              = default;
-  ErrorContractTrait(const ErrorContractTrait&)     = delete;
-  ErrorContractTrait(ErrorContractTrait&&) noexcept = default;
+  ErrorContract()                         = default;
+  ErrorContract(const ErrorContract&)     = default;
+  ErrorContract(ErrorContract&&) noexcept = default;
 
-  ErrorContractTrait& operator=(const ErrorContractTrait&)     = delete;
-  ErrorContractTrait& operator=(ErrorContractTrait&&) noexcept = default;
+  ErrorContract& operator=(const ErrorContract&)     = default;
+  ErrorContract& operator=(ErrorContract&&) noexcept = default;
 
-  ~ErrorContractTrait() = default;
-
-  template<typename Type>
-  explicit ErrorContractTrait(Type&& logger)
-    : implementation(std::make_unique<Implementation<Type>>(std::forward<Type>(logger))) {}
+  ~ErrorContract() = default;
 
   template<typename Type>
-  ErrorContractTrait& operator=(Type&& logger) {
-    implementation = std::make_unique<Implementation<Type>>(std::forward<Type>(logger));
+    requires(not std::same_as<Type, ErrorContract>)
+  explicit ErrorContract(Type&& logger)
+    : implementation(std::make_shared<Implementation<Type>>(std::forward<Type>(logger))) {}
+
+  template<typename Type>
+  ErrorContract& operator=(Type&& logger) {
+    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(logger));
 
     return *this;
   }
 
   template<typename Logger, typename... Args>
   void emplace(Args&&... args) {
-    implementation = std::make_unique<Implementation<Logger>>(std::forward<Args>(args)...);
+    implementation = std::make_shared<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
   [[nodiscard]]
@@ -239,19 +293,24 @@ struct ErrorContractTrait {
   }
 
 private:
-  std::unique_ptr<Interface> implementation;
+  std::shared_ptr<Interface> implementation;
 };
+} // namespace trait
 
 // should the context be a trait, too?
 // just expecting getters to be available?
 // that prevents editing the context
 struct Context {
-  LoggerTrait        logger;
-  AllocatorTrait     allocator;
-  ErrorContractTrait error_contract;
+  Context();
+
+  trait::Logger    logger;
+  trait::Allocator allocator;
+  // temporary allocator?
+  trait::ErrorContract error_contract;
 };
 
 struct ScopedContext {
+           ScopedContext();
   explicit ScopedContext(Context context);
 
   ScopedContext(const ScopedContext&) = delete;

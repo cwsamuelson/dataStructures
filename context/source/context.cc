@@ -5,19 +5,33 @@
 namespace flp {
 
 namespace {
-std::vector<Context> ContextStack;
-struct GlobalContext {
-  GlobalContext() {
-    ContextStack.emplace_back();
+struct [[nodiscard]] GlobalContextStack {
+  GlobalContextStack() noexcept {
+    stack.emplace_back();
   }
-  ~GlobalContext() {
-    ContextStack.pop_back();
+  GlobalContextStack(const GlobalContextStack&) = delete;
+  GlobalContextStack(GlobalContextStack&&)      = delete;
+
+  GlobalContextStack& operator=(const GlobalContextStack&) = delete;
+  GlobalContextStack& operator=(GlobalContextStack&&)      = delete;
+
+  ~GlobalContextStack() noexcept {
+    stack.pop_back();
   }
+
+  std::vector<Context> stack;
 };
-// this variable may never be directly used
-// it's being used to setup the default context
-[[maybe_unused]] GlobalContext global_context;
+
+GlobalContextStack global_context;
 } // namespace
+
+Context::Context()
+  : logger(GetContext().logger)
+  , allocator(GetContext().allocator)
+  , error_contract(GetContext().error_contract) {}
+
+ScopedContext::ScopedContext()
+  : ScopedContext(Context {}) {}
 
 ScopedContext::ScopedContext(Context context) {
   PushContext(std::move(context));
@@ -28,16 +42,16 @@ ScopedContext::~ScopedContext() {
 }
 
 void PushContext(Context context) {
-  ContextStack.emplace_back(std::move(context));
+  global_context.stack.emplace_back(std::move(context));
 }
 
 void PopContext() {
-  ContextStack.pop_back();
+  global_context.stack.pop_back();
 }
 
 // where to create base context?
 const Context& GetContext() {
-  return ContextStack.back();
+  return global_context.stack.back();
 }
 
 } // namespace flp
