@@ -39,21 +39,17 @@ struct Logger {
   struct Implementation : Interface {
     Type logger;
 
-    explicit Implementation(const Type& value)
-      : logger(value) {}
-    explicit Implementation(Type&& value)
-      : logger(std::move(value)) {}
+    template<typename T>
+    explicit Implementation(T&& value)
+      : logger(std::forward<T>(value)) {}
 
-    Implementation& operator=(const Type& value) {
-      logger = value;
-      return *this;
-    }
-    Implementation& operator=(Type&& value) {
-      logger = std::move(value);
+    template<typename T>
+    Implementation& operator=(T&& value) {
+      logger = std::forward<T>(value);
       return *this;
     }
 
-    ~Implementation() = default;
+    ~Implementation() override = default;
 
     void log(const LogMessage& message) override {
       logger.log(message);
@@ -71,21 +67,8 @@ struct Logger {
 
   template<typename Type>
     requires(not std::same_as<Type, Logger>)
-  Logger(const Type& logger)
-    : implementation(std::make_shared<Implementation<std::decay_t<Type>>>(std::forward<Type>(logger))) {}
-
-  template<typename Type>
-    requires(not std::same_as<Type, Logger>)
   Logger(Type&& logger)
     : implementation(std::make_shared<Implementation<std::decay_t<Type>>>(std::forward<Type>(logger))) {}
-
-  template<typename Type>
-    requires(not std::same_as<Type, Logger>)
-  Logger& operator=(const Type& logger) {
-    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(logger));
-
-    return *this;
-  }
 
   template<typename Type>
     requires(not std::same_as<Type, Logger>)
@@ -161,6 +144,18 @@ struct Allocator {
   struct Implementation : Interface {
     Type allocator;
 
+    template<typename T>
+    explicit Implementation(T&& value)
+      : allocator(std::forward<T>(value)) {}
+
+    template<typename T>
+    Implementation& operator=(T&& value) {
+      allocator = std::forward<T>(value);
+      return *this;
+    }
+
+    ~Implementation() override = default;
+
     template<typename AllocationType>
     AllocationType* allocate_impl(const size_t object_count) {
       return allocator.allocate(object_count);
@@ -183,12 +178,13 @@ struct Allocator {
 
   template<typename Type>
     requires(not std::same_as<Type, Allocator>)
-  explicit Allocator(Type&& logger)
-    : implementation(std::make_shared<Implementation<Type>>(std::forward<Type>(logger))) {}
+  Allocator(Type&& allocator)
+    : implementation(std::make_shared<Implementation<std::decay_t<Type>>>(std::forward<Type>(allocator))) {}
 
   template<typename Type>
-  Allocator& operator=(Type&& logger) {
-    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(logger));
+    requires(not std::same_as<Type, Allocator>)
+  Allocator& operator=(Type&& allocator) {
+    implementation = std::make_shared<Implementation<Type>>(std::forward<Type>(allocator));
 
     return *this;
   }
