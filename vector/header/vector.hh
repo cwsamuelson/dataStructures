@@ -1,9 +1,9 @@
 #pragma once
 
-#include <core/normal_iterator.hh>
 #include <aligned_buffer.hh>
-
 #include <error_help.hh>
+
+#include <core/normal_iterator.hh>
 
 #include <memory>
 #include <numbers>
@@ -13,25 +13,25 @@ namespace flp {
 template<typename Type>
 class Vector {
 public:
-  using value_type = Type;
-  using pointer = value_type*;
-  using reference = value_type&;
+  using value_type      = Type;
+  using pointer         = value_type*;
+  using reference       = value_type&;
   using const_reference = const value_type&;
-  using const_pointer = const value_type*;
-  using iterator = normal_iterator<value_type, Vector>;
-  using size_type = size_t;
+  using const_pointer   = const value_type*;
+  using iterator        = normal_iterator<value_type, Vector>;
+  using size_type       = size_t;
 
   static constexpr size_type value_alignment = alignof(value_type);
-  static constexpr size_type value_size = sizeof(value_type);
+  static constexpr size_type value_size      = sizeof(value_type);
 
 private:
-  using Buffer = std::unique_ptr<AlignedBuffer<Type>[]>;
+  using Buffer = std::unique_ptr<AlignedTypeBuffer<Type>[]>;
   Buffer buffer;
-  size_t current_size{};
-  size_t current_capacity{};
+  size_t current_size {};
+  size_t current_capacity {};
 
   static Buffer create_buffer(const size_type element_count) {
-    return Buffer{new AlignedBuffer<Type>[element_count]};
+    return Buffer { new AlignedTypeBuffer<Type>[element_count] };
   }
 
   void ensure_size(const size_type ensured_size) {
@@ -42,7 +42,10 @@ private:
         reserve(static_cast<float>(current_size) * std::numbers::phi_v<float>);
       }
     }
-    VERIFY(current_capacity >= current_size + 1, "Insufficient capacity available ({}).  Required: {}", current_capacity, current_size + 1);
+    VERIFY(current_capacity >= current_size + 1,
+           "Insufficient capacity available ({}).  Required: {}",
+           current_capacity,
+           current_size + 1);
   }
 
 public:
@@ -73,11 +76,10 @@ public:
 
   Vector(const_reference val, size_type count);
 
-  template<typename inputIter/*, typename = requireInputIter<inputIter>*/>
+  template<typename inputIter /*, typename = requireInputIter<inputIter>*/>
   Vector(inputIter first, inputIter last);
 
-  [[nodiscard]]
-  decltype(auto) operator[](this auto&& self, const size_type index) {
+  [[nodiscard]] decltype(auto) operator[](this auto&& self, const size_type index) {
     VERIFY(index < self.size(), "Index ({}) beyond bounds ({})", index, self.size());
     return self.buffer[index].get();
   }
@@ -108,9 +110,9 @@ public:
     return aligned_buffer.get();
   }
 
-  template<typename ...Args>
+  template<typename... Args>
   // requires constructible
-  reference emplace_back(Args&& ...args) {
+  reference emplace_back(Args&&... args) {
     ensure_size(current_size + 1);
 
     auto& aligned_buffer = buffer[size()];
@@ -154,7 +156,7 @@ public:
       emplace_back();
     }
 
-    while(size() > count_target) {
+    while (size() > count_target) {
       pop_back();
     }
   }
@@ -166,7 +168,7 @@ public:
       push_back(value);
     }
 
-    while(size() > count_target) {
+    while (size() > count_target) {
       pop_back();
     }
   }
@@ -179,22 +181,22 @@ public:
     auto new_buffer = create_buffer(new_capacity);
     // exception safety here?
     // if one of these move operations fails, we're in a sad, but I believe valid, state
-    for (size_t i{}; i < current_size; ++i) {
+    for (size_t i {}; i < current_size; ++i) {
       new_buffer[i].construct(std::move(buffer[i].get()));
       buffer[i].destruct();
     }
-    buffer = std::move(new_buffer);
+    buffer           = std::move(new_buffer);
     current_capacity = new_capacity;
     VERIFY(current_capacity >= new_capacity, "Failed to allocate new capacity ({})", new_capacity);
   }
 
   void shrink_to_fit() {
     auto new_buffer = create_buffer(current_size);
-    for (size_t i{}; i < current_size; ++i) {
+    for (size_t i {}; i < current_size; ++i) {
       new_buffer[i].construct(std::move(buffer[i].get()));
       buffer[i].destruct();
     }
-    buffer = std::move(new_buffer);
+    buffer           = std::move(new_buffer);
     current_capacity = current_size;
   }
 
@@ -226,5 +228,4 @@ public:
   iterator Iterator(size_type idx);
 };
 
-}
-
+} // namespace flp

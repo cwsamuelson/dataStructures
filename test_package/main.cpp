@@ -11,7 +11,7 @@
 
 int main(){
   flp::Vector<int> vector;
-  flp::AlignedBuffer<int> aligned_buffer;
+  flp::AlignedTypeBuffer<int> aligned_buffer;
   flp::Optional<int> optional;
   flp::Promise<int> promise;
 }

@@ -5,6 +5,9 @@
 
 namespace flp {
 namespace trait {
+// type erasure is probably not great for logger performance
+// this can be important if lots of logs are made
+// that's not an unreasonable expectation either
 struct Logger {
   enum class NoiseLevel : uint8_t {
     low,
@@ -110,6 +113,32 @@ private:
 // buffered logger
 // timestamped logger
 
+template<size_t AllocationBufferSize>
+struct DesiredAllocatorStyle {
+  alignas(alignof(max_align_t))
+  std::array<std::byte, AllocationBufferSize> buffer;
+
+  size_t cursor{};
+
+  template<typename Type>
+  Type* allocate(const size_t object_count) {
+    Type* result = buffer.data();
+    cursor += object_count * sizeof(Type);
+    return result;
+  }
+
+  template<typename Type>
+  void deallocate(const size_t object_count) {
+    // do nothing, lol
+  }
+};
+
+struct Unique/*?*/ {
+
+};
+
+// use functors and templated lambdas to capture by member function?
+// this isn't great for performance, but neither is type erasure
 struct Allocator {
   struct Interface {
     virtual ~Interface() noexcept = default;
@@ -119,25 +148,25 @@ struct Allocator {
     // allocation cpp2 allocators use 'new', and returns custom pointers I'm unsure where between these the solution
     // lies
 
-    template<typename Type>
+    /*template<typename Type>
     Type* allocate(this auto&& self, const size_t object_count) {
       return self.allocate_impl(object_count);
     }
 
     template<typename Type>
     void deallocate(this auto&& self, const Type* pointer, const size_t object_count) {
-      return self.deallocate_impl(pointer, object_count);
+      self.deallocate_impl(pointer, object_count);
     }
 
     template<typename Type>
     void construct(this auto&& self, const Type* pointer, const size_t object_count) {
-      return self.construct_impl(pointer, object_count);
+      self.construct_impl(pointer, object_count);
     }
 
     template<typename Type>
     void destroy(this auto&& self, const Type* pointer, const size_t object_count) {
-      return self.destroy_impl(pointer, object_count);
-    }
+      self.destroy_impl(pointer, object_count);
+    }*/
   };
 
   template<typename Type>
@@ -194,15 +223,15 @@ struct Allocator {
     implementation = std::make_shared<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
-  template<typename AllocationType>
+  /*template<typename AllocationType>
   AllocationType* allocate(const size_t object_count) {
     return implementation->allocate<AllocationType>(object_count);
-  }
+  }*/
 
-  template<typename AllocationType>
+  /*template<typename AllocationType>
   void deallocate(const AllocationType* pointer, const size_t object_count) {
     implementation->deallocate(pointer, object_count);
-  }
+  }*/
 
 private:
   std::shared_ptr<Interface> implementation;

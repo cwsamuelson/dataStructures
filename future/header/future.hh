@@ -14,7 +14,7 @@ struct Promise;
 
 template<typename Type>
 struct SharedStateBase {
-  AlignedBuffer<Type> buffer;
+  AlignedTypeBuffer<Type> buffer;
   bool initialized = false;
   std::exception_ptr exception;
   std::once_flag set_flag;

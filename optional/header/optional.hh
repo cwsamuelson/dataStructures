@@ -177,7 +177,7 @@ public:
   }
 
 private:
-  AlignedBuffer<Type> buffer;
+  AlignedTypeBuffer<Type> buffer;
   bool                initialized = false;
 };
 
