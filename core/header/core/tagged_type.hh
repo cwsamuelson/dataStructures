@@ -44,6 +44,10 @@ struct TaggedType {
     return *this;
   }
 
+  constexpr auto operator-() const noexcept {
+    return -value;
+  }
+
   friend constexpr auto operator+(const TaggedType& lhs, const TaggedType& rhs) noexcept {
     return Type(lhs) + Type(rhs);
   }
