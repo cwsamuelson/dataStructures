@@ -7,21 +7,21 @@ using namespace flp;
 // this struct should maybe be put into a shared location?
 TEST_CASE("Logger type erasure") {
   SECTION("Constructor/assignment") {
-    struct S {
+    struct TestLogger {
       void log(const trait::Logger::LogMessage& message) {
         (void)message;
       }
     };
 
-    S s;
+    TestLogger s;
 
-    trait::Logger erased_logger  = S {};
+    trait::Logger erased_logger  = TestLogger {};
     trait::Logger erased_logger2 = s;
-    trait::Logger erased_logger3(S {});
+    trait::Logger erased_logger3(TestLogger {});
     trait::Logger erased_logger4(s);
 
     erased_logger = s;
-    erased_logger = S {};
+    erased_logger = TestLogger {};
   }
 
   SECTION("Using member functions") {
@@ -79,16 +79,17 @@ struct TestAllocator {
     , last_deconstruct_count(g)
     , last_deconstruct_pointer(h) {}
 
-  template<typename Type>
-  Type* allocate(this auto&& self, const size_t object_count) {
-    self.last_allocate_count = object_count;
-    return ++self.allocation_pseudo_value_counter;
+  std::byte* allocate(const size_t alignment, const size_t total_size) {
+    auto* pointer = new std::byte[total_size];
+    allocation_pseudo_value_counter = reinterpret_cast<size_t>(pointer);
+    last_allocate_count = total_size;
+    return pointer;
   }
 
-  template<typename Type>
-  void deallocate(this auto&& self, const Type* pointer, [[maybe_unused]] const size_t object_count) {
-    self.last_deallocate_count   = object_count;
-    self.last_deallocate_pointer = pointer;
+  void deallocate(std::byte* const pointer, const size_t bytes) {
+    last_deallocate_count = bytes;
+    last_deallocate_pointer = reinterpret_cast<size_t>(pointer);
+    delete[] pointer;
   }
 
   template<typename Type>
@@ -118,7 +119,7 @@ TEST_CASE("Allocator type erasure") {
   }
 
   //! @FIXME gotta figure out type-erased allocator interface to handle this
-  /*SECTION("Using member functions") {
+  SECTION("Using member functions") {
     size_t allocation_pseudo_value_counter {};
     size_t last_allocate_count {};
     size_t last_deallocate_count {};
@@ -141,17 +142,29 @@ TEST_CASE("Allocator type erasure") {
     CHECK(last_deconstruct_count == 0);
     CHECK(last_deconstruct_pointer == 0);
 
-    const auto first_allocate = erased_allocator.allocate<int>(1);
+    auto* const first_allocate = erased_allocator.allocate<int>(1);
 
-    CHECK(first_allocate == (void*)1);
-    CHECK(last_allocate_count == 1);
+    CHECK(allocation_pseudo_value_counter == reinterpret_cast<size_t>(first_allocate));
+    CHECK(last_allocate_count == 1 * sizeof(int));
     CHECK(last_deallocate_count == 0);
     CHECK(last_deallocate_pointer == 0);
     CHECK(last_construct_count == 0);
     CHECK(last_construct_pointer == 0);
     CHECK(last_deconstruct_count == 0);
     CHECK(last_deconstruct_pointer == 0);
-  }*/
+
+    erased_allocator.deallocate(first_allocate, 1);
+
+    CHECK(allocation_pseudo_value_counter == reinterpret_cast<size_t>(first_allocate));
+    CHECK(last_allocate_count == 1 * sizeof(int));
+    CHECK(last_deallocate_count == 1 * sizeof(int));
+    CHECK(last_deallocate_pointer == reinterpret_cast<size_t>(first_allocate));
+    CHECK(last_construct_count == 0);
+    CHECK(last_construct_pointer == 0);
+    CHECK(last_deconstruct_count == 0);
+    CHECK(last_deconstruct_pointer == 0);
+
+  }
 }
 
 TEST_CASE("Error contracts type erasure") {}

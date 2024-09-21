@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <source_location>
 
@@ -113,60 +114,23 @@ private:
 // buffered logger
 // timestamped logger
 
-template<size_t AllocationBufferSize>
-struct DesiredAllocatorStyle {
-  alignas(alignof(max_align_t))
-  std::array<std::byte, AllocationBufferSize> buffer;
-
-  size_t cursor{};
-
-  template<typename Type>
-  Type* allocate(const size_t object_count) {
-    Type* result = buffer.data();
-    cursor += object_count * sizeof(Type);
-    return result;
-  }
-
-  template<typename Type>
-  void deallocate(const size_t object_count) {
-    // do nothing, lol
-  }
-};
-
-struct Unique/*?*/ {
-
-};
-
 // use functors and templated lambdas to capture by member function?
 // this isn't great for performance, but neither is type erasure
 struct Allocator {
   struct Interface {
     virtual ~Interface() noexcept = default;
 
-    // cpp std::allocators have only allocate + deallocate
-    // I think having a construct/create + destruct/destroy allows things like using an aligned buffer to manage
-    // allocation cpp2 allocators use 'new', and returns custom pointers I'm unsure where between these the solution
-    // lies
-
-    /*template<typename Type>
-    Type* allocate(this auto&& self, const size_t object_count) {
-      return self.allocate_impl(object_count);
-    }
+    virtual std::byte* allocate_impl(size_t alignment, size_t total_size) = 0;
+    virtual void deallocate_impl(std::byte* const pointer, size_t bytes) = 0;
 
     template<typename Type>
-    void deallocate(this auto&& self, const Type* pointer, const size_t object_count) {
-      self.deallocate_impl(pointer, object_count);
+    Type* allocate(const size_t object_count) {
+      return reinterpret_cast<Type*>(allocate_impl(alignof(Type), object_count * sizeof(Type)));
     }
-
     template<typename Type>
-    void construct(this auto&& self, const Type* pointer, const size_t object_count) {
-      self.construct_impl(pointer, object_count);
+    void deallocate(Type* const pointer, const size_t object_count) {
+      deallocate_impl(reinterpret_cast<std::byte* const>(pointer), object_count * sizeof(Type));
     }
-
-    template<typename Type>
-    void destroy(this auto&& self, const Type* pointer, const size_t object_count) {
-      self.destroy_impl(pointer, object_count);
-    }*/
   };
 
   template<typename Type>
@@ -185,14 +149,12 @@ struct Allocator {
 
     ~Implementation() override = default;
 
-    template<typename AllocationType>
-    AllocationType* allocate_impl(const size_t object_count) {
-      return allocator.allocate(object_count);
+    std::byte* allocate_impl(const size_t alignment, const size_t total_size) override {
+      return allocator.allocate(alignment, total_size);
     }
 
-    template<typename AllocationType>
-    void deallocate_impl(const AllocationType* pointer, const size_t object_count) {
-      allocator.deallocate_impl(pointer, object_count);
+    void deallocate_impl(std::byte* const pointer, const size_t bytes) override {
+      allocator.deallocate(pointer, bytes);
     }
   };
 
@@ -208,7 +170,7 @@ struct Allocator {
   template<typename Type>
     requires(not std::same_as<Type, Allocator>)
   Allocator(Type&& allocator)
-    : implementation(std::make_shared<Implementation<std::decay_t<Type>>>(std::forward<Type>(allocator))) {}
+    : implementation(std::make_shared<Implementation<Type>>(std::forward<Type>(allocator))) {}
 
   template<typename Type>
     requires(not std::same_as<Type, Allocator>)
@@ -220,18 +182,18 @@ struct Allocator {
 
   template<typename Logger, typename... Args>
   void emplace(Args&&... args) {
-    implementation = std::make_shared<Implementation<Logger>>(std::forward<Args>(args)...);
+    //implementation = std::make_shared<Implementation<Logger>>(std::forward<Args>(args)...);
   }
 
-  /*template<typename AllocationType>
+  template<typename AllocationType>
   AllocationType* allocate(const size_t object_count) {
     return implementation->allocate<AllocationType>(object_count);
-  }*/
+  }
 
-  /*template<typename AllocationType>
-  void deallocate(const AllocationType* pointer, const size_t object_count) {
+  template<typename AllocationType>
+  void deallocate(AllocationType* pointer, const size_t object_count) {
     implementation->deallocate(pointer, object_count);
-  }*/
+  }
 
 private:
   std::shared_ptr<Interface> implementation;
