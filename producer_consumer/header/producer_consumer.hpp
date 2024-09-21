@@ -264,7 +264,7 @@ struct SimpleSpawner{
   std::shared_ptr<Store> store;
 
   SpawnedType spawn() {
-    return {store};
+    return SpawnedType{store};
   }
 };
 
