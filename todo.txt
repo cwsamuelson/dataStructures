@@ -25,7 +25,6 @@ named_type
 normal_iterator
 operators
 pager
-polynomial
 prefix_tree
 ProducerConsumer
 range
@@ -43,4 +42,3 @@ threadPool
 timer
 traits
 tuple
-unit

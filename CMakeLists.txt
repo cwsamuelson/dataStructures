@@ -15,6 +15,7 @@ add_subdirectory(optional)
 add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
+add_subdirectory(units)
 add_subdirectory(vector)
 
 common_library(${PROJECT_NAME} INTERFACE)
@@ -33,6 +34,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
+  ${PROJECT_NAME}_units
   ${PROJECT_NAME}_vector
 )
 
