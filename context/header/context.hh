@@ -204,6 +204,7 @@ private:
 // stack
 // arena
 
+// 'contract group'?
 struct ErrorContract {
   enum class Category : uint8_t {
     verbose,
@@ -216,8 +217,7 @@ struct ErrorContract {
     virtual ~Interface() noexcept = default;
 
     [[nodiscard]]
-    virtual bool is_active() const
-      = 0;
+    virtual bool is_active() const = 0;
     virtual void report_violation() const                 = 0;
     virtual void report_violation(std::string_view) const = 0;
   };
@@ -282,6 +282,16 @@ struct ErrorContract {
 private:
   std::shared_ptr<Interface> implementation;
 };
+
+// default
+// type safety
+// bounds safety
+// null safety
+// testing
+// static-checks
+
+using ContractViolationHandler = std::function<void()>;
+
 } // namespace trait
 
 // should the context be a trait, too?

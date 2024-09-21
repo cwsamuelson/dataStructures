@@ -16,7 +16,7 @@ void static_for(F func, std::index_sequence<Is...>) {
 }
 
 TEST_CASE("Range type deduction from bounds") {
-  SECTION("Intrinsic types, lmits bounds") {
+  SECTION("Intrinsic types, limits bounds") {
     TEST_TYPE_BOUNDS(uint8_t);
     TEST_TYPE_BOUNDS(uint16_t);
     TEST_TYPE_BOUNDS(uint32_t);
@@ -71,12 +71,15 @@ TEST_CASE("Ranges math") {}
 TEST_CASE("Using ranged integers") {
   SECTION("Expected underlying types") {
     STATIC_CHECK(std::same_as<u8::Type, uint8_t>);
-    STATIC_CHECK(std::same_as<u16::Type, uint16_t>);
-    STATIC_CHECK(std::same_as<u32::Type, uint32_t>);
-    STATIC_CHECK(std::same_as<u64::Type, uint64_t>);
     STATIC_CHECK(std::same_as<s8::Type, int8_t>);
+
+    STATIC_CHECK(std::same_as<u16::Type, uint16_t>);
     STATIC_CHECK(std::same_as<s16::Type, int16_t>);
+
+    STATIC_CHECK(std::same_as<u32::Type, uint32_t>);
     STATIC_CHECK(std::same_as<s32::Type, int32_t>);
+
+    STATIC_CHECK(std::same_as<u64::Type, uint64_t>);
     STATIC_CHECK(std::same_as<s64::Type, int64_t>);
   }
 
@@ -118,15 +121,16 @@ TEST_CASE("Using ranged integers") {
   SECTION("Math with no risk of overflow") {
     SECTION("Safe type promotion guarantee") {
       STATIC_CHECK(std::same_as<decltype(u8 {} + u8 {})::Type, u16::Type>);
-      // STATIC_CHECK(std::same_as<decltype(u16 {} + u16 {})::Type, u32::Type>);
+      STATIC_CHECK(std::same_as<decltype(u16 {} + u16 {})::Type, u32::Type>);
       // STATIC_CHECK(std::same_as<decltype(u32 {} + u32 {})::Type, u64::Type>);
       // STATIC_CHECK(std::same_as<decltype(u64{} + u64{})::Type, ...::Type>);
-      /*STATIC_CHECK(std::same_as<decltype(s8 {} + s8 {}), u16>);
-      STATIC_CHECK(std::same_as<decltype(s16 {} + s16 {}), u32>);
-      STATIC_CHECK(std::same_as<decltype(s32 {} + s32 {}), u64>);
+
+      STATIC_CHECK(std::same_as<decltype(s8 {} + s8 {})::Type, s16::Type>);
+      STATIC_CHECK(std::same_as<decltype(s16 {} + s16 {})::Type, s32::Type>);
+      // STATIC_CHECK(std::same_as<decltype(s32 {} + s32 {})::Type, s64::Type>);
       // STATIC_CHECK(std::same_as<decltype(s64{} + s64{}), ...>);
 
-      STATIC_CHECK(std::same_as<decltype(u8 {} - u8 {}), s16>); // worst case 0 - 255 == -255
+      /*STATIC_CHECK(std::same_as<decltype(u8 {} - u8 {}), s16>); // worst case 0 - 255 == -255
       STATIC_CHECK(std::same_as<decltype(s8 {} - u8 {}), s16>); // worst case -128 - 255 == -383
       STATIC_CHECK(std::same_as<decltype(s8 {} - s8 {}), s16>); // worst case -128 - -128 == -256
 

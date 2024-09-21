@@ -11,24 +11,23 @@
 namespace flp {
 
 namespace {
-
 template<Range>
 struct DeducedTypeImpl;
 
 template<Range range>
-  requires(range.start >= 0 and range.finish <= 255)
+  requires(range.start >= 0 and range.finish <= std::numeric_limits<uint8_t>::max())
 struct DeducedTypeImpl<range> {
   using type = uint8_t;
 };
 
 template<Range range>
-  requires(range.start >= 0 and range.finish <= 65535 and range.finish > 255)
+  requires(range.start >= 0 and range.finish <= std::numeric_limits<uint16_t>::max() and range.finish > std::numeric_limits<uint8_t>::max())
 struct DeducedTypeImpl<range> {
   using type = uint16_t;
 };
 
 template<Range range>
-  requires(range.start >= 0 and range.finish <= std::numeric_limits<uint32_t>::max() and range.finish > 65535)
+  requires(range.start >= 0 and range.finish <= std::numeric_limits<uint32_t>::max() and range.finish > std::numeric_limits<uint16_t>::max())
 struct DeducedTypeImpl<range> {
   using type = uint32_t;
 };
@@ -70,23 +69,29 @@ template<Range range>
 struct DeducedTypeImpl<range> {
   using type = int64_t;
 };
+}
 
+
+template<Range range>
+using DeducedType = typename DeducedTypeImpl<range>::type;
+
+namespace {
 template<Range op1_range, Range op2_range, typename Op>
 struct WorstCaseRange {
   constexpr static std::array values { Op {}(op1_range.start, op2_range.start),
                                        Op {}(op1_range.start, op2_range.finish),
                                        Op {}(op1_range.finish, op2_range.start),
                                        Op {}(op1_range.finish, op2_range.finish) };
-  constexpr static Range      range = {
+
+  constexpr static Range range = {
     *std::ranges::min_element(values),
     *std::ranges::max_element(values),
   };
+
+  using Type = DeducedType<range>;
 };
 
 } // namespace
-
-template<Range range>
-using DeducedType = typename DeducedTypeImpl<range>::type;
 
 struct Unconstrained_t {};
 constexpr static Unconstrained_t unconstrained {};
@@ -120,8 +125,9 @@ struct RangedInt {
 
   template<Range OtherRange>
   constexpr auto operator+(const RangedInt<OtherRange>& other) noexcept {
-    return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::plus<>>::range>(std::plus<> {}(value, other.value),
-                                                                                 unconstrained);
+    using WorstCase = WorstCaseRange<ValueRange, OtherRange, std::plus<>>;
+    using MathType = typename WorstCase::Type;
+    return RangedInt<WorstCase::range>(std::plus<MathType> {}(value, other.value), unconstrained);
   }
 
   template<Range OtherRange>
@@ -154,12 +160,15 @@ template<typename Type>
 RangedInt(const Type&) -> RangedInt<Range { std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max() }>;
 
 using u8  = RangedInt<{ std::numeric_limits<uint8_t>::min(), std::numeric_limits<uint8_t>::max() }>;
-using u16 = RangedInt<{ std::numeric_limits<uint16_t>::min(), std::numeric_limits<uint16_t>::max() }>;
-using u32 = RangedInt<{ std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max() }>;
-using u64 = RangedInt<{ std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max() }>;
 using s8  = RangedInt<{ std::numeric_limits<int8_t>::min(), std::numeric_limits<int8_t>::max() }>;
+
+using u16 = RangedInt<{ std::numeric_limits<uint16_t>::min(), std::numeric_limits<uint16_t>::max() }>;
 using s16 = RangedInt<{ std::numeric_limits<int16_t>::min(), std::numeric_limits<int16_t>::max() }>;
+
+using u32 = RangedInt<{ std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max() }>;
 using s32 = RangedInt<{ std::numeric_limits<int32_t>::min(), std::numeric_limits<int32_t>::max() }>;
+
+using u64 = RangedInt<{ std::numeric_limits<uint64_t>::min(), std::numeric_limits<uint64_t>::max() }>;
 using s64 = RangedInt<{ std::numeric_limits<int64_t>::min(), std::numeric_limits<int64_t>::max() }>;
 
 } // namespace flp

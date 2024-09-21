@@ -2,6 +2,7 @@ accessor
 algorithm
 allocator
 array
+colony/hive
 date_time
 enumerator
 equation
