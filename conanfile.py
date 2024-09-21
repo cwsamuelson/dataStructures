@@ -24,6 +24,7 @@ class galactic_structures(ConanFile):
         "lifetime/*",
         "matrix/*",
         "optional/*",
+        "producer_consumer/*",
         "ranged_int/*",
         "vector/*",
         "cmake/*",

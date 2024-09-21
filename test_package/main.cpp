@@ -7,6 +7,7 @@
 #include <core/normal_iterator.hh>
 #include <future.hh>
 #include <optional.hh>
+#include <producer_consumer.hpp>
 #include <vector.hh>
 
 int main(){
@@ -14,4 +15,6 @@ int main(){
   flp::AlignedTypeBuffer<int> aligned_buffer;
   flp::Optional<int> optional;
   flp::Promise<int> promise;
+  flp::Future<int> future = promise.get_future();
+  const auto [producer, consumer] = flp::create_spsc<int>();
 }

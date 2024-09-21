@@ -32,4 +32,3 @@ TEST_CASE("Producer consumer tests") {
   producer.push(42);
   CHECK(*consumer.pop() == 42);
 }
-
