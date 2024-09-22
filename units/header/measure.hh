@@ -23,9 +23,38 @@ struct Measure {
       -length, -time, -mass, -current, -temperature, -candela, -money, -angle, -percentage, -count, -byte, -tick
     };
   }
+
+  constexpr friend Measure operator*(const Measure& lhs, const Measure& rhs) {
+    return Measure { .length      = lhs.length + rhs.length,
+                     .time        = lhs.time + rhs.time,
+                     .mass        = lhs.mass + rhs.mass,
+                     .current     = lhs.current + rhs.current,
+                     .temperature = lhs.temperature + rhs.temperature,
+                     .candela     = lhs.candela + rhs.candela,
+                     .money       = lhs.money + rhs.money,
+                     .angle       = lhs.angle + rhs.angle,
+                     .percentage  = lhs.percentage + rhs.percentage,
+                     .count       = lhs.count + rhs.count,
+                     .byte        = lhs.byte + rhs.byte,
+                     .tick        = lhs.tick + rhs.tick };
+  }
+
+  constexpr friend Measure operator/(const Measure& lhs, const Measure& rhs) {
+    return Measure { .length      = lhs.length - rhs.length,
+                     .time        = lhs.time - rhs.time,
+                     .mass        = lhs.mass - rhs.mass,
+                     .current     = lhs.current - rhs.current,
+                     .temperature = lhs.temperature - rhs.temperature,
+                     .candela     = lhs.candela - rhs.candela,
+                     .money       = lhs.money - rhs.money,
+                     .angle       = lhs.angle - rhs.angle,
+                     .percentage  = lhs.percentage - rhs.percentage,
+                     .count       = lhs.count - rhs.count,
+                     .byte        = lhs.byte - rhs.byte,
+                     .tick        = lhs.tick - rhs.tick };
+  }
 };
 
-//                              d  t  m  c  T  l  M  a  p  k, ml,B
 constexpr Measure NoneMeasure           = { .length      = 0,
                                             .time        = 0,
                                             .mass        = 0,
@@ -291,5 +320,4 @@ constexpr Measure ElectricFieldMeasure  = { .length      = 1,
                                             .byte        = 0,
                                             .tick        = 0 };
 
-}
-
+} // namespace flp
