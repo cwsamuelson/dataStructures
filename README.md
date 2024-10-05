@@ -7,21 +7,21 @@ This is an umbrella project for various code/tools/utilities I have thought of, 
 ## Interfaces
 
 ## Existing tools
-aligned buffer
+aligned-buffer
 configuration
 context system
 'core'
 ECS
 future
 hive
-lifetime tracking
+lifetime-tracking
 matrix
 optional
 polynomial
 producer-consumer
 profiler
-ranged integers
-sparse set
+ranged-integers
+sparse-set
 'std::hive'
 units
 vector
@@ -72,6 +72,9 @@ threadPool
 timer
 traits
 tuple
+
+# Goals
+The primary function for this project for me is practice of varying kinds.  It is also a useful collection of 'previous art' for myself that I can pull from when working on other things.  I use this to implement 'normal' things like std::vector, and create new things like units (at the time I came up with the idea and original implementation, I had no idea boost::units existed).  Both things exercise my skill as a programmer and designer in different ways.  Due to the sometimes 'experimental' nature of what I'm working on and thinking about, code quality does not always meet my own standards.  It is my goal that eventually it will, but given the often necessarily WIP nature of many of this code, nothing can be guaranteed.  Improvement changes and ideas are welcome!
 
 # Contributors
 At this time I am the only contributor.  Feel free to provide a PR or issue with ideas or changes!
