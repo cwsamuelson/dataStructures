@@ -27,6 +27,7 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   ${BASE_PROJECT}_core
+  ${BASE_PROJECT}_sparse_set
   error_support::error_support
 )
 
