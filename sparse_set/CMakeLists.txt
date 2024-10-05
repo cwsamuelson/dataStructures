@@ -5,7 +5,7 @@ project(${BASE_PROJECT}_sparse_set LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/hive.hh
+  header/sparse_set.hh
 )
 set(SOURCES
 )
