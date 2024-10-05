@@ -22,11 +22,13 @@ TEST_CASE("Hive") {
     CHECK(hive.capacity() == 0);
     CHECK(hive.size() == 0);
     CHECK(hive.empty());
+    CHECK(hive.begin() == hive.end());
 
     hive.insert(0);
     CHECK(hive.capacity() == 1024);
     CHECK(hive.size() == 1);
     CHECK(not hive.empty());
+    CHECK(hive.begin() != hive.end());
 
     auto iter = hive.insert(1);
     CHECK(hive.capacity() >= 1024);
@@ -42,6 +44,7 @@ TEST_CASE("Hive") {
     CHECK(hive.capacity() == 0);
     CHECK(hive.size() == 0);
     CHECK(hive.empty());
+    CHECK(hive.begin() == hive.end());
 
     for (size_t i {}; i < 1024; ++i) {
       hive.insert(i);
@@ -61,6 +64,7 @@ TEST_CASE("Hive") {
     CHECK(hive.capacity() == 0);
     CHECK(hive.size() == 0);
     CHECK(hive.empty());
+    CHECK(hive.begin() == hive.end());
   }
 
   SECTION("") {

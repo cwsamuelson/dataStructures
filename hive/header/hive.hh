@@ -46,6 +46,9 @@ struct Hive {
     std::list<Chunk>::iterator chunk_iterator;
     size_t                     buffer_index;
 
+    friend bool operator==(const BaseIterator&, const BaseIterator&) = default;
+    friend bool operator!=(const BaseIterator&, const BaseIterator&) = default;
+
     BaseIterator operator++() {
       if (buffer_index == Chunk::ObjectCount) {
         ++chunk_iterator;
@@ -86,6 +89,7 @@ struct Hive {
   // list helps preserve iterators
   // allocations are done in chunks to assign with memory management
   std::list<Chunk> chunks;
+  // skipfield for better performance
 
   // rule of 0? 🤞🏻
   /*Hive()                = default;
@@ -102,7 +106,7 @@ struct Hive {
     auto   iter  = chunks.begin();
     size_t index = 0;
 
-    while (index < Chunk::ObjectCount and not iter->validity_flags[index]) {
+    while (iter != chunks.end() and index < Chunk::ObjectCount and not iter->validity_flags[index]) {
       ++index;
     }
 
@@ -227,8 +231,10 @@ struct Hive {
   }
 
   void clear() noexcept {
-    // gotta destruct all contents first
-    chunks.clear();
+    auto iter = begin();
+    while (iter != end()) {
+      erase(iter++);
+    }
   }
 };
 
