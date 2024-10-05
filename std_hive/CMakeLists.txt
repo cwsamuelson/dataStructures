@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_hive LANGUAGES CXX)
+project(${BASE_PROJECT}_std_hive LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 

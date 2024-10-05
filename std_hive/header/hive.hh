@@ -7,55 +7,74 @@
 namespace flp {
 
 struct hive_limits {
-  size_t min, max;
-  hive_limits(size_t minimum, size_t maximum) noexcept : min(minimum), max(maximum) {}
+  size_t    min;
+  size_t    max;
+  constexpr hive_limits(size_t minimum, size_t maximum) noexcept
+    : min(minimum)
+    , max(maximum) {}
 };
 
 
-enum struct hive_priority { performance, memory_use };
-
-
-template <class T, class Allocator = allocator<T>, hive_priority Priority = hive_priority::performance>
+template<class T, class Allocator = allocator<T>>
 class hive {
+private:
+  hive_limits current - limits = implementation - defined; // exposition only
+
 public:
   // types
-  using value_type = T;
-  using allocator_type = Allocator;
-  using pointer = typename allocator_traits<Allocator>::pointer;
-  using const_pointer = typename allocator_traits<Allocator>::const_pointer;
-  using reference = value_type&;
-  using const_reference = const value_type&;
-  using size_type = implementation-defined; // see 22.2
-  using difference_type = implementation-defined; // see 22.2
-  using iterator = implementation-defined; // see 22.2
-  using const_iterator = implementation-defined; // see 22.2
-  using reverse_iterator = implementation-defined; // see 22.2
-  using const_reverse_iterator = implementation-defined; // see 22.2
+  using value_type             = T;
+  using allocator_type         = Allocator;
+  using pointer                = typename allocator_traits<Allocator>::pointer;
+  using const_pointer          = typename allocator_traits<Allocator>::const_pointer;
+  using reference              = value_type&;
+  using const_reference        = const value_type&;
+  using size_type              = implementation - defined; // see [container.requirements]
+  using difference_type        = implementation - defined; // see [container.requirements]
+  using iterator               = implementation - defined; // see [container.requirements]
+  using const_iterator         = implementation - defined; // see [container.requirements]
+  using reverse_iterator       = std::reverse_iterator<iterator>; // see [container.requirements]
+  using const_reverse_iterator = std::reverse_iterator<const_iterator>; // see [container.requirements]
 
 
-
-  hive() noexcept(noexcept(Allocator())) : hive(Allocator()) { }
-  explicit hive(std::hive_limits block_capacity_limits) noexcept(noexcept(Allocator())) : hive(Allocator()) { }
+  constexpr hive() noexcept(noexcept(Allocator()))
+    : hive(Allocator()) {}
   explicit hive(const Allocator&) noexcept;
-  explicit hive(std::hive_limits block_capacity_limits, const Allocator&) noexcept;
-  explicit hive(size_type n, std::hive_limits block_capacity_limits = implementation-defined, const Allocator& = Allocator());
-  hive(size_type n, const T& value, std::hive_limits block_capacity_limits = implementation-defined, const Allocator& = Allocator());
-  template<class InputIterator1, class InputIterator2>
-    hive(InputIterator1 first, InputIterator2 last, std::hive_limits block_capacity_limits = implementation-defined, const Allocator& = Allocator());
+  explicit hive(hive_limits block_limits)
+    : hive(block_limits, Allocator()) {}
+           hive(hive_limits block_limits, const Allocator&);
+  explicit hive(size_type n, const Allocator& = Allocator());
+           hive(size_type n, hive_limits block_limits, const Allocator& = Allocator());
+           hive(size_type n, const T& value, const Allocator& = Allocator());
+           hive(size_type n, const T& value, hive_limits block_limits, const Allocator& = Allocator());
+  template<class InputIterator>
+  hive(InputIterator first, InputIterator last, const Allocator& = Allocator());
+  template<class InputIterator>
+  hive(InputIterator first, InputIterator last, hive_limits block_limits, const Allocator& = Allocator());
+  template<container - compatible - range<T> R>
+  hive(from_range_t, R&& rg, const Allocator& = Allocator());
+  template<container - compatible - range<T> R>
+  hive(from_range_t, R&& rg, hive_limits block_limits, const Allocator& = Allocator());
   hive(const hive& x);
   hive(hive&&) noexcept;
-  hive(const hive&, const Allocator&);
-  hive(hive&&, const Allocator&);
-  hive(initializer_list<T>, std::hive_limits block_capacity_limits = implementation-defined, const Allocator& = Allocator());
-  ~hive() noexcept;
-  hive& operator= (const hive& x);
-  hive& operator= (hive&& x) noexcept(allocator_traits<Allocator>::propagate_on_container_move_assignment::value || allocator_traits<Allocator>::is_always_equal::value);
-  hive& operator= (initializer_list<T>);
-  template<class InputIterator1, class InputIterator2> void assign(InputIterator1 first, InputIterator2 last);
+  hive(const hive&, const type_identity_t<Allocator>&);
+  hive(hive&&, const type_identity_t<Allocator>&);
+  hive(initializer_list<T> il, const Allocator& = Allocator());
+  hive(initializer_list<T> il, hive_limits block_limits, const Allocator& = Allocator());
+
+  ~hive();
+
+  hive& operator=(const hive& x);
+  hive& operator=(hive&& x) noexcept(allocator_traits<Allocator>::propagate_on_container_move_assignment::value
+                                     || allocator_traits<Allocator>::is_always_equal::value);
+  hive& operator=(initializer_list<T>);
+  template<class InputIterator>
+  void assign(InputIterator first, InputIterator last);
+  template<container - compatible - range<T> R>
+  void assign_range(R&& rg);
   void assign(size_type n, const T& t);
   void assign(initializer_list<T>);
-  allocator_type get_allocator() const noexcept;
 
+  allocator_type get_allocator() const noexcept;
 
 
   // iterators
@@ -75,96 +94,71 @@ public:
 
 
   // capacity
-  [[nodiscard]] bool empty() const noexcept;
+  [[nodiscard]]
+  bool      empty() const noexcept;
   size_type size() const noexcept;
   size_type max_size() const noexcept;
   size_type capacity() const noexcept;
-  size_type memory() const noexcept;
-  void reserve(size_type n);
-  void shrink_to_fit();
-  void trim() noexcept;
+  void      reserve(size_type n);
+  void      shrink_to_fit();
+  void      trim_capacity() noexcept;
+  void      trim_capacity(size_type n) noexcept;
 
 
   // modifiers
-  template <class... Args> iterator emplace(Args&&... args);
+  template<class... Args>
+  iterator emplace(Args&&... args);
   iterator insert(const T& x);
   iterator insert(T&& x);
-  void insert(size_type n, const T& x);
-  template <class InputIterator1, class InputIterator2> void insert(InputIterator1 first, InputIterator2 last);
+  void     insert(size_type n, const T& x);
+  template<class InputIterator>
+  void insert(InputIterator first, InputIterator last);
+  template<container - compatible - range<T> R>
+  void insert_range(R&& rg);
   void insert(initializer_list<T> il);
+
   iterator erase(const_iterator position);
   iterator erase(const_iterator first, const_iterator last);
-  void swap(hive&) noexcept(allocator_traits<Allocator>::propagate_on_container_swap::value || allocator_traits<Allocator>::is_always_equal::value);
-  void clear() noexcept;
+  void     swap(hive&) noexcept(allocator_traits<Allocator>::propagate_on_container_swap::value
+                            || allocator_traits<Allocator>::is_always_equal::value);
+  void     clear() noexcept;
 
 
   // hive operations
-  void splice(hive &x);
+  void      splice(hive& x);
+  void      splice(hive&& x);
+  size_type unique();
+  template<class BinaryPredicate>
+  size_type unique(BinaryPredicate binary_pred);
 
-  std::hive_limits block_capacity_limits() const noexcept;
-  void reshape(std::hive_limits block_capacity_limits);
+  constexpr hive_limits        block_capacity_limits() const noexcept;
+  static constexpr hive_limits block_capacity_hard_limits() noexcept;
+  void                         reshape(hive_limits block_limits);
 
-  iterator get_iterator(pointer p) noexcept;
+  iterator       get_iterator(const_pointer p) noexcept;
   const_iterator get_iterator(const_pointer p) const noexcept;
 
   void sort();
-  template <class Compare> void sort(Compare comp);
-
-  friend bool operator== (const hive &x, const hive &y);
-  friend bool operator!= (const hive &x, const hive &y);
-
-
-  class iterator
-  {
-    friend void advance(iterator &it, Distance n);
-    friend iterator next(iterator it, difference_type distance = 1);
-    friend iterator prev(iterator it, difference_type distance = 1);
-    friend difference_type distance(iterator first, iterator last);
-  }
+  template<class Compare>
+  void sort(Compare comp);
+};
 
 
-  class const_iterator
-  {
-    friend void advance(const_iterator &it, Distance n);
-    friend const_iterator next(const_iterator it, difference_type distance = 1);
-    friend const_iterator prev(const_iterator it, difference_type distance = 1);
-    friend difference_type distance(const_iterator first, const_iterator last);
-  }
+template<class InputIterator,
+         class Allocator
+         = allocator<iter - value - type<InputIterator>> hive(InputIterator, InputIterator, Allocator = Allocator())
+           -> hive<iter - value - type<InputIterator>, Allocator>;
 
+template<class InputIterator,
+         class Allocator = allocator<iter - value - type<InputIterator>> hive(
+           InputIterator, InputIterator, hive_limits block_limits, Allocator = Allocator())
+           -> hive<iter - value - type<InputIterator>, block_limits, Allocator>;
 
-  class reverse_iterator
-  {
-    friend void advance(reverse_iterator &it, Distance n);
-    friend reverse_iterator next(reverse_iterator it, difference_type distance = 1);
-    friend reverse_iterator prev(reverse_iterator it, difference_type distance = 1);
-    friend difference_type distance(reverse_iterator first, reverse_iterator last);
-  }
+template<ranges::input_range R, class Allocator = allocator<ranges::range_value_t<R>>>
+hive(from_range_t, R&&, Allocator = Allocator()) -> hive<ranges::range_value_t<R>, Allocator>;
 
-
-  class const_reverse_iterator
-  {
-    friend void advance(const_reverse_iterator &it, Distance n);
-    friend const_reverse_iterator next(const_reverse_iterator it, difference_type distance = 1);
-    friend const_reverse_iterator prev(const_reverse_iterator it, difference_type distance = 1);
-    friend difference_type distance(const_reverse_iterator first, const_reverse_iterator last);
-  }
-
-
-  // swap
-  friend void swap(hive& x, hive& y)
-    noexcept(noexcept(x.swap(y)));
-
-
-  // erase
-  template <class Predicate>
-    friend size_type erase_if(hive& c, Predicate pred);
-  template <class U>
-    friend size_type erase(hive& c, const U& value);
-}
-
-
-template<class InputIterator, class Allocator = allocator<iter-value-type <InputIterator>>>
-  hive(InputIterator, InputIterator, Allocator = Allocator())
-    -> hive<iter-value-type <InputIterator>, Allocator>;
+template<ranges::input_range R, class Allocator = allocator<ranges::range_value_t<R>>>
+hive(from_range_t, R&&, hive_limits block_limits, Allocator = Allocator())
+  -> hive<ranges::range_value_t<R>, block_limits, Allocator>;
 
 } // namespace flp
