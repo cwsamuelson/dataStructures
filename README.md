@@ -1,5 +1,6 @@
 # Documentation
 This is an umbrella project for various code/tools/utilities I have thought of, or decided to replicate for practice.  Each sub-project/directory will have its own more detailed README to cover its specific contents.
+**TODO** Actually create those READMEs.  I'd like them to be reasonably good quality, so this will take time and focus.  It also implies some level of completeness of the piece it documents, which many of these are certainly not.
 
 ## Examples
 
