@@ -6,6 +6,7 @@ find_package(cmake_scripts REQUIRED)
 add_subdirectory(aligned_buffer)
 add_subdirectory(context)
 add_subdirectory(core)
+add_subdirectory(ecs)
 add_subdirectory(future)
 add_subdirectory(hive)
 add_subdirectory(lifetime)
@@ -25,8 +26,9 @@ common_library(${PROJECT_NAME} INTERFACE)
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
   ${PROJECT_NAME}_aligned_buffer
-  ${PROJECT_NAME}_core
   ${PROJECT_NAME}_context
+  ${PROJECT_NAME}_core
+  ${PROJECT_NAME}_ecs
   ${PROJECT_NAME}_future
   ${PROJECT_NAME}_hive
   ${PROJECT_NAME}_lifetime
