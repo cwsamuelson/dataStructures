@@ -26,8 +26,13 @@ struct SparseSet {
   void erase(const Type value) {
     // this could be optimized, I'm sure
     if (contains(value)) {
-      // incrementing the value is cheap, and ensures they no longer match
-      ++dense_data.at(sparse_data.at(value));
+      // swapping this value with the last valid element ensures this one is invalidated, and maintains the dense
+      // invariant
+      const auto index = sparse_data.at(value);
+      std::swap(dense_data.at(index), dense_data.at(element_count - 1));
+      // then the sparse data indexes must be updated
+      sparse_data.at(dense_data.at(index)) = index;
+
       --element_count;
     }
   }

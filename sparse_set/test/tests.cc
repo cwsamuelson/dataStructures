@@ -48,4 +48,26 @@ TEST_CASE("sparse_set") {
   CHECK(sparse_set.size() == 0);
   CHECK(sparse_set.empty());
   CHECK(sparse_set.begin() == sparse_set.end());
+
+  sparse_set.insert(3);
+  sparse_set.insert(8);
+  sparse_set.insert(15);
+  CHECK(sparse_set.size() == 3);
+  CHECK(not sparse_set.empty());
+  CHECK(sparse_set.begin() != sparse_set.end());
+  CHECK(sparse_set.contains(3));
+  CHECK(sparse_set.contains(8));
+  CHECK(sparse_set.contains(15));
+  CHECK(*sparse_set.begin() == 3);
+  CHECK(*(++sparse_set.begin()) == 8);
+  CHECK(*(++(++sparse_set.begin())) == 15);
+
+  sparse_set.erase(8);
+  CHECK(sparse_set.size() == 2);
+  CHECK(not sparse_set.empty());
+  CHECK(sparse_set.begin() != sparse_set.end());
+  CHECK(sparse_set.contains(3));
+  CHECK(sparse_set.contains(15));
+  CHECK(*sparse_set.begin() == 3);
+  CHECK(*(++sparse_set.begin()) == 15);
 }
