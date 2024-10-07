@@ -1,5 +1,6 @@
 #pragma once
 
+#include <sparse_map.hh>
 #include <sparse_set.hh>
 
 #include <any>
@@ -10,6 +11,18 @@
 
 namespace flp {
 
+namespace {
+// trying to avoid RTTI
+
+size_t pseudo_hash_counter {};
+
+template<typename T>
+struct PseudoTypeHash {
+  static inline size_t hash = pseudo_hash_counter++;
+};
+
+} // namespace
+
 template<typename... Components>
 struct View;
 
@@ -18,7 +31,8 @@ struct Registry {
 
   EntityID              create();
   std::vector<EntityID> create(size_t count);
-  void                  destroy(EntityID entity_id);
+  // destroys all components, and makes id invalid
+  void destroy(EntityID entity_id);
 
   template<typename Iterator>
   void destroy(Iterator begin, Iterator end) {
@@ -35,30 +49,33 @@ struct Registry {
   }
 
   template<typename Component, typename... Args>
-  void emplace(const EntityID id, Args&&... args) {}
-
-  template<typename Component>
-  void remove(const EntityID id) {}
-
-  template<typename Component>
-  Component& get(const EntityID id) {
+  void emplace(const EntityID entity_id, Args&&... args) {
+    component_maps[PseudoTypeHash<Component>::hash].insert(entity_id, Component { std::forward<Args>(args)... });
   }
 
   template<typename Component>
-  const Component& get(const EntityID id) const {
+  void remove(const EntityID entity_id) {
+    component_maps[PseudoTypeHash<Component>::hash].erase(entity_id);
   }
 
-  template<typename ...Components>
-  std::tuple<Components&...> get(const EntityID id) {
+  template<typename Component>
+  Component& get(const EntityID entity_id) {
+    return component_maps.at(PseudoTypeHash<Component>::hash).at(entity_id);
   }
 
-  template<typename ...Components>
-  std::tuple<const Components&...> get(const EntityID id) const {
+  template<typename Component>
+  const Component& get(const EntityID entity_id) const {
+    return component_maps.at(PseudoTypeHash<Component>::hash).at(entity_id);
   }
 
   template<typename... Components>
+  std::tuple<Components&...> get(const EntityID id) {}
+
+  template<typename... Components>
+  std::tuple<const Components&...> get(const EntityID id) const {}
+
+  template<typename... Components>
   View<Components...> view() {
-    typeid(int).hash_code();
     return {};
   }
 
@@ -72,8 +89,9 @@ struct Registry {
 
   template<typename Component>
   [[nodiscard]]
-  bool has() const {
-    return false;
+  bool has(const EntityID entity_id) const {
+    const auto hash = PseudoTypeHash<Component>::hash;
+    return component_maps.contains(hash) and component_maps.at(hash).contains(entity_id);
   }
 
   template<typename... Components>
@@ -85,8 +103,11 @@ struct Registry {
   bool any_of(const EntityID entity_id) const {}
 
   template<typename Component>
-  void clear() {}
+  void clear() {
+    component_maps[PseudoTypeHash<Component>::hash].clear();
+  }
   void clear();
+  // remove all components for id
   void clear(EntityID entity_id);
 
   template<typename Component, typename Functor>
@@ -99,7 +120,8 @@ struct Registry {
     requires std::invocable<Functor, EntityID>
   void on_destroy(Functor&& functor) {}
 
-  std::map<size_t, SparseSet<EntityID, std::any>> component_map;
+  SparseSet<EntityID>                             valid_entities;
+  std::map<size_t, SparseMap<EntityID, std::any>> component_maps;
 };
 
 template<typename... Components>

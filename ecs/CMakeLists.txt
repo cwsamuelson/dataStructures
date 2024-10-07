@@ -28,6 +28,7 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
   ${BASE_PROJECT}_core
   ${BASE_PROJECT}_sparse_set
+  ${BASE_PROJECT}_sparse_map
   error_support::error_support
 )
 
