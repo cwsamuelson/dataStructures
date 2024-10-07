@@ -18,6 +18,7 @@ add_subdirectory(optional)
 add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
+add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 add_subdirectory(std_hive)
 add_subdirectory(units)
@@ -42,6 +43,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
+  ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   ${PROJECT_NAME}_std_hive
   ${PROJECT_NAME}_units
