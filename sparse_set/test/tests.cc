@@ -11,17 +11,25 @@ TEST_CASE("sparse_set") {
   CHECK(sparse_set.size() == 0);
   CHECK(sparse_set.empty());
   CHECK(sparse_set.begin() == sparse_set.end());
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(1));
+  CHECK(not sparse_set.contains(5));
 
   sparse_set.clear();
   CHECK(sparse_set.size() == 0);
   CHECK(sparse_set.empty());
   CHECK(sparse_set.begin() == sparse_set.end());
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(1));
+  CHECK(not sparse_set.contains(5));
 
   sparse_set.insert(1);
   CHECK(sparse_set.size() == 1);
   CHECK(not sparse_set.empty());
   CHECK(sparse_set.begin() != sparse_set.end());
   CHECK(sparse_set.contains(1));
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(5));
 
   CHECK(*sparse_set.begin() == 1);
   CHECK(sparse_set.begin() != sparse_set.end());
@@ -30,6 +38,9 @@ TEST_CASE("sparse_set") {
   CHECK(sparse_set.size() == 0);
   CHECK(sparse_set.empty());
   CHECK(sparse_set.begin() == sparse_set.end());
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(1));
+  CHECK(not sparse_set.contains(5));
 
   sparse_set.insert(1);
   sparse_set.insert(2);
@@ -39,6 +50,8 @@ TEST_CASE("sparse_set") {
   CHECK(sparse_set.begin() != sparse_set.end());
   CHECK(sparse_set.contains(1));
   CHECK(sparse_set.contains(2));
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(5));
 
   CHECK(*sparse_set.begin() == 1);
   CHECK(*(++sparse_set.begin()) == 2);
@@ -48,6 +61,9 @@ TEST_CASE("sparse_set") {
   CHECK(sparse_set.size() == 0);
   CHECK(sparse_set.empty());
   CHECK(sparse_set.begin() == sparse_set.end());
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(1));
+  CHECK(not sparse_set.contains(5));
 
   sparse_set.insert(3);
   sparse_set.insert(8);
@@ -61,8 +77,12 @@ TEST_CASE("sparse_set") {
   CHECK(*sparse_set.begin() == 3);
   CHECK(*(++sparse_set.begin()) == 8);
   CHECK(*(++(++sparse_set.begin())) == 15);
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(1));
+  CHECK(not sparse_set.contains(5));
 
   sparse_set.erase(8);
+  CHECK(not sparse_set.contains(8));
   CHECK(sparse_set.size() == 2);
   CHECK(not sparse_set.empty());
   CHECK(sparse_set.begin() != sparse_set.end());
@@ -70,4 +90,7 @@ TEST_CASE("sparse_set") {
   CHECK(sparse_set.contains(15));
   CHECK(*sparse_set.begin() == 3);
   CHECK(*(++sparse_set.begin()) == 15);
+  CHECK(not sparse_set.contains(0));
+  CHECK(not sparse_set.contains(1));
+  CHECK(not sparse_set.contains(5));
 }
