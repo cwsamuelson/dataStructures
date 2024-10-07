@@ -5,7 +5,7 @@ project(${BASE_PROJECT}_sparse_map LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/template.hh
+  header/sparse_map.hh
 )
 set(SOURCES
 )
