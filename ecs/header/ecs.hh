@@ -60,19 +60,25 @@ struct Registry {
 
   template<typename Component>
   Component& get(const EntityID entity_id) {
-    return component_maps.at(PseudoTypeHash<Component>::hash).at(entity_id);
+    return std::any_cast<Component&>(component_maps.at(PseudoTypeHash<Component>::hash).at(entity_id));
   }
 
   template<typename Component>
   const Component& get(const EntityID entity_id) const {
-    return component_maps.at(PseudoTypeHash<Component>::hash).at(entity_id);
+    return std::any_cast<Component&>(component_maps.at(PseudoTypeHash<Component>::hash).at(entity_id));
   }
 
   template<typename... Components>
-  std::tuple<Components&...> get(const EntityID id) {}
+    requires(sizeof...(Components) > 1)
+  std::tuple<Components&...> get(const EntityID entity_id) {
+    return std::make_tuple(get<std::forward<Components>>(entity_id)...);
+  }
 
   template<typename... Components>
-  std::tuple<const Components&...> get(const EntityID id) const {}
+    requires(sizeof...(Components) > 1)
+  std::tuple<const Components&...> get(const EntityID entity_id) const {
+    return std::make_tuple(get<std::forward<Components>>(entity_id)...);
+  }
 
   template<typename... Components>
   View<Components...> view() {
