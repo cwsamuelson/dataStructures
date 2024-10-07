@@ -8,19 +8,30 @@
 
 namespace flp {
 
-template<std::unsigned_integral Key, typename Value = void>
+template<std::unsigned_integral Key, typename Value>
 struct SparseMap {
   [[nodiscard]]
   bool contains(const Key value) const noexcept {
-    return value < sparse_data.size() and sparse_data.at(value) < element_count
+    return value < sparse_data.size() and sparse_data.at(value) < value_data.size()
        and dense_data.at(sparse_data.at(value)) == value;
   }
 
-  void insert(const Key value) {
-    ensure_size(value + 1);
-    dense_data.at(element_count) = value;
-    sparse_data.at(value)        = element_count;
-    ++element_count;
+  [[nodiscard]]
+  Value& at(const Key key) {
+    return value_data.at(sparse_data.at(key));
+  }
+
+  [[nodiscard]]
+  const Value& at(const Key key) const {
+    return value_data.at(sparse_data.at(key));
+  }
+
+  void insert(const Key key, Value value) {
+    const auto element_count = value_data.size();
+    ensure_size(key + 1);
+    value_data.emplace_back(std::move(value));
+    dense_data.at(element_count) = key;
+    sparse_data.at(key)          = element_count;
   }
 
   void erase(const Key value) {
@@ -29,55 +40,56 @@ struct SparseMap {
       // swapping this value with the last valid element ensures this one is invalidated, and maintains the dense
       // invariant
       const auto index = sparse_data.at(value);
-      std::swap(dense_data.at(index), dense_data.at(element_count - 1));
+      std::swap(dense_data.at(index), dense_data.at(value_data.size() - 1));
+      std::swap(value_data.at(index), value_data.at(value_data.size() - 1));
       // then the sparse data indexes must be updated
-      sparse_data.at(std::get<0>(dense_data.at(index))) = index;
+      sparse_data.at(dense_data.at(index)) = index;
 
-      --element_count;
+      value_data.pop_back();
     }
   }
 
   void clear() noexcept {
-    element_count = 0;
+    value_data.clear();
   }
 
   [[nodiscard]]
   size_t size() const noexcept {
-    return element_count;
+    return value_data.size();
   }
 
   [[nodiscard]]
   bool empty() const noexcept {
-    return size() == 0;
+    return value_data.empty();
   }
 
   void ensure_size(const size_t min_size) {
-    if (element_count < min_size) {
+    if (sparse_data.size() < min_size) {
       sparse_data.resize(min_size, 0);
       dense_data.resize(min_size, 0);
+      value_data.reserve(min_size);
     }
   }
 
   auto begin() {
-    return dense_data.begin();
+    return value_data.begin();
   }
 
   auto begin() const {
-    return dense_data.begin();
+    return value_data.begin();
   }
 
   auto end() {
-    return dense_data.begin() + element_count;
+    return value_data.end();
   }
 
   auto end() const {
-    return dense_data.begin() + element_count;
+    return dense_data.end();
   }
 
-  std::vector<Key>       sparse_data;
-  std::vector<Value> dense_data;
-
-  size_t element_count {};
+  std::vector<Key>   sparse_data;
+  std::vector<Key>   dense_data;
+  std::vector<Value> value_data;
 };
 
 } // namespace flp
