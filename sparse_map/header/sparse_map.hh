@@ -26,6 +26,15 @@ struct SparseMap {
     return value_data.at(sparse_data.at(key));
   }
 
+  template<typename ...Args>
+  void emplace(const Key key, Args&& ...args) {
+    const auto element_count = value_data.size();
+    ensure_size(key + 1);
+    value_data.emplace_back(std::forward<Args>(args)...);
+    dense_data.at(element_count) = key;
+    sparse_data.at(key)          = element_count;
+  }
+
   void insert(const Key key, Value value) {
     const auto element_count = value_data.size();
     ensure_size(key + 1);
