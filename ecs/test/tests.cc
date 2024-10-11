@@ -71,6 +71,12 @@ TEST_CASE("ECS") {
   CHECK(registry.has<Position>(entity_id1));
   CHECK(registry.has<Velocity>(entity_id1));
 
+  {
+    auto [position, velocity] = registry.get<Position, Velocity>(entity_id0);
+    CHECK(position == Position { 5.6F, 7.8F });
+    CHECK(velocity == Velocity { 6.7F, 8.9F });
+  }
+
   SECTION("Iteration") {
     auto view = registry.view<const Position, Velocity>();
 
@@ -79,6 +85,9 @@ TEST_CASE("ECS") {
     view.each([](const auto, const Position&, Velocity&) {});
 
     for (auto&& [entity, position, velocity] : view) {
+      (void)entity;
+      (void)position;
+      (void)velocity;
     }
   }
 }

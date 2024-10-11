@@ -126,7 +126,7 @@ struct PolyStorage<Type, Dimensionality> {
 // this absolutely should support u8/s8 etc
 template<typename NumberType = double, size_t Dimensionality = 1>
 struct Polynomial {
-  using Type = NDPoint<NumberType, Dimensionality>;
+  using Type    = NDPoint<NumberType, Dimensionality>;
   using Storage = PolyStorage<NumberType, Dimensionality>;
 
   Polynomial() = default;

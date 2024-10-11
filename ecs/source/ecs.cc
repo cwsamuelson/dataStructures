@@ -27,7 +27,7 @@ bool Registry::valid(const EntityID entity_id) {
 }
 
 Registry::EntityID Registry::current(const EntityID entity_id) {
-  return {};
+  return entity_id;
 }
 
 void Registry::clear() {

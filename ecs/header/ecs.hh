@@ -71,18 +71,18 @@ struct Registry {
   template<typename... Components>
     requires(sizeof...(Components) > 1)
   std::tuple<Components&...> get(const EntityID entity_id) {
-    return std::make_tuple(get<std::forward<Components>>(entity_id)...);
+    return std::make_tuple(get<Components&>(entity_id)...);
   }
 
   template<typename... Components>
     requires(sizeof...(Components) > 1)
   std::tuple<const Components&...> get(const EntityID entity_id) const {
-    return std::make_tuple(get<std::forward<Components>>(entity_id)...);
+    return std::make_tuple(get<Components&>(entity_id)...);
   }
 
   template<typename... Components>
   View<Components...> view() {
-    return {};
+    return {*this};
   }
 
   //  check if current entity is valid
@@ -102,11 +102,15 @@ struct Registry {
 
   template<typename... Components>
   [[nodiscard]]
-  bool all_of(const EntityID entity_id) const {}
+  bool all_of(const EntityID entity_id) const {
+    return false;
+  }
 
   template<typename... Components>
   [[nodiscard]]
-  bool any_of(const EntityID entity_id) const {}
+  bool any_of(const EntityID entity_id) const {
+    return false;
+  }
 
   template<typename Component>
   void clear() {
@@ -132,6 +136,8 @@ struct Registry {
 
 template<typename... Components>
 struct View {
+  Registry& registry;
+
   template<typename Functor>
     requires std::invocable<Functor, Registry::EntityID, Components&...>
   void each(Functor&& functor) {}
@@ -141,6 +147,9 @@ struct View {
   void each(Functor&& functor) {}
 
   struct Iterator {
+    Registry& registry;
+    Registry::EntityID entity_id;
+
     Iterator operator++() {
       return {};
     }
@@ -152,15 +161,19 @@ struct View {
       return {};
     }
 
-    friend auto operator<=>(const Iterator& lhs, const Iterator& rhs) noexcept = default;
-    friend bool operator==(const Iterator&, const Iterator&) noexcept          = default;
+    friend auto operator<=>(const Iterator& lhs, const Iterator& rhs) noexcept {
+      return lhs.entity_id <=> rhs.entity_id;
+    }
+    friend bool operator==(const Iterator& lhs, const Iterator& rhs) noexcept {
+      return lhs.entity_id == rhs.entity_id;
+    }
   };
 
   Iterator begin() {
-    return {};
+    return {registry};
   }
   Iterator end() {
-    return {};
+    return {registry};
   }
 };
 

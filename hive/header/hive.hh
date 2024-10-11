@@ -233,7 +233,9 @@ struct Hive {
   void clear() noexcept {
     auto iter = begin();
     while (iter != end()) {
-      erase(iter++);
+      auto current = iter;
+      ++iter;
+      erase(current);
     }
   }
 };
