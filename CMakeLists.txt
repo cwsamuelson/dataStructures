@@ -21,6 +21,7 @@ add_subdirectory(ranged_int)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 add_subdirectory(std_hive)
+add_subdirectory(try_wrap)
 add_subdirectory(units)
 add_subdirectory(vector)
 
@@ -46,6 +47,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   ${PROJECT_NAME}_std_hive
+  ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_units
   ${PROJECT_NAME}_vector
 )

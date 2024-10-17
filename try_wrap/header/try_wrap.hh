@@ -1,25 +1,10 @@
+#pragma once
+
 #include <iostream>
 #include <optional>
 #include <type_traits>
 
-void nodata_nothrow() noexcept {
-}
-
-void nodata() {
-}
-
-int nothrow() noexcept {
-    return 42;
-}
-
-int data() {
-    return 1138;
-}
-
-int& get_static() {
-    static int i = 42;
-    return i;
-}
+namespace flp {
 
 template<typename Type>
 using Ref = std::conditional_t<std::is_reference_v<Type>, std::reference_wrapper<std::remove_reference_t<Type>>, Type>;
@@ -92,20 +77,4 @@ struct TryWrap {
     }
 };
 
-int main() {
-    /*auto x = */TryWrap{nodata_nothrow}();
-    auto y = TryWrap{nothrow}();
-    auto z = TryWrap{nodata}();
-    auto [v, w] = TryWrap{data}();
-    auto&& [a, b] = TryWrap{get_static}();
-
-    std::cout << *a << '\n';
-    ++*a;
-    std::cout << *a << '\n';
-
-    auto&& [c, d] = TryWrap{get_static}();
-    std::cout << *c << '\n';
-    ++*c;
-    std::cout << *c << '\n';
-    std::cout << *a << '\n';
 }
