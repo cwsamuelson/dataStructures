@@ -7,9 +7,10 @@ depend/*
 *.swp
 *.stackdump
 documentation/*
-build/*
 .idea/*
 cmake-build-*/*
+build/*
+build-*/*
 CMakeUserPresets.json
 conan_provider.cmake
 

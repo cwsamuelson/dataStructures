@@ -1,7 +1,7 @@
 from conan import ConanFile
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
 from conan.tools.files import copy
-from conans.errors import ConanInvalidConfiguration
+from conan.errors import ConanInvalidConfiguration
 
 
 class galactic_structures(ConanFile):
@@ -43,11 +43,11 @@ class galactic_structures(ConanFile):
     # it appears that the test_package is picking up this dependency
     # is this always happening? how to stop that..
     test_requires = [
-        "catch2/3.7.0"
+        "catch2/[^3.7.0]"
     ]
 
     tool_requires = [
-        "cmake_scripts/1.0.0"
+        "cmake_scripts/[^1.2.0]"
     ]
 
     options = {
@@ -78,7 +78,7 @@ class galactic_structures(ConanFile):
 
     def requirements(self):
         #    self.requires(".../...", override=True)
-        self.requires("error_support/1.0.0", transitive_headers=True, transitive_libs=True)
+        self.requires("error_support/[^1.0.0]", transitive_headers=True, transitive_libs=True)
 
     # running the tests doesn't affect the results
     # if this produces an invalid package, that package would always have been invalid, regardless of if the tests were run
