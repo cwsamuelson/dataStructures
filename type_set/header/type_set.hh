@@ -42,23 +42,23 @@ struct Rebind<Source<Args...>, Target> {
 };
 
 template<typename...>
-class TypeSet;
+class TypeSetImpl;
 
 template<>
-class TypeSet<> {
+class TypeSetImpl<> {
 public:
-  constexpr TypeSet() = default;
+  constexpr TypeSetImpl() = default;
 
-  constexpr TypeSet(const TypeSet&) = default;
-  constexpr TypeSet(TypeSet&&)      = default;
+  constexpr TypeSetImpl(const TypeSetImpl&) = default;
+  constexpr TypeSetImpl(TypeSetImpl&&)      = default;
 
-  constexpr ~TypeSet() = default;
+  constexpr ~TypeSetImpl() = default;
 
-  constexpr TypeSet& operator=(const TypeSet&) = delete;
-  constexpr TypeSet& operator=(TypeSet&&)      = delete;
+  constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
+  constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
 
   template<typename...>
-  friend class TypeSet;
+  friend class TypeSetImpl;
 
   static constexpr size_t size() {
     return 0;
@@ -75,35 +75,35 @@ public:
 
   template<typename... Types>
   static constexpr auto insert() {
-    return typename Rebind<typename UniqueTypes<Types...>::type, TypeSet>::type {};
+    return typename Rebind<typename UniqueTypes<Types...>::type, TypeSetImpl>::type {};
   }
 
   template<typename>
   static constexpr auto erase() {
-    return TypeSet {};
+    return TypeSetImpl {};
   }
 
   template<typename... OtherArgs>
-  constexpr bool operator==(const TypeSet<OtherArgs...>&) const {
+  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
     return sizeof...(OtherArgs) == 0;
   }
 };
 
 template<typename T1, typename... Args>
-class TypeSet<T1, Args...> {
+class TypeSetImpl<T1, Args...> {
 public:
-  constexpr TypeSet() = default;
+  constexpr TypeSetImpl() = default;
 
-  constexpr TypeSet(const TypeSet&) = default;
-  constexpr TypeSet(TypeSet&&)      = default;
+  constexpr TypeSetImpl(const TypeSetImpl&) = default;
+  constexpr TypeSetImpl(TypeSetImpl&&)      = default;
 
-  constexpr ~TypeSet() = default;
+  constexpr ~TypeSetImpl() = default;
 
-  constexpr TypeSet& operator=(const TypeSet&) = delete;
-  constexpr TypeSet& operator=(TypeSet&&)      = delete;
+  constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
+  constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
 
   template<typename...>
-  friend class TypeSet;
+  friend class TypeSetImpl;
 
   static constexpr size_t size() {
     return (sizeof...(Args)) + 1;
@@ -120,44 +120,44 @@ public:
 
   template<typename... Types>
   static constexpr auto insert() {
-    return typename Rebind<typename UniqueTypes<T1, Args..., Types...>::type, TypeSet>::type {};
+    return typename Rebind<typename UniqueTypes<T1, Args..., Types...>::type, TypeSetImpl>::type {};
   }
 
   template<typename Type>
   static constexpr auto erase() {
     if constexpr (not contains<Type>()) {
-      return TypeSet {};
+      return TypeSetImpl {};
     } else if constexpr (std::same_as<T1, Type>) {
-      return typename Rebind<typename UniqueTypes<Args...>::type, TypeSet>::type {};
+      return typename Rebind<typename UniqueTypes<Args...>::type, TypeSetImpl>::type {};
     } else {
-      return typename Rebind<typename UniqueTypes<Args...>::type, TypeSet>::type {}
+      return typename Rebind<typename UniqueTypes<Args...>::type, TypeSetImpl>::type {}
         .template erase<Type>()
         .template insert<T1>();
     }
   }
 
   template<typename... OtherArgs>
-  constexpr bool operator==(const TypeSet<OtherArgs...>& other) const {
+  constexpr bool operator==(const TypeSetImpl<OtherArgs...>& other) const {
     return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (contains<OtherArgs>() and ...)
        and (other.template contains<T1>() and (other.template contains<Args>() and ...));
   }
 };
 
 template<typename Type>
-class TypeSet<Type> {
+class TypeSetImpl<Type> {
 public:
-  constexpr TypeSet() = default;
+  constexpr TypeSetImpl() = default;
 
-  constexpr TypeSet(const TypeSet&) = default;
-  constexpr TypeSet(TypeSet&&)      = default;
+  constexpr TypeSetImpl(const TypeSetImpl&) = default;
+  constexpr TypeSetImpl(TypeSetImpl&&)      = default;
 
-  constexpr ~TypeSet() = default;
+  constexpr ~TypeSetImpl() = default;
 
-  constexpr TypeSet& operator=(const TypeSet&) = delete;
-  constexpr TypeSet& operator=(TypeSet&&)      = delete;
+  constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
+  constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
 
   template<typename...>
-  friend class TypeSet;
+  friend class TypeSetImpl;
 
   static constexpr size_t size() {
     return 1;
@@ -174,22 +174,25 @@ public:
 
   template<typename... Types>
   static constexpr auto insert() {
-    return typename Rebind<typename UniqueTypes<Type, Types...>::type, TypeSet>::type {};
+    return typename Rebind<typename UniqueTypes<Type, Types...>::type, TypeSetImpl>::type {};
   }
 
   template<typename OtherType>
   static constexpr auto erase() {
     if constexpr (std::same_as<OtherType, Type>) {
-      return TypeSet<> {};
+      return TypeSetImpl<> {};
     } else {
-      return TypeSet {};
+      return TypeSetImpl {};
     }
   }
 
   template<typename... OtherArgs>
-  constexpr bool operator==(const TypeSet<OtherArgs...>&) const {
+  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
     return (contains<OtherArgs>() and ...);
   }
 };
+
+template<typename... Args>
+struct TypeSet : Rebind<typename UniqueTypes<Args...>::type, TypeSetImpl>::type {};
 
 } // namespace flp
