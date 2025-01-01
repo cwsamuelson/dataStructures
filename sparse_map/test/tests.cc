@@ -10,7 +10,6 @@ struct S {
   friend auto operator<=>(const S&, const S&) noexcept = default;
 };
 
-// this struct should maybe be put into a shared location?
 TEST_CASE("sparse map") {
   SparseMap<size_t, S> sparse_map;
 

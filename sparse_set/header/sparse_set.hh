@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <cstddef>
 #include <vector>
 
 // https://programmingpraxis.com/2012/03/09/sparse-sets/
@@ -9,7 +10,8 @@
 namespace flp {
 
 template<std::unsigned_integral Type>
-struct SparseSet {
+class SparseSet {
+public:
   [[nodiscard]]
   bool contains(const Type value) const noexcept {
     return value < sparse_data.size() and sparse_data.at(value) < element_count
@@ -58,6 +60,11 @@ struct SparseSet {
     }
   }
 
+  [[nodiscard]]
+  size_t capacity() const noexcept {
+    return sparse_data.size().capacity();
+  }
+
   auto begin() {
     return dense_data.begin();
   }
@@ -74,6 +81,7 @@ struct SparseSet {
     return dense_data.begin() + element_count;
   }
 
+private:
   std::vector<Type> sparse_data;
   std::vector<Type> dense_data;
 

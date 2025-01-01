@@ -4,8 +4,7 @@
 
 using namespace flp;
 
-// this struct should maybe be put into a shared location?
-TEST_CASE("sparse_set") {
+TEST_CASE("sparse set") {
   SparseSet<size_t> sparse_set;
 
   CHECK(sparse_set.size() == 0);
