@@ -1,323 +1,61 @@
 #pragma once
 
+#include <type_set.hh>
+
+#include <concepts>
+#include <cstddef>
+#include <tuple>
+
 namespace flp {
 
-struct Measure {
-  using Type = signed long long;
+struct MeasureBase {
+  size_t order;
 
-  Type length;
-  Type time;
-  Type mass;
-  Type current;
-  Type temperature;
-  Type candela;
-  Type money;
-  Type angle;
-  Type percentage;
-  Type count;
-  Type byte;
-  Type tick;
-
-  constexpr Measure inverse() const {
-    return {
-      -length, -time, -mass, -current, -temperature, -candela, -money, -angle, -percentage, -count, -byte, -tick
-    };
+  template<typename Self, typename Other>
+    requires std::same_as<Self, Other>
+  [[nodiscard]]
+  constexpr Self operator+(this const Self& self, const Other& other) const {
+    return self.order + other.order;
   }
 
-  constexpr friend Measure operator*(const Measure& lhs, const Measure& rhs) {
-    return Measure { .length      = lhs.length + rhs.length,
-                     .time        = lhs.time + rhs.time,
-                     .mass        = lhs.mass + rhs.mass,
-                     .current     = lhs.current + rhs.current,
-                     .temperature = lhs.temperature + rhs.temperature,
-                     .candela     = lhs.candela + rhs.candela,
-                     .money       = lhs.money + rhs.money,
-                     .angle       = lhs.angle + rhs.angle,
-                     .percentage  = lhs.percentage + rhs.percentage,
-                     .count       = lhs.count + rhs.count,
-                     .byte        = lhs.byte + rhs.byte,
-                     .tick        = lhs.tick + rhs.tick };
-  }
-
-  constexpr friend Measure operator/(const Measure& lhs, const Measure& rhs) {
-    return Measure { .length      = lhs.length - rhs.length,
-                     .time        = lhs.time - rhs.time,
-                     .mass        = lhs.mass - rhs.mass,
-                     .current     = lhs.current - rhs.current,
-                     .temperature = lhs.temperature - rhs.temperature,
-                     .candela     = lhs.candela - rhs.candela,
-                     .money       = lhs.money - rhs.money,
-                     .angle       = lhs.angle - rhs.angle,
-                     .percentage  = lhs.percentage - rhs.percentage,
-                     .count       = lhs.count - rhs.count,
-                     .byte        = lhs.byte - rhs.byte,
-                     .tick        = lhs.tick - rhs.tick };
+  template<typename Self, typename Other>
+    requires std::same_as<Self, Other>
+  [[nodiscard]]
+  constexpr Self operator-(this const Self& self, const Other& other) const {
+    return self.order - other.order;
   }
 };
 
-constexpr Measure NoneMeasure           = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure LengthMeasure         = { .length      = 1,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure MassMeasure           = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 1,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure CurrentMeasure        = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 1,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure TemperatureMeasure    = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 1,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure LightIntensityMeasure = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 1,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure MoneyMeasure          = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 1,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure TimeMeasure           = { .length      = 0,
-                                            .time        = 1,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure TickMeasure           = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 1,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure PercentMeasure        = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 1,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure FrequencyMeasure      = { .length      = 0,
-                                            .time        = -1,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure AngleMeasure          = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 1,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure SolidAngleMeasure     = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 2,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure MoleMeasure           = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 1,
-                                            .tick        = 0 };
-constexpr Measure ByteMeasure           = { .length      = 0,
-                                            .time        = 0,
-                                            .mass        = 0,
-                                            .current     = 0,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 1 };
-constexpr Measure VoltageMeasure        = { .length      = 2,
-                                            .time        = -3,
-                                            .mass        = 1,
-                                            .current     = -1,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure ResistanceMeasure     = { .length      = 2,
-                                            .time        = -3,
-                                            .mass        = 1,
-                                            .current     = -2,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure CapacitanceMeasure    = { .length      = -2,
-                                            .time        = 4,
-                                            .mass        = -1,
-                                            .current     = 2,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure InductanceMeasure     = { .length      = 2,
-                                            .time        = -2,
-                                            .mass        = 1,
-                                            .current     = -2,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure ChargeMeasure         = { .length      = 0,
-                                            .time        = 1,
-                                            .mass        = 0,
-                                            .current     = 1,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure MagneticFieldMeasure  = { .length      = 0,
-                                            .time        = -2,
-                                            .mass        = 1,
-                                            .current     = 1,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
-constexpr Measure ElectricFieldMeasure  = { .length      = 1,
-                                            .time        = -3,
-                                            .mass        = 1,
-                                            .current     = -1,
-                                            .temperature = 0,
-                                            .candela     = 0,
-                                            .money       = 0,
-                                            .angle       = 0,
-                                            .percentage  = 0,
-                                            .count       = 0,
-                                            .byte        = 0,
-                                            .tick        = 0 };
+struct LengthBase : MeasureBase {};
+struct TimeBase : MeasureBase {};
+struct MassBase : MeasureBase {};
+struct CurrentBase : MeasureBase {};
+struct TemperatureBase : MeasureBase {};
+struct CandelaBase : MeasureBase {};
+struct MoneyBase : MeasureBase {};
+struct AngleBase : MeasureBase {};
+struct PercentageBase : MeasureBase {};
+struct CountBase : MeasureBase {};
+struct ByteBase : MeasureBase {};
+struct TickBase : MeasureBase {};
+
+template<auto... Measures>
+  requires(std::derived_from<decltype(Measures), MeasureBase> && ...)
+      and ((not std::same_as<decltype(Measures), MeasureBase>) && ...)
+struct Measure {
+  static constexpr typename Rebind<TypeSet<decltype(Measures)...>, std::tuple>::type measures;
+
+  template<auto... OtherMeasures>
+  constexpr auto operator*(const Measure<OtherMeasures...>& other) {
+    auto f = []<typename Measure, typename Tuple>(const Measure& measure, const Tuple& tuple) {
+      if constexpr (typename Rebind<Tuple, TypeSet>::type::template contains<Measure>()) {
+        return measure + std::get<Measure>(tuple);
+      } else {
+        return  measure;
+      }
+    };
+    (f(std::get<Measures>(measures), other), ...);
+  }
+};
 
 } // namespace flp
