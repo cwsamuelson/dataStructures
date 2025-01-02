@@ -2,6 +2,7 @@
 
 #include <core/traits.hh>
 
+#include <array>
 #include <concepts>
 #include <cstddef>
 
@@ -29,17 +30,20 @@ struct ValuePack {
   template<auto Value>
   using Append = ValuePack<Values..., Value>;
 
-  template<template<auto, auto> typename Functor, auto Value>
-  static constexpr BoolConstant<(Functor<Value, Values>::value or ...)> AnyOf {};
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<(Predicate<Values>::value or ...)> AnyOf {};
 
-  template<template<auto, auto> typename Functor, auto Value>
-  static constexpr BoolConstant<(Functor<Value, Values>::value and ...)> AllOf {};
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<(Predicate<Values>::value and ...)> AllOf {};
 
-  template<auto Value>
-  static constexpr auto Contains = AnyOf<Equality, Value>;
+  // template<auto Value>
+  // static constexpr auto Contains = AnyOf<Equality, Value>;
 
-  template<template<auto, auto> typename Functor, auto... OtherValues>
-  static constexpr auto Zip = (Functor<Values, OtherValues...>::value, ...);
+  template<template<auto> typename Predicate>
+  using Transform = ValuePack<Predicate<Values>::value...>;
+
+  // template<template<auto, auto> typename Functor, auto... OtherValues>
+  // static constexpr auto Zip = ValuePack<Functor<Values, OtherValues...>::value...>;
 };
 
 } // namespace flp

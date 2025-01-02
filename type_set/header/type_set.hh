@@ -87,6 +87,19 @@ public:
   constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
     return sizeof...(OtherArgs) == 0;
   }
+
+  // intersection
+  // difference
+  // symmetric difference
+  // union
+
+  template<typename... OtherArgs>
+  static constexpr auto union_() {
+    return TypeSetImpl<OtherArgs...> {};
+  }
+
+  template<typename... OtherArgs>
+  static constexpr auto intersection() {}
 };
 
 template<typename T1, typename... Args>

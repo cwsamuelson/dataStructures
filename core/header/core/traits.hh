@@ -130,6 +130,9 @@ using FalseType    = BoolConstant<false>;
 
 // --- predicates
 
+// These predicates are operating on values...
+// I'd like to have a set of them that operate on types
+
 template<auto Value>
 struct Identity {
   static constexpr auto value = Value;
