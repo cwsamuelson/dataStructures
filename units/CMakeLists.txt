@@ -6,6 +6,7 @@ find_package(error_support REQUIRED)
 
 set(HEADERS
   header/measure.hh
+  header/standard_measures.hh
   header/system.hh
   header/units.hh
 )
