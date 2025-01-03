@@ -24,6 +24,8 @@ struct ValuePack {
     return false;
   }
 
+  // Size
+
   template<auto Value>
   using Prepend = ValuePack<Value, Values...>;
 
@@ -36,14 +38,14 @@ struct ValuePack {
   template<template<auto> typename Predicate>
   static constexpr BoolConstant<(Predicate<Values>::value and ...)> AllOf {};
 
-  // template<auto Value>
-  // static constexpr auto Contains = AnyOf<Equality, Value>;
-
   template<template<auto> typename Predicate>
   using Transform = ValuePack<Predicate<Values>::value...>;
 
-  // template<template<auto, auto> typename Functor, auto... OtherValues>
-  // static constexpr auto Zip = ValuePack<Functor<Values, OtherValues...>::value...>;
+  // Front
+  // Back
+
+  // Contains?
+  // Zip?
 };
 
 } // namespace flp

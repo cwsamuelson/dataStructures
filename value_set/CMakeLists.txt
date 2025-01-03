@@ -1,14 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_units LANGUAGES CXX)
+project(${BASE_PROJECT}_value_set LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/measure.hh
-  header/standard_measures.hh
-  header/system.hh
-  header/units.hh
+  header/value_set.hh
 )
 set(SOURCES
 )
@@ -28,8 +25,7 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
-  ${BASE_PROJECT}_type_set
-  ${BASE_PROJECT}_value_set
+  ${BASE_PROJECT}_core
   error_support::error_support
 )
 

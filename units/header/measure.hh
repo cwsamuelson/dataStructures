@@ -31,13 +31,13 @@ template<auto... Measures>
   requires(std::derived_from<decltype(Measures), MeasureBase> && ...)
       and ((not std::same_as<decltype(Measures), MeasureBase>) && ...)
 struct Measure {
-  static constexpr typename Rebind<TypeSet<decltype(Measures)...>, std::tuple>::type measures {};
+  static constexpr typename RebindTypes<TypeSet<decltype(Measures)...>, std::tuple>::type measures {};
 
   template<auto... OtherMeasures>
   constexpr auto operator*(const Measure<OtherMeasures...>& other) {
-    constexpr auto f = []<typename Measure, typename Tuple>(const Measure& measure, const Tuple& tuple) {
-      if constexpr (typename Rebind<Tuple, TypeSet>::type::template contains<Measure>()) {
-        return measure + std::get<Measure>(tuple);
+    constexpr auto f = []<typename Meas, typename Tuple>(const Meas& measure, const Tuple& tuple) {
+      if constexpr (typename RebindTypes<Tuple, TypeSet>::type::template contains<Meas>()) {
+        return measure + std::get<Meas>(tuple);
       } else {
         return measure;
       }

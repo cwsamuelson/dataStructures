@@ -26,8 +26,9 @@ add_subdirectory(sparse_set)
 add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
-add_subdirectory(units)
+#add_subdirectory(units)
 add_subdirectory(value_pack)
+#add_subdirectory(value_set)
 add_subdirectory(vector)
 
 common_library(${PROJECT_NAME} INTERFACE)
@@ -57,8 +58,9 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
-  ${PROJECT_NAME}_units
+  #${PROJECT_NAME}_units
   ${PROJECT_NAME}_value_pack
+  #${PROJECT_NAME}_value_set
   ${PROJECT_NAME}_vector
 )
 
