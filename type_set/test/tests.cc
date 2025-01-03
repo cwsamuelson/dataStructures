@@ -4,111 +4,110 @@
 
 using namespace flp;
 
-// this struct should maybe be put into a shared location?
-TEST_CASE("Type Set contains") {
+TEST_CASE("`TypeSet` Contains") {
   SECTION("Empty set") {
-    STATIC_CHECK(not TypeSet<>::contains<float>());
-    STATIC_CHECK(not TypeSet<>::contains<signed int>());
-    STATIC_CHECK(not TypeSet<>::contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<>::Contains<float>());
+    STATIC_CHECK(not TypeSet<>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<>::Contains<unsigned int>());
   }
 
   SECTION("Single value") {
-    STATIC_CHECK(not TypeSet<float>::contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<float>::contains<signed int>());
+    STATIC_CHECK(not TypeSet<float>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<float>::Contains<signed int>());
 
-    STATIC_CHECK(not TypeSet<unsigned int>::contains<signed int>());
-    STATIC_CHECK(not TypeSet<unsigned int>::contains<float>());
+    STATIC_CHECK(not TypeSet<unsigned int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<unsigned int>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<signed int>::contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<signed int>::contains<float>());
+    STATIC_CHECK(not TypeSet<signed int>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<signed int>::Contains<float>());
 
-    STATIC_CHECK(TypeSet<float>::contains<float>());
-    STATIC_CHECK(TypeSet<unsigned int>::contains<unsigned int>());
-    STATIC_CHECK(TypeSet<signed int>::contains<signed int>());
+    STATIC_CHECK(TypeSet<float>::Contains<float>());
+    STATIC_CHECK(TypeSet<unsigned int>::Contains<unsigned int>());
+    STATIC_CHECK(TypeSet<signed int>::Contains<signed int>());
   }
 
   SECTION("Multiple values") {
-    STATIC_CHECK(TypeSet<signed int, unsigned int, float>::contains<signed int>());
-    STATIC_CHECK(TypeSet<signed int, unsigned int, float>::contains<unsigned int>());
-    STATIC_CHECK(TypeSet<signed int, unsigned int, float>::contains<float>());
+    STATIC_CHECK(TypeSet<signed int, unsigned int, float>::Contains<signed int>());
+    STATIC_CHECK(TypeSet<signed int, unsigned int, float>::Contains<unsigned int>());
+    STATIC_CHECK(TypeSet<signed int, unsigned int, float>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<unsigned int, float>::contains<signed int>());
-    STATIC_CHECK(not TypeSet<signed int, float>::contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<signed int, unsigned int>::contains<float>());
+    STATIC_CHECK(not TypeSet<unsigned int, float>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<signed int, float>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<signed int, unsigned int>::Contains<float>());
   }
 }
 
-TEST_CASE("Type Set insert") {
+TEST_CASE("`TypeSet` insert") {
   SECTION("Empty set") {
-    STATIC_CHECK(TypeSet<>::insert<unsigned int>().contains<unsigned int>());
-    STATIC_CHECK(TypeSet<>::insert<signed int>().contains<signed int>());
-    STATIC_CHECK(TypeSet<>::insert<float>().contains<float>());
+    STATIC_CHECK(TypeSet<>::insert<unsigned int>::Contains<unsigned int>());
+    STATIC_CHECK(TypeSet<>::insert<signed int>::Contains<signed int>());
+    STATIC_CHECK(TypeSet<>::insert<float>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<>::insert<unsigned int>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<>::insert<unsigned int>().contains<float>());
+    STATIC_CHECK(not TypeSet<>::insert<unsigned int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<>::insert<unsigned int>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<>::insert<signed int>().contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<>::insert<signed int>().contains<float>());
+    STATIC_CHECK(not TypeSet<>::insert<signed int>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<>::insert<signed int>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<>::insert<float>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<>::insert<float>().contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<>::insert<float>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<>::insert<float>::Contains<unsigned int>());
   }
 
   SECTION("Single value") {
-    STATIC_CHECK(TypeSet<float>::insert<unsigned int>().contains<unsigned int>());
-    STATIC_CHECK(TypeSet<float>::insert<signed int>().contains<signed int>());
+    STATIC_CHECK(TypeSet<float>::insert<unsigned int>::Contains<unsigned int>());
+    STATIC_CHECK(TypeSet<float>::insert<signed int>::Contains<signed int>());
 
     SECTION("Idempotent") {
-      STATIC_CHECK(TypeSet<float>::insert<float>().contains<float>());
-      STATIC_CHECK(TypeSet<signed int>::insert<signed int>().contains<signed int>());
-      STATIC_CHECK(TypeSet<unsigned int>::insert<unsigned int>().contains<unsigned int>());
+      STATIC_CHECK(TypeSet<float>::insert<float>::Contains<float>());
+      STATIC_CHECK(TypeSet<signed int>::insert<signed int>::Contains<signed int>());
+      STATIC_CHECK(TypeSet<unsigned int>::insert<unsigned int>::Contains<unsigned int>());
 
-      STATIC_CHECK(not TypeSet<float>::insert<float>().contains<signed int>());
-      STATIC_CHECK(not TypeSet<float>::insert<float>().contains<unsigned int>());
+      STATIC_CHECK(not TypeSet<float>::insert<float>::Contains<signed int>());
+      STATIC_CHECK(not TypeSet<float>::insert<float>::Contains<unsigned int>());
 
-      STATIC_CHECK(not TypeSet<signed int>::insert<signed int>().contains<float>());
-      STATIC_CHECK(not TypeSet<signed int>::insert<signed int>().contains<unsigned int>());
+      STATIC_CHECK(not TypeSet<signed int>::insert<signed int>::Contains<float>());
+      STATIC_CHECK(not TypeSet<signed int>::insert<signed int>::Contains<unsigned int>());
 
-      STATIC_CHECK(not TypeSet<unsigned int>::insert<unsigned int>().contains<float>());
-      STATIC_CHECK(not TypeSet<unsigned int>::insert<unsigned int>().contains<signed int>());
+      STATIC_CHECK(not TypeSet<unsigned int>::insert<unsigned int>::Contains<float>());
+      STATIC_CHECK(not TypeSet<unsigned int>::insert<unsigned int>::Contains<signed int>());
     }
   }
 
   SECTION("Multiple values") {
-    STATIC_CHECK(TypeSet<float, unsigned int>::insert<signed int>().contains<signed int>());
-    STATIC_CHECK(TypeSet<float, signed int>::insert<unsigned int>().contains<unsigned int>());
-    STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<float>().contains<float>());
+    STATIC_CHECK(TypeSet<float, unsigned int>::insert<signed int>::Contains<signed int>());
+    STATIC_CHECK(TypeSet<float, signed int>::insert<unsigned int>::Contains<unsigned int>());
+    STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<float>::Contains<float>());
 
     SECTION("Idempotent") {
-      STATIC_CHECK(TypeSet<float, unsigned int>::insert<float>().contains<float>());
-      STATIC_CHECK(TypeSet<float, unsigned int>::insert<unsigned int>().contains<unsigned int>());
+      STATIC_CHECK(TypeSet<float, unsigned int>::insert<float>::Contains<float>());
+      STATIC_CHECK(TypeSet<float, unsigned int>::insert<unsigned int>::Contains<unsigned int>());
 
-      STATIC_CHECK(TypeSet<float, signed int>::insert<signed int>().contains<signed int>());
-      STATIC_CHECK(TypeSet<float, signed int>::insert<float>().contains<float>());
+      STATIC_CHECK(TypeSet<float, signed int>::insert<signed int>::Contains<signed int>());
+      STATIC_CHECK(TypeSet<float, signed int>::insert<float>::Contains<float>());
 
-      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<signed int>().contains<signed int>());
-      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<unsigned int>().contains<unsigned int>());
+      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<signed int>::Contains<signed int>());
+      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<unsigned int>::Contains<unsigned int>());
     }
   }
 }
 
-TEST_CASE("Type Set erase") {
+TEST_CASE("`TypeSet` erase") {
   SECTION("Empty set") {
     STATIC_CHECK(TypeSet<>::erase<unsigned int>().empty());
     STATIC_CHECK(TypeSet<>::erase<signed int>().empty());
     STATIC_CHECK(TypeSet<>::erase<float>().empty());
 
-    STATIC_CHECK(not TypeSet<>::erase<unsigned int>().contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<>::erase<unsigned int>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<>::erase<unsigned int>().contains<float>());
+    STATIC_CHECK(not TypeSet<>::erase<unsigned int>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<>::erase<unsigned int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<>::erase<unsigned int>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<>::erase<signed int>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<>::erase<signed int>().contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<>::erase<signed int>().contains<float>());
+    STATIC_CHECK(not TypeSet<>::erase<signed int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<>::erase<signed int>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<>::erase<signed int>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<>::erase<float>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<>::erase<float>().contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<>::erase<float>().contains<float>());
+    STATIC_CHECK(not TypeSet<>::erase<float>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<>::erase<float>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<>::erase<float>::Contains<float>());
   }
 
   SECTION("Single value") {
@@ -116,54 +115,54 @@ TEST_CASE("Type Set erase") {
     STATIC_CHECK(TypeSet<unsigned int>::erase<unsigned int>().empty());
     STATIC_CHECK(TypeSet<signed int>::erase<signed int>().empty());
 
-    STATIC_CHECK(not TypeSet<float>::erase<float>().contains<float>());
-    STATIC_CHECK(not TypeSet<signed int>::erase<signed int>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<unsigned int>::erase<unsigned int>().contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<float>::erase<float>::Contains<float>());
+    STATIC_CHECK(not TypeSet<signed int>::erase<signed int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<unsigned int>::erase<unsigned int>::Contains<unsigned int>());
 
-    STATIC_CHECK(not TypeSet<float>::erase<float>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<float>::erase<float>().contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<float>::erase<float>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<float>::erase<float>::Contains<unsigned int>());
 
-    STATIC_CHECK(not TypeSet<signed int>::erase<signed int>().contains<float>());
-    STATIC_CHECK(not TypeSet<signed int>::erase<signed int>().contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<signed int>::erase<signed int>::Contains<float>());
+    STATIC_CHECK(not TypeSet<signed int>::erase<signed int>::Contains<unsigned int>());
 
-    STATIC_CHECK(not TypeSet<unsigned int>::erase<unsigned int>().contains<float>());
-    STATIC_CHECK(not TypeSet<unsigned int>::erase<unsigned int>().contains<signed int>());
+    STATIC_CHECK(not TypeSet<unsigned int>::erase<unsigned int>::Contains<float>());
+    STATIC_CHECK(not TypeSet<unsigned int>::erase<unsigned int>::Contains<signed int>());
 
     SECTION("Idempotent") {
-      STATIC_CHECK(not TypeSet<float>::erase<unsigned int>().contains<unsigned int>());
-      STATIC_CHECK(not TypeSet<float>::erase<signed int>().contains<signed int>());
-      STATIC_CHECK(not TypeSet<float>::erase<float>().contains<float>());
+      STATIC_CHECK(not TypeSet<float>::erase<unsigned int>::Contains<unsigned int>());
+      STATIC_CHECK(not TypeSet<float>::erase<signed int>::Contains<signed int>());
+      STATIC_CHECK(not TypeSet<float>::erase<float>::Contains<float>());
     }
   }
 
   SECTION("Multiple values") {
-    STATIC_CHECK(not TypeSet<float, unsigned int>::erase<unsigned int>().contains<unsigned int>());
-    STATIC_CHECK(not TypeSet<float, unsigned int>::erase<float>().contains<float>());
+    STATIC_CHECK(not TypeSet<float, unsigned int>::erase<unsigned int>::Contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<float, unsigned int>::erase<float>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<float, signed int>::erase<signed int>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<float, signed int>::erase<float>().contains<float>());
+    STATIC_CHECK(not TypeSet<float, signed int>::erase<signed int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<float, signed int>::erase<float>::Contains<float>());
 
-    STATIC_CHECK(not TypeSet<signed int, unsigned int>::erase<signed int>().contains<signed int>());
-    STATIC_CHECK(not TypeSet<signed int, unsigned int>::erase<unsigned int>().contains<unsigned int>());
+    STATIC_CHECK(not TypeSet<signed int, unsigned int>::erase<signed int>::Contains<signed int>());
+    STATIC_CHECK(not TypeSet<signed int, unsigned int>::erase<unsigned int>::Contains<unsigned int>());
 
     SECTION("Idempotent") {
-      STATIC_CHECK(not TypeSet<float, unsigned int>::erase<signed int>().contains<signed int>());
-      STATIC_CHECK(not TypeSet<float, signed int>::erase<unsigned int>().contains<unsigned int>());
-      STATIC_CHECK(not TypeSet<signed int, unsigned int>::erase<float>().contains<float>());
+      STATIC_CHECK(not TypeSet<float, unsigned int>::erase<signed int>::Contains<signed int>());
+      STATIC_CHECK(not TypeSet<float, signed int>::erase<unsigned int>::Contains<unsigned int>());
+      STATIC_CHECK(not TypeSet<signed int, unsigned int>::erase<float>::Contains<float>());
 
-      STATIC_CHECK(TypeSet<float, unsigned int>::insert<float>().contains<float>());
-      STATIC_CHECK(TypeSet<float, unsigned int>::insert<unsigned int>().contains<unsigned int>());
+      STATIC_CHECK(TypeSet<float, unsigned int>::insert<float>::Contains<float>());
+      STATIC_CHECK(TypeSet<float, unsigned int>::insert<unsigned int>::Contains<unsigned int>());
 
-      STATIC_CHECK(TypeSet<float, signed int>::insert<signed int>().contains<signed int>());
-      STATIC_CHECK(TypeSet<float, signed int>::insert<float>().contains<float>());
+      STATIC_CHECK(TypeSet<float, signed int>::insert<signed int>::Contains<signed int>());
+      STATIC_CHECK(TypeSet<float, signed int>::insert<float>::Contains<float>());
 
-      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<signed int>().contains<signed int>());
-      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<unsigned int>().contains<unsigned int>());
+      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<signed int>::Contains<signed int>());
+      STATIC_CHECK(TypeSet<signed int, unsigned int>::insert<unsigned int>::Contains<unsigned int>());
     }
   }
 }
 
-TEST_CASE("Type Set size") {
+TEST_CASE("`TypeSet` size") {
   SECTION("Empty set") {
     STATIC_CHECK(TypeSet<>::size() == 0);
 
@@ -217,7 +216,7 @@ TEST_CASE("Type Set size") {
   }
 }
 
-TEST_CASE("Type Set empty") {
+TEST_CASE("`TypeSet` empty") {
   SECTION("Static style") {
     STATIC_CHECK(TypeSet<>::empty());
 
@@ -315,7 +314,7 @@ TEST_CASE("Type Set empty") {
   }
 }
 
-TEST_CASE("Type Set equality") {
+TEST_CASE("`TypeSet` equality") {
   STATIC_CHECK(TypeSet<> {} == TypeSet<> {});
 
   STATIC_CHECK(TypeSet<> {} != TypeSet<unsigned int> {});
@@ -383,8 +382,9 @@ TEST_CASE("Type Set equality") {
 TEST_CASE("Duplicate Type in TypeSet") {
   STATIC_CHECK(TypeSet<float>::insert<float>() == TypeSet<float> {});
 
-  STATIC_CHECK(not TypeSet<float, float>::erase<float>().contains<float>());
+  STATIC_CHECK(not TypeSet<float, float>::erase<float>::Contains<float>());
   STATIC_CHECK(TypeSet<float, float>::erase<float>() != TypeSet<float> {});
   STATIC_CHECK(TypeSet<float, float>::erase<float>() == TypeSet<> {});
   STATIC_CHECK(TypeSet<float, float>::erase<float>().empty());
 }
+

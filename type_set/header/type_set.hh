@@ -1,45 +1,12 @@
 #pragma once
 
+#include <type_pack.hh>
+
 #include <concepts>
 #include <cstddef>
-#include <tuple>
 #include <type_traits>
 
 namespace flp {
-
-template<typename...>
-struct Prepend;
-
-template<typename T1, typename... Args>
-struct Prepend<T1, std::tuple<Args...>> {
-  using type = std::tuple<T1, Args...>;
-};
-
-template<typename...>
-struct UniqueTypes;
-
-template<typename T1, typename... Args>
-struct UniqueTypes<T1, Args...> {
-  template<typename T, typename... Ts>
-  static constexpr bool contains = (std::same_as<T, Ts> or ...);
-
-  using type = std::conditional_t<contains<T1, Args...>,
-                                  typename UniqueTypes<Args...>::type,
-                                  typename Prepend<T1, typename UniqueTypes<Args...>::type>::type>;
-};
-
-template<>
-struct UniqueTypes<> {
-  using type = std::tuple<>;
-};
-
-template<typename, template<typename...> typename, typename...>
-struct Rebind;
-
-template<template<typename...> typename Source, template<typename...> typename Target, typename... Args>
-struct Rebind<Source<Args...>, Target> {
-  using type = Target<Args...>;
-};
 
 template<typename...>
 class TypeSetImpl;
@@ -57,31 +24,23 @@ public:
   constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
   constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
 
+  using Pack = TypePack<>;
+
   template<typename...>
   friend class TypeSetImpl;
 
-  static constexpr size_t size() {
-    return 0;
-  }
+  static constexpr auto Size = Pack::Size;
 
-  static constexpr bool empty() {
-    return true;
-  }
+  static constexpr auto Empty = Pack::Empty;
 
   template<typename>
-  static constexpr bool contains() {
-    return false;
-  }
+  static constexpr BoolConstant<false> Contains{};
 
-  template<typename... Types>
-  static constexpr auto insert() {
-    return typename Rebind<typename UniqueTypes<Types...>::type, TypeSetImpl>::type {};
-  }
+  template<typename...Types>
+  using Insert = TypePack<Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename>
-  static constexpr auto erase() {
-    return TypeSetImpl {};
-  }
+  using Erase = TypeSetImpl<>;
 
   template<typename... OtherArgs>
   constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
@@ -92,14 +51,6 @@ public:
   // difference
   // symmetric difference
   // union
-
-  template<typename... OtherArgs>
-  static constexpr auto union_() {
-    return TypeSetImpl<OtherArgs...> {};
-  }
-
-  template<typename... OtherArgs>
-  static constexpr auto intersection() {}
 };
 
 template<typename T1, typename... Args>
@@ -115,44 +66,36 @@ public:
   constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
   constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
 
+  using Pack = TypePack<T1, Args...>;
+
   template<typename...>
   friend class TypeSetImpl;
 
-  static constexpr size_t size() {
-    return (sizeof...(Args)) + 1;
-  }
+  static constexpr auto Size = Pack::Size;
 
-  static constexpr bool empty() {
-    return false;
-  }
+  static constexpr auto Empty = Pack::Empty;
 
   template<typename Type>
-  static constexpr bool contains() {
-    return std::same_as<Type, T1> or (std::same_as<Type, Args> or ...);
-  }
+  static constexpr BoolConstant<std::same_as<Type, T1> or (std::same_as<Type, Args> or ...)> Contains{};
 
   template<typename... Types>
-  static constexpr auto insert() {
-    return typename Rebind<typename UniqueTypes<T1, Args..., Types...>::type, TypeSetImpl>::type {};
-  }
+  using Insert = TypePack<T1, Args..., Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename Type>
-  static constexpr auto erase() {
-    if constexpr (not contains<Type>()) {
-      return TypeSetImpl {};
-    } else if constexpr (std::same_as<T1, Type>) {
-      return typename Rebind<typename UniqueTypes<Args...>::type, TypeSetImpl>::type {};
-    } else {
-      return typename Rebind<typename UniqueTypes<Args...>::type, TypeSetImpl>::type {}
-        .template erase<Type>()
-        .template insert<T1>();
-    }
-  }
-
+  using Erase = std::conditional_t<
+    not Contains<Type>,
+        TypeSetImpl,
+        std::conditional_t<
+          std::same_as<T1, Type>,
+            TypePack<Args...>::Unique::template Rebind<TypeSetImpl>,
+            TypePack<Args...>::Unique::template Rebind<TypeSetImpl>::Erase<Type>::Insert<T1>
+        >
+      >;
+            
   template<typename... OtherArgs>
   constexpr bool operator==(const TypeSetImpl<OtherArgs...>& other) const {
-    return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (contains<OtherArgs>() and ...)
-       and (other.template contains<T1>() and (other.template contains<Args>() and ...));
+    return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (Contains<OtherArgs>() and ...)
+       and (other.template Contains<T1>() and (other.template Contains<Args>() and ...));
   }
 };
 
@@ -169,26 +112,20 @@ public:
   constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
   constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
 
+  using Pack = TypePack<Type>;
+
   template<typename...>
   friend class TypeSetImpl;
 
-  static constexpr size_t size() {
-    return 1;
-  }
+  static constexpr auto Size = Pack::Size;
 
-  static constexpr bool empty() {
-    return false;
-  }
+  static constexpr auto Empty = Pack::Empty;
 
   template<typename OtherType>
-  static constexpr bool contains() {
-    return std::same_as<OtherType, Type>;
-  }
+  static constexpr BoolConstant<std::same_as<OtherType, Type>> Contains{};
 
   template<typename... Types>
-  static constexpr auto insert() {
-    return typename Rebind<typename UniqueTypes<Type, Types...>::type, TypeSetImpl>::type {};
-  }
+  using Insert = TypePack<Type, Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename OtherType>
   static constexpr auto erase() {
@@ -201,11 +138,11 @@ public:
 
   template<typename... OtherArgs>
   constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
-    return (contains<OtherArgs>() and ...);
+    return (Contains<OtherArgs>() and ...);
   }
 };
 
 template<typename... Args>
-struct TypeSet : Rebind<typename UniqueTypes<Args...>::type, TypeSetImpl>::type {};
+struct TypeSet : TypePack<Args...>::Unique::template Rebind<TypeSetImpl> {};
 
 } // namespace flp
