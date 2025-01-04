@@ -11,23 +11,34 @@ namespace flp {
 template<typename...>
 class TypeSetImpl;
 
+// Equality
+// Size
+// Empty
+// Contains
+// Insert
+// Erase
+// AnyOf
+// AllOf
+// Transform
+// Rebind
+// Filter
+// Intersection
+// Difference
+// Symmetric Difference
+// Union
+
 template<>
 class TypeSetImpl<> {
 public:
-  constexpr TypeSetImpl() = default;
-
-  constexpr TypeSetImpl(const TypeSetImpl&) = default;
-  constexpr TypeSetImpl(TypeSetImpl&&)      = default;
-
-  constexpr ~TypeSetImpl() = default;
-
-  constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
-  constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
-
   using Pack = TypePack<>;
 
   template<typename...>
   friend class TypeSetImpl;
+
+  template<typename... OtherArgs>
+  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
+    return sizeof...(OtherArgs) == 0;
+  }
 
   static constexpr auto Size = Pack::Size;
 
@@ -42,34 +53,37 @@ public:
   template<typename>
   using Erase = TypeSetImpl<>;
 
-  template<typename... OtherArgs>
-  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
-    return sizeof...(OtherArgs) == 0;
-  }
+  template<template<typename> typename Predicate>
+  static constexpr BoolConstant<false> AnyOf{};
+  template<template<typename> typename Predicate>
+  static constexpr BoolConstant<false> AllOf{};
 
-  // intersection
-  // difference
-  // symmetric difference
-  // union
+  template<template<typename> typename Predicate>
+  using Transform = typename Pack::Transform<Predicate>;
+
+  template<template<typename...> typename Target>
+  using Rebind = Target<>;
+
+// Filter
+// Intersection
+// Difference
+// Symmetric Difference
+// Union
 };
 
 template<typename T1, typename... Args>
 class TypeSetImpl<T1, Args...> {
 public:
-  constexpr TypeSetImpl() = default;
-
-  constexpr TypeSetImpl(const TypeSetImpl&) = default;
-  constexpr TypeSetImpl(TypeSetImpl&&)      = default;
-
-  constexpr ~TypeSetImpl() = default;
-
-  constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
-  constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
-
   using Pack = TypePack<T1, Args...>;
 
   template<typename...>
   friend class TypeSetImpl;
+            
+  template<typename... OtherArgs>
+  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
+    return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (Contains<OtherArgs> and ...)
+       and (TypeSetImpl<OtherArgs...>::template Contains<T1> and (TypeSetImpl<OtherArgs...>::template Contains<Args> and ...));
+  }
 
   static constexpr auto Size = Pack::Size;
 
@@ -84,38 +98,45 @@ public:
   template<typename Type>
   using Erase = std::conditional_t<
     not Contains<Type>,
-        TypeSetImpl,
-        std::conditional_t<
-          std::same_as<T1, Type>,
-            TypePack<Args...>::Unique::template Rebind<TypeSetImpl>,
-            TypePack<Args...>::Unique::template Rebind<TypeSetImpl>::Erase<Type>::Insert<T1>
+      TypeSetImpl<T1, Args...>,
+      std::conditional_t<
+        std::same_as<T1, Type>,
+          typename TypeSetImpl<Args...>::Erase<Type>,
+          typename TypeSetImpl<Args...>::Erase<Type>::Insert<T1>
         >
       >;
-            
-  template<typename... OtherArgs>
-  constexpr bool operator==(const TypeSetImpl<OtherArgs...>& other) const {
-    return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (Contains<OtherArgs>() and ...)
-       and (other.template Contains<T1>() and (other.template Contains<Args>() and ...));
-  }
+
+  template<template<typename> typename Predicate>
+  static constexpr BoolConstant<false> AnyOf{};
+  template<template<typename> typename Predicate>
+  static constexpr BoolConstant<false> AllOf{};
+
+  template<template<typename> typename Predicate>
+  using Transform = typename Pack::Transform<Predicate>;
+
+  template<template<typename...> typename Target>
+  using Rebind = Target<T1, Args...>;
+
+// Filter
+// Intersection
+// Difference
+// Symmetric Difference
+// Union
 };
 
+// is this one needed?
 template<typename Type>
 class TypeSetImpl<Type> {
 public:
-  constexpr TypeSetImpl() = default;
-
-  constexpr TypeSetImpl(const TypeSetImpl&) = default;
-  constexpr TypeSetImpl(TypeSetImpl&&)      = default;
-
-  constexpr ~TypeSetImpl() = default;
-
-  constexpr TypeSetImpl& operator=(const TypeSetImpl&) = delete;
-  constexpr TypeSetImpl& operator=(TypeSetImpl&&)      = delete;
-
   using Pack = TypePack<Type>;
 
   template<typename...>
   friend class TypeSetImpl;
+
+  template<typename... OtherArgs>
+  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
+    return (Contains<OtherArgs> and ...);
+  }
 
   static constexpr auto Size = Pack::Size;
 
@@ -128,18 +149,28 @@ public:
   using Insert = TypePack<Type, Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename OtherType>
-  static constexpr auto erase() {
-    if constexpr (std::same_as<OtherType, Type>) {
-      return TypeSetImpl<> {};
-    } else {
-      return TypeSetImpl {};
-    }
-  }
+  using Erase = std::conditional_t<
+    std::same_as<OtherType, Type>,
+      TypeSetImpl<>,
+      TypeSetImpl<Type>
+    >;
 
-  template<typename... OtherArgs>
-  constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
-    return (Contains<OtherArgs>() and ...);
-  }
+  template<template<typename> typename Predicate>
+  static constexpr BoolConstant<false> AnyOf{};
+  template<template<typename> typename Predicate>
+  static constexpr BoolConstant<false> AllOf{};
+
+  template<template<typename> typename Predicate>
+  using Transform = typename Pack::Transform<Predicate>;
+
+  template<template<typename...> typename Target>
+  using Rebind = Target<Type>;
+
+// Filter
+// Intersection
+// Difference
+// Symmetric Difference
+// Union
 };
 
 template<typename... Args>
