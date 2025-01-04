@@ -5,13 +5,25 @@
 using namespace flp;
 
 TEST_CASE("`TypePack` equality") {
-  STATIC_CHECK(TypePack<> {} == TypePack<> {});
-  STATIC_CHECK(TypePack<int> {} == TypePack<int> {});
-  STATIC_CHECK(TypePack<float> {} != TypePack<int> {});
-  STATIC_CHECK(TypePack<int, float> {} == TypePack<int, float> {});
-  STATIC_CHECK(TypePack<float, int> {} != TypePack<int, float> {});
-  STATIC_CHECK(TypePack<> {} != TypePack<int, float> {});
-  STATIC_CHECK(TypePack<> {} != TypePack<float> {});
+  SECTION("Value equality") {
+    STATIC_CHECK(TypePack<> {} == TypePack<> {});
+    STATIC_CHECK(TypePack<int> {} == TypePack<int> {});
+    STATIC_CHECK(TypePack<float> {} != TypePack<int> {});
+    STATIC_CHECK(TypePack<int, float> {} == TypePack<int, float> {});
+    STATIC_CHECK(TypePack<float, int> {} != TypePack<int, float> {});
+    STATIC_CHECK(TypePack<> {} != TypePack<int, float> {});
+    STATIC_CHECK(TypePack<> {} != TypePack<float> {});
+  }
+
+  /*SECTION("Type-oriented") {
+    STATIC_CHECK(TypePack<>::template Equal<TypePack<>>);
+    STATIC_CHECK(TypePack<int>::template Equal<TypePack<int>>);
+    STATIC_CHECK(TypePack<float>::template Equal<TypePack<int>>);
+    STATIC_CHECK(TypePack<int, float>::template Equal<TypePack<int, float>>);
+    STATIC_CHECK(TypePack<float, int>::template Equal<TypePack<int, float>>);
+    STATIC_CHECK(TypePack<>::template Equal<TypePack<int, float>>);
+    STATIC_CHECK(TypePack<>::template Equal<TypePack<float>>);
+  }*/
 }
 
 TEST_CASE("`TypePack` Size") {
@@ -53,6 +65,11 @@ TEST_CASE("`TypePack` Append") {
   STATIC_CHECK(typename TypePack<int>::Append<float>{} == TypePack<int, float>{});
   STATIC_CHECK(typename TypePack<float, int>::Append<unsigned int>{} == TypePack<float, int, unsigned int>{});
 }
+
+template<typename Type>
+struct TruePredicate {
+  static constexpr bool value = true;
+};
 
 template<typename Type>
 struct FalsePredicate {
@@ -103,5 +120,29 @@ TEST_CASE("`TypePack` Unique") {
   STATIC_CHECK(TypePack<int>::Unique{} == TypePack<int>{});
   STATIC_CHECK(TypePack<int, float>::Unique{} == TypePack<int, float>{});
   STATIC_CHECK(TypePack<int, int>::Unique{} == TypePack<int>{});
+}
+
+template<typename Type>
+struct IsInt {
+  static constexpr bool value = std::same_as<Type, int>;
+};
+
+template<typename Type>
+struct IsFloat {
+  static constexpr bool value = std::same_as<Type, float>;
+};
+
+TEST_CASE("`TypePack` Filter") {
+  STATIC_CHECK(TypePack<>::Filter<TruePredicate>{} == TypePack<>{});
+  STATIC_CHECK(TypePack<>::Filter<FalsePredicate>{} == TypePack<>{});
+
+  STATIC_CHECK(TypePack<int>::Filter<TruePredicate>{} == TypePack<int>{});
+  STATIC_CHECK(TypePack<int>::Filter<FalsePredicate>{} == TypePack<>{});
+
+  STATIC_CHECK(TypePack<int, float>::Filter<TruePredicate>{} == TypePack<int, float>{});
+  STATIC_CHECK(TypePack<int, float>::Filter<FalsePredicate>{} == TypePack<>{});
+
+  STATIC_CHECK(TypePack<int, float>::Filter<IsInt>{} == TypePack<int>{});
+  STATIC_CHECK(TypePack<int, float>::Filter<IsFloat>{} == TypePack<float>{});
 }
 
