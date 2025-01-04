@@ -332,13 +332,94 @@ TEST_CASE("Duplicate Type in TypeSet") {
   STATIC_CHECK(TypeSet<float, float>::Erase<float>::Empty);
 }
 
-// AnyOf
-// AllOf
-// Transform
-// Rebind
-// Filter
-// Intersection
-// Difference
-// Symmetric Difference
-// Union
+template<typename>
+struct TruePredicate {
+  static constexpr bool value = true;
+};
+
+template<typename>
+struct FalsePredicate {
+  static constexpr bool value = false;
+};
+
+template<typename Type>
+struct IsIntPredicate {
+  static constexpr bool value = std::same_as<Type, int>;
+};
+
+template<typename Type>
+struct IsFloatPredicate {
+  static constexpr bool value = std::same_as<Type, float>;
+};
+
+TEST_CASE("`TypeSet` AnyOf") {
+  STATIC_CHECK(not TypeSet<>::AnyOf<TruePredicate>);
+  STATIC_CHECK(TypeSet<int>::AnyOf<TruePredicate>);
+  STATIC_CHECK(TypeSet<int, float>::AnyOf<TruePredicate>);
+
+  STATIC_CHECK(not TypeSet<>::AnyOf<FalsePredicate>);
+  STATIC_CHECK(not TypeSet<int>::AnyOf<FalsePredicate>);
+  STATIC_CHECK(not TypeSet<int, float>::AnyOf<FalsePredicate>);
+
+  STATIC_CHECK(not TypeSet<>::AnyOf<IsIntPredicate>);
+  STATIC_CHECK(TypeSet<int>::AnyOf<IsIntPredicate>);
+  STATIC_CHECK(not TypeSet<float>::AnyOf<IsIntPredicate>);
+  STATIC_CHECK(TypeSet<int, float>::AnyOf<IsIntPredicate>);
+
+  STATIC_CHECK(not TypeSet<>::AnyOf<IsFloatPredicate>);
+  STATIC_CHECK(not TypeSet<int>::AnyOf<IsFloatPredicate>);
+  STATIC_CHECK(TypeSet<float>::AnyOf<IsFloatPredicate>);
+  STATIC_CHECK(TypeSet<int, float>::AnyOf<IsFloatPredicate>);
+}
+
+TEST_CASE("`TypeSet` AllOf") {
+  STATIC_CHECK(not TypeSet<>::AllOf<TruePredicate>);
+  STATIC_CHECK(TypeSet<int>::AllOf<TruePredicate>);
+  STATIC_CHECK(TypeSet<int, float>::AllOf<TruePredicate>);
+
+  STATIC_CHECK(not TypeSet<>::AllOf<FalsePredicate>);
+  STATIC_CHECK(not TypeSet<int>::AllOf<FalsePredicate>);
+  STATIC_CHECK(not TypeSet<int, float>::AllOf<FalsePredicate>);
+
+  STATIC_CHECK(not TypeSet<>::AllOf<IsIntPredicate>);
+  STATIC_CHECK(TypeSet<int>::AllOf<IsIntPredicate>);
+  STATIC_CHECK(not TypeSet<float>::AllOf<IsIntPredicate>);
+  STATIC_CHECK(not TypeSet<int, float>::AllOf<IsIntPredicate>);
+  STATIC_CHECK(TypeSet<int, int>::AllOf<IsIntPredicate>);
+
+  STATIC_CHECK(not TypeSet<>::AllOf<IsFloatPredicate>);
+  STATIC_CHECK(not TypeSet<int>::AllOf<IsFloatPredicate>);
+  STATIC_CHECK(TypeSet<float>::AllOf<IsFloatPredicate>);
+  STATIC_CHECK(not TypeSet<int, float>::AllOf<IsFloatPredicate>);
+  STATIC_CHECK(TypeSet<float, float>::AllOf<IsFloatPredicate>);
+}
+
+template<typename>
+struct TransformPredicate {
+  using type = int;
+};
+
+TEST_CASE("`TypeSet` Transform") {
+  //STATIC_CAST(TypeSet<int>::Transform<TransformPredicate>{} == TypeSet<int>{});
+  //STATIC_CAST(TypeSet<float>::Transform<TransformPredicate>{} == TypeSet<int>{});
+  //STATIC_CAST(TypeSet<int, float>::Transform<TransformPredicate>{} == TypeSet<int>{});
+}
+
+TEST_CASE("`TypeSet` Rebind") {
+}
+
+TEST_CASE("`TypeSet` Filter") {
+}
+
+TEST_CASE("`TypeSet` Intersection") {
+}
+
+TEST_CASE("`TypeSet` Difference") {
+}
+
+TEST_CASE("`TypeSet` Symmetric Difference") {
+}
+
+TEST_CASE("`TypeSet` Union") {
+}
 

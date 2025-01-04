@@ -107,9 +107,9 @@ public:
       >;
 
   template<template<typename> typename Predicate>
-  static constexpr BoolConstant<false> AnyOf{};
+  static constexpr BoolConstant<(Predicate<T1>::value or (Predicate<Args>::value or ...))> AnyOf{};
   template<template<typename> typename Predicate>
-  static constexpr BoolConstant<false> AllOf{};
+  static constexpr BoolConstant<(Predicate<T1>::value and (Predicate<Args>::value and ...))> AllOf{};
 
   template<template<typename> typename Predicate>
   using Transform = typename Pack::Transform<Predicate>;
@@ -156,9 +156,9 @@ public:
     >;
 
   template<template<typename> typename Predicate>
-  static constexpr BoolConstant<false> AnyOf{};
+  static constexpr BoolConstant<Predicate<Type>::value> AnyOf{};
   template<template<typename> typename Predicate>
-  static constexpr BoolConstant<false> AllOf{};
+  static constexpr BoolConstant<Predicate<Type>::value> AllOf{};
 
   template<template<typename> typename Predicate>
   using Transform = typename Pack::Transform<Predicate>;
