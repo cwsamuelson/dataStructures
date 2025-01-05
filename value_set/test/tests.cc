@@ -4,7 +4,6 @@
 
 using namespace flp;
 
-// this struct should maybe be put into a shared location?
 TEST_CASE("Value Set contains") {
   SECTION("Empty set") {
     STATIC_CHECK(not ValueSet<>::contains<4.2F>());

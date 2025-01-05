@@ -7,6 +7,8 @@
 
 namespace flp {
 
+namespace {
+
 template<auto...>
 struct PrependValue;
 
@@ -40,6 +42,8 @@ template<template<auto...> typename Source, template<auto...> typename Target, a
 struct RebindValues<Source<Args...>, Target> {
   using type = Target<Args...>;
 };
+
+}
 
 template<auto...>
 class ValueSetImpl;

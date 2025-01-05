@@ -85,7 +85,7 @@ template<typename Query, template<typename...> typename Target>
 inline constexpr bool IsSpecializationOf = is_specialization_helper<std::decay_t<Query>, Target>;
 
 template<typename Type, template<typename...> typename Target>
-concept instance_of = IsSpecializationOf<Type, Target>;
+concept InstanceOf = IsSpecializationOf<Type, Target>;
 
 /*template<typename Type, typename Referred>
 concept Iterator = requires(Type value) {

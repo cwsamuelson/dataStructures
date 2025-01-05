@@ -58,13 +58,15 @@ public:
   template<template<typename> typename Predicate>
   static constexpr BoolConstant<false> AllOf{};
 
-  template<template<typename> typename Predicate>
-  using Transform = typename Pack::Transform<Predicate>;
+  template<template<typename> typename>
+  using Transform = TypeSetImpl<>;
 
   template<template<typename...> typename Target>
   using Rebind = Target<>;
 
-// Filter
+  template<template<typename> typename Predicate>
+  using Filter = Pack::template Filter<Predicate>::template Rebind<TypeSetImpl>;
+
 // Intersection
 // Difference
 // Symmetric Difference
@@ -112,12 +114,14 @@ public:
   static constexpr BoolConstant<(Predicate<T1>::value and (Predicate<Args>::value and ...))> AllOf{};
 
   template<template<typename> typename Predicate>
-  using Transform = typename Pack::Transform<Predicate>;
+  using Transform = typename Pack::Transform<Predicate>::Unique::template Rebind<TypeSetImpl>;
 
   template<template<typename...> typename Target>
   using Rebind = Target<T1, Args...>;
 
-// Filter
+  template<template<typename> typename Predicate>
+  using Filter = Pack::template Filter<Predicate>::template Rebind<TypeSetImpl>;
+
 // Intersection
 // Difference
 // Symmetric Difference
@@ -161,12 +165,14 @@ public:
   static constexpr BoolConstant<Predicate<Type>::value> AllOf{};
 
   template<template<typename> typename Predicate>
-  using Transform = typename Pack::Transform<Predicate>;
+  using Transform = typename Pack::Transform<Predicate>::Unique::template Rebind<TypeSetImpl>;
 
   template<template<typename...> typename Target>
   using Rebind = Target<Type>;
 
-// Filter
+  template<template<typename> typename Predicate>
+  using Filter = std::conditional_t<Predicate<Type>::value, TypeSetImpl<Type>, TypeSetImpl<>>;
+
 // Intersection
 // Difference
 // Symmetric Difference
