@@ -1,49 +1,30 @@
 #pragma once
 
+#include <value_pack.hh>
+
+#include <core/traits.hh>
+
 #include <concepts>
 #include <cstddef>
-#include <tuple>
 #include <type_traits>
 
 namespace flp {
 
-namespace {
-
-template<auto...>
-struct PrependValue;
-
-template<auto T1, auto... Args>
-struct PrependValue<T1, std::tuple<Args...>> {
-  using type = std::tuple<T1, Args...>;
-};
-
-template<auto...>
-struct UniqueValues;
-
-template<auto T1, auto... Args>
-struct UniqueValues<T1, Args...> {
-  template<auto T, auto... Ts>
-  static constexpr bool contains = (std::same_as<T, Ts> or ...);
-
-  using type = std::conditional_t<contains<T1, Args...>,
-                                  typename UniqueValues<Args...>::type,
-                                  typename PrependValue<T1, typename UniqueValues<Args...>::type>::type>;
-};
-
-template<>
-struct UniqueValues<> {
-  using type = std::tuple<>;
-};
-
-template<template<auto...> typename, auto...>
-struct RebindValues;
-
-template<template<auto...> typename Source, template<auto...> typename Target, auto... Args>
-struct RebindValues<Source<Args...>, Target> {
-  using type = Target<Args...>;
-};
-
-}
+// Equality
+// Size
+// Empty
+// Contains
+// Insert
+// Erase
+// AnyOf
+// AllOf
+// Transform
+// Rebind
+// Filter
+// Intersection
+// Difference
+// Symmetric Difference
+// Union
 
 template<auto...>
 class ValueSetImpl;
@@ -51,165 +32,148 @@ class ValueSetImpl;
 template<>
 class ValueSetImpl<> {
 public:
-  constexpr ValueSetImpl() = default;
-
-  constexpr ValueSetImpl(const ValueSetImpl&) = default;
-  constexpr ValueSetImpl(ValueSetImpl&&)      = default;
-
-  constexpr ~ValueSetImpl() = default;
-
-  constexpr ValueSetImpl& operator=(const ValueSetImpl&) = delete;
-  constexpr ValueSetImpl& operator=(ValueSetImpl&&)      = delete;
+  using Pack = ValuePack<>;
 
   template<auto...>
   friend class ValueSetImpl;
-
-  static constexpr size_t size() {
-    return 0;
-  }
-
-  static constexpr bool empty() {
-    return true;
-  }
-
-  template<auto>
-  static constexpr bool contains() {
-    return false;
-  }
-
-  template<auto... Values>
-  static constexpr auto insert() {
-    return typename RebindValues<typename UniqueValues<Values...>::type, ValueSetImpl>::type {};
-  }
-
-  template<auto>
-  static constexpr auto erase() {
-    return ValueSetImpl {};
-  }
 
   template<auto... OtherArgs>
   constexpr bool operator==(const ValueSetImpl<OtherArgs...>&) const {
     return sizeof...(OtherArgs) == 0;
   }
 
-  // intersection
-  // difference
-  // symmetric difference
-  // union
+  static constexpr auto Size = Pack::Size;
 
-  template<auto... OtherArgs>
-  static constexpr auto union_() {
-    return ValueSetImpl<OtherArgs...> {};
-  }
+  static constexpr auto Empty = Pack::Empty;
 
-  template<auto... OtherArgs>
-  static constexpr auto intersection() {}
+  template<auto>
+  static constexpr BoolConstant<false> Contains {};
+
+  template<auto... Values>
+  using Insert = typename ValuePack<Values...>::Unique::template Rebind<ValueSetImpl>;
+
+  template<auto>
+  using Erase = ValueSetImpl<>;
+
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<false> AnyOf {};
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<false> AllOf {};
+
+  template<template<auto> typename>
+  using Transform = ValueSetImpl<>;
+
+  template<template<auto...> typename Target>
+  using Rebind = Target<>;
+
+  template<template<auto> typename Predicate>
+  using Filter = typename Pack::Filter<Predicate>::template Rebind<ValueSetImpl>;
+
+  // Intersection
+  // Difference
+  // Symmetric Difference
+  // Union
 };
 
-template<auto T1, auto... Args>
-class ValueSetImpl<T1, Args...> {
+template<auto V1, auto... Values>
+class ValueSetImpl<V1, Values...> {
 public:
-  constexpr ValueSetImpl() = default;
-
-  constexpr ValueSetImpl(const ValueSetImpl&) = default;
-  constexpr ValueSetImpl(ValueSetImpl&&)      = default;
-
-  constexpr ~ValueSetImpl() = default;
-
-  constexpr ValueSetImpl& operator=(const ValueSetImpl&) = delete;
-  constexpr ValueSetImpl& operator=(ValueSetImpl&&)      = delete;
+  using Pack = ValuePack<V1, Values...>;
 
   template<auto...>
   friend class ValueSetImpl;
 
-  static constexpr size_t size() {
-    return (sizeof...(Args)) + 1;
+  template<auto... OtherValues>
+  constexpr bool operator==(const ValueSetImpl<OtherValues...>&) const {
+    return (sizeof...(OtherValues) == (sizeof...(Values) + 1)) and (Contains<OtherValues> and ...)
+       and (ValueSetImpl<OtherValues...>::template Contains<V1>
+            and (ValueSetImpl<OtherValues...>::template Contains<Values> and ...));
   }
 
-  static constexpr bool empty() {
-    return false;
-  }
+  static constexpr auto Size = Pack::Size;
 
-  template<auto Value>
-  static constexpr bool contains() {
-    return std::same_as<Value, T1> or (std::same_as<Value, Args> or ...);
-  }
-
-  template<auto... Values>
-  static constexpr auto insert() {
-    return typename RebindValues<typename UniqueValues<T1, Args..., Values...>::type, ValueSetImpl>::type {};
-  }
+  static constexpr auto Empty = Pack::Empty;
 
   template<auto Value>
-  static constexpr auto erase() {
-    if constexpr (not contains<Value>()) {
-      return ValueSetImpl {};
-    } else if constexpr (std::same_as<T1, Value>) {
-      return typename RebindValues<typename UniqueValues<Args...>::type, ValueSetImpl>::type {};
-    } else {
-      return typename RebindValues<typename UniqueValues<Args...>::type, ValueSetImpl>::type {}
-        .template erase<Value>()
-        .template insert<T1>();
-    }
-  }
+  static constexpr BoolConstant<(Value == V1) or ((Value == Values) or ...)> Contains {};
 
-  template<auto... OtherArgs>
-  constexpr bool operator==(const ValueSetImpl<OtherArgs...>& other) const {
-    return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (contains<OtherArgs>() and ...)
-       and (other.template contains<T1>() and (other.template contains<Args>() and ...));
-  }
+  template<auto... OtherValues>
+  using Insert = typename ValuePack<V1, Values..., OtherValues...>::Unique::template Rebind<ValueSetImpl>;
+
+  template<auto Value>
+  using Erase = std::conditional_t<not Contains<Value>,
+                                   ValueSetImpl<V1, Values...>,
+                                   std::conditional_t<(V1 == Value),
+                                                      typename ValueSetImpl<Values...>::Erase<Value>,
+                                                      typename ValueSetImpl<Values...>::Erase<Value>::Insert<V1>>>;
+
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<(Predicate<V1>::value or (Predicate<Values>::value or ...))> AnyOf {};
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<(Predicate<V1>::value and (Predicate<Values>::value and ...))> AllOf {};
+
+  template<template<auto> typename Predicate>
+  using Transform = typename Pack::template Transform<Predicate>::Unique::template Rebind<ValueSetImpl>;
+
+  template<template<auto...> typename Target>
+  using Rebind = Target<V1, Values...>;
+
+  template<template<auto> typename Predicate>
+  using Filter = typename Pack::template Filter<Predicate>::template Rebind<ValueSetImpl>;
+
+  // Intersection
+  // Difference
+  // Symmetric Difference
+  // Union
 };
 
 template<auto Value>
 class ValueSetImpl<Value> {
 public:
-  constexpr ValueSetImpl() = default;
-
-  constexpr ValueSetImpl(const ValueSetImpl&) = default;
-  constexpr ValueSetImpl(ValueSetImpl&&)      = default;
-
-  constexpr ~ValueSetImpl() = default;
-
-  constexpr ValueSetImpl& operator=(const ValueSetImpl&) = delete;
-  constexpr ValueSetImpl& operator=(ValueSetImpl&&)      = delete;
+  using Pack = ValuePack<Value>;
 
   template<auto...>
   friend class ValueSetImpl;
 
-  static constexpr size_t size() {
-    return 1;
-  }
-
-  static constexpr bool empty() {
-    return false;
-  }
-
-  template<auto OtherValue>
-  static constexpr bool contains() {
-    return std::same_as<OtherValue, Value>;
-  }
-
-  template<auto... Values>
-  static constexpr auto insert() {
-    return typename RebindValues<typename UniqueValues<Value, Values...>::type, ValueSetImpl>::type {};
-  }
-
-  template<auto OtherValue>
-  static constexpr auto erase() {
-    if constexpr (std::same_as<OtherValue, Value>) {
-      return ValueSetImpl<> {};
-    } else {
-      return ValueSetImpl {};
-    }
-  }
-
   template<auto... OtherArgs>
   constexpr bool operator==(const ValueSetImpl<OtherArgs...>&) const {
-    return (contains<OtherArgs>() and ...);
+    return (Contains<OtherArgs> and ...);
   }
+
+  static constexpr auto Size = Pack::Size;
+
+  static constexpr auto Empty = Pack::Empty;
+
+  template<auto OtherValue>
+  static constexpr BoolConstant<OtherValue == Value> Contains {};
+
+  template<auto... OtherValues>
+  using Insert = typename ValuePack<Value, OtherValues...>::Unique::template Rebind<ValueSetImpl>;
+
+  template<auto OtherValue>
+  using Erase = std::conditional_t<OtherValue == Value, ValueSetImpl<>, ValueSetImpl<Value>>;
+
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<Predicate<Value>::value> AnyOf {};
+  template<template<auto> typename Predicate>
+  static constexpr BoolConstant<Predicate<Value>::value> AllOf {};
+
+  template<template<auto> typename Predicate>
+  using Transform = typename Pack::template Transform<Predicate>::Unique::template Rebind<ValueSetImpl>;
+
+  template<template<auto...> typename Target>
+  using Rebind = Target<Value>;
+
+  template<template<auto> typename Predicate>
+  using Filter = std::conditional_t<Predicate<Value>::value, ValueSetImpl<Value>, ValueSetImpl<>>;
+
+  // Intersection
+  // Difference
+  // Symmetric Difference
+  // Union
 };
 
 template<auto... Args>
-struct ValueSet : RebindValues<typename UniqueValues<Args...>::type, ValueSetImpl>::type {};
+struct ValueSet : ValuePack<Args...>::Unique::template Rebind<ValueSetImpl> {};
 
 } // namespace flp
