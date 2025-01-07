@@ -55,15 +55,15 @@ TEST_CASE("`TypePack` Back") {
 }
 
 TEST_CASE("`TypePack` Prepend") {
-  STATIC_CHECK(typename TypePack<>::Prepend<int>{} == TypePack<int>{});
-  STATIC_CHECK(typename TypePack<int>::Prepend<float>{} == TypePack<float, int>{});
-  STATIC_CHECK(typename TypePack<float, int>::Prepend<unsigned int>{} == TypePack<unsigned int, float, int>{});
+  STATIC_CHECK(typename TypePack<>::Prepend<int> {} == TypePack<int> {});
+  STATIC_CHECK(typename TypePack<int>::Prepend<float> {} == TypePack<float, int> {});
+  STATIC_CHECK(typename TypePack<float, int>::Prepend<unsigned int> {} == TypePack<unsigned int, float, int> {});
 }
 
 TEST_CASE("`TypePack` Append") {
-  STATIC_CHECK(typename TypePack<>::Append<int>{} == TypePack<int>{});
-  STATIC_CHECK(typename TypePack<int>::Append<float>{} == TypePack<int, float>{});
-  STATIC_CHECK(typename TypePack<float, int>::Append<unsigned int>{} == TypePack<float, int, unsigned int>{});
+  STATIC_CHECK(typename TypePack<>::Append<int> {} == TypePack<int> {});
+  STATIC_CHECK(typename TypePack<int>::Append<float> {} == TypePack<int, float> {});
+  STATIC_CHECK(typename TypePack<float, int>::Append<unsigned int> {} == TypePack<float, int, unsigned int> {});
 }
 
 template<typename Type>
@@ -110,16 +110,16 @@ struct Transformer {
 };
 
 TEST_CASE("`TypePack` Transform") {
-  STATIC_CHECK(TypePack<>::Transform<Transformer>{} == TypePack<>{});
-  STATIC_CHECK(TypePack<float>::Transform<Transformer>{} == TypePack<int>{});
-  STATIC_CHECK(TypePack<float, unsigned int>::Transform<Transformer>{} == TypePack<int, int>{});
+  STATIC_CHECK(TypePack<>::Transform<Transformer> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<float>::Transform<Transformer> {} == TypePack<int> {});
+  STATIC_CHECK(TypePack<float, unsigned int>::Transform<Transformer> {} == TypePack<int, int> {});
 }
 
 TEST_CASE("`TypePack` Unique") {
-  STATIC_CHECK(TypePack<>::Unique{} == TypePack<>{});
-  STATIC_CHECK(TypePack<int>::Unique{} == TypePack<int>{});
-  STATIC_CHECK(TypePack<int, float>::Unique{} == TypePack<int, float>{});
-  STATIC_CHECK(TypePack<int, int>::Unique{} == TypePack<int>{});
+  STATIC_CHECK(TypePack<>::Unique {} == TypePack<> {});
+  STATIC_CHECK(TypePack<int>::Unique {} == TypePack<int> {});
+  STATIC_CHECK(TypePack<int, float>::Unique {} == TypePack<int, float> {});
+  STATIC_CHECK(TypePack<int, int>::Unique {} == TypePack<int> {});
 }
 
 template<typename Type>
@@ -133,16 +133,68 @@ struct IsFloat {
 };
 
 TEST_CASE("`TypePack` Filter") {
-  STATIC_CHECK(TypePack<>::Filter<TruePredicate>{} == TypePack<>{});
-  STATIC_CHECK(TypePack<>::Filter<FalsePredicate>{} == TypePack<>{});
+  STATIC_CHECK(TypePack<>::Filter<TruePredicate> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<>::Filter<FalsePredicate> {} == TypePack<> {});
 
-  STATIC_CHECK(TypePack<int>::Filter<TruePredicate>{} == TypePack<int>{});
-  STATIC_CHECK(TypePack<int>::Filter<FalsePredicate>{} == TypePack<>{});
+  STATIC_CHECK(TypePack<int>::Filter<TruePredicate> {} == TypePack<int> {});
+  STATIC_CHECK(TypePack<int>::Filter<FalsePredicate> {} == TypePack<> {});
 
-  STATIC_CHECK(TypePack<int, float>::Filter<TruePredicate>{} == TypePack<int, float>{});
-  STATIC_CHECK(TypePack<int, float>::Filter<FalsePredicate>{} == TypePack<>{});
+  STATIC_CHECK(TypePack<int, float>::Filter<TruePredicate> {} == TypePack<int, float> {});
+  STATIC_CHECK(TypePack<int, float>::Filter<FalsePredicate> {} == TypePack<> {});
 
-  STATIC_CHECK(TypePack<int, float>::Filter<IsInt>{} == TypePack<int>{});
-  STATIC_CHECK(TypePack<int, float>::Filter<IsFloat>{} == TypePack<float>{});
+  STATIC_CHECK(TypePack<int, float>::Filter<IsInt> {} == TypePack<int> {});
+  STATIC_CHECK(TypePack<int, float>::Filter<IsFloat> {} == TypePack<float> {});
 }
 
+TEST_CASE("TypePack Left Shift") {
+  STATIC_CHECK(TypePack<>::LeftShift {} == TypePack<> {});
+  STATIC_CHECK(TypePack<signed int>::LeftShift {} == TypePack<signed int> {});
+  STATIC_CHECK(TypePack<unsigned int>::LeftShift {} == TypePack<unsigned int> {});
+  STATIC_CHECK(TypePack<float>::LeftShift {} == TypePack<float> {});
+  STATIC_CHECK(TypePack<signed int, float>::LeftShift {} == TypePack<float, signed int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::LeftShift {} == TypePack<signed int, float, unsigned int> {});
+}
+
+TEST_CASE("TypePack Right Shift") {
+  STATIC_CHECK(TypePack<>::LeftShift {} == TypePack<> {});
+  STATIC_CHECK(TypePack<signed int>::LeftShift {} == TypePack<signed int> {});
+  STATIC_CHECK(TypePack<unsigned int>::LeftShift {} == TypePack<unsigned int> {});
+  STATIC_CHECK(TypePack<float>::LeftShift {} == TypePack<float> {});
+  STATIC_CHECK(TypePack<signed int, float>::LeftShift {} == TypePack<float, signed int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::LeftShift {} == TypePack<signed int, float, unsigned int> {});
+}
+
+TEST_CASE("TypePack Take") {
+  STATIC_CHECK(TypePack<>::Take<0> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int>::Take<0> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int>::Take<1> {} == TypePack<unsigned int> {});
+  STATIC_CHECK(TypePack<unsigned int, float>::Take<0> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int, float>::Take<1> {} == TypePack<unsigned int> {});
+  STATIC_CHECK(TypePack<unsigned int, float>::Take<2> {} == TypePack<unsigned int, float> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Take<0> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Take<1> {} == TypePack<unsigned int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Take<2> {} == TypePack<unsigned int, signed int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Take<3> {} == TypePack<unsigned int, signed int, float> {});
+}
+
+TEST_CASE("TypePack Drop") {
+  STATIC_CHECK(TypePack<>::Drop<0> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int>::Drop<0> {} == TypePack<unsigned int> {});
+  STATIC_CHECK(TypePack<unsigned int>::Drop<1> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int>::Drop<0> {} == TypePack<unsigned int, signed int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int>::Drop<1> {} == TypePack<signed int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int>::Drop<2> {} == TypePack<> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Drop<0> {} == TypePack<unsigned int, signed int, float> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Drop<1> {} == TypePack<signed int, float> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Drop<2> {} == TypePack<float> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Drop<3> {} == TypePack<> {});
+}
+
+TEST_CASE("TypePack Reverse") {
+  STATIC_CHECK(TypePack<>::Reverse {} == TypePack<> {});
+  STATIC_CHECK(TypePack<signed int>::Reverse {} == TypePack<signed int> {});
+  STATIC_CHECK(TypePack<signed int, float>::Reverse {} == TypePack<float, signed int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float>::Reverse {} == TypePack<float, signed int, unsigned int> {});
+  STATIC_CHECK(TypePack<unsigned int, signed int, float, double>::Reverse {}
+               == TypePack<double, float, signed int, unsigned int> {});
+}

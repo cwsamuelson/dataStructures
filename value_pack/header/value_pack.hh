@@ -218,6 +218,7 @@ struct ValuePack {
   template<template<auto> typename Predicate>
   using Filter = typename FilterHelper<Predicate, Values...>::type;
 
+  //! @TODO shift by an amount
   using LeftShift  = typename LShiftHelper<Values...>::type;
   using RightShift = typename RShiftHelper<Values...>::type;
 
