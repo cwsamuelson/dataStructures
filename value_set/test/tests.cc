@@ -2,6 +2,8 @@
 
 #include <catch2/catch_all.hpp>
 
+#include <concepts>
+
 using namespace flp;
 
 TEST_CASE("Duplicate Value in ValueSet") {
@@ -449,9 +451,9 @@ TEST_CASE("`ValueSet` Transform") {
   STATIC_CHECK(ValueSet<-1138, 4.2F>::Transform<TransformPredicate> {} == ValueSet<42, 4.2F> {});
 }
 
-template<auto ...Values>
+template<auto... Values>
 struct TestPack {
-  template<auto ...OtherValues>
+  template<auto... OtherValues>
   constexpr bool operator==(const TestPack<OtherValues...>&) const {
     return ((Values == OtherValues) and ...);
   }

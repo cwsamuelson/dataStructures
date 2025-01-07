@@ -66,15 +66,15 @@ TEST_CASE("ValuePack Back") {
 }
 
 TEST_CASE("ValuePack Prepend") {
-  STATIC_CHECK(typename ValuePack<>::Prepend<-1138>{} == ValuePack<-1138>{});
-  STATIC_CHECK(typename ValuePack<-1138>::Prepend<4.2F>{} == ValuePack<4.2F, -1138>{});
-  STATIC_CHECK(typename ValuePack<4.2F, -1138>::Prepend<42>{} == ValuePack<42, 4.2F, -1138>{});
+  STATIC_CHECK(typename ValuePack<>::Prepend<-1138> {} == ValuePack<-1138> {});
+  STATIC_CHECK(typename ValuePack<-1138>::Prepend<4.2F> {} == ValuePack<4.2F, -1138> {});
+  STATIC_CHECK(typename ValuePack<4.2F, -1138>::Prepend<42> {} == ValuePack<42, 4.2F, -1138> {});
 }
 
 TEST_CASE("ValuePack Append") {
-  STATIC_CHECK(typename ValuePack<>::Append<-1138>{} == ValuePack<-1138>{});
-  STATIC_CHECK(typename ValuePack<-1138>::Append<4.2F>{} == ValuePack<-1138, 4.2F>{});
-  STATIC_CHECK(typename ValuePack<4.2F, -1138>::Append<42>{} == ValuePack<4.2F, -1138, 42>{});
+  STATIC_CHECK(typename ValuePack<>::Append<-1138> {} == ValuePack<-1138> {});
+  STATIC_CHECK(typename ValuePack<-1138>::Append<4.2F> {} == ValuePack<-1138, 4.2F> {});
+  STATIC_CHECK(typename ValuePack<4.2F, -1138>::Append<42> {} == ValuePack<4.2F, -1138, 42> {});
 }
 
 template<auto>
@@ -115,9 +115,9 @@ struct RebindTarget {
 };
 
 TEST_CASE("ValuePack Rebind") {
-  STATIC_CHECK(ValuePack<>::Rebind<RebindTarget>{} == RebindTarget<>{});
-  STATIC_CHECK(ValuePack<-1138>::Rebind<RebindTarget>{} == RebindTarget<-1138>{});
-  STATIC_CHECK(ValuePack<-1138, 4.2F>::Rebind<RebindTarget>{} == RebindTarget<-1138, 4.2F>{});
+  STATIC_CHECK(ValuePack<>::Rebind<RebindTarget> {} == RebindTarget<> {});
+  STATIC_CHECK(ValuePack<-1138>::Rebind<RebindTarget> {} == RebindTarget<-1138> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Rebind<RebindTarget> {} == RebindTarget<-1138, 4.2F> {});
 }
 
 template<auto Value>
@@ -126,16 +126,16 @@ struct Transformer {
 };
 
 TEST_CASE("ValuePack Transform") {
-  STATIC_CHECK(ValuePack<>::Transform<Transformer>{} == ValuePack<>{});
-  STATIC_CHECK(ValuePack<4.2F>::Transform<Transformer>{} == ValuePack<-1138>{});
-  STATIC_CHECK(ValuePack<4.2F, 42>::Transform<Transformer>{} == ValuePack<-1138, -1138>{});
+  STATIC_CHECK(ValuePack<>::Transform<Transformer> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<4.2F>::Transform<Transformer> {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<4.2F, 42>::Transform<Transformer> {} == ValuePack<-1138, -1138> {});
 }
 
 TEST_CASE("ValuePack Unique") {
-  STATIC_CHECK(ValuePack<>::Unique{} == ValuePack<>{});
-  STATIC_CHECK(ValuePack<-1138>::Unique{} == ValuePack<-1138>{});
-  STATIC_CHECK(ValuePack<-1138, 4.2F>::Unique{} == ValuePack<-1138, 4.2F>{});
-  STATIC_CHECK(ValuePack<-1138, -1138>::Unique{} == ValuePack<-1138>{});
+  STATIC_CHECK(ValuePack<>::Unique {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<-1138>::Unique {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Unique {} == ValuePack<-1138, 4.2F> {});
+  STATIC_CHECK(ValuePack<-1138, -1138>::Unique {} == ValuePack<-1138> {});
 }
 
 template<auto Value>
@@ -149,16 +149,45 @@ struct IsLife {
 };
 
 TEST_CASE("ValuePack Filter") {
-  STATIC_CHECK(ValuePack<>::Filter<TruePredicate>{} == ValuePack<>{});
-  STATIC_CHECK(ValuePack<>::Filter<FalsePredicate>{} == ValuePack<>{});
+  STATIC_CHECK(ValuePack<>::Filter<TruePredicate> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<>::Filter<FalsePredicate> {} == ValuePack<> {});
 
-  STATIC_CHECK(ValuePack<-1138>::Filter<TruePredicate>{} == ValuePack<-1138>{});
-  STATIC_CHECK(ValuePack<-1138>::Filter<FalsePredicate>{} == ValuePack<>{});
+  STATIC_CHECK(ValuePack<-1138>::Filter<TruePredicate> {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<-1138>::Filter<FalsePredicate> {} == ValuePack<> {});
 
-  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<TruePredicate>{} == ValuePack<-1138, 4.2F>{});
-  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<FalsePredicate>{} == ValuePack<>{});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<TruePredicate> {} == ValuePack<-1138, 4.2F> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<FalsePredicate> {} == ValuePack<> {});
 
-  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<IsTHX>{} == ValuePack<-1138>{});
-  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<IsLife>{} == ValuePack<4.2F>{});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<IsTHX> {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Filter<IsLife> {} == ValuePack<4.2F> {});
 }
 
+TEST_CASE("ValuePack Left Shift") {
+  STATIC_CHECK(ValuePack<>::LeftShift {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<-1138>::LeftShift {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<1138>::LeftShift {} == ValuePack<1138> {});
+  STATIC_CHECK(ValuePack<4.2F>::LeftShift {} == ValuePack<4.2F> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::LeftShift {} == ValuePack<4.2F, -1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::LeftShift {} == ValuePack<-1138, 4.2F, 1138> {});
+}
+
+TEST_CASE("ValuePack Right Shift") {
+  STATIC_CHECK(ValuePack<>::LeftShift {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<-1138>::LeftShift {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<1138>::LeftShift {} == ValuePack<1138> {});
+  STATIC_CHECK(ValuePack<4.2F>::LeftShift {} == ValuePack<4.2F> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::LeftShift {} == ValuePack<4.2F, -1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::LeftShift {} == ValuePack<-1138, 4.2F, 1138> {});
+}
+
+TEST_CASE("ValuePack Take") {}
+
+TEST_CASE("ValuePack Drop") {}
+
+TEST_CASE("ValuePack Reverse") {
+  STATIC_CHECK(ValuePack<>::Reverse {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<-1138>::Reverse {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<-1138, 4.2F>::Reverse {} == ValuePack<4.2F, -1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Reverse {} == ValuePack<4.2F, -1138, 1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F, 11.38>::Reverse {} == ValuePack<11.38, 4.2F, -1138, 1138> {});
+}

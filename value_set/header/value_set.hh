@@ -69,7 +69,9 @@ public:
   template<template<auto> typename Predicate>
   using Filter = typename Pack::Filter<Predicate>::template Rebind<ValueSetImpl>;
 
-  // Intersection
+  template<auto...>
+  using Intersection = ValueSetImpl<>;
+
   // Difference
   // Symmetric Difference
   // Union
@@ -121,7 +123,6 @@ public:
   template<template<auto> typename Predicate>
   using Filter = typename Pack::template Filter<Predicate>::template Rebind<ValueSetImpl>;
 
-  // Intersection
   // Difference
   // Symmetric Difference
   // Union
@@ -167,7 +168,10 @@ public:
   template<template<auto> typename Predicate>
   using Filter = std::conditional_t<Predicate<Value>::value, ValueSetImpl<Value>, ValueSetImpl<>>;
 
-  // Intersection
+  template<auto... OtherValues>
+  using Intersection
+    = std::conditional_t<ValuePack<OtherValues...>::template Contains<Value>, ValuePack<Value>, ValuePack<>>;
+
   // Difference
   // Symmetric Difference
   // Union
