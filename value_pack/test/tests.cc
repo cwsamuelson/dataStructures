@@ -180,9 +180,31 @@ TEST_CASE("ValuePack Right Shift") {
   STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::LeftShift {} == ValuePack<-1138, 4.2F, 1138> {});
 }
 
-TEST_CASE("ValuePack Take") {}
+TEST_CASE("ValuePack Take") {
+  STATIC_CHECK(ValuePack<>::Take<0> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138>::Take<0> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138>::Take<1> {} == ValuePack<1138> {});
+  STATIC_CHECK(ValuePack<1138, 4.2F>::Take<0> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138, 4.2F>::Take<1> {} == ValuePack<1138> {});
+  STATIC_CHECK(ValuePack<1138, 4.2F>::Take<2> {} == ValuePack<1138, 4.2F> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Take<0> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Take<1> {} == ValuePack<1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Take<2> {} == ValuePack<1138, -1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Take<3> {} == ValuePack<1138, -1138, 4.2F> {});
+}
 
-TEST_CASE("ValuePack Drop") {}
+TEST_CASE("ValuePack Drop") {
+  STATIC_CHECK(ValuePack<>::Drop<0> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138>::Drop<0> {} == ValuePack<1138> {});
+  STATIC_CHECK(ValuePack<1138>::Drop<1> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138, -1138>::Drop<0> {} == ValuePack<1138, -1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138>::Drop<1> {} == ValuePack<-1138> {});
+  STATIC_CHECK(ValuePack<1138, -1138>::Drop<2> {} == ValuePack<> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Drop<0> {} == ValuePack<1138, -1138, 4.2F> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Drop<1> {} == ValuePack<-1138, 4.2F> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Drop<2> {} == ValuePack<4.2F> {});
+  STATIC_CHECK(ValuePack<1138, -1138, 4.2F>::Drop<3> {} == ValuePack<> {});
+}
 
 TEST_CASE("ValuePack Reverse") {
   STATIC_CHECK(ValuePack<>::Reverse {} == ValuePack<> {});

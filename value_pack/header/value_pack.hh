@@ -106,7 +106,13 @@ struct RShiftHelper<V1, Values...> {
 template<size_t Count, auto... Values>
 struct TakeHelper;
 
+template<auto... Values>
+struct TakeHelper<0, Values...> {
+  using type = ValuePack<>;
+};
+
 template<size_t Count, auto Value, auto... Values>
+  requires(Count > 1)
 struct TakeHelper<Count, Value, Values...> {
   using type = typename TakeHelper<Count - 1, Values...>::type::template Prepend<Value>;
 };
@@ -119,14 +125,20 @@ struct TakeHelper<1, Value, Values...> {
 template<size_t Count, auto... Values>
 struct DropHelper;
 
-template<size_t Count, auto Value, auto... Values>
-struct DropHelper<Count, Value, Values...> {
-  using type = typename DropHelper<Count - 1, Values...>::type;
+template<auto... Values>
+struct DropHelper<0, Values...> {
+  using type = ValuePack<Values...>;
 };
 
 template<auto Value, auto... Values>
 struct DropHelper<1, Value, Values...> {
   using type = ValuePack<Values...>;
+};
+
+template<size_t Count, auto Value, auto... Values>
+  requires(Count > 1)
+struct DropHelper<Count, Value, Values...> {
+  using type = typename DropHelper<Count - 1, Values...>::type;
 };
 
 template<auto... Values>
