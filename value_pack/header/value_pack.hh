@@ -2,7 +2,6 @@
 
 #include <core/traits.hh>
 
-#include <array>
 #include <concepts>
 #include <cstddef>
 
@@ -41,8 +40,8 @@ struct FilterHelper<Predicate> {
 template<template<auto> typename Predicate, auto V1, auto... Values>
 struct FilterHelper<Predicate, V1, Values...> {
   using type = std::conditional_t<Predicate<V1>::value,
-                                  typename ValuePack<Values...>::Filter<Predicate>::Prepend<V1>,
-                                  typename ValuePack<Values...>::Filter<Predicate>>;
+                                  typename ValuePack<Values...>::template Filter<Predicate>::template Prepend<V1>,
+                                  typename ValuePack<Values...>::template Filter<Predicate>>;
 };
 
 template<auto...>
@@ -179,7 +178,7 @@ struct ValuePack {
 
   /*template<auto... OtherValues>
     requires(sizeof...(Values) == sizeof...(OtherValues))
-  static constexpr BoolConstant<( and ...)> Equal{};
+  static constexpr BoolConstant<((Values == OtherValues) and ...)> Equal{};
 
   template<auto... OtherValues>
     requires(sizeof...(Values) != sizeof...(OtherValues))

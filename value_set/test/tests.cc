@@ -485,10 +485,15 @@ TEST_CASE("`ValueSet` Filter") {
   STATIC_CHECK(ValueSet<-1138, 4.2F, 42>::Filter<FilterTestPredicate> {} == ValueSet<-1138, 42> {});
 }
 
-TEST_CASE("`ValueSet` Intersection") {}
+TEST_CASE("`ValueSet` Intersection") {
+}
 
-TEST_CASE("`ValueSet` Difference") {}
+TEST_CASE("`ValueSet` Difference") {
+}
 
-TEST_CASE("`ValueSet` Symmetric Difference") {}
+TEST_CASE("`ValueSet` Symmetric Difference") {
+}
 
-TEST_CASE("`ValueSet` Union") {}
+TEST_CASE("`ValueSet` Union") {
+}
+

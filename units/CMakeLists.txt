@@ -5,6 +5,7 @@ project(${BASE_PROJECT}_units LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/measure_pack.hh
   header/measure.hh
   header/standard_measures.hh
   header/system.hh
@@ -28,6 +29,7 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
+  ${BASE_PROJECT}_core
   ${BASE_PROJECT}_type_set
   ${BASE_PROJECT}_value_set
   error_support::error_support
