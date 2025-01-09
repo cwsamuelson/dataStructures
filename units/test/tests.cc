@@ -8,7 +8,8 @@
 
 using namespace flp;
 
-struct TestMeasure : MeasureBase {};
+struct TestMeasure1 : MeasureBase {};
+struct TestMeasure2 : MeasureBase {};
 
 TEST_CASE("MeasurePack Has") {
   STATIC_CHECK(not MeasurePack<>::Has<int>);
@@ -48,19 +49,33 @@ TEST_CASE("Measures") {
   }
 
   SECTION("Single measures") {
-    Measure<TestMeasure { 1 }> measure1;
+    Measure<TestMeasure1 { 1 }> measure1;
     Measure<>                  measure2;
 
-    STATIC_CHECK(std::same_as<decltype(measure1 * measure2), decltype(measure1)>);
-    //STATIC_CHECK(std::same_as<decltype(measure2 * measure1), decltype(measure1)>);
+    STATIC_CHECK(measure1 * measure2 == measure1);
+    STATIC_CHECK(measure2 * measure1 == measure1);
 
-    STATIC_CHECK(std::same_as<decltype(measure1 * measure1), Measure<TestMeasure { 2 }>>);
-    //STATIC_CHECK(std::same_as<decltype(measure2 * measure2), Measure<TestMeasure { 2 }>>);
+    STATIC_CHECK(measure1 * measure1 == Measure<TestMeasure1{2}>{});
+    STATIC_CHECK(measure2 * measure2 == Measure<>{});
 
-    STATIC_CHECK(std::same_as<decltype(measure1 / measure2), decltype(measure1)>);
-    //STATIC_CHECK(std::same_as<decltype(measure1 / measure1), Measure<>>);
+    STATIC_CHECK(measure1 / measure2 == measure1);
+    STATIC_CHECK(measure1 / measure1 == Measure<>{});
 
-    //STATIC_CHECK(std::same_as<decltype(measure2 / measure1), Measure<TestMeasure{-1}>>);
+    STATIC_CHECK(measure2 / measure1 == Measure<TestMeasure1{-1}>{});
+    STATIC_CHECK(measure2 / measure2 == Measure<>{});
+  }
+
+  SECTION("Multiple measures") {
+    Measure<TestMeasure1{1}> measure1;
+    Measure<TestMeasure2{1}> measure2;
+    auto measure3 = measure1 / measure2;
+
+    STATIC_CHECK(measure3 * measure2 == measure1);
+
+    Measure<TestMeasure1{1}, TestMeasure2{-1}> measure4{};
+    STATIC_CHECK(measure4 * measure2 == measure1);
+
+    STATIC_CHECK(measure4 * measure4 == Measure<TestMeasure1{2}, TestMeasure2{-2}>{});
   }
 }
 

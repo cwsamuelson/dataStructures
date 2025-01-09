@@ -11,6 +11,7 @@ TEST_CASE("Duplicate Value in ValueSet") {
   STATIC_CHECK(ValueSet<4.2F, 4.2F>::Erase<4.2F> {} != ValueSet<4.2F> {});
   STATIC_CHECK(ValueSet<4.2F, 4.2F>::Erase<4.2F> {} == ValueSet<> {});
   STATIC_CHECK(ValueSet<-1138, 4.2F> {} == ValueSet<4.2F, -1138> {});
+  STATIC_CHECK(ValueSet<1138, 1138> {} == ValueSet<1138> {});
 
   STATIC_CHECK(ValueSet<-1138, 4.2F, 42> {} == ValueSet<-1138, 4.2F, 42> {});
   STATIC_CHECK(ValueSet<-1138, 4.2F, 42> {} == ValueSet<42, -1138, 4.2F> {});
