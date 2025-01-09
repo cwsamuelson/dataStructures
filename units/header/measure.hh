@@ -12,39 +12,72 @@
 namespace flp {
 
 struct MeasureBase {
-  size_t order;
+  signed long long int order;
 
-  template<typename Self, typename Other>
-    requires std::same_as<Self, Other>
+  template<typename Self>
   [[nodiscard]]
-  constexpr Self operator+(this const Self& self, const Other& other) {
-    return self.order + other.order;
+  constexpr auto operator<=>(this const Self& self, const Self& other) noexcept {
+    return self.order <=> other.order;
   }
 
-  template<typename Self, typename Other>
-    requires std::same_as<Self, Other>
+  template<typename Self>
   [[nodiscard]]
-  constexpr Self operator-(this const Self& self, const Other& other) {
-    return self.order - other.order;
+  constexpr auto operator==(this const Self& self, const Self& other) noexcept {
+    return self.order == other.order;
+  }
+
+  template<typename Self>
+  [[nodiscard]]
+  constexpr Self operator+(this const Self& self, const Self& other) noexcept {
+    return {self.order + other.order};
+  }
+
+  template<typename Self>
+  [[nodiscard]]
+  constexpr Self operator-(this const Self& self, const Self& other) noexcept {
+    return {self.order - other.order};
   }
 };
+
+template<auto... Measures>
+  requires(std::derived_from<decltype(Measures), MeasureBase> && ...)
+      and ((not std::same_as<decltype(Measures), MeasureBase>) && ...)
+struct Measure;
 
 namespace {
 
 template<auto... Measures>
 struct MeasureImpl {
   template<auto... OtherMeasures>
-  constexpr auto operator*(const MeasureImpl<OtherMeasures...>& other) {
+  constexpr auto operator*(const MeasureImpl<OtherMeasures...>& other) noexcept {
     constexpr auto f = []<typename Meas>(const Meas& measure, const MeasureImpl<OtherMeasures...>&) {
       if constexpr (MeasurePack<OtherMeasures...>::template Has<Meas>) {
-        return measure + MeasurePack<OtherMeasures...>::template Select<Meas>::Front;
+        return Meas{measure + MeasurePack<OtherMeasures...>::template Select<Meas>};
       } else {
         return measure;
       }
-    }
+    };
 
-    return MeasureImpl<f(Measures, other)...> {};
+    return Measure<f(Measures, other)...> {};
   }
+
+  template<auto... OtherMeasures>
+  constexpr auto operator/(const MeasureImpl<OtherMeasures...>& other) noexcept {
+    constexpr auto f = []<typename Meas>(const Meas& measure, const MeasureImpl<OtherMeasures...>&) {
+      if constexpr (MeasurePack<OtherMeasures...>::template Has<Meas>) {
+        return Meas{measure - MeasurePack<OtherMeasures...>::template Select<Meas>};
+      } else {
+        return measure;
+      }
+    };
+
+    return Measure<f(Measures, other)...> {};
+  }
+};
+
+template<auto Value>
+struct EmptyFilter {
+  static constexpr auto value = Value.order != 0;
 };
 
 }
@@ -53,7 +86,7 @@ struct MeasureImpl {
 template<auto... Measures>
   requires(std::derived_from<decltype(Measures), MeasureBase> && ...)
       and ((not std::same_as<decltype(Measures), MeasureBase>) && ...)
-struct Measure : MeasurePack<Measures...>::UniqueTypes::template Rebind<MeasureImpl> {};
+struct Measure : MeasurePack<Measures...>::UniqueTypes::Filter<EmptyFilter> ::template Rebind<MeasureImpl>{};
 
 } // namespace flp
 

@@ -27,13 +27,15 @@ struct UniqueTypeHelper<V1, Values...> {
 template<typename, auto...>
 struct SelectHelper;
 
-template<typename Type>
-struct SelectHelper<Type> {};
-
 template<typename Type, auto V1, auto... Values>
 struct SelectHelper<Type, V1, Values...> {
-  using type
-    = std::conditional_t<std::same_as<Type, decltype(V1)>, ValuePack<V1>, typename SelectHelper<Type, Values...>::type>;
+  static constexpr auto value = []{
+    if constexpr (std::same_as<Type, decltype(V1)>) {
+      return V1;
+    } else {
+      return SelectHelper<Type, Values...>::value;
+    }
+  }();
 };
 
 } // namespace
@@ -41,7 +43,7 @@ struct SelectHelper<Type, V1, Values...> {
 template<auto... Measures>
 struct MeasurePack : ValuePack<Measures...> {
   template<typename Type>
-  using Select = typename SelectHelper<Type, Measures...>::type;
+  static constexpr auto Select = SelectHelper<Type, Measures...>::value;
 
   template<typename Type>
   static constexpr BoolConstant<(std::same_as<decltype(Measures), Type> or ...)> Has {};
@@ -50,3 +52,4 @@ struct MeasurePack : ValuePack<Measures...> {
 };
 
 } // namespace flp
+
