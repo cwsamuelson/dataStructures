@@ -189,6 +189,9 @@ struct ValuePack {
   static constexpr BoolConstant<Size == 0> Empty {};
 
   template<auto Value>
+  static constexpr BoolConstant<((Value == Values) or ...)> Contains{};
+
+  template<auto Value>
   using Prepend = ValuePack<Value, Values...>;
 
   template<auto Value>

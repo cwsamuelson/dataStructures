@@ -51,6 +51,9 @@ TEST_CASE("ValuePack Empty") {
   STATIC_CHECK(not ValuePack<-1138, 4.2F>::Empty);
 }
 
+TEST_CASE("ValuePack Contains") {
+}
+
 TEST_CASE("ValuePack Front") {
   // STATIC_CHECK(typename ValuePack<>::Front); // doesn't compile
   STATIC_CHECK(ValuePack<-1138>::Front<> == -1138);

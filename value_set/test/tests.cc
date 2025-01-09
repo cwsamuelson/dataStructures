@@ -486,6 +486,20 @@ TEST_CASE("`ValueSet` Filter") {
 }
 
 TEST_CASE("`ValueSet` Intersection") {
+  STATIC_CHECK(ValueSet<>::Intersection<>{} == ValueSet<>{});
+  STATIC_CHECK(ValueSet<42>::Intersection<>{} == ValueSet<>{});
+  STATIC_CHECK(ValueSet<>::Intersection<42>{} == ValueSet<>{});
+  STATIC_CHECK(ValueSet<42>::Intersection<1138>{} == ValueSet<>{});
+  STATIC_CHECK(ValueSet<42, 4.2F>::Intersection<1138, -1138>{} == ValueSet<>{});
+
+  STATIC_CHECK(ValueSet<-1138, 4.2F, 42>::Intersection<>{} == ValueSet<>{});
+  STATIC_CHECK(ValueSet<>::Intersection<-1138, 4.2F, 42>{} == ValueSet<>{});
+
+  STATIC_CHECK(ValueSet<-1138, 4.2F, 42>::Intersection<-1138>{} == ValueSet<-1138>{});
+  STATIC_CHECK(ValueSet<-1138, 4.2F, 42>::Intersection<-1138, 4.2F>{} == ValueSet<-1138, 4.2F>{});
+  STATIC_CHECK(ValueSet<-1138, 4.2F, 42>::Intersection<4.2F, -1138>{} == ValueSet<-1138, 4.2F>{});
+
+  STATIC_CHECK(ValueSet<-1138, 42>::Intersection<4.2F, -1138>{} == ValueSet<-1138>{});
 }
 
 TEST_CASE("`ValueSet` Difference") {

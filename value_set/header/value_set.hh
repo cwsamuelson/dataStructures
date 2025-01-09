@@ -26,8 +26,44 @@ namespace flp {
 // Symmetric Difference
 // Union
 
+namespace {
+
+template<typename...>
+struct IntersectionHelper;
+
+template<auto ...Values>
+struct IntersectionHelper<ValuePack<>, ValuePack<Values...>> {
+  using type = ValuePack<>;
+};
+
+template<auto ...Values>
+struct IntersectionHelper<ValuePack<Values...>, ValuePack<>> {
+  using type = ValuePack<>;
+};
+
+template<auto LV1, auto ...LValues, auto ...RValues>
+  requires (sizeof...(RValues) > 0)
+struct IntersectionHelper<ValuePack<LV1, LValues...>, ValuePack<RValues...>> {
+  using type = std::conditional_t<
+    ValuePack<RValues...>::template Contains<LV1>,
+      typename IntersectionHelper<
+        ValuePack<LValues...>,
+        ValuePack<RValues...>
+      >::type::template Prepend<LV1>,
+      typename IntersectionHelper<
+        ValuePack<LValues...>,
+        ValuePack<RValues...>
+      >::type
+    >;
+};
+
+}
+
 template<auto...>
 class ValueSetImpl;
+
+template<auto...>
+struct ValueSet;
 
 template<>
 class ValueSetImpl<> {
@@ -70,7 +106,7 @@ public:
   using Filter = typename Pack::Filter<Predicate>::template Rebind<ValueSetImpl>;
 
   template<auto...>
-  using Intersection = ValueSetImpl<>;
+  using Intersection = ValueSet<>;
 
   // Difference
   // Symmetric Difference
@@ -123,6 +159,9 @@ public:
   template<template<auto> typename Predicate>
   using Filter = typename Pack::template Filter<Predicate>::template Rebind<ValueSetImpl>;
 
+  template<auto... OtherValues>
+  using Intersection = typename IntersectionHelper<ValuePack<V1, Values...>, ValuePack<OtherValues...>>::type::Rebind<ValueSet>;
+
   // Difference
   // Symmetric Difference
   // Union
@@ -170,7 +209,7 @@ public:
 
   template<auto... OtherValues>
   using Intersection
-    = std::conditional_t<ValuePack<OtherValues...>::template Contains<Value>, ValuePack<Value>, ValuePack<>>;
+    = std::conditional_t<ValuePack<OtherValues...>::template Contains<Value>, ValueSet<Value>, ValueSet<>>;
 
   // Difference
   // Symmetric Difference
