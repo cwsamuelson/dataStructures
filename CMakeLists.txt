@@ -16,7 +16,7 @@ add_subdirectory(matrix)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(operators)
 add_subdirectory(optional)
-#add_subdirectory(polynomial)
+add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
 add_subdirectory(singly_linked_list)
@@ -30,6 +30,7 @@ add_subdirectory(units)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
 add_subdirectory(vector)
+#add_subdirectory(versioning)
 
 common_library(${PROJECT_NAME} INTERFACE)
 
@@ -48,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
-  #${PROJECT_NAME}_polynomial
+  ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
   ${PROJECT_NAME}_singly_linked_list
@@ -62,6 +63,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
   ${PROJECT_NAME}_vector
+  #${PROJECT_NAME}_versioning
 )
 
 enable_testing()

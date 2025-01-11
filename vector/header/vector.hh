@@ -30,7 +30,7 @@ private:
   size_t current_size {};
   size_t current_capacity {};
 
-  static Buffer create_buffer(const size_type element_count) {
+  static Buffer create_buffer(const size_type element_count) noexcept {
     return Buffer { new AlignedTypeBuffer<Type>[element_count] };
   }
 
@@ -50,23 +50,23 @@ private:
 
 public:
   Vector() = default;
-  Vector(const Vector& other) /*noexcept(std::is_noexcept_copy_constructible_v<value_type>)*/ {
+  Vector(const Vector& other) noexcept(std::is_nothrow_copy_constructible_v<value_type>) {
     reserve(other.size());
     for (const auto& element : other) {
       push_back(element);
     }
   }
-  Vector(Vector&&) /*noexcept(std::is_noexcept_move_constructible_v<value_type>)*/ = default;
+  Vector(Vector&&) noexcept(std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  Vector& operator=(const Vector& other) /*noexcept(std::is_noexcept_copy_assignable_v<value_type>)*/ {
+  Vector& operator=(const Vector& other) noexcept(std::is_nothrow_copy_assignable_v<value_type>) {
     reserve(other.size());
     for (const auto& element : other) {
       push_back(element);
     }
   }
-  Vector& operator=(Vector&&) /*noexcept(std::is_noexcept_move_constructible_v<value_type>)*/ = default;
+  Vector& operator=(Vector&&) noexcept(std::is_nothrow_move_constructible_v<value_type>) = default;
 
-  ~Vector() /*noexcept(std::is_noexcept_destructible_v<value_type>)*/ {
+  ~Vector() noexcept(std::is_nothrow_destructible_v<value_type>) {
     clear();
   }
 
@@ -111,7 +111,7 @@ public:
   }
 
   template<typename... Args>
-  // requires constructible
+    requires std::is_constructible_v<value_type, Args...>
   reference emplace_back(Args&&... args) {
     ensure_size(current_size + 1);
 
@@ -122,13 +122,13 @@ public:
     return aligned_buffer.get();
   }
 
-  void pop_back() {
+  void pop_back() noexcept(std::is_nothrow_destructible_v<value_type>) {
     auto& aligned_buffer = buffer[size() - 1];
     aligned_buffer.destruct();
     --current_size;
   }
 
-  void clear() {
+  void clear() noexcept(std::is_nothrow_destructible_v<value_type>) {
     while (not empty()) {
       pop_back();
     }
@@ -149,7 +149,8 @@ public:
     return current_capacity;
   }
 
-  void resize(const size_type count_target) /*is default constructible*/ {
+  void resize(const size_type count_target) noexcept(std::is_nothrow_default_constructible_v<value_type>)
+    requires std::is_default_constructible_v<value_type> {
     reserve(count_target);
 
     while (size() < count_target) {
@@ -161,7 +162,8 @@ public:
     }
   }
 
-  void resize(const size_type count_target, const value_type value) {
+  void resize(const size_type count_target, const value_type value) noexcept(std::is_nothrow_copy_constructible_v<value_type>)
+    requires std::is_copy_constructible_v<value_type> {
     reserve(count_target);
 
     while (size() < count_target) {
@@ -173,7 +175,7 @@ public:
     }
   }
 
-  void reserve(const size_type new_capacity) /*notrhow move assign?*/ {
+  void reserve(const size_type new_capacity) noexcept(std::is_nothrow_move_assignable_v<value_type>) /*does it need to be nothrow destructible too?*/{
     if (new_capacity <= current_capacity) {
       return;
     }
@@ -190,7 +192,7 @@ public:
     VERIFY(current_capacity >= new_capacity, "Failed to allocate new capacity ({})", new_capacity);
   }
 
-  void shrink_to_fit() {
+  void shrink_to_fit() noexcept(std::is_nothrow_move_constructible_v<value_type>) {
     auto new_buffer = create_buffer(current_size);
     for (size_t i {}; i < current_size; ++i) {
       new_buffer[i].construct(std::move(buffer[i].get()));
@@ -229,3 +231,4 @@ public:
 };
 
 } // namespace flp
+

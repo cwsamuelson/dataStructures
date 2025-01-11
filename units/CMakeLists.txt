@@ -5,9 +5,9 @@ project(${BASE_PROJECT}_units LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/measure_pack.hh
-  header/measure.hh
-  header/standard_measures.hh
+  header/dimension_pack.hh
+  header/dimension.hh
+  header/standard_dimensions.hh
   header/system.hh
   header/units.hh
 )

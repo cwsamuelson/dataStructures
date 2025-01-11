@@ -25,6 +25,8 @@ template<typename Type>
 using YDimension = NDimension<Type, 1>;
 template<typename Type>
 using ZDimension = NDimension<Type, 2>;
+template<typename Type>
+using WDimension = NDimension<Type, 3>;
 
 template<typename, typename>
 struct NDPointImpl;
@@ -44,7 +46,7 @@ struct NDPointImpl<Type, std::index_sequence<DimensionIndices...>> {
 
   constexpr ~NDPointImpl() noexcept = default;
 
-  friend auto operator<=>(const NDPointImpl&, const NDPointImpl&) noexcept = default;
+  friend constexpr auto operator<=>(const NDPointImpl&, const NDPointImpl&) noexcept = default;
 
   explicit constexpr NDPointImpl(Coordinates coords)
     : coordinates(std::move(coords)) {}
@@ -95,18 +97,17 @@ template<typename Type>
 using Point2D = NDPoint<Type, 2>;
 template<typename Type>
 using Point3D = NDPoint<Type, 3>;
+template<typename Type>
+using Point4D = NDPoint<Type, 4>;
 
 template<typename Type, size_t Dimensionality>
-struct PolyStorage;
+struct PolyStorage {
+  using type = std::map<NDPoint<size_t, Dimensionality>, Type>;
+};
 
 template<typename Type>
 struct PolyStorage<Type, 1> {
-  using Type = std::vector<Type>;
-};
-
-template<typename Type, size_t Dimensionality>
-struct PolyStorage<Type, Dimensionality> {
-  using Type = std::map<NDPoint<size_t, Dimensionality>, Type>;
+  using type = std::vector<Type>;
 };
 
 // a polynomial is a 2D construct, inherently
@@ -126,12 +127,12 @@ struct PolyStorage<Type, Dimensionality> {
 // this absolutely should support u8/s8 etc
 template<typename NumberType = double, size_t Dimensionality = 1>
 struct Polynomial {
-  using Type    = NDPoint<NumberType, Dimensionality>;
-  using Storage = PolyStorage<NumberType, Dimensionality>;
+  using PointType = NDPoint<NumberType, Dimensionality>;
+  using Storage   = PolyStorage<NumberType, Dimensionality>::type;
 
   Polynomial() = default;
 
-  Polynomial(std::initializer_list<Type> coeffs);
+  Polynomial(std::initializer_list<PointType> coeffs);
 
   Polynomial(const Polynomial&)     = default;
   Polynomial(Polynomial&&) noexcept = default;
@@ -149,15 +150,14 @@ struct Polynomial {
   Polynomial& operator/=(const Polynomial&);
 
   template<size_t OtherDimensionality>
-  Polynomial& operator*=(const Type& value);
+  Polynomial& operator*=(const PointType& value);
   template<size_t OtherDimensionality>
-  Polynomial& operator/=(const Type& value);
+  Polynomial& operator/=(const PointType& value);
 
   [[nodiscard]]
-  Polynomial
-  operator-() const;
+  Polynomial operator-() const;
 
-  [[nodiscard]] decltype(auto) operator[](this auto&& self, const size_t index);
+  [[nodiscard]] decltype(auto) operator[](const size_t index);
 
   template<size_t InputDimensionality>
   [[nodiscard]] decltype(auto) operator()(this auto&& self, const NDPoint<NumberType, InputDimensionality>& value);

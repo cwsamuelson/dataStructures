@@ -4,10 +4,7 @@ project(${PROJECT_NAME}_test)
 find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
-  dimension.cc
-  #units.cc
-  system.cc
-  converter.cc
+  tests.cc
 )
 
 target_link_libraries(${PROJECT_NAME}

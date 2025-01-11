@@ -22,7 +22,7 @@ struct AlignedBuffer {
     new (storage.data()) Type(std::forward<Args>(args)...);
   }
   template<typename Type>
-  void destruct() {
+  void destruct() noexcept(std::is_nothrow_destructible_v<Type>) {
     reinterpret_cast<Type*>(&storage)->~Type();
   }
 
@@ -47,7 +47,7 @@ struct AlignedTypeBuffer : AlignedBuffer<sizeof(Type), alignof(Type)> {
   void construct(Args&&... args) {
     Base::template construct<Type>(std::forward<Args>(args)...);
   }
-  void destruct() {
+  void destruct() noexcept(std::is_nothrow_destructible_v<Type>) {
     Base::template destruct<Type>();
   }
 

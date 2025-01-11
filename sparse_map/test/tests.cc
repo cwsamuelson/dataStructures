@@ -10,7 +10,7 @@ struct S {
   friend auto operator<=>(const S&, const S&) noexcept = default;
 };
 
-TEST_CASE("sparse map") {
+TEST_CASE("`SparseMap`") {
   SparseMap<size_t, S> sparse_map;
 
   CHECK(sparse_map.size() == 0);
@@ -91,3 +91,4 @@ TEST_CASE("sparse map") {
   CHECK(not sparse_map.contains(0));
   CHECK(not sparse_map.contains(1));
 }
+

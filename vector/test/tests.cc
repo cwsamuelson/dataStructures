@@ -45,7 +45,7 @@ struct RAIISignaler {
   }
 };
 
-TEST_CASE("Vectors will run constructors/destructors when appropriate") {
+TEST_CASE("`Vector` respects object lifetimes", "VECTOR") {
   SECTION("Constructor is run on emplace_back call") {
     Vector<RAIISignaler> vector;
 
@@ -76,15 +76,15 @@ TEST_CASE("Vectors will run constructors/destructors when appropriate") {
 SCENARIO("Using emplace_back to create new elements") {
 }
 
-TEST_CASE("Vectors can be resized") {
-  SECTION("Vector capacity can be initialized") {
+TEST_CASE("`Vector` resizing") {
+  SECTION("Initialize with a capacity") {
     Vector<RAIISignaler> vector(12);
 
     CHECK(vector.empty());
     CHECK(vector.capacity() >= 12);
   }
 
-  SECTION("Vector size increases with additions") {
+  SECTION("Size increases as elements are added") {
     Vector<RAIISignaler> vector;
     CHECK(vector.size() == 0);
     CHECK(vector.empty());
@@ -115,7 +115,7 @@ TEST_CASE("Vectors can be resized") {
     CHECK(vector.capacity() >= vector.size());
   }
 
-  SECTION("Resizing bigger changes size and capacity") {
+  SECTION("Resizing increases capacity") {
     Vector<RAIISignaler> vector;
 
     vector.resize(1);
@@ -125,7 +125,7 @@ TEST_CASE("Vectors can be resized") {
     CHECK(vector.back().default_constructor);
   }
 
-  SECTION("Resizing smaller changes size but not capacity") {
+  SECTION("Shrinking doesn't affect capacity") {
     Vector<RAIISignaler> vector;
     constexpr size_t initial_size = 12;
 
@@ -145,7 +145,7 @@ TEST_CASE("Vectors can be resized") {
     CHECK(vector.capacity() == initial_capacity);
   }
 
-  SECTION("Reserving bigger changes capacity but not size") {
+  SECTION("Reserving will increase capacity") {
     Vector<RAIISignaler> vector;
     CHECK(vector.empty());
 
@@ -188,18 +188,18 @@ TEST_CASE("Vectors can be resized") {
   }
 }
 
-TEST_CASE("Vectors can be iterated across using standard mechanisms") {
-  SECTION("Vectors can participate in range-based for loops") {
+TEST_CASE("`Vector` iteration") {
+  SECTION("range-based for loops") {
   }
 
   SECTION("Vectors can be iterated like arrays") {
   }
 
-  SECTION("Vectors can be iterated by iterators(begin, end)") {
+  SECTION("using begin/end iterators") {
   }
 }
 
-TEST_CASE("Constructors") {
+TEST_CASE("`Vector` constructors") {
   SECTION("Copy list") {
   }
 }
@@ -215,7 +215,7 @@ struct NoDefault {
   ~NoDefault() = default;
 };
 
-TEST_CASE("Holding type without default constructor") {
+TEST_CASE("`Vector` holding type without default constructor") {
   Vector<NoDefault> vector;
   vector.emplace_back(42);
 

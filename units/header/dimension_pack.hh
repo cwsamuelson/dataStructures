@@ -40,15 +40,15 @@ struct SelectHelper<Type, V1, Values...> {
 
 } // namespace
 
-template<auto... Measures>
-struct MeasurePack : ValuePack<Measures...> {
+template<auto... Dimensions>
+struct DimensionPack : ValuePack<Dimensions...> {
   template<typename Type>
-  static constexpr auto Select = SelectHelper<Type, Measures...>::value;
+  static constexpr auto Select = SelectHelper<Type, Dimensions...>::value;
 
   template<typename Type>
-  static constexpr BoolConstant<(std::same_as<decltype(Measures), Type> or ...)> Has {};
+  static constexpr BoolConstant<(std::same_as<decltype(Dimensions), Type> or ...)> Has {};
 
-  using UniqueTypes = typename UniqueTypeHelper<Measures...>::type;
+  using UniqueTypes = typename UniqueTypeHelper<Dimensions...>::type;
 };
 
 } // namespace flp

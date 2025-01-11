@@ -146,7 +146,7 @@ TEST_CASE("`TypePack` Filter") {
   STATIC_CHECK(TypePack<int, float>::Filter<IsFloat> {} == TypePack<float> {});
 }
 
-TEST_CASE("TypePack Left Shift") {
+TEST_CASE("`TypePack` LeftShift") {
   STATIC_CHECK(TypePack<>::LeftShift {} == TypePack<> {});
   STATIC_CHECK(TypePack<signed int>::LeftShift {} == TypePack<signed int> {});
   STATIC_CHECK(TypePack<unsigned int>::LeftShift {} == TypePack<unsigned int> {});
@@ -155,7 +155,7 @@ TEST_CASE("TypePack Left Shift") {
   STATIC_CHECK(TypePack<unsigned int, signed int, float>::LeftShift {} == TypePack<signed int, float, unsigned int> {});
 }
 
-TEST_CASE("TypePack Right Shift") {
+TEST_CASE("`TypePack` RightShift") {
   STATIC_CHECK(TypePack<>::LeftShift {} == TypePack<> {});
   STATIC_CHECK(TypePack<signed int>::LeftShift {} == TypePack<signed int> {});
   STATIC_CHECK(TypePack<unsigned int>::LeftShift {} == TypePack<unsigned int> {});
@@ -164,7 +164,7 @@ TEST_CASE("TypePack Right Shift") {
   STATIC_CHECK(TypePack<unsigned int, signed int, float>::LeftShift {} == TypePack<signed int, float, unsigned int> {});
 }
 
-TEST_CASE("TypePack Take") {
+TEST_CASE("`TypePack` Take") {
   STATIC_CHECK(TypePack<>::Take<0> {} == TypePack<> {});
   STATIC_CHECK(TypePack<unsigned int>::Take<0> {} == TypePack<> {});
   STATIC_CHECK(TypePack<unsigned int>::Take<1> {} == TypePack<unsigned int> {});
@@ -177,7 +177,7 @@ TEST_CASE("TypePack Take") {
   STATIC_CHECK(TypePack<unsigned int, signed int, float>::Take<3> {} == TypePack<unsigned int, signed int, float> {});
 }
 
-TEST_CASE("TypePack Drop") {
+TEST_CASE("`TypePack` Drop") {
   STATIC_CHECK(TypePack<>::Drop<0> {} == TypePack<> {});
   STATIC_CHECK(TypePack<unsigned int>::Drop<0> {} == TypePack<unsigned int> {});
   STATIC_CHECK(TypePack<unsigned int>::Drop<1> {} == TypePack<> {});
@@ -190,7 +190,7 @@ TEST_CASE("TypePack Drop") {
   STATIC_CHECK(TypePack<unsigned int, signed int, float>::Drop<3> {} == TypePack<> {});
 }
 
-TEST_CASE("TypePack Reverse") {
+TEST_CASE("`TypePack` Reverse") {
   STATIC_CHECK(TypePack<>::Reverse {} == TypePack<> {});
   STATIC_CHECK(TypePack<signed int>::Reverse {} == TypePack<signed int> {});
   STATIC_CHECK(TypePack<signed int, float>::Reverse {} == TypePack<float, signed int> {});
@@ -198,3 +198,4 @@ TEST_CASE("TypePack Reverse") {
   STATIC_CHECK(TypePack<unsigned int, signed int, float, double>::Reverse {}
                == TypePack<double, float, signed int, unsigned int> {});
 }
+

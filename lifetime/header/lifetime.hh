@@ -22,17 +22,17 @@ struct Lifetime {
   static inline size_t ID_Counter = 0;
   size_t               ID         = ++ID_Counter;
 
-  Lifetime() {
+  Lifetime() noexcept {
     print(ID);
   }
-  Lifetime(const Lifetime& other) {
+  Lifetime(const Lifetime& other) noexcept {
     print(other.ID, ID);
   }
   Lifetime(Lifetime&& other) noexcept
     : ID(other.ID) {
     print(ID);
   }
-  Lifetime& operator=(const Lifetime& other) {
+  Lifetime& operator=(const Lifetime& other) noexcept {
     print(other.ID, ID);
     return *this;
   }

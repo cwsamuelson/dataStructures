@@ -4,7 +4,7 @@
 
 using namespace flp;
 
-TEST_CASE("sparse set") {
+TEST_CASE("`SparseSet`") {
   SparseSet<size_t> sparse_set;
 
   CHECK(sparse_set.size() == 0);
@@ -89,3 +89,4 @@ TEST_CASE("sparse set") {
   CHECK(not sparse_set.contains(1));
   CHECK(not sparse_set.contains(5));
 }
+
