@@ -128,7 +128,7 @@ struct EmptyFilter {
 template<auto... Dimensions>
   requires(std::derived_from<decltype(Dimensions), DimensionBase> && ...)
       and ((not std::same_as<decltype(Dimensions), DimensionBase>) && ...)
-struct Dimension : DimensionPack<Dimensions...>::UniqueTypes::Filter<EmptyFilter>::template Rebind<DimensionImpl>{};
+struct Dimension : DimensionPack<Dimensions...>::UniqueTypes::template Filter<EmptyFilter>::template Rebind<DimensionImpl>{};
 
 } // namespace flp
 

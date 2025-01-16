@@ -255,7 +255,7 @@ async(Functor&& functor, Args&& ...args) {
   using Type = std::invoke_result_t<std::decay_t<Functor>, std::decay_t<Args>...>;
   Promise<Type> promise;
   auto future = promise.get_future();
-  std::thread t([promise = std::move(promise), function = std::forward<Functor>(functor), ...args = std::forward<Args>(args)] mutable {
+  std::thread t([promise = std::move(promise), function = std::forward<Functor>(functor), ...args = std::forward<Args>(args)]() mutable {
       try {
           promise.set_value(function(std::forward<Args>(args)...));
       } catch(...) {

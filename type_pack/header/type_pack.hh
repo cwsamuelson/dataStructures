@@ -26,7 +26,7 @@ struct UniqueHelper<T1, Types...> {
   static constexpr bool contains = (std::same_as<T1, Types> or ...);
 
   using type = std::
-    conditional_t<contains, typename TypePack<Types...>::Unique, typename TypePack<Types...>::Unique::Prepend<T1>>;
+    conditional_t<contains, typename TypePack<Types...>::Unique, typename TypePack<Types...>::Unique::template Prepend<T1>>;
 };
 
 template<template<typename> typename, typename...>
@@ -40,8 +40,8 @@ struct FilterHelper<Predicate> {
 template<template<typename> typename Predicate, typename T1, typename... Types>
 struct FilterHelper<Predicate, T1, Types...> {
   using type = std::conditional_t<Predicate<T1>::value,
-                                  typename TypePack<Types...>::Filter<Predicate>::Prepend<T1>,
-                                  typename TypePack<Types...>::Filter<Predicate>>;
+                                  typename TypePack<Types...>::template Filter<Predicate>::template Prepend<T1>,
+                                  typename TypePack<Types...>::template Filter<Predicate>>;
 };
 
 template<typename...>

@@ -26,7 +26,7 @@ struct UniqueHelper<V1, Values...> {
   static constexpr bool contains = ((V1 == Values) or ...);
 
   using type = std::
-    conditional_t<contains, typename ValuePack<Values...>::Unique, typename ValuePack<Values...>::Unique::Prepend<V1>>;
+    conditional_t<contains, typename ValuePack<Values...>::Unique, typename ValuePack<Values...>::Unique::template Prepend<V1>>;
 };
 
 template<template<auto> typename, auto...>

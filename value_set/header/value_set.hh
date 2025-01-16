@@ -142,8 +142,8 @@ public:
   using Erase = std::conditional_t<not Contains<Value>,
                                    ValueSetImpl<V1, Values...>,
                                    std::conditional_t<(V1 == Value),
-                                                      typename ValueSetImpl<Values...>::Erase<Value>,
-                                                      typename ValueSetImpl<Values...>::Erase<Value>::Insert<V1>>>;
+                                                      typename ValueSetImpl<Values...>::template Erase<Value>,
+                                                      typename ValueSetImpl<Values...>::template Erase<Value>::template Insert<V1>>>;
 
   template<template<auto> typename Predicate>
   static constexpr BoolConstant<(Predicate<V1>::value or (Predicate<Values>::value or ...))> AnyOf {};
@@ -160,7 +160,7 @@ public:
   using Filter = typename Pack::template Filter<Predicate>::template Rebind<ValueSetImpl>;
 
   template<auto... OtherValues>
-  using Intersection = typename IntersectionHelper<ValuePack<V1, Values...>, ValuePack<OtherValues...>>::type::Rebind<ValueSet>;
+  using Intersection = typename IntersectionHelper<ValuePack<V1, Values...>, ValuePack<OtherValues...>>::type::template Rebind<ValueSet>;
 
   // Difference
   // Symmetric Difference

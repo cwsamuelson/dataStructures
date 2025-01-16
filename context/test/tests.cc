@@ -34,7 +34,7 @@ TEST_CASE("Logger type erasure") {
         CHECK(message.level == trait::Logger::NoiseLevel::noisy);
         CHECK(message.category == trait::Logger::Category::trace);
         CHECK(message.message == "message");
-        CHECK(message.location.file_name() == std::source_location::current().file_name());
+        CHECK(std::string_view(message.location.file_name()) == std::string_view(std::source_location::current().file_name()));
 
         check = true;
       }

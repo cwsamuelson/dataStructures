@@ -3,6 +3,7 @@
 #include <functional>
 #include <memory>
 #include <source_location>
+#include <string>
 
 namespace flp {
 namespace trait {
@@ -27,9 +28,9 @@ struct Logger {
   };
 
   struct LogMessage {
-    NoiseLevel           level;
-    Category             category;
-    std::string_view     message;
+    NoiseLevel           level = NoiseLevel::medium;
+    Category             category = Category::info;
+    std::string_view     message = "";
     std::source_location location = std::source_location::current();
   };
 

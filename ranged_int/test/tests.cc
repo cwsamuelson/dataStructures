@@ -8,7 +8,7 @@
 using namespace flp;
 
 #define TEST_TYPE_BOUNDS(TYPE)                                                                                         \
-  STATIC_CHECK(std::same_as<DeducedType<{ std::numeric_limits<TYPE>::min(), std::numeric_limits<TYPE>::max() }>, TYPE>)
+  STATIC_CHECK(std::same_as<DeducedType<Range{ std::numeric_limits<TYPE>::min(), std::numeric_limits<TYPE>::max() }>, TYPE>)
 
 template<class F, std::size_t... Is>
 void static_for(F func, std::index_sequence<Is...>) {
@@ -28,15 +28,15 @@ TEST_CASE("Range type deduction from bounds") {
   }
 
   SECTION("Checking some simple cases, and some edge cases") {
-    STATIC_CHECK(std::same_as<DeducedType<{ 0, 1 }>, uint8_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ 0, 256 }>, uint16_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ 254, 255 }>, uint8_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ 256, 65535 }>, uint16_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ 256, 257 }>, uint16_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ -1, 127 }>, int8_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ -1, 255 }>, int16_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ -1, 65535 }>, int32_t>);
-    STATIC_CHECK(std::same_as<DeducedType<{ 0, 65536 }>, uint32_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ 0, 1 }>, uint8_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ 0, 256 }>, uint16_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ 254, 255 }>, uint8_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ 256, 65535 }>, uint16_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ 256, 257 }>, uint16_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ -1, 127 }>, int8_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ -1, 255 }>, int16_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ -1, 65535 }>, int32_t>);
+    STATIC_CHECK(std::same_as<DeducedType<Range{ 0, 65536 }>, uint32_t>);
   }
 }
 
@@ -84,16 +84,16 @@ TEST_CASE("Using ranged integers") {
   }
 
   SECTION("Ranges determine semantically valid underlying types") {
-    STATIC_CHECK(std::same_as<RangedInt<{ 0, 255 }>::Type, uint8_t>);
-    STATIC_CHECK(std::same_as<RangedInt<{ 0, 65535 }>::Type, uint16_t>);
-    STATIC_CHECK(std::same_as<RangedInt<{ 0ULL, 4294967295ULL }>::Type, uint32_t>);
-    STATIC_CHECK(std::same_as<RangedInt<{ 0ULL, 18446744073709551615ULL }>::Type, uint64_t>);
-    STATIC_CHECK(std::same_as<RangedInt<{ -128, 127 }>::Type, int8_t>);
-    STATIC_CHECK(std::same_as<RangedInt<{ -32768, 32767 }>::Type, int16_t>);
-    STATIC_CHECK(std::same_as<RangedInt<{ -2147483648LL, 2147483647LL }>::Type, int32_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ 0, 255 }>::Type, uint8_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ 0, 65535 }>::Type, uint16_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ 0ULL, 4294967295ULL }>::Type, uint32_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ 0ULL, 18446744073709551615ULL }>::Type, uint64_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ -128, 127 }>::Type, int8_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ -32768, 32767 }>::Type, int16_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ -2147483648LL, 2147483647LL }>::Type, int32_t>);
     // STATIC_CHECK(std::same_as<RangedInt<{ -9223372036854775808, 9223372036854775807LL }>::Type, int64_t>);
 
-    STATIC_CHECK(std::same_as<RangedInt<{ -255, 1 }>::Type, int16_t>);
+    STATIC_CHECK(std::same_as<RangedInt<Range{ -255, 1 }>::Type, int16_t>);
   }
 
   SECTION("Worst case ranges") {

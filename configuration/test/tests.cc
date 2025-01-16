@@ -4,6 +4,5 @@
 
 using namespace flp;
 
-// this struct should maybe be put into a shared location?
 TEST_CASE("configuration") {
 }

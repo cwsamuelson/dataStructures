@@ -48,7 +48,7 @@ public:
   static constexpr BoolConstant<false> Contains{};
 
   template<typename...Types>
-  using Insert = TypePack<Types...>::Unique::template Rebind<TypeSetImpl>;
+  using Insert = typename TypePack<Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename>
   using Erase = TypeSetImpl<>;
@@ -65,7 +65,7 @@ public:
   using Rebind = Target<>;
 
   template<template<typename> typename Predicate>
-  using Filter = Pack::template Filter<Predicate>::template Rebind<TypeSetImpl>;
+  using Filter = typename Pack::Filter<Predicate>::template Rebind<TypeSetImpl>;
 
 // Intersection
 // Difference
@@ -80,7 +80,7 @@ public:
 
   template<typename...>
   friend class TypeSetImpl;
-            
+
   template<typename... OtherArgs>
   constexpr bool operator==(const TypeSetImpl<OtherArgs...>&) const {
     return (sizeof...(OtherArgs) == (sizeof...(Args) + 1)) and (Contains<OtherArgs> and ...)
@@ -95,7 +95,7 @@ public:
   static constexpr BoolConstant<std::same_as<Type, T1> or (std::same_as<Type, Args> or ...)> Contains{};
 
   template<typename... Types>
-  using Insert = TypePack<T1, Args..., Types...>::Unique::template Rebind<TypeSetImpl>;
+  using Insert = typename TypePack<T1, Args..., Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename Type>
   using Erase = std::conditional_t<
@@ -103,8 +103,8 @@ public:
       TypeSetImpl<T1, Args...>,
       std::conditional_t<
         std::same_as<T1, Type>,
-          typename TypeSetImpl<Args...>::Erase<Type>,
-          typename TypeSetImpl<Args...>::Erase<Type>::Insert<T1>
+          typename TypeSetImpl<Args...>::template Erase<Type>,
+          typename TypeSetImpl<Args...>::template Erase<Type>::template Insert<T1>
         >
       >;
 
@@ -114,13 +114,13 @@ public:
   static constexpr BoolConstant<(Predicate<T1>::value and (Predicate<Args>::value and ...))> AllOf{};
 
   template<template<typename> typename Predicate>
-  using Transform = typename Pack::Transform<Predicate>::Unique::template Rebind<TypeSetImpl>;
+  using Transform = typename Pack::template Transform<Predicate>::Unique::template Rebind<TypeSetImpl>;
 
   template<template<typename...> typename Target>
   using Rebind = Target<T1, Args...>;
 
   template<template<typename> typename Predicate>
-  using Filter = Pack::template Filter<Predicate>::template Rebind<TypeSetImpl>;
+  using Filter = typename Pack::template Filter<Predicate>::template Rebind<TypeSetImpl>;
 
 // Intersection
 // Difference
@@ -150,7 +150,7 @@ public:
   static constexpr BoolConstant<std::same_as<OtherType, Type>> Contains{};
 
   template<typename... Types>
-  using Insert = TypePack<Type, Types...>::Unique::template Rebind<TypeSetImpl>;
+  using Insert = typename TypePack<Type, Types...>::Unique::template Rebind<TypeSetImpl>;
 
   template<typename OtherType>
   using Erase = std::conditional_t<
@@ -165,7 +165,7 @@ public:
   static constexpr BoolConstant<Predicate<Type>::value> AllOf{};
 
   template<template<typename> typename Predicate>
-  using Transform = typename Pack::Transform<Predicate>::Unique::template Rebind<TypeSetImpl>;
+  using Transform = typename Pack::template Transform<Predicate>::Unique::template Rebind<TypeSetImpl>;
 
   template<template<typename...> typename Target>
   using Rebind = Target<Type>;

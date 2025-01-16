@@ -25,22 +25,27 @@ struct Lifetime {
   Lifetime() noexcept {
     print(ID);
   }
+
   Lifetime(const Lifetime& other) noexcept {
     print(other.ID, ID);
   }
+
   Lifetime(Lifetime&& other) noexcept
     : ID(other.ID) {
     print(ID);
   }
+
   Lifetime& operator=(const Lifetime& other) noexcept {
     print(other.ID, ID);
     return *this;
   }
+
   Lifetime& operator=(Lifetime&& other) noexcept {
     print(other.ID, ID);
     ID = other.ID;
     return *this;
   }
+
   ~Lifetime() noexcept {
     print(ID);
   }
@@ -49,6 +54,7 @@ struct Lifetime {
 } // namespace flp
 
 namespace std {
+
 template<>
 struct allocator<flp::Lifetime> {
   using value_type = flp::Lifetime;
@@ -57,6 +63,7 @@ struct allocator<flp::Lifetime> {
     flp::print(n);
     return reinterpret_cast<flp::Lifetime*>(new (align_val_t(alignof(flp::Lifetime))) char[n * sizeof(flp::Lifetime)]);
   }
+
   void deallocate(flp::Lifetime* t, size_t n) {
     flp::print(n);
     delete[] (reinterpret_cast<char*>(t));
