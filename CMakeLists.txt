@@ -19,6 +19,8 @@ add_subdirectory(optional)
 add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
+#add_subdirectory(ring_buffer)
+#add_subdirectory(ring_view)
 add_subdirectory(singly_linked_list)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
@@ -52,6 +54,8 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
+  #${PROJECT_NAME}_ring_buffer
+  #${PROJECT_NAME}_ring_view
   ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
