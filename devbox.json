@@ -6,6 +6,9 @@
     "conan@latest",
     "ninja@latest"
   ],
+  "include": [
+    //"github:cwsamuelson/devbox-plugin?dir=../main"
+  ],
   "shell": {
     "init_hook": [
     ],

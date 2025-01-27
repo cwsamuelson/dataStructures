@@ -13,4 +13,5 @@ build/*
 build-*/*
 CMakeUserPresets.json
 conan_provider.cmake
+.devbox/
 
