@@ -351,3 +351,70 @@ TEST_CASE("Range") {
   }
 }
 
+template<typename Type>
+struct RandomAccessIterator {
+  Type i{};
+
+  const Type& operator*() const {
+    return i;
+  }
+
+  Type& operator*() {
+    return i;
+  }
+
+  RandomAccessIterator operator++(int) {
+    return {};
+  }
+
+  RandomAccessIterator operator++() {
+    return {};
+  }
+
+  RandomAccessIterator operator--(int) {
+    return {};
+  }
+
+  RandomAccessIterator operator--() {
+    return {};
+  }
+
+  RandomAccessIterator operator+(uint64_t) const {
+    return {};
+  }
+
+  RandomAccessIterator operator+(int64_t) const {
+    return {};
+  }
+
+  RandomAccessIterator operator-(uint64_t) const {
+    return {};
+  }
+
+  RandomAccessIterator operator-(int64_t) const {
+    return {};
+  }
+
+  RandomAccessIterator operator+=(uint64_t) {
+    return {};
+  }
+
+  RandomAccessIterator operator+=(int64_t) {
+    return {};
+  }
+
+  RandomAccessIterator operator-=(uint64_t) {
+    return {};
+  }
+
+  RandomAccessIterator operator-=(int64_t) {
+    return {};
+  }
+};
+
+TEST_CASE("RandomAccessIterator") {
+  STATIC_CHECK(flp::RandomAccessIterator<int*, int>);
+  STATIC_CHECK(flp::RandomAccessIterator<std::vector<int>::iterator, int>);
+  STATIC_CHECK(flp::RandomAccessIterator<RandomAccessIterator<int>, int>);
+}
+

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <utility>
 
 namespace flp {
@@ -117,6 +118,28 @@ concept BidirectionalIterator = ForwardIterator<Type, Referred> and requires(Typ
   iterator--;
 };
 
+// totally ordered
+template<typename Type, typename Referred>
+concept RandomAccessIterator = BidirectionalIterator<Type, Referred> and requires(Type iterator, const Type citerator, uint64_t uconstant, int64_t sconstant) {
+  {iterator + uconstant} -> std::same_as<Type>;
+  {iterator + sconstant} -> std::same_as<Type>;
+  {iterator += uconstant};
+  {iterator += sconstant};
+  {iterator - uconstant} -> std::same_as<Type>;
+  {iterator - sconstant} -> std::same_as<Type>;
+  {iterator -= uconstant};
+  {iterator -= sconstant};
+  {citerator + uconstant} -> std::same_as<Type>;
+  {citerator + sconstant} -> std::same_as<Type>;
+  {citerator - uconstant} -> std::same_as<Type>;
+  {citerator - sconstant} -> std::same_as<Type>;
+};
+
+// contiguous iterator
+/*template<typename Type, typename Referred>
+concept ContiguousIterator = RandomAccessIterator<Type, Referred> and requires(Type iterator) {
+};*/
+
 // simplest iterator
 template<typename Type, typename Referred>
 concept SimpleIterator = ForwardIterator<Type, Referred>;
@@ -126,6 +149,12 @@ concept Range = requires(Type value) {
   {value.begin()} -> SimpleIterator<Contained>;
   {value.end()} -> SimpleIterator<Contained>;
 };
+
+// orderings
+// partial
+// total
+// strong?
+// weak?
 
 } // namespace flp
 
