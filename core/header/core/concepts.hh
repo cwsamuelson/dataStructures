@@ -71,16 +71,41 @@ inline constexpr bool IsSpecializationOf = is_specialization_helper<std::decay_t
 template<typename Type, template<typename...> typename Target>
 concept InstanceOf = IsSpecializationOf<Type, Target>;
 
-/*template<typename Type, typename Referred>
-concept Iterator = requires(Type value) {
-  ++value;
-  value++;
-  --value;
-  value--;
-  *value -> std::convertible_to<Referred>;
+template<typename Type>
+concept BooleanTestable = requires(Type value) {
+  {value} -> std::convertible_to<bool>;
+  {not value} -> std::convertible_to<bool>;
 };
 
-template<typename Type, typename Contained>
+template<typename Type1, typename Type2>
+concept EqualityComparableWith = requires(Type1 value1, Type2 value2) {
+  {value1 == value2} -> BooleanTestable;
+  {value2 == value1} -> BooleanTestable;
+  {value1 != value2} -> BooleanTestable;
+  {value2 != value1} -> BooleanTestable;
+};
+
+template<typename Type>
+concept EqualityComparable = EqualityComparableWith<Type, Type>;
+
+template<typename Type, typename Referred>
+concept Dereferencable = requires(Type value) {
+  {*value} -> std::convertible_to<Referred>;
+};
+
+template<typename Type, typename Referred>
+concept ForwardIterator = Dereferencable<Type, Referred> and requires(Type iterator) {
+  ++iterator;
+  iterator++;
+};
+
+template<typename Type, typename Referred>
+concept BidirectionalIterator = ForwardIterator<Type, Referred> and requires(Type iterator) {
+  --iterator;
+  iterator--;
+};
+
+/*template<typename Type, typename Contained>
 concept Range = requires(Type value, Type cvalue) {
   std::begin(value) -> Iterator<Contained>;
   std::end(value) -> Iterator<Contained>;
