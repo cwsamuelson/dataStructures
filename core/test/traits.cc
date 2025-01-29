@@ -158,3 +158,51 @@ TEST_CASE("Predicates") {
     STATIC_CHECK(flp::Division<4, 2>::value == 2);
   }
 }
+
+TEST_CASE("Trait testing") {
+  SECTION("Is const") {
+    STATIC_CHECK(flp::IsConst<const int>);
+    STATIC_CHECK(not flp::IsConst<int>);
+    STATIC_CHECK(flp::IsConst<const float>);
+    STATIC_CHECK(not flp::IsConst<float>);
+    STATIC_CHECK(flp::IsConst<flp::AddConst<int>>);
+  }
+
+  SECTION("Is volatile") {
+    STATIC_CHECK(flp::IsVolatile<volatile int>);
+    STATIC_CHECK(not flp::IsVolatile<int>);
+    STATIC_CHECK(flp::IsVolatile<volatile float>);
+    STATIC_CHECK(not flp::IsVolatile<float>);
+    STATIC_CHECK(flp::IsVolatile<flp::AddVolatile<int>>);
+  }
+
+  SECTION("Is pointer") {
+    STATIC_CHECK(flp::IsPointer<int*>);
+    STATIC_CHECK(not flp::IsPointer<int>);
+    STATIC_CHECK(flp::IsPointer<float*>);
+    STATIC_CHECK(not flp::IsPointer<float>);
+    STATIC_CHECK(flp::IsPointer<flp::AddPointer<int>>);
+  }
+
+  SECTION("Is reference") {
+    STATIC_CHECK(flp::IsReference<int&>);
+    STATIC_CHECK(not flp::IsReference<int>);
+    STATIC_CHECK(flp::IsReference<float&>);
+    STATIC_CHECK(not flp::IsReference<float>);
+    STATIC_CHECK(flp::IsReference<flp::AddLValueReference<int>>);
+    STATIC_CHECK(flp::IsReference<flp::AddRValueReference<int>>);
+  }
+
+  SECTION("Is CV") {
+    STATIC_CHECK(flp::IsCV<const volatile int>);
+    STATIC_CHECK(not flp::IsCV<int>);
+    STATIC_CHECK(not flp::IsCV<const int>);
+    STATIC_CHECK(not flp::IsCV<volatile int>);
+    STATIC_CHECK(flp::IsCV<const volatile float>);
+    STATIC_CHECK(not flp::IsCV<float>);
+    STATIC_CHECK(not flp::IsCV<const float>);
+    STATIC_CHECK(not flp::IsCV<volatile float>);
+    STATIC_CHECK(flp::IsCV<flp::AddCV<int>>);
+  }
+}
+

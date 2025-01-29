@@ -213,4 +213,75 @@ struct GreaterThan {
   }
 };
 
+// --- const
+
+template<typename>
+struct IsConstImpl {
+  static constexpr auto value = FalseType{};
+};
+
+template<typename Type>
+struct IsConstImpl<const Type> {
+  static constexpr auto value = TrueType{};
+};
+
+template<typename Type>
+static constexpr auto IsConst = IsConstImpl<Type>::value;
+
+// --- volatile
+
+template<typename>
+struct IsVolatileImpl {
+  static constexpr auto value = FalseType{};
+};
+
+template<typename Type>
+struct IsVolatileImpl<volatile Type> {
+  static constexpr auto value = TrueType{};
+};
+
+template<typename Type>
+static constexpr auto IsVolatile = IsVolatileImpl<Type>::value;
+
+// --- CV
+
+template<typename Type>
+static constexpr auto IsCV = IsConst<Type> and IsVolatile<Type>;
+
+// --- reference
+
+template<typename>
+struct IsReferenceImpl {
+  static constexpr auto value = FalseType{};
+};
+
+template<typename Type>
+struct IsReferenceImpl<Type&&> {
+  static constexpr auto value = TrueType{};
+};
+
+template<typename Type>
+struct IsReferenceImpl<Type&> {
+  static constexpr auto value = TrueType{};
+};
+
+template<typename Type>
+static constexpr auto IsReference = IsReferenceImpl<Type>::value;
+
+// --- pointer
+
+template<typename>
+struct IsPointerImpl {
+  static constexpr auto value = FalseType{};
+};
+
+template<typename Type>
+struct IsPointerImpl<Type*> {
+  static constexpr auto value = TrueType{};
+};
+
+template<typename Type>
+static constexpr auto IsPointer = IsPointerImpl<Type>::value;
+
 } // namespace flp
+
