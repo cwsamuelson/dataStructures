@@ -4,6 +4,18 @@
 
 namespace flp {
 
+template<typename Type, typename...>
+concept Truth = true;
+
+template<typename Type, typename...>
+concept Lies/*?????*/ = false;
+
+template<typename Type, typename... Args>
+concept Invokable = requires(Type&& value, Args&&... args) {
+  std::forward<Type>(value)(std::forward<Args>(args)...);
+  // member dereferencing?
+};
+
 // basis
 template<typename Type, typename... Args>
 concept Constructible = requires(Args... args) { new Type(args...); };
@@ -78,7 +90,7 @@ concept BooleanTestable = requires(Type value) {
 };
 
 template<typename Type1, typename Type2>
-concept EqualityComparableWith = requires(Type1 value1, Type2 value2) {
+concept EqualityComparableWith = requires(const Type1 value1, const Type2 value2) {
   {value1 == value2} -> BooleanTestable;
   {value2 == value1} -> BooleanTestable;
   {value1 != value2} -> BooleanTestable;
@@ -105,16 +117,15 @@ concept BidirectionalIterator = ForwardIterator<Type, Referred> and requires(Typ
   iterator--;
 };
 
-/*template<typename Type, typename Contained>
-concept Range = requires(Type value, Type cvalue) {
-  std::begin(value) -> Iterator<Contained>;
-  std::end(value) -> Iterator<Contained>;
+// simplest iterator
+template<typename Type, typename Referred>
+concept SimpleIterator = ForwardIterator<Type, Referred>;
 
-  std::begin(cvalue) -> Iterator<const Contained>;
-  std::end(cvalue) -> Iterator<const Contained>;
-
-  std::cbegin(value) -> Iterator<const Contained>;
-  std::cend(value) -> Iterator<const Contained>;
-};*/
+template<typename Type, typename Contained>
+concept Range = requires(Type value) {
+  {value.begin()} -> SimpleIterator<Contained>;
+  {value.end()} -> SimpleIterator<Contained>;
+};
 
 } // namespace flp
+
