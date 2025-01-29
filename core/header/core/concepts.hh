@@ -101,6 +101,27 @@ concept EqualityComparableWith = requires(const Type1 value1, const Type2 value2
 template<typename Type>
 concept EqualityComparable = EqualityComparableWith<Type, Type>;
 
+template<typename Type1, typename Type2>
+concept PartiallyOrderedWith = requires(const Type1 value1, const Type2 value2) {
+  {value2 < value1} -> BooleanTestable;
+  {value2 <= value1} -> BooleanTestable;
+  {value2 > value1} -> BooleanTestable;
+  {value2 >= value1} -> BooleanTestable;
+  {value1 < value2} -> BooleanTestable;
+  {value1 <= value2} -> BooleanTestable;
+  {value1 > value2} -> BooleanTestable;
+  {value1 >= value2} -> BooleanTestable;
+};
+
+template<typename Type>
+concept PartiallyOrdered = PartiallyOrderedWith<Type, Type>;
+
+template<typename Type1, typename Type2>
+concept TotallyOrderedWith = PartiallyOrderedWith<Type1, Type2> and EqualityComparableWith<Type1, Type2>;
+
+template<typename Type>
+concept TotallyOrdered = TotallyOrderedWith<Type, Type>;
+
 template<typename Type, typename Referred>
 concept Dereferencable = requires(Type value) {
   {*value} -> std::convertible_to<Referred>;
@@ -118,9 +139,8 @@ concept BidirectionalIterator = ForwardIterator<Type, Referred> and requires(Typ
   iterator--;
 };
 
-// totally ordered
 template<typename Type, typename Referred>
-concept RandomAccessIterator = BidirectionalIterator<Type, Referred> and requires(Type iterator, const Type citerator, uint64_t uconstant, int64_t sconstant) {
+concept RandomAccessIterator = BidirectionalIterator<Type, Referred> /*and TotallyOrdered<Type>*/ and requires(Type iterator, const Type citerator, uint64_t uconstant, int64_t sconstant) {
   {iterator + uconstant} -> std::same_as<Type>;
   {iterator + sconstant} -> std::same_as<Type>;
   {iterator += uconstant};

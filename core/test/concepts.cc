@@ -257,6 +257,9 @@ TEST_CASE("EqualityComparable") {
   }
 }
 
+// partially ordered
+// totally ordered
+
 template<typename Type>
 struct FancyPointer {
   Type& operator*() {
