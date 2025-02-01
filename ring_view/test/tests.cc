@@ -5,5 +5,6 @@
 using namespace flp;
 
 TEST_CASE("ring_view") {
+  RingView<int> ring_view;
 }
 

@@ -112,9 +112,15 @@ using AddPointer = Type*;
 
 template<typename Type>
 concept Integral = std::integral<Type>;
+template<typename Type>
+concept Signed = std::signed_integral<Type>;
+template<typename Type>
+concept Unsigned = std::unsigned_integral<Type>;
 
-template<Integral Type, Type Value>
-struct IntegralConstant {
+template<auto Value>
+struct ValueConstant {
+  using Type = decltype(Value);
+
   static constexpr Type value = Value;
 
   [[nodiscard]]
@@ -123,10 +129,21 @@ struct IntegralConstant {
   }
 };
 
+template<Integral Type, Type Value>
+using IntegralConstant = ValueConstant<Type, Value>;
+template<Integral Type, Type Value>
+using SignedConstant = ValueConstant<Type, Value>;
+template<Integral Type, Type Value>
+using UnsignedConstant = ValueConstant<Type, Value>;
+template<Integral Type, Type Value>
+using FloatingPointConstant = ValueConstant<Type, Value>;
+
 template<bool Value>
-using BoolConstant = IntegralConstant<bool, Value>;
+using BoolConstant = ValueConstant<bool, Value>;
 using TrueType     = BoolConstant<true>;
 using FalseType    = BoolConstant<false>;
+static constexpr True = TrueType{};
+static constexpr False = FalseType{};
 
 // --- predicates
 
@@ -282,6 +299,31 @@ struct IsPointerImpl<Type*> {
 
 template<typename Type>
 static constexpr auto IsPointer = IsPointerImpl<Type>::value;
+
+// --- iterator
+
+template<typename Type>
+using IteratorType = decltype(*std::declval<Type>());
+
+// --- range
+
+template<typename Type>
+using RangeIterator = decltype(std::begin(std::declval<Type>()));
+
+template<typename Type>
+using RangeType = IteratorType<RangeIterator<Type>>;
+
+// --- If
+
+template<bool Condition>
+struct If {
+  struct Then {
+  };
+  struct Else {
+  };
+};
+
+// --- Map
 
 } // namespace flp
 

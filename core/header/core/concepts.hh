@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <iterator>
 #include <utility>
 
 namespace flp {
@@ -166,8 +167,14 @@ concept SimpleIterator = ForwardIterator<Type, Referred>;
 
 template<typename Type, typename Contained>
 concept Range = requires(Type value) {
-  {value.begin()} -> SimpleIterator<Contained>;
-  {value.end()} -> SimpleIterator<Contained>;
+  {std::begin(value)} -> SimpleIterator<Contained>;
+  {std::end(value)} -> SimpleIterator<Contained>;
+};
+
+template<typename Type>
+concept BareRange = requires(Type value) {
+  {std::begin(value)};
+  {std::end(value)};
 };
 
 // orderings
