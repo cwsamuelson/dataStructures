@@ -32,6 +32,8 @@ struct Logger {
     Category             category = Category::info;
     std::string_view     message = "";
     std::source_location location = std::source_location::current();
+    // time stamp
+    // thread id
   };
 
   struct Interface {

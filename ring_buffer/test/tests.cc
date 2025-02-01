@@ -4,6 +4,7 @@
 
 using namespace flp;
 
-TEST_CASE("ring_buffer") {
+TEST_CASE("modular access") {
+  RingBuffer<int> rbuf;
 }
 
