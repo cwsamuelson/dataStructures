@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <iterator>
 #include <type_traits>
 
 namespace flp {
@@ -116,6 +117,8 @@ template<typename Type>
 concept Signed = std::signed_integral<Type>;
 template<typename Type>
 concept Unsigned = std::unsigned_integral<Type>;
+template<typename Type>
+concept FloatingPoint = std::floating_point<Type>;
 
 template<auto Value>
 struct ValueConstant {
@@ -129,21 +132,28 @@ struct ValueConstant {
   }
 };
 
-template<Integral Type, Type Value>
-using IntegralConstant = ValueConstant<Type, Value>;
-template<Integral Type, Type Value>
-using SignedConstant = ValueConstant<Type, Value>;
-template<Integral Type, Type Value>
-using UnsignedConstant = ValueConstant<Type, Value>;
-template<Integral Type, Type Value>
-using FloatingPointConstant = ValueConstant<Type, Value>;
+template<auto Value>
+  requires Integral<decltype(Value)>
+using IntegralConstant = ValueConstant<Value>;
+
+template<auto Value>
+  requires Signed<decltype(Value)>
+using SignedConstant = ValueConstant<Value>;
+
+template<auto Value>
+  requires Unsigned<decltype(Value)>
+using UnsignedConstant = ValueConstant<Value>;
+
+template<auto Value>
+  requires FloatingPoint<decltype(Value)>
+using FloatingPointConstant = ValueConstant<Value>;
 
 template<bool Value>
-using BoolConstant = ValueConstant<bool, Value>;
+using BoolConstant = ValueConstant<Value>;
 using TrueType     = BoolConstant<true>;
 using FalseType    = BoolConstant<false>;
-static constexpr True = TrueType{};
-static constexpr False = FalseType{};
+static constexpr TrueType True{};
+static constexpr FalseType False{};
 
 // --- predicates
 
@@ -239,7 +249,7 @@ struct IsConstImpl {
 
 template<typename Type>
 struct IsConstImpl<const Type> {
-  static constexpr auto value = TrueType{};
+  static constexpr auto value = True;
 };
 
 template<typename Type>
@@ -254,7 +264,7 @@ struct IsVolatileImpl {
 
 template<typename Type>
 struct IsVolatileImpl<volatile Type> {
-  static constexpr auto value = TrueType{};
+  static constexpr auto value = True;
 };
 
 template<typename Type>
@@ -274,12 +284,12 @@ struct IsReferenceImpl {
 
 template<typename Type>
 struct IsReferenceImpl<Type&&> {
-  static constexpr auto value = TrueType{};
+  static constexpr auto value = True;
 };
 
 template<typename Type>
 struct IsReferenceImpl<Type&> {
-  static constexpr auto value = TrueType{};
+  static constexpr auto value = True;
 };
 
 template<typename Type>

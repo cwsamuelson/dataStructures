@@ -111,10 +111,10 @@ TEST_CASE("Add/remove pointer") {
 }
 
 TEST_CASE("Integral Constants") {
-  STATIC_CHECK(flp::IntegralConstant<size_t, 42> {} == 42);
-  STATIC_CHECK(flp::IntegralConstant<size_t, 1138> {} == 1138);
-  STATIC_CHECK(flp::IntegralConstant<size_t, 42>::value == 42);
-  STATIC_CHECK(flp::IntegralConstant<size_t, 1138>::value == 1138);
+  STATIC_CHECK(flp::IntegralConstant<42> {} == 42);
+  STATIC_CHECK(flp::IntegralConstant<1138> {} == 1138);
+  STATIC_CHECK(flp::IntegralConstant<42>::value == 42);
+  STATIC_CHECK(flp::IntegralConstant<1138>::value == 1138);
 
   STATIC_CHECK(flp::BoolConstant<true> {});
   STATIC_CHECK(not flp::BoolConstant<false> {});
@@ -122,7 +122,9 @@ TEST_CASE("Integral Constants") {
   STATIC_CHECK(not flp::BoolConstant<false>::value);
 
   STATIC_CHECK(flp::TrueType {});
+  STATIC_CHECK(flp::True);
   STATIC_CHECK(not flp::FalseType {});
+  STATIC_CHECK(not flp::False);
   STATIC_CHECK(flp::TrueType::value);
   STATIC_CHECK(not flp::FalseType::value);
 }
