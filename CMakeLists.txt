@@ -4,6 +4,7 @@ project(GalacticStructures LANGUAGES CXX)
 find_package(cmake_scripts REQUIRED)
 
 add_subdirectory(aligned_buffer)
+add_subdirectory(box)
 add_subdirectory(configuration)
 add_subdirectory(context)
 add_subdirectory(core)
@@ -39,6 +40,7 @@ common_library(${PROJECT_NAME} INTERFACE)
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
   ${PROJECT_NAME}_aligned_buffer
+  ${PROJECT_NAME}_box
   ${PROJECT_NAME}_configuration
   ${PROJECT_NAME}_context
   ${PROJECT_NAME}_core
