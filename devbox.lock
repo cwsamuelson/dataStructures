@@ -253,6 +253,44 @@
         }
       }
     },
+    "gdb@latest": {
+      "last_modified": "2025-02-07T11:26:36Z",
+      "resolved": "github:NixOS/nixpkgs/d98abf5cf5914e5e4e9d57205e3af55ca90ffc1d#gdb",
+      "source": "devbox-search",
+      "version": "16.1",
+      "systems": {
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/gfn2b2avmvfi5bijnzw5zd81jmcf6qil-gdb-16.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/gfn2b2avmvfi5bijnzw5zd81jmcf6qil-gdb-16.1"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/bzdhwwdqw11yziqj3wvb02i6x59gl3pz-gdb-16.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/bzdhwwdqw11yziqj3wvb02i6x59gl3pz-gdb-16.1"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4bk2vah4syvq9sq2hhya4szcr5nhb10f-gdb-16.1",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4bk2vah4syvq9sq2hhya4szcr5nhb10f-gdb-16.1"
+        }
+      }
+    },
     "gitlab-ci-local@latest": {
       "last_modified": "2025-01-26T08:24:11Z",
       "resolved": "github:NixOS/nixpkgs/5d3221fd57cc442a1a522a15eb5f58230f45a304#gitlab-ci-local",

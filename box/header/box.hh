@@ -61,21 +61,25 @@ public:
 
   // Movable `Box` introduces nullability of `Box`, which we don't want. If
   // that's of interest an `OptionalBox` or `NullableBox` should be written instead.
+  // if a `bool Nullable` nttp was created, the existence of the move operations
+  // could be contingent on the value of `Nullable`
+  //  requires Nullable
   //Box(Box&&) ...
+  //  requires Nullable
   //Box& operator=(Box&&) ...
 
   Box& operator=(const Box& other) {
-    *value = other.value;
+    *value = *other.value;
     return *this;
   }
 
   Box& operator=(const Type& input) {
-    *value = std::make_unique<Type>(input);
+    value = std::make_unique<Type>(input);
     return *this;
   }
 
   Box& operator=(Type&& input) noexcept {
-    *value = std::make_unique<Type>(std::move(input));
+    value = std::make_unique<Type>(std::move(input));
     return *this;
   }
 
@@ -86,6 +90,11 @@ public:
 
         Type* operator->()       { return value.get(); }
   const Type* operator->() const { return value.get(); }
+
+  template<typename ...Args>
+  void emplace(Args&& ...args) {
+    value = std::make_unique<Type>(std::forward<Args>(args)...);
+  }
 
 private:
   std::unique_ptr<Type> value;

@@ -9,7 +9,8 @@
     "cloc@latest",
     "python@latest",
     "doxygen@latest",
-    "mkdocs@latest"
+    "mkdocs@latest",
+    "gdb@latest"
   ],
   "shell": {
     "init_hook": [
