@@ -53,8 +53,19 @@ TEST_CASE("box") {
       Box<Expression> lhs{};
     };
 
-    Expression y ;
+    //Expression y ;
     //y = 1138;
+  }
+
+  SECTION("Comparison") {
+    const Box<size_t> x{42};
+    const Box<size_t> y{1138};
+    const Box<size_t> z{1138};
+
+    CHECK(x < y);
+    CHECK(y == z);
+    CHECK(x != y);
+    CHECK(y <= z);
   }
 }
 

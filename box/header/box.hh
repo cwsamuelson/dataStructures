@@ -96,6 +96,14 @@ public:
     value = std::make_unique<Type>(std::forward<Args>(args)...);
   }
 
+  friend auto operator<=>(const Box& lhs, const Box& rhs) noexcept {
+    return *lhs <=> *rhs;
+  }
+
+  friend auto operator==(const Box& lhs, const Box& rhs) noexcept {
+    return *lhs == *rhs;
+  }
+
 private:
   std::unique_ptr<Type> value;
 };
