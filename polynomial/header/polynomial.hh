@@ -120,6 +120,9 @@ struct PolyStorage<Type, 1> {
 //   a 2D point can either be on or off a 2D curve
 //  3D - 1D => 2D
 //  a 3D surface, intersecting at a plane at a particular axis coordinate, will result in an intersecting 2D curve
+//  However, this does not generalize: the general form of the plane is:
+//  `x/a + y/b + z/c = 1`
+//  which does not follow the above rule.
 
 // is there a fast_float?
 // float may be faster than double; imo faster is preferred
@@ -143,6 +146,8 @@ struct Polynomial {
   ~Polynomial() = default;
 
   friend auto operator<=>(const Polynomial&, const Polynomial&) noexcept = default;
+
+  Polynomial& operator+();
 
   Polynomial& operator+=(const Polynomial&);
   Polynomial& operator-=(const Polynomial&);
@@ -168,10 +173,6 @@ struct Polynomial {
   [[nodiscard]]
   size_t order() const;
 
-  // these may be subject to dimensionality
-  // the derivative in a direction of a 3D surface, would result in a 2D curve
-  // (I think?)
-  // similar inverses for antiderivative and integration
   [[nodiscard]]
   Polynomial derive() const;
   [[nodiscard]]
@@ -180,7 +181,7 @@ struct Polynomial {
   Polynomial integrate(const NumberType upper_bound, const NumberType lower_bound) const;
 
 private:
-  Storage coefficients;
+  std::vector<NumberType> coefficients;
 };
 
 } // namespace flp

@@ -50,12 +50,14 @@ private:
 
 public:
   Vector() = default;
+
   Vector(const Vector& other) noexcept(std::is_nothrow_copy_constructible_v<value_type>) {
     reserve(other.size());
     for (const auto& element : other) {
       push_back(element);
     }
   }
+
   Vector(Vector&&) noexcept(std::is_nothrow_move_constructible_v<value_type>) = default;
 
   Vector& operator=(const Vector& other) noexcept(std::is_nothrow_copy_assignable_v<value_type>) {
@@ -74,10 +76,22 @@ public:
     reserve(capacity);
   }
 
-  Vector(const_reference val, size_type count);
+  Vector(const_reference val, size_type count) {
+    reserve(count);
+    for (size_t i{}; i < count; ++i) {
+      push_back(val);
+    }
+  }
 
   template<typename inputIter /*, typename = requireInputIter<inputIter>*/>
-  Vector(inputIter first, inputIter last);
+  Vector(inputIter first, inputIter last) {
+    /*if constexpr (contiguous iterator?) {
+      reserve(last - first);
+    }*/
+
+    for (; first != last; ++first) {
+    }
+  }
 
   [[nodiscard]] decltype(auto) operator[](this auto&& self, const size_type index) {
     VERIFY(index < self.size(), "Index ({}) beyond bounds ({})", index, self.size());

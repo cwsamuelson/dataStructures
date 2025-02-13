@@ -45,6 +45,19 @@ TEST_CASE("box") {
     CHECK(std::get<int>(rhs) == 42);
   }
 
+  SECTION("Test recursion") {
+    struct X;
+    struct Y {
+      std::variant<int, flp::Box<X>> x;
+    };
+    struct X {
+      flp::Box<Y> y;
+    };
+
+    X x;
+    Y y;
+  }
+
   SECTION("Direct recursion") {
     struct Expression : std::variant<std::monostate, int, flp::Box<Expression>> {
       using Base = std::variant<std::monostate, int, flp::Box<Expression>>;
@@ -53,8 +66,8 @@ TEST_CASE("box") {
       Box<Expression> lhs{};
     };
 
-    //Expression y ;
-    //y = 1138;
+    //Box<Expression> y ;
+    //*y = 1138;
   }
 
   SECTION("Comparison") {

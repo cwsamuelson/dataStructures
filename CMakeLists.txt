@@ -17,6 +17,7 @@ add_subdirectory(matrix)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(operators)
 add_subdirectory(optional)
+#add_subdirectory(polymorphic_value)
 add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
@@ -53,6 +54,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
+  #${PROJECT_NAME}_polymorphic_value
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
