@@ -54,6 +54,10 @@ struct SharedPointer {
   }
 
   SharedPointer& operator=(SharedPointer&& other) {
+    if (control_block != nullptr) {
+      decrement();
+    }
+
     control_block = other.control_block;
     other.control_block = nullptr;
     return *this;
