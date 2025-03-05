@@ -70,7 +70,20 @@ struct SharedPointer {
 
   [[nodiscard]]
   Type* get() const {
-    return control_block->pointer;
+    return control_block == nullptr
+      ? nullptr
+      : control_block->pointer;
+  }
+
+  [[nodiscard]]
+  size_t use_count() const {
+    return control_block == nullptr
+      ? 0
+      : control_block->ref_count;
+  }
+
+  void reset() {
+    decrement();
   }
 
   [[nodiscard]]
@@ -83,11 +96,6 @@ struct SharedPointer {
     return control_block->pointer;
   }
 
-  [[nodiscard]]
-  size_t use_count() const {
-    return control_block->ref_count;
-  }
-
 private:
   static void default_deleter(Type* pointer) {
     delete pointer;
@@ -95,10 +103,11 @@ private:
 
   void decrement() {
     --control_block->ref_count;
-    if (control_block->ref_count ==0) {
+    if (control_block->ref_count == 0) {
       control_block->deleter(control_block->pointer);
       delete control_block;
     }
+    control_block = nullptr;
   }
 
   void increment() {

@@ -25,6 +25,7 @@ add_subdirectory(ratio)
 add_subdirectory(ring_buffer)
 add_subdirectory(ring_view)
 add_subdirectory(singly_linked_list)
+add_subdirectory(shared_ptr)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 #add_subdirectory(std_hive)
@@ -32,6 +33,7 @@ add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
 add_subdirectory(units)
+#add_subdirectory(utilities)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
 add_subdirectory(vector)
@@ -62,6 +64,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_ring_buffer
   ${PROJECT_NAME}_ring_view
   ${PROJECT_NAME}_singly_linked_list
+  ${PROJECT_NAME}_shared_ptr
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   #${PROJECT_NAME}_std_hive
@@ -69,6 +72,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
   ${PROJECT_NAME}_units
+  #${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
   ${PROJECT_NAME}_vector

@@ -5,12 +5,38 @@
 using namespace flp;
 
 TEST_CASE("SharedPointer") {
-  SharedPointer<int> pointer(new int);
+  SharedPointer<int> pointer1(new int);
 
-  REQUIRE(pointer.get() != nullptr);
+  CHECK(pointer1.use_count() == 1);
 
-  *pointer = 1138;
+  REQUIRE(pointer1.get() != nullptr);
 
-  CHECK(*pointer == 1138);
+  *pointer1 = 1138;
+
+  CHECK(*pointer1 == 1138);
+
+  SharedPointer<int> pointer2(pointer1);
+
+  CHECK(pointer1.use_count() == 2);
+  CHECK(pointer2.use_count() == 2);
+  CHECK(pointer1.get() == pointer2.get());
+
+  SECTION("reset pointer1") {
+    pointer1.reset();
+
+    CHECK(pointer1.use_count() == 0);
+    CHECK(pointer2.use_count() == 1);
+
+    CHECK(pointer1.get() == nullptr);
+  }
+
+  SECTION("reset pointer2") {
+    pointer2.reset();
+
+    CHECK(pointer2.use_count() == 0);
+    CHECK(pointer1.use_count() == 1);
+
+    CHECK(pointer2.get() == nullptr);
+  }
 }
 
