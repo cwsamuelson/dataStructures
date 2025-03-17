@@ -167,7 +167,19 @@ TEST_CASE("Trait testing") {
     STATIC_CHECK(not flp::IsConst<int>);
     STATIC_CHECK(flp::IsConst<const float>);
     STATIC_CHECK(not flp::IsConst<float>);
+
     STATIC_CHECK(flp::IsConst<flp::AddConst<int>>);
+    STATIC_CHECK(not flp::IsConst<flp::RemoveConst<const int>>);
+
+    STATIC_CHECK(flp::IsConst<const int&>);
+    STATIC_CHECK(not flp::IsConst<int&>);
+    STATIC_CHECK(flp::IsConst<const int&>);
+    STATIC_CHECK(not flp::IsConst<int&>);
+
+    STATIC_CHECK(flp::IsConst<const int*>);
+    STATIC_CHECK(not flp::IsConst<int*>);
+    STATIC_CHECK(flp::IsConst<const int*>);
+    STATIC_CHECK(not flp::IsConst<int*>);
   }
 
   SECTION("Is volatile") {

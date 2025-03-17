@@ -73,14 +73,14 @@ template<typename Type>
 concept NothrowMovable = NothrowMoveConstructible<Type> and NothrowMoveAssignable<Type>;
 
 template<typename, template<typename...> class>
-inline constexpr bool is_specialization_helper = false;
+inline constexpr bool is_specialization_impl = false;
 
 template<template<typename...> class Target, typename... Args>
-inline constexpr bool is_specialization_helper<Target<Args...>, Target> = true;
+inline constexpr bool is_specialization_impl<Target<Args...>, Target> = true;
 
 // using the wrapper and decay handles refs and cv-qual
 template<typename Query, template<typename...> typename Target>
-inline constexpr bool IsSpecializationOf = is_specialization_helper<std::decay_t<Query>, Target>;
+inline constexpr bool IsSpecializationOf = is_specialization_impl<std::decay_t<Query>, Target>;
 
 template<typename Type, template<typename...> typename Target>
 concept InstanceOf = IsSpecializationOf<Type, Target>;

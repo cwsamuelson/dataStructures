@@ -63,3 +63,4 @@ template<Range range>
 constexpr static bool IsNegative = range.start < 0;
 
 } // namespace flp
+

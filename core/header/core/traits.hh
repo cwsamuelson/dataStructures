@@ -253,6 +253,21 @@ struct IsConstImpl<const Type> {
 };
 
 template<typename Type>
+struct IsConstImpl<Type*> {
+  static constexpr auto value = IsConstImpl<Type>::value;
+};
+
+template<typename Type>
+struct IsConstImpl<Type&> {
+  static constexpr auto value = IsConstImpl<Type>::value;
+};
+
+template<typename Type>
+struct IsConstImpl<Type&&> {
+  static constexpr auto value = IsConstImpl<Type>::value;
+};
+
+template<typename Type>
 static constexpr auto IsConst = IsConstImpl<Type>::value;
 
 // --- volatile
