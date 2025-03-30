@@ -7,6 +7,7 @@ add_subdirectory(aligned_buffer)
 add_subdirectory(box)
 add_subdirectory(configuration)
 add_subdirectory(context)
+add_subdirectory(coordinates)
 add_subdirectory(core)
 add_subdirectory(doubly_linked_list)
 #add_subdirectory(ecs)
@@ -47,6 +48,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_box
   ${PROJECT_NAME}_configuration
   ${PROJECT_NAME}_context
+  ${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
   ${PROJECT_NAME}_doubly_linked_list
   #${PROJECT_NAME}_ecs
