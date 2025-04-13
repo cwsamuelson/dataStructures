@@ -9,8 +9,10 @@ add_subdirectory(configuration)
 add_subdirectory(context)
 add_subdirectory(coordinates)
 add_subdirectory(core)
+add_subdirectory(delegate)
 add_subdirectory(doubly_linked_list)
 #add_subdirectory(ecs)
+add_subdirectory(function)
 add_subdirectory(future)
 #add_subdirectory(hive)
 add_subdirectory(lifetime)
@@ -51,8 +53,10 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_context
   ${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
+  ${PROJECT_NAME}_delegate
   ${PROJECT_NAME}_doubly_linked_list
   #${PROJECT_NAME}_ecs
+  ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
   #${PROJECT_NAME}_hive
   ${PROJECT_NAME}_lifetime
