@@ -5,6 +5,7 @@ find_package(cmake_scripts REQUIRED)
 
 add_subdirectory(aligned_buffer)
 add_subdirectory(box)
+add_subdirectory(colors)
 add_subdirectory(configuration)
 add_subdirectory(context)
 add_subdirectory(coordinates)
@@ -25,6 +26,7 @@ add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
 add_subdirectory(ratio)
+#add_subdirectory(resource_pack)
 add_subdirectory(ring_buffer)
 add_subdirectory(ring_view)
 add_subdirectory(singly_linked_list)
@@ -32,7 +34,7 @@ add_subdirectory(shared_ptr)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 #add_subdirectory(std_hive)
-add_subdirectory(sum_type)
+#add_subdirectory(sum_type)
 add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
@@ -49,6 +51,7 @@ target_link_libraries(${PROJECT_NAME}
   INTERFACE
   ${PROJECT_NAME}_aligned_buffer
   ${PROJECT_NAME}_box
+  ${PROJECT_NAME}_colors
   ${PROJECT_NAME}_configuration
   ${PROJECT_NAME}_context
   ${PROJECT_NAME}_coordinates
@@ -68,6 +71,8 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
+  ${PROJECT_NAME}_ratio
+  #${PROJECT_NAME}_resource_pack
   ${PROJECT_NAME}_ring_buffer
   ${PROJECT_NAME}_ring_view
   ${PROJECT_NAME}_singly_linked_list
@@ -75,7 +80,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   #${PROJECT_NAME}_std_hive
-  ${PROJECT_NAME}_sum_type
+  #${PROJECT_NAME}_sum_type
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
