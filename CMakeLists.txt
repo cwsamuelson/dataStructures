@@ -26,7 +26,7 @@ add_subdirectory(polynomial)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
 add_subdirectory(ratio)
-#add_subdirectory(resource_pack)
+add_subdirectory(resource_pack)
 add_subdirectory(ring_buffer)
 add_subdirectory(ring_view)
 add_subdirectory(singly_linked_list)
@@ -72,7 +72,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
   ${PROJECT_NAME}_ratio
-  #${PROJECT_NAME}_resource_pack
+  ${PROJECT_NAME}_resource_pack
   ${PROJECT_NAME}_ring_buffer
   ${PROJECT_NAME}_ring_view
   ${PROJECT_NAME}_singly_linked_list
