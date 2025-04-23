@@ -83,6 +83,20 @@ Type convert(std::span<const std::byte>& span) {
   return static_subspan<Type, 1>(span)[0];
 }
 
+template<typename IStream>
+IStream& operator>>(IStream& istream, Pack::PackFile::IndexEntry::Key& key) {
+  istream >> key.length;
+  key.text.resize(key.length);
+  VERIFY(istream.read(reinterpret_cast<char*>(key.text.data()), key.length), "Couldn't read all bytes from file.  Expected {} bytes.", static_cast<size_t>(key.length));
+}
+
+template<typename IStream>
+IStream& operator>>(IStream& istream, Pack::PackFile::IndexEntry& entry) {
+  VERIFY(istream >> entry.key, "Could not read index entry keysize");
+  VERIFY(istream >> entry.offset, "Could not read index entry offset");
+  VERIFY(istream >> entry.size, "Could not read index entry size");
+}
+
 }
 
 namespace Pack {
@@ -91,128 +105,66 @@ PackFile::PackFile() = default;
 
 PackFile::PackFile(const std::filesystem::path& path)
   : file_path(path) {
-  data = read_binary(file_path);
+  try {
+    std::ifstream file(file_path, std::ios::binary | std::ios::ate);
+    VERIFY(file, "Could not open file", file_path.string());
 
-  std::span<const std::byte> file_span(data);
+    VERIFY(file >> entry_count, "Could not read index size from file");
 
-  file_blob = file_span;
+    for (size_t i{}; i < entry_count and file; ++i) {
+      auto& entry =index.emplace_back();
+      VERIFY(file >> entry, "Could not read {}th index entry", index.size());
+    }
 
-  index_size = convert<size_t>(file_span);
-
-  index_blob = safe_subspan(file_span, index_size);
-
-  data_blob = file_span;
-
-  generate_index();
-  VERIFY(check_index_integrity(), "Inconsistent resource index generated from file");
+    check_index_integrity();
+  } CATCH_AND_NEST("Error parsing file ({})", path.string())
 }
 
-bool PackFile::check_index_integrity() const {
-  size_t data_size{};
-
-  for (const auto& entry : index) {
-    data_size += entry.size;
-  }
-
-  VERIFY(data_size == data_blob.size(), "Index/pack format is invalid. Index indicates {} bytes, and the found blob size was {}", data_size, data_blob.size());
-
-  return true;
+void PackFile::check_index_integrity() const {
+  VERIFY(entry_count == index.size(), "Expected {} index entries, found {}", entry_count, index.size());
 }
 
 void PackFile::clear() {
   *this = PackFile();
 }
 
-void PackFile::generate_index() {
-  std::span<const std::byte> span = index_blob;
-
-  while (not span.empty()) {
-    const auto key_size = convert<size_t>(span);
-
-    const std::string_view null_termed_str(reinterpret_cast<const char*>(span.data()));
-
-    VERIFY(null_termed_str.size() == key_size, "Index entry key isn't null terminated");
-
-    const auto key_span = safe_subspan(span, key_size);
-
-    // trim null byte
-    VERIFY(static_cast<char>(safe_subspan(span, 1)[0]) == '\0', "Index entry isn't properly null terminated");
-
-    const auto offset = convert<size_t>(span);
-    const auto size = convert<size_t>(span);
-
-    const IndexEntry::Key key {
-      key_size,
-      {reinterpret_cast<const char*>(key_span.data()), key_span.size()}
-    };
-
-    index.emplace_back(key, offset, size);
-  }
-}
-
 ResourcePack::ResourcePack() = default;
 
 ResourcePack::ResourcePack(const std::filesystem::path& path)
   : pack_file(path) {
-
-  for (const auto& entry : pack_file.index) {
-    VERIFY(not index.contains(entry.key.text), "Redundant key found in index: {}", entry.key.text);
-
-    index.try_emplace(entry.key.text, pack_file.data_blob.data() + entry.offset, pack_file.data_blob.data() + entry.offset + entry.size);
-  }
 }
 
 void ResourcePack::load(const std::filesystem::path& path) {
   *this = ResourcePack(path);
 }
 
-void ResourcePack::save(const std::filesystem::path& path) {
-  // create binary blob
-  //   tracking offsets/sizes for keys
-  // create index blob
-  //   from tracked offsets/sizes
-  // write index size
-  // write index
-  // write binary
+void ResourcePack::save(const std::filesystem::path& path) const {
+  try {
+    std::ofstream file(path, std::ios::binary | std::ios::ate);
+    VERIFY(file, "Could not open file ({})", path.string());
 
-  auto key_sizes =
-      index
-    | std::views::keys
-    | std::views::transform([](const auto& key) {
-      return key.size();
-    })
-  ;
+    file << index.size();
 
-  const auto total_index_size = std::views::feld_left_first(key_sizes).value_or(0) + (index.size() * (3 * 8));
+    for (size_t cursor{}; const auto& [key, value] : index) {
+      file << key.size();
+      file << key;
+      file << cursor;
+      file << value.size();
+    }
 
-  const auto binary_segment =
-      index
-    | std::views::values
-    | std::views::join
-  ;
-
-  const auto blob_size = std::distance(binary_segment.begin(), binary_segment.end());
-
-  std::vector<std::byte> buffer(blob_size + total_index_size + 8);
-
-  std::span<std::byte> buf_span(buffer.data(), buffer.size());
-
-  std::memcpy(buf_span.data(), &total_index_size, 8);
-
-  index
-    | std::views::transform([](const auto& pair) {
-      const auto& [key, value] = pair;
-      return std::views::concat(key, value);
-    })
-    | std::views::join
-  ;
-  // copy index
-  // copy blob
+    for (const auto& [key, value] : index) {
+      file.write(reinterpret_cast<const char*>(value.data()), value.size());
+    }
+  } CATCH_AND_NEST("Error writing file ({})", path.string())
 }
 
 void ResourcePack::clear() {
   pack_file.clear();
   index.clear();
+}
+
+bool ResourcePack::contains(const std::string& key) const {
+  return index.contains(key);
 }
 
 }
