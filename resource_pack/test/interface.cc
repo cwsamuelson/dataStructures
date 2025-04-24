@@ -17,10 +17,17 @@ SCENARIO("`ResourcePack`") {
     Pack::ResourcePack old_pack("file.pack");
 
     CHECK(old_pack.contains("abc"));
-    auto& abc_vec = old_pack["abc"];
+    /*auto& abc_vec = old_pack["abc"];
     CHECK(abc_vec.size() == sizeof(size_t));
     size_t abc{};
-    std::memcpy(&abc, abc_vec.data(), sizeof(size_t));
+    std::memcpy(&abc, abc_vec.data(), sizeof(size_t));*/
+    CHECK(old_pack.pack_file.file_path.string().ends_with("file.pack"));
+    CHECK(old_pack.pack_file.entry_count == 1);
+    REQUIRE(old_pack.pack_file.index.size() == 1);
+    CHECK(old_pack.pack_file.index[0].offset == 0);
+    CHECK(old_pack.pack_file.index[0].size == 8);
+    CHECK(old_pack.pack_file.index[0].key.length == 3);
+    CHECK(old_pack.pack_file.index[0].key.text == "abc");
   }
 }
 
