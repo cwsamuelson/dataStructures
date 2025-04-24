@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include <print>
+
 struct bytes_view : std::ranges::view_interface<bytes_view> {
   std::span<unsigned char> byte_span;
 
@@ -85,16 +87,21 @@ Type convert(std::span<const std::byte>& span) {
 
 template<typename IStream>
 IStream& operator>>(IStream& istream, Pack::PackFile::IndexEntry::Key& key) {
-  istream >> key.length;
+  VERIFY(istream.read(reinterpret_cast<char*>(&key.length), sizeof(key.length)), "Couldn't read key length from file.");
+
   key.text.resize(key.length);
-  VERIFY(istream.read(reinterpret_cast<char*>(key.text.data()), key.length), "Couldn't read all bytes from file.  Expected {} bytes.", static_cast<size_t>(key.length));
+  VERIFY(istream.read(reinterpret_cast<char*>(key.text.data()), key.length), "Couldn't read all bytes from file.  Expected {} bytes.", key.length);
+
+  return istream;
 }
 
 template<typename IStream>
 IStream& operator>>(IStream& istream, Pack::PackFile::IndexEntry& entry) {
   VERIFY(istream >> entry.key, "Could not read index entry keysize");
-  VERIFY(istream >> entry.offset, "Could not read index entry offset");
-  VERIFY(istream >> entry.size, "Could not read index entry size");
+  VERIFY(istream.read(reinterpret_cast<char*>(&entry.offset), sizeof(entry.offset)), "Could not read index entry offset");
+  VERIFY(istream.read(reinterpret_cast<char*>(&entry.size), sizeof(entry.size)), "Could not read index entry size");
+
+  return istream;
 }
 
 }
@@ -106,13 +113,13 @@ PackFile::PackFile() = default;
 PackFile::PackFile(const std::filesystem::path& path)
   : file_path(path) {
   try {
-    std::ifstream file(file_path, std::ios::binary | std::ios::ate);
+    std::ifstream file(file_path, std::ios::binary);
     VERIFY(file, "Could not open file", file_path.string());
 
-    VERIFY(file >> entry_count, "Could not read index size from file");
+    VERIFY(file.read(reinterpret_cast<char*>(&entry_count), sizeof(entry_count)), "Could not read index size from file");
 
     for (size_t i{}; i < entry_count and file; ++i) {
-      auto& entry =index.emplace_back();
+      auto& entry = index.emplace_back();
       VERIFY(file >> entry, "Could not read {}th index entry", index.size());
     }
 
@@ -131,8 +138,8 @@ void PackFile::clear() {
 ResourcePack::ResourcePack() = default;
 
 ResourcePack::ResourcePack(const std::filesystem::path& path)
-  : pack_file(path) {
-}
+  : pack_file(path)
+{}
 
 void ResourcePack::load(const std::filesystem::path& path) {
   *this = ResourcePack(path);
@@ -140,16 +147,21 @@ void ResourcePack::load(const std::filesystem::path& path) {
 
 void ResourcePack::save(const std::filesystem::path& path) const {
   try {
-    std::ofstream file(path, std::ios::binary | std::ios::ate);
+    std::ofstream file(path, std::ios::binary);
     VERIFY(file, "Could not open file ({})", path.string());
 
-    file << index.size();
+    auto s = index.size();
+
+    file.write(reinterpret_cast<const char*>(&s), sizeof(s));
 
     for (size_t cursor{}; const auto& [key, value] : index) {
-      file << key.size();
+      s = key.size();
+      file.write(reinterpret_cast<const char*>(&s), sizeof(s));
       file << key;
-      file << cursor;
-      file << value.size();
+      s = cursor;
+      file.write(reinterpret_cast<const char*>(&s), sizeof(s));
+      s = value.size();
+      file.write(reinterpret_cast<const char*>(&s), sizeof(s));
     }
 
     for (const auto& [key, value] : index) {
