@@ -1,8 +1,12 @@
 #include <cstddef>
+#include <cstdint>
+#include <functional>
 #include <iostream>
 #include <memory>
+#include <ranges>
 #include <span>
 #include <stack>
+#include <vector>
 
 template<typename Type>
 struct RC {
@@ -30,14 +34,12 @@ struct SharedPointer {
     template<typename Deleter>
     SharedPointer(Type value, Deleter deleter) {
     }
-
     SharedPointer() = default;
 
     SharedPointer(const SharedPointer& other)
         : control_block(other.control_block) {
         increment();
     }
-
     SharedPointer(SharedPointer&& other)
         : control_block(other.control_block) {
         other.control_block = nullptr;
@@ -68,25 +70,46 @@ struct SharedPointer {
         return control_block != nullptr;
     }
 
+​
+
     Type& operator*() {
+
         return *control_block->pointer;
+
     }
+
+​
 
 private:
+
     static void default_deleter(Type* pointer) {
+
         delete pointer;
+
     }
+
+​
 
     void decrement() {
+
         --control_block->ref_count;
+
         if (control_block->ref_count ==0) {
+
             delete control_block;
+
         }
+
     }
 
+​
+
     void increment() {
+
         ++control_block->ref_count;
+
     }
+
 };
 
 struct LoggerBase {
@@ -107,16 +130,37 @@ struct AllocatorBase : std::enable_shared_from_this<AllocatorBase> {
 protected:
     virtual void* allocate(size_t size, size_t alignment) = 0;
 
-    virtual void deallocate(void* pointer, size_t alignment) = 0;
+    virtual void deallocate(void* pointer, size_t size) = 0;
+
+    virtual void deallocate(void* pointer, std::align_val_t alignment) = 0;
+
+    virtual void deallocate(void* pointer, size_t size, std::align_val_t alignment) = 0;
 
 public:
     template<typename Type>
     Type* allocate(const size_t count){
+        std::cout << "`AllocatorBase` `allocate` template wrapper\n";
         return static_cast<Type*>(allocate(count * sizeof(Type), alignof(Type)));
     }
     template<typename Type>
     void deallocate(Type* pointer) {
-        deallocate(pointer, alignof(Type));
+        std::cout << "`AllocatorBase` `deallocate(Type*)` template wrapper\n";
+        deallocate(static_cast<void*>(pointer), static_cast<std::align_val_t>(alignof(Type)));
+    }
+    template<typename Type>
+    void deallocate(Type* pointer, const size_t size) {
+        std::cout << "`AllocatorBase` `deallocate(Type*, sz)` template wrapper\n";
+        deallocate(static_cast<void*>(pointer), size);
+    }
+    template<typename Type>
+    void deallocate(Type* pointer, const std::align_val_t alignment) {
+        std::cout << "`AllocatorBase` `deallocate(Type*, al)` template wrapper\n";
+        deallocate(static_cast<void*>(pointer), static_cast<std::align_val_t>(alignment));
+    }
+    template<typename Type>
+    void deallocate(Type* pointer, const size_t size, const std::align_val_t alignment) {
+        std::cout << "`AllocatorBase` `deallocate(Type*, sz, al)` template wrapper\n";
+        deallocate(static_cast<void*>(pointer), size, alignment);
     }
 
     template<typename Type, typename ...Args>
@@ -136,6 +180,7 @@ public:
     void destruct(Type* pointer) {
         pointer->~Type();
     }
+
     template<typename Type>
     void destruct_n(Type* pointer, const size_t count) {
         for(auto* ptr = pointer; ptr != pointer + count; ++ptr) {
@@ -179,9 +224,19 @@ struct STDAllocator : AllocatorBase {
         return operator new(size, static_cast<std::align_val_t>(alignment));
     }
 
-    void deallocate(void* ptr, const size_t alignment) override {
+    void deallocate(void* ptr, const size_t size) override {
         std::cout << "STDAllocator " << id << " deallocating\n";
-        operator delete(ptr, static_cast<std::align_val_t>(alignment));
+        operator delete(ptr, size);
+    }
+
+    void deallocate(void* pointer, std::align_val_t alignment) {
+        std::cout << "STDAllocator " << id << " deallocating\n";
+        operator delete(pointer, alignment);
+    }
+
+    void deallocate(void* pointer, size_t size, std::align_val_t alignment) override {
+        std::cout << "STDAllocator " << id << " deallocating\n";
+        operator delete(pointer, size, alignment);
     }
 };
 
@@ -219,7 +274,15 @@ struct PoolAllocator : AllocatorBase {
         return pointer;
     }
 
-    void deallocate(void* ptr, const size_t alignment) override {
+    void deallocate([[maybe_unused]]void* ptr, [[maybe_unused]]const size_t alignment) override {
+        std::cout << "PoolAllocator deallocating\n";
+    }
+
+    void deallocate([[maybe_unused]]void* pointer, [[maybe_unused]]const std::align_val_t alignment) {
+        std::cout << "PoolAllocator deallocating\n";
+    }
+
+    void deallocate([[maybe_unused]]void* pointer, [[maybe_unused]]const size_t size, [[maybe_unused]]const std::align_val_t alignment) override {
         std::cout << "PoolAllocator deallocating\n";
     }
 };
@@ -227,8 +290,6 @@ struct PoolAllocator : AllocatorBase {
 struct ContextFrame {
     std::shared_ptr<AllocatorBase> allocator;
     std::shared_ptr<LoggerBase> logger;
-    // error handling
-    // coroutine handling?
 };
 
 struct ContextStack {
@@ -320,7 +381,6 @@ struct S {
     }
 };
 
-
 struct UseAllocFoo {
     std::shared_ptr<AllocatorBase> allocator;
 
@@ -337,10 +397,60 @@ struct UseAllocBar {
     }
 };
 
-void run1() {
-    ScopedContext _ (std::make_shared<STDAllocator>(1));
+template<typename Type>
+struct StdAllocWrapper {
+    using value_type = Type;
+    using pointer = Type*;
 
-    std::cout << "start run1" << std:: endl;
+    std::shared_ptr<AllocatorBase> allocator;
+
+    StdAllocWrapper()
+        : allocator(::allocator())
+    {}
+
+    pointer allocate(const size_t n) {
+        return allocator->allocate<Type>(n);
+    }
+
+    /*pointer allocate(const size_t n, const pointer) {
+        return nullptr;
+    }*/
+
+    /*pointer allocate_at_least(const size_t n) {
+        return nullptr;
+    }*/
+
+    void deallocate(pointer p, size_t n) {
+        allocator->deallocate<Type>(p, n);
+    }
+
+    size_t max_size() const {
+        return -1;
+    }
+
+    void construct(){}
+    void destroy() {}
+};
+
+struct RAIILogger {
+    std::function<void()> func;
+    std::string stub;
+
+    template<typename Func>
+    RAIILogger(Func&& f, std::string message)
+        : func(std::forward<Func>(f))
+        , stub(std::move(message))
+    {}
+
+    void operator()() const {
+        std::cout << stub << " started\n";
+        func();
+        std::cout << stub << " ended\n";
+    }
+};
+
+void stack1() {
+    ScopedContext _ (std::make_shared<STDAllocator>(1));
 
     UseAllocFoo foo{allocator()};
 
@@ -349,22 +459,17 @@ void run1() {
 
         UseAllocFoo bar{allocator()};
 
-        foo.foo();
-        bar.foo();
-
+        const auto x = foo.foo();
+        const auto y = bar.foo();
     }
-
-    std::cout << "end run1" << std:: endl;
 }
 
 UseAllocBar get_bar() {
     return {allocator()};
 }
 
-void run2() {
+void stack2() {
     ScopedContext _ (std::make_shared<STDAllocator>(1));
-
-    std::cout << "run2 start\n";
 
     auto bar1 = get_bar();
 
@@ -379,13 +484,9 @@ void run2() {
     auto s1 = bar1.bar();
     auto s2 = bar2.bar();
     auto s3 = bar3.bar();
-
-    std::cout << "run2 end\n";
 }
 
-void run3() {
-    std::cout << "run3 start\n";
-
+void stack3() {
     auto bar = get_bar();
     auto _ = create_scoped_context<PoolAllocator>();
 
@@ -394,24 +495,135 @@ void run3() {
     auto bar2 = get_bar();
 
     bar2.bar();
+}
 
-    std::cout << "run3 end\n";
+void context_stack_test() {
+    std::vector<RAIILogger> vec{
+        // runs without additional context of its own
+        {stack1, "stack1"},
+        {stack2, "stack2"},
+        {stack3, "stack3"}
+    };
+
+    std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+
+    stack1();
+
+    for (const auto& f : vec) {
+        f();
+        std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+    }
+}
+
+namespace Contextual {
+    // basic_string
+    template<typename Char, typename Traits = std::char_traits<Char>, typename Allocator = StdAllocWrapper<Char>>
+        // requires Allocator is context aware
+    using BasicString = std::basic_string<Char, Traits, Allocator>;
+    using String = BasicString<char>;
+    //using WString = BasicString<wchar>;
+    // deque
+    template<typename Type, typename Allocator = StdAllocWrapper<Type>>
+        // requires Allocator is context aware
+    using Deque = std::deque<Type, Allocator>;
+    // forward_list
+    //template<typename Type, typename Allocator = StdAllocWrapper<Type>>
+        // requires Allocator is context aware
+    //using ForwardList = std::forward_list<Type, Allocator>;
+    // list
+    //template<typename Type, typename Allocator = StdAllocWrapper<Type>>
+        // requires Allocator is context aware
+    //using List = std::list<Type, Allocator>;
+    // vector
+    template<typename Type, typename Allocator = StdAllocWrapper<Type>>
+        // requires Allocator is context aware
+    using Vector = std::vector<Type, Allocator>;
+    // map
+    //template<typename Key, typename Value, typename Compare = std::less<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using Map = std::map<Key, Value, Compare, Allocator>;
+    // multimap
+    //template<typename Key, typename Value, typename Compare = std::less<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using MultiMap = std::multimap<Key, Value, Compare, Allocator>;
+    // set
+    //template<typename Key, typename Compare = std::less<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using Set = std::set<Key, Compare, Allocator>;
+    // multiset
+    //template<typename Key, typename Compare = std::less<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using MultiSet = std::multiset<Key, Compare, Allocator>;
+    // unordered_map
+    //template<typename Key, typename Value, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using UnorderedMap = std::unordered_map<Key, Value, Hash, KeyEqual, Allocator>;
+    // unordered_multimap
+    //template<typename Key, typename Value, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using UnorderedMultiMap = std::unordered_multimap<Key, Value, Hash, KeyEqual, Allocator>;
+    // unordered_set
+    //template<typename Key, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using UnorderedSet = std::unordered_set<Key, Hash, KeyEqual, Allocator>;
+    // unordered_multiset
+    //template<typename Key, typename Hash = std::hash<Key>, typename KeyEqual = std::equal_to<Key>, typename Allocator = StdAllocWrapper<std::pair<const Key, Value>>>
+        // requires Allocator is context aware
+    //using UnorderedMultiSet = std::unordered_multiset<Key, Hash, KeyEqual, Allocator>;
+}
+
+void alloc1() {
+    Contextual::Vector<int> v;
+
+    v.reserve(43);
+
+    v.push_back(1138);
+}
+
+void alloc2() {
+    Contextual::Vector<int> v;
+
+    v.reserve(43);
+    v.push_back(1138);
+
+    //! @TODO Fix this: something to do with rebind
+    //v.shrink_to_fit();
+
+    v.push_back(42);
+}
+
+void alloc3() {
+    Contextual::Vector<int> v;
+
+    v.reserve(43);
+    v.push_back(1138);
+    v.push_back(1139);
+
+    auto u = v;
+
+    v.clear();
+
+    u.push_back(1);
+}
+
+void alloc_test() {
+    std::vector<RAIILogger> vec{
+        {alloc1, "alloc1"},
+        {alloc2, "alloc2"},
+        {alloc3, "alloc3"}
+    };
+
+    std::cout << "alloc_test start\n";
+
+    stack1();
+    for (const auto& f : vec) {
+        f();
+    }
+    std::cout << "alloc_test end\n";
 }
 
 int main() {
-    // runs without additional context of its own
+    context_stack_test();
 
-    std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
-
-    run1();
-
-    std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
-
-    run2();
-
-    std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
-
-    run3();
-
-    std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+    alloc_test();
 }
