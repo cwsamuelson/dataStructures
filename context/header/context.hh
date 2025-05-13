@@ -30,7 +30,7 @@ struct Logger {
   struct LogMessage {
     NoiseLevel           level = NoiseLevel::medium;
     Category             category = Category::info;
-    std::string_view     message = "";
+    std::string          message = "";
     std::source_location location = std::source_location::current();
     // time stamp
     // thread id
@@ -60,6 +60,20 @@ struct Logger {
 
     void log(const LogMessage& message) override {
       logger.log(message);
+    }
+
+    // NoiseLevel           level
+    // Category             category
+    // std::string_view     message
+    // std::source_location location
+    template<NoiseLevel Level, Category Cat, typename ...Args>
+    void log(std::string_view fmt, Args&& ...args) {
+      log(LogMessage{
+        .level = Level,
+        .category = Cat,
+        .message = std::format(fmt, std::forward<Args>(args)...),
+        //.location = ...,
+      });
     }
   };
 
@@ -309,7 +323,37 @@ struct Context {
   trait::ErrorContract error_contract;
 };
 
+struct ContextStack {
+  std::stack<ContextFrame> stack;
+
+  ContextStack() {
+    stack.push({
+      std::make_shared<STDAllocator>(42),
+      std::make_shared<STDLogger>(),
+    });
+  }
+
+  void push(ContextFrame frame) {
+    std::cout << "pushing context " << stack.size() << std::endl;
+    stack.push(frame);
+  }
+
+  void pop() {
+    std::cout << "popping context " << stack.size() << std::endl;
+    stack.pop();
+  }
+
+  const ContextFrame& context() const {
+    return stack.top();
+  }
+};
+
 struct ScopedContext {
+  template<typename ...Args>
+  ScopedContext(Args&& ...args) {
+    push_context(std::forward<Args>(args)...);
+  }
+
            ScopedContext();
   explicit ScopedContext(Context context);
 
@@ -320,7 +364,17 @@ struct ScopedContext {
   ScopedContext& operator=(ScopedContext&&)      = delete;
 
   ~ScopedContext();
+
+  template<typename Type, typename ...Args>
+  static auto create(Args&& ...args) {
+    return ScopedContext(std::make_shared<Type>(std::forward<Args>(args)...));
+  }
 };
+
+template<typename Type, typename ...Args>
+auto create_scoped_context(Args&& ...args) {
+  return ScopedContext(std::make_shared<Type>(std::forward<Args>(args)...));
+}
 
 void           PushContext(Context context);
 void           PopContext();
