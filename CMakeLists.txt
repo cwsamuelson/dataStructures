@@ -1,18 +1,21 @@
 cmake_minimum_required(VERSION 3.21)
 project(GalacticStructures LANGUAGES CXX)
 
+set(CONAN_CMAKE_SILENT_OUTPUT TRUE CACHE BOOL "")
+
 find_package(cmake_scripts REQUIRED)
 
 add_subdirectory(aligned_buffer)
 add_subdirectory(box)
 add_subdirectory(colors)
 add_subdirectory(configuration)
-add_subdirectory(context)
-add_subdirectory(coordinates)
+#add_subdirectory(context)
+#add_subdirectory(coordinates)
 add_subdirectory(core)
 add_subdirectory(delegate)
 add_subdirectory(doubly_linked_list)
 #add_subdirectory(ecs)
+add_subdirectory(equation)
 add_subdirectory(function)
 add_subdirectory(future)
 #add_subdirectory(hive)
@@ -53,12 +56,13 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_box
   ${PROJECT_NAME}_colors
   ${PROJECT_NAME}_configuration
-  ${PROJECT_NAME}_context
-  ${PROJECT_NAME}_coordinates
+  #${PROJECT_NAME}_context
+  #${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
   ${PROJECT_NAME}_delegate
   ${PROJECT_NAME}_doubly_linked_list
   #${PROJECT_NAME}_ecs
+  ${PROJECT_NAME}_equation
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
   #${PROJECT_NAME}_hive
