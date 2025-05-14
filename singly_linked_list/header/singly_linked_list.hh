@@ -5,6 +5,12 @@
 
 namespace flp {
 
+//! @TODO conditional noexcepts
+//! @TODO allocator awareness
+//! @TODO context allocator awareness
+//! @TODO fancy pointers
+//! @TODO iterators
+
 template<typename Type>
 class SinglyLinkedList {
 public:
@@ -22,12 +28,19 @@ public:
   }
 
   [[nodiscard]]
-  SinglyLinkedList& operator=(const SinglyLinkedList&) {
+  SinglyLinkedList& operator=(const SinglyLinkedList& other) {
+    for (Node* node = other.root; node != nullptr; node = node->next) {
+      push_back(node->value);
+    }
+
     return *this;
   }
 
   [[nodiscard]]
-  SinglyLinkedList& operator=(SinglyLinkedList&&) noexcept {
+  SinglyLinkedList& operator=(SinglyLinkedList&& other) noexcept {
+    root = other.root;
+    other.root = nullptr;
+
     return *this;
   }
 
@@ -51,13 +64,13 @@ public:
     return result;
   }
 
-  void push_back(Type value) {
+  void push_back(this auto&& self, Type value) {
     Node* node = new Node {
-      .next  = root,
+      .next  = self.root,
       .value = std::move(value),
     };
 
-    root = node;
+    self.root = node;
   }
 
   // undefined behaviour on empty container

@@ -10,6 +10,11 @@ TEST_CASE("single linked list") {
   CHECK(list.empty());
   CHECK(list.size() == 0);
 
+  list.clear();
+
+  CHECK(list.empty());
+  CHECK(list.size() == 0);
+
   list.push_back(42);
   CHECK(not list.empty());
   CHECK(list.size() == 1);
@@ -23,7 +28,12 @@ TEST_CASE("single linked list") {
   CHECK(list.size() == 0);
 
   list.push_back(42);
+  CHECK(list.back() == 42);
+  list.back() = 1138;
+  CHECK(list.back() == 1138);
+
   list.clear();
+
   CHECK(list.empty());
   CHECK(list.size() == 0);
 }

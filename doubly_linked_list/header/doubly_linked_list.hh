@@ -1,7 +1,14 @@
 #pragma once
 
+#include <cstddef>
 
 namespace flp {
+
+//! @TODO conditional noexcepts
+//! @TODO allocator awareness
+//! @TODO context allocator awareness
+//! @TODO fancy pointers
+//! @TODO iterators
 
 template<typename Type>
 class DoublyLinkedList {
@@ -19,6 +26,12 @@ public:
 
   [[nodiscard]]
   DoublyLinkedList& operator=(DoublyLinkedList&& other) {
+    head = other.head;
+    tail = other.tail;
+
+    other.head = nullptr;
+    other.tail = nullptr;
+
     return *this;
   }
 
@@ -26,12 +39,36 @@ public:
     clear();
   }
 
+  void push_front(Type value) {}
+
+  void pop_front(Type value) {}
+
   void push_back(Type value) {}
 
   void pop_back(Type value) {}
 
-  Type& back() noexcept {
-    return tail->value;
+  Type& front(this auto&& self) noexcept {
+    return self.head->value;
+  }
+
+  Type& back(this auto&& self) noexcept {
+    return self.tail->value;
+  }
+
+  [[nodiscard]]
+  size_t size() const noexcept {
+    size_t count{};
+
+    for (auto* cursor = head; cursor != tail; cursor = cursor->next) {
+      ++count;
+    }
+
+    return count;
+  }
+
+  [[nodiscard]]
+  bool empty() const noexcept {
+    return head == nullptr;
   }
 
   void clear() {
