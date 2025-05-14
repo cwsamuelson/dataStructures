@@ -2,6 +2,9 @@
 
 namespace flp::trait {
 
+// type erasure is probably not great for logger performance
+// this can be important if lots of logs are made
+// that's not an unreasonable expectation either
 struct Logger {
   enum class NoiseLevel : uint8_t {
     low,
@@ -58,7 +61,7 @@ struct Logger {
     // Category             category
     // std::string_view     message
     // std::source_location location
-    template<NoiseLevel Level, Category Cat, typename ...Args>
+    /*template<NoiseLevel Level, Category Cat, typename ...Args>
     void log(std::string_view fmt, Args&& ...args) {
       log(LogMessage{
         .level = Level,
@@ -66,7 +69,7 @@ struct Logger {
         .message = std::format(fmt, std::forward<Args>(args)...),
         //.location = ...,
       });
-    }
+    }*/
   };
 
   Logger()                  = default;

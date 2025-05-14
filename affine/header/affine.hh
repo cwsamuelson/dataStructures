@@ -5,6 +5,7 @@
 //! @TODO conversion between origins/coordinate systems
 //! @TODO homogeneous coordinates
 // 4x4 matrices.  using 0./1. to distinguish
+//! @TODO Variable dimensionality
 namespace flp {
 
 template<typename Type>
@@ -16,7 +17,7 @@ struct Vector {
 };
 
 template<typename Type>
-constexpr Point<Type> O{};
+constexpr Point<Type> O {};
 
 // A basis vector is part of an affine reference frame
 // or otherwise part of a coordinate system
@@ -33,6 +34,11 @@ template<typename Type>
 constexpr Basis<Type, 1> j{/* 0, 1, 0 */};
 template<typename Type>
 constexpr Basis<Type, 2> k{/* 0, 0, 1 */};
+
+struct AffineFrame {
+  //origin;
+  //bases;
+};
 
 // these operations define the affine nature of points and positions.
 template<typename Type>

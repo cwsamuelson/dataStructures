@@ -4,6 +4,10 @@ project(${PROJECT_NAME}_test)
 find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
+  allocator.cc
+  erasure.cc
+  #fake_logging.cc
+  logger.cc
   tests.cc
 )
 

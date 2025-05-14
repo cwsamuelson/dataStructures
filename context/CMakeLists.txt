@@ -6,6 +6,20 @@ find_package(error_support REQUIRED)
 
 set(HEADERS
   header/context.hh
+  header/containers.hh
+  header/containers/deque.hh
+  header/containers/forward_list.hh
+  header/containers/list.hh
+  header/containers/map.hh
+  header/containers/set.hh
+  header/containers/string.hh
+  header/containers/unordered_map.hh
+  header/containers/unordered_set.hh
+  header/containers/vector.hh
+  header/frame.hh
+  header/traits.hh
+  header/traits/allocator.hh
+  header/traits/logger.hh
 )
 set(SOURCES
   source/context.cc

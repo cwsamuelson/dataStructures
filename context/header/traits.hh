@@ -5,5 +5,6 @@
 // that's not an unreasonable expectation either
 
 #include <traits/allocator.hh>
+#include <traits/contract.hh>
 #include <traits/logger.hh>
 

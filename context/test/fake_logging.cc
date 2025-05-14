@@ -3,6 +3,7 @@
 #include <chrono>
 #include <functional>
 #include <memory>
+#include <source_location>
 #include <string>
 #include <thread>
 #include <vector>
@@ -62,13 +63,15 @@ struct LogCategory {
 /*!
  */
 struct LogMessage {
-  NoiseLevel              level = NoiseLevel::medium;
-  Category                category = Category::info;
-  LogCategory;
-  std::string_view        message = "";
-  std::source_location    location = std::source_location::current();
-  std::chrono::time_point time_stamp;
-  std::thread::id         thread_id = std::this_thread::get_id();
+  using TimePoint = std::chrono::steady_clock::time_point;
+
+  NoiseLevel           level = NoiseLevel::medium;
+  Category             category = Category::info;
+  LogCategory          system;
+  std::string_view     message = "";
+  std::source_location location = std::source_location::current();
+  TimePoint            time_stamp;
+  std::thread::id      thread_id = std::this_thread::get_id();
 };
 
 /*!
@@ -78,6 +81,8 @@ struct LogMessage {
  */
 using Formatter = std::function<std::string(const LogMessage&)>;
 
+using Filter = std::function<bool(const LogMessage&)>;
+
 /*!
  * stdout/stderr
  * file
@@ -86,9 +91,9 @@ using Formatter = std::function<std::string(const LogMessage&)>;
  * @NOTE In order to handle asynchrony, Handlers should be re-entrant.
  */
 struct Handler {
-  NoiseLevel              level = NoiseLevel::medium;
-  Formatter formatter;
-  filter[];
+  NoiseLevel          level = NoiseLevel::medium;
+  Formatter           formatter;
+  std::vector<Filter> filter[];
 
   void log(LogMessage message) {
     if message.level > level {
@@ -101,7 +106,7 @@ struct Handler {
     do_log(formatter(message));
   }
 
-  void do_log(string);
+  void do_log(const std::string&);
 };
 
 /*!
@@ -229,4 +234,3 @@ TEST_CASE("Test fake logging system") {
   A = global.fork();
   B = global.fork();
 }
-
