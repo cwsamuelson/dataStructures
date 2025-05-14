@@ -2,6 +2,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <memory>
+
 namespace flp {
 
 template<typename Type>

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_template LANGUAGES CXX)
+project(${BASE_PROJECT}_utilities LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/template.hh
+  header/memory.hh
 )
 set(SOURCES
 )
@@ -25,7 +25,6 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
-  ${BASE_PROJECT}_core
   error_support::error_support
 )
 
