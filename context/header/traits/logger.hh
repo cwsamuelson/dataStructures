@@ -107,7 +107,7 @@ struct Logger {
            const Category             category,
            const std::string_view     message,
            const std::source_location location = std::source_location::current()) {
-    implementation->log({ level, category, message, location });
+    implementation->log({ level, category, std::string(message), location });
   }
 
   // asynchronous???

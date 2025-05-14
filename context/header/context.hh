@@ -13,41 +13,19 @@
 
 namespace flp {
 
-thread_local inline ContextStack GlobalCtxStack{};
+void push_context(ContextFrame frame);
 
-void push_context(ContextFrame frame) {
-  GlobalCtxStack.push(frame);
-}
+void pop_context();
 
-void pop_context() {
-  GlobalCtxStack.pop();
-}
+void push_context(std::shared_ptr<AllocatorBase> allocator);
 
-void push_context(std::shared_ptr<AllocatorBase> allocator) {
-  push_context(ContextFrame{
-    .allocator = allocator,
-    .logger = GlobalCtxStack.stack.top().logger,
-  });
-}
+void push_context(std::shared_ptr<LoggerBase> logger);
 
-void push_context(std::shared_ptr<LoggerBase> logger) {
-  push_context(ContextFrame{
-    .allocator = GlobalCtxStack.stack.top().allocator,
-    .logger = logger,
-  });
-}
+const ContextFrame& context();
 
-const ContextFrame& context() {
-  return GlobalCtxStack.context();
-}
+std::shared_ptr<AllocatorBase> allocator();
 
-auto allocator() {
-  return context().allocator;
-}
-
-auto logger() {
-  return context().logger;
-}
+std::shared_ptr<LoggerBase> logger();
 
 struct ScopedContext {
   template<typename ...Args>
@@ -78,9 +56,5 @@ template<typename Type, typename ...Args>
 auto create_scoped_context(Args&& ...args) {
   return ScopedContext(std::make_shared<Type>(std::forward<Args>(args)...));
 }
-
-void                PushContext(ContextFrame context);
-void                PopContext();
-const ContextFrame& GetContext();
 
 } // namespace flp

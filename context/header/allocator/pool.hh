@@ -1,13 +1,10 @@
-#include <cstddef>
-#include <cstdint>
-#include <functional>
-#include <iostream>
-#include <memory>
-#include <ranges>
-#include <span>
-#include <stack>
-#include <vector>
+#pragma once
 
+#include <allocator/base.hh>
+
+#include <memory>
+
+namespace flp {
 
 struct PoolAllocator : AllocatorBase {
   struct MemoryPool {
@@ -35,7 +32,6 @@ struct PoolAllocator : AllocatorBase {
   void operator=(const PoolAllocator&) = delete;
 
   void* allocate(const size_t size, const size_t alignment) override {
-    std::cout << "PoolAllocator allocating\n";
     const auto* rptr = pool.remaining_block.data();
     pool.remaining_block = pool.remaining_block.subspan(alignment - (reinterpret_cast<size_t>(rptr) % alignment));
     auto* pointer = pool.remaining_block.data();
@@ -44,24 +40,13 @@ struct PoolAllocator : AllocatorBase {
   }
 
   void deallocate([[maybe_unused]]void* ptr, [[maybe_unused]]const size_t alignment) override {
-    std::cout << "PoolAllocator deallocating\n";
   }
 
   void deallocate([[maybe_unused]]void* pointer, [[maybe_unused]]const std::align_val_t alignment) {
-    std::cout << "PoolAllocator deallocating\n";
   }
 
   void deallocate([[maybe_unused]]void* pointer, [[maybe_unused]]const size_t size, [[maybe_unused]]const std::align_val_t alignment) override {
-    std::cout << "PoolAllocator deallocating\n";
   }
 };
 
-struct ContextFrame {
-  std::shared_ptr<AllocatorBase> allocator;
-  std::shared_ptr<LoggerBase> logger;
-  // error handling
-  // contracts
-  // concurrency
-  // coroutine handling?
-  // parallelism # auto parallel for loops?
-};
+}

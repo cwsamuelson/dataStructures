@@ -1,5 +1,10 @@
 #pragma once
 
+#include <allocator/base.hh>
+#include <context.hh>
+
+#include <memory>
+
 namespace flp {
 
 template<typename Type>
@@ -10,7 +15,7 @@ struct StdAllocWrapper {
   std::shared_ptr<AllocatorBase> allocator;
 
   StdAllocWrapper()
-    : allocator(::allocator())
+    : allocator(flp::allocator())
   {}
 
   pointer allocate(const size_t n) {
@@ -33,8 +38,8 @@ struct StdAllocWrapper {
     return -1;
   }
 
-  void construct(){}
-  void destroy() {}
+  //void construct(){}
+  //void destroy() {}
 };
 
 }

@@ -1,3 +1,4 @@
+#include <allocator/pool.hh>
 #include <containers.hh>
 #include <context.hh>
 
@@ -146,11 +147,12 @@ TEST_CASE("Context Stack") {
     {stack3, "stack3"}
   };
 
-  std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+  //std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
 
   for (const auto& f : vec) {
     f();
-    std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+
+    //std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
   }
 }
 

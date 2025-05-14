@@ -16,6 +16,7 @@ struct ContextFrame {
   // error handling
   // contracts
   // concurrency
+  // coroutine handling?
   // parallelism # auto parallel for loops?
 
   //trait::Logger    logger;
