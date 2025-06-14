@@ -1,5 +1,10 @@
 #pragma once
 
+#include <algorithm>
+#include <functional>
+#include <memory>
+#include <optional>
+#include <vector>
 
 namespace flp {
 
@@ -24,24 +29,172 @@ namespace flp {
 //   - xor
 //   - A process that runs on `failure` of the parent
 
+template<typename>
+struct FunctorAdaptor;
+
 template<typename Delta>
 struct ProcessMonitor {
+  // making the process type a template parameter of processmonitor (with the
+  //  constraint of inheriting from this type), can enable derived classes of
+  //  processmonitor to use additional features smoothly.
   struct Process {
-    std::vector<Process> children;
+    virtual std::optional<bool> tick(Delta) = 0;
+
+    //[[nodiscard]]
+    //bool succeeded() const {
+    //  return success.value();
+    //}
+
+    //[[nodiscard]]
+    //bool failed() const {
+    //  return not succeeded();
+    //}
+
+    [[nodiscard]]
+    bool alive() const {
+      return not dead();
+    }
+
+    [[nodiscard]]
+    bool dead() const {
+      return result.has_value();
+    }
+
+    //[[nodiscard]]
+    //bool running() const {
+    //}
+
+    //[[nodiscard]]
+    //bool paused() const {
+    //  return living.value() and running.value();
+    //}
+
+    //[[nodiscard]]
+    //bool finished() const {
+    //}
+
+    //void fork() {
+    //}
+
+    virtual void abort() {}
+
+    std::vector<std::shared_ptr<Process>> children;
+
+    std::optional<bool> result;
   };
 
-  void update(const Delta delta) {
+  void tick(const Delta delta) {
     for (auto& process : processes) {
-      process.execute(delta);
+      if (process->alive()) {
+        try {
+          process->result = process->tick(delta);
+        } catch (...) {
+          process->result = false;
+        }
+      }
     }
   }
 
   void operator()(const Delta delta) {
-    update(delta);
+    tick(delta);
   }
 
-  std::vector<Process> processes;
+  [[nodiscard]]
+  bool empty() const noexcept {
+    return processes.empty();
+  }
+
+  [[nodiscard]]
+  size_t size() const noexcept {
+    return processes.size();
+  }
+
+  void clear() {
+    abort();
+    processes.clear();
+  }
+
+  void abort() {
+    for (auto& process : processes) {
+      process->abort();
+    }
+  }
+
+  template<typename Proc, typename ...Args>
+  void spawn(Args&& ...args) {
+    processes.emplace_back(std::make_shared<Proc>(std::forward<Args>(args)...));
+  }
+
+  template<typename Func>
+  void spawn(Func&& func) {
+    processes.push_back(std::make_shared<FunctorAdaptor<Delta>>(std::move(func)));
+  }
+
+  //template<typename Func>
+  //void attach(Func&& func) {
+  //  processes.emplace_back(std::move(func));
+  //}
+
+  void clean() {
+    const auto last = std::remove_if(processes.begin(), processes.end(), [](const auto& proc) {
+      return proc->dead();
+    });
+
+    processes.erase(last, processes.end());
+  }
+
+  std::vector<std::shared_ptr<Process>> processes;
+};
+
+template<typename Delta>
+struct FunctorAdaptor : ProcessMonitor<Delta>::Process {
+  template<std::invocable<Delta> Functor>
+    requires std::convertible_to<std::invoke_result_t<Functor, Delta>, std::optional<bool>>
+  FunctorAdaptor(Functor&& fn)
+    : func(std::move(fn))
+  {}
+
+  template<std::invocable<Delta> Functor>
+    requires (not std::convertible_to<std::invoke_result_t<Functor, Delta>, std::optional<bool>>)
+  FunctorAdaptor(Functor&& fn)
+    : func([fn = std::move(fn)](const Delta delta) -> std::optional<bool> {
+      try {
+        fn(delta);
+      } catch (...) {
+        return false;
+      }
+
+      return std::nullopt;
+    })
+  {}
+
+  template<std::invocable<> Functor>
+    requires (std::convertible_to<std::invoke_result_t<Functor>, std::optional<bool>>)
+  FunctorAdaptor(Functor&& fn)
+    : func([fn = std::move(fn)](const Delta)  -> std::optional<bool> {
+      return fn();
+    })
+  {}
+
+  template<std::invocable<> Functor>
+    requires (not std::convertible_to<std::invoke_result_t<Functor>, std::optional<bool>>)
+  FunctorAdaptor(Functor&& fn)
+    : func([fn = std::move(fn)](const Delta)  -> std::optional<bool> {
+      try {
+        fn();
+      } catch (...) {
+        return false;
+      }
+
+      return std::nullopt;
+    })
+  {}
+
+  std::optional<bool> tick(const Delta delta_t) override {
+    return func(delta_t);
+  }
+
+  std::function<std::optional<bool>(Delta)> func;
 };
 
 } // namespace flp
-

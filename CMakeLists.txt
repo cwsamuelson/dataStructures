@@ -26,6 +26,7 @@ add_subdirectory(matrix)
 add_subdirectory(optional)
 #add_subdirectory(polymorphic_value)
 add_subdirectory(polynomial)
+add_subdirectory(process_manager)
 add_subdirectory(producer_consumer)
 add_subdirectory(ranged_int)
 add_subdirectory(ratio)
@@ -73,6 +74,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_optional
   #${PROJECT_NAME}_polymorphic_value
   ${PROJECT_NAME}_polynomial
+  ${PROJECT_NAME}_process_manager
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_ranged_int
   ${PROJECT_NAME}_ratio
