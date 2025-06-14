@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <vector>
 
 namespace flp {
@@ -43,30 +44,36 @@ namespace flp {
 // If each task provides an expected execution time, we can check whether the
 // set of tasks will succeed.
 
+template<typename>
+struct FunctorAdaptor;
+
 struct Scheduler {
   struct TaskConfig {
     time frequency{1ms};
+    // worst case
+    duration deadline{1ms};
   };
 
-  // 'actual' task..
   struct Task {
-    // polymorphic?
-    // functor/std::function?
+    virtual void tick() = 0;
   };
 
-  struct Schedule {
-    // Interface to create/validate a schedule of tasks
+  std::vector<Task> tasks;
+};
 
-    void add(Task, TaskConfig){}
+struct FunctorAdaptor : Scheduler::Task {
+  template<std::invocable<> Functor>
+  FunctorAdaptor(Functor&& fn)
+    : func([fn = std::move(fn)] {
+      return fn();
+    })
+  {}
 
-    [[nodiscard]]
-    bool valid() const {
-      return false;
-    }
-  };
+  void tick() override {
+    return func(delta_t);
+  }
 
-  std::vector<std::tuple<Task, TaskConfig>> tasks;
+  std::function<void()> func;
 };
 
 } // namespace flp
-

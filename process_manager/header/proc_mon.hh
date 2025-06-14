@@ -40,15 +40,15 @@ struct ProcessMonitor {
   struct Process {
     virtual std::optional<bool> tick(Delta) = 0;
 
-    //[[nodiscard]]
-    //bool succeeded() const {
-    //  return success.value();
-    //}
+    [[nodiscard]]
+    bool succeeded() const {
+      return result.has_value() and result.value();
+    }
 
-    //[[nodiscard]]
-    //bool failed() const {
-    //  return not succeeded();
-    //}
+    [[nodiscard]]
+    bool failed() const {
+      return result.has_value() and not result.value();
+    }
 
     [[nodiscard]]
     bool alive() const {
@@ -60,25 +60,12 @@ struct ProcessMonitor {
       return result.has_value();
     }
 
-    //[[nodiscard]]
-    //bool running() const {
-    //}
-
-    //[[nodiscard]]
-    //bool paused() const {
-    //  return living.value() and running.value();
-    //}
-
-    //[[nodiscard]]
-    //bool finished() const {
-    //}
-
     //void fork() {
     //}
 
-    virtual void abort() {}
-
-    std::vector<std::shared_ptr<Process>> children;
+    virtual void abort() {
+      result = false;
+    }
 
     std::optional<bool> result;
   };
@@ -129,11 +116,6 @@ struct ProcessMonitor {
   void spawn(Func&& func) {
     processes.push_back(std::make_shared<FunctorAdaptor<Delta>>(std::move(func)));
   }
-
-  //template<typename Func>
-  //void attach(Func&& func) {
-  //  processes.emplace_back(std::move(func));
-  //}
 
   void clean() {
     const auto last = std::remove_if(processes.begin(), processes.end(), [](const auto& proc) {
