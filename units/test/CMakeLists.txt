@@ -8,6 +8,7 @@ common_test(${PROJECT_NAME}
   #units.cc
   system.cc
   converter.cc
+  #test.cc
 )
 
 target_link_libraries(${PROJECT_NAME}
