@@ -3,6 +3,7 @@
 #include <allocator/base.hh>
 
 #include <memory>
+#include <span>
 
 namespace flp {
 

@@ -23,6 +23,7 @@ set(HEADERS
 )
 set(SOURCES
   source/context.cc
+  source/base.cc
 )
 
 common_library(${PROJECT_NAME}
@@ -47,4 +48,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

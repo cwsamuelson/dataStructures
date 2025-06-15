@@ -1,15 +1,11 @@
 #pragma once
 
+//#include align_val_t
+
 namespace flp {
 
-// maybe 'id allocator'?
-// maybe should only be for testing?
 struct STDAllocator : AllocatorBase {
-  size_t id{};
-
-  STDAllocator(const size_t ID)
-    : id(ID)
-  {}
+  STDAllocator() = default;
 
   STDAllocator(const STDAllocator&) = delete;
   void operator=(const STDAllocator&) = delete;

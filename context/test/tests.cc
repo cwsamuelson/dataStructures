@@ -63,12 +63,12 @@ struct UseAllocFoo {
 };
 
 void stack1() {
-  ScopedContext _ (std::make_shared<STDAllocator>(1));
+  ScopedContext _ (std::make_shared<STDAllocator>());
 
   UseAllocFoo foo{allocator()};
 
   {
-    ScopedContext _(std::make_shared<STDAllocator>(1138));
+    ScopedContext _(std::make_shared<STDAllocator>());
 
     UseAllocFoo bar{allocator()};
 
@@ -78,12 +78,12 @@ void stack1() {
 }
 
 void stack2() {
-  ScopedContext _ (std::make_shared<STDAllocator>(1));
+  ScopedContext _ (std::make_shared<STDAllocator>());
 
   auto bar1 = get_bar();
 
   auto bar2 = []{
-    ScopedContext _ (std::make_shared<STDAllocator>(1138));
+    ScopedContext _ (std::make_shared<STDAllocator>());
 
     return get_bar();
   }();

@@ -4,6 +4,8 @@ namespace flp {
 
 struct LoggerBase {
   enum class Noise {
+    Noisy,
+    Quiet,
   };
 
   enum class Severity {

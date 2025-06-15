@@ -14,7 +14,7 @@ struct ContextStack {
 
   ContextStack() {
     stack.push({
-      std::make_shared<STDAllocator>(42),
+      std::make_shared<STDAllocator>(),
       std::make_shared<STDLogger>(),
     });
   }

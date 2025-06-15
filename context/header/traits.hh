@@ -7,4 +7,3 @@
 #include <traits/allocator.hh>
 #include <traits/contract.hh>
 #include <traits/logger.hh>
-

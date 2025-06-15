@@ -44,5 +44,4 @@ std::shared_ptr<LoggerBase> logger() {
   return context().logger;
 }
 
-
 } // namespace flp

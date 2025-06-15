@@ -1,6 +1,16 @@
 #pragma once
 
 #include <memory>
+//#include align_val_t
+
+namespace flp {
+struct AllocatorBase;
+}
+
+void* operator new(size_t size, const std::shared_ptr<flp::AllocatorBase>& allocator);
+void* operator new[](size_t size, const std::shared_ptr<flp::AllocatorBase>& allocator);
+void* operator new(size_t size, std::align_val_t alignment, const std::shared_ptr<flp::AllocatorBase>& allocator);
+void* operator new[](size_t size, std::align_val_t alignment, const std::shared_ptr<flp::AllocatorBase>& allocator);
 
 namespace flp {
 
@@ -14,6 +24,10 @@ protected:
 
   virtual void deallocate(void* pointer, size_t size, std::align_val_t alignment) = 0;
 
+  friend void* ::operator new(size_t size, const std::shared_ptr<flp::AllocatorBase>& allocator);
+  friend void* ::operator new[](size_t size, const std::shared_ptr<flp::AllocatorBase>& allocator);
+  friend void* ::operator new(size_t size, std::align_val_t alignment, const std::shared_ptr<flp::AllocatorBase>& allocator);
+  friend void* ::operator new[](size_t size, std::align_val_t alignment, const std::shared_ptr<flp::AllocatorBase>& allocator);
 
 public:
   template<typename Type>
