@@ -73,7 +73,7 @@ public:
     self.root = node;
   }
 
-  // undefined behaviour on empty container
+  // UB: empty container
   void pop_back() noexcept {
     Node* node = root->next;
 
@@ -81,7 +81,7 @@ public:
     root = node;
   }
 
-  // undefined behaviour on empty container
+  // UB: empty container
   Type& back() noexcept {
     return root->value;
   }

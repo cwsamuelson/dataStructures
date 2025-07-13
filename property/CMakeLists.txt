@@ -1,16 +1,17 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_thread_pool LANGUAGES CXX)
+project(${BASE_PROJECT}_property LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
+find_package(Boost REQUIRED)
 
 set(HEADERS
-  header/thread_pool.hh
+  header/core/property.hh
 )
 set(SOURCES
 )
 
-common_library(${PROJECT_NAME} INTERFACE
+common_library(${PROJECT_NAME}
   ${HEADERS}
   ${SOURCES}
 )
@@ -24,9 +25,11 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  INTERFACE
+  PUBLIC
   ${BASE_PROJECT}_core
   error_support::error_support
+
+  Boost::boost
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)

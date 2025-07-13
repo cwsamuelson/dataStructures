@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace flp::Colors {
 
 struct RGBA {
@@ -11,9 +10,9 @@ struct RGBA {
       uint8_t blue;
       uint8_t alpha;
     };
+
     uint32_t value;
   };
 };
 
 } // namespace flp
-

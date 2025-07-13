@@ -39,8 +39,10 @@ struct Range {
 
     return std::strong_ordering::equivalent;
   }
+
   constexpr friend bool operator==(const auto point, const Range& range) noexcept {
-    return std::cmp_greater_equal(point, range.start) and std::cmp_less_equal(point, range.finish);
+    return std::cmp_greater_equal(point, range.start)
+       and std::cmp_less_equal(point, range.finish);
   }
 
   constexpr friend Range operator+(const Range& lhs, const Range& rhs) noexcept {

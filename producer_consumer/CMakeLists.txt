@@ -32,4 +32,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

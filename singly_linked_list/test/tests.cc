@@ -37,3 +37,52 @@ TEST_CASE("single linked list") {
   CHECK(list.empty());
   CHECK(list.size() == 0);
 }
+
+SCENARIO("Empty container exhibits typical empty container characteristics.") {
+  GIVEN("A default initialized list") {
+    SinglyLinkedList<int> list;
+
+    THEN("The list is empty") {
+      CHECK(list.empty());
+    }
+    THEN("The list has size 0") {
+      CHECK(list.size() == 0);
+    }
+
+    WHEN("The container is cleared") {
+      list.clear();
+
+      THEN("The list is empty") {
+        CHECK(list.empty());
+      }
+      THEN("The list has size 0") {
+        CHECK(list.size() == 0);
+      }
+    }
+
+    WHEN("Values are added to the container") {
+      list.push_back(0);
+
+      THEN("The list is not empty") {
+        CHECK(not list.empty());
+      }
+      THEN("The list size is non-zero") {
+        CHECK(list.size() != 0);
+      }
+
+      AND_WHEN("The container is cleared") {
+        list.clear();
+
+        THEN("The list is empty") {
+          CHECK(list.empty());
+        }
+        THEN("The list has size 0") {
+          CHECK(list.size() == 0);
+        }
+      }
+    }
+  }
+
+  // The same as above, but with a list with values
+  // values from ctor
+}

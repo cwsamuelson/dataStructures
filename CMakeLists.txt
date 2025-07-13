@@ -28,6 +28,7 @@ add_subdirectory(optional)
 add_subdirectory(polynomial)
 add_subdirectory(process_manager)
 add_subdirectory(producer_consumer)
+add_subdirectory(property)
 add_subdirectory(ranged_int)
 add_subdirectory(ratio)
 add_subdirectory(resource_pack)
@@ -40,6 +41,7 @@ add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
+add_subdirectory(thread_pool)
 add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
@@ -77,6 +79,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_process_manager
   ${PROJECT_NAME}_producer_consumer
+  ${PROJECT_NAME}_property
   ${PROJECT_NAME}_ranged_int
   ${PROJECT_NAME}_ratio
   ${PROJECT_NAME}_resource_pack
@@ -89,6 +92,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_sparse_set
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
+  ${PROJECT_NAME}_thread_pool
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set

@@ -3,5 +3,8 @@
 
 namespace flp {
 
+struct ThreadPool {
+};
+
 } // namespace flp
 
