@@ -15,15 +15,15 @@ TEST_CASE("`TypePack` equality") {
     STATIC_CHECK(TypePack<> {} != TypePack<float> {});
   }
 
-  /*SECTION("Type-oriented") {
-    STATIC_CHECK(TypePack<>::template Equal<TypePack<>>);
-    STATIC_CHECK(TypePack<int>::template Equal<TypePack<int>>);
-    STATIC_CHECK(TypePack<float>::template Equal<TypePack<int>>);
-    STATIC_CHECK(TypePack<int, float>::template Equal<TypePack<int, float>>);
-    STATIC_CHECK(TypePack<float, int>::template Equal<TypePack<int, float>>);
-    STATIC_CHECK(TypePack<>::template Equal<TypePack<int, float>>);
-    STATIC_CHECK(TypePack<>::template Equal<TypePack<float>>);
-  }*/
+  SECTION("Type-oriented") {
+    STATIC_CHECK(TypePack<>::Equal<>);
+    STATIC_CHECK(TypePack<int>::Equal<int>);
+    STATIC_CHECK(not TypePack<float>::Equal<int>);
+    STATIC_CHECK(TypePack<int, float>::Equal<int, float>);
+    STATIC_CHECK(not TypePack<float, int>::Equal<int, float>);
+    STATIC_CHECK(not TypePack<>::Equal<int, float>);
+    STATIC_CHECK(not TypePack<>::Equal<float>);
+  }
 }
 
 TEST_CASE("`TypePack` Size") {
@@ -199,3 +199,9 @@ TEST_CASE("`TypePack` Reverse") {
                == TypePack<double, float, signed int, unsigned int> {});
 }
 
+template<size_t>
+struct Foo {};
+
+//TEST_CASE("`TypePack` SubPack") {
+//  STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<1, 2>{} == TypePack<Foo<1>, Foo<2>>{});
+//}

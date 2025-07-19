@@ -162,6 +162,23 @@ struct ReverseHelper<Type, Types...> {
   using type = typename ReverseHelper<Types...>::type::template Append<Type>;
 };
 
+template<typename, typename>
+struct EqualHelper {
+  static constexpr BoolConstant<false> value{};
+};
+
+template<typename ...Types, typename... OtherTypes>
+  requires (sizeof...(Types) != sizeof...(OtherTypes))
+struct EqualHelper<TypePack<Types...>, TypePack<OtherTypes...>> {
+  static constexpr BoolConstant<false> value{};
+};
+
+template<typename ...Types, typename... OtherTypes>
+  requires (sizeof...(Types) == sizeof...(OtherTypes))
+struct EqualHelper<TypePack<Types...>, TypePack<OtherTypes...>> {
+  static constexpr BoolConstant<(std::same_as<Types, OtherTypes> and ...)> value{};
+};
+
 } // namespace
 
 template<typename... Types>
@@ -180,13 +197,8 @@ struct TypePack {
     return false;
   }
 
-  /*template<typename... OtherTypes>
-    requires(sizeof...(Types) == sizeof...(OtherTypes))
-  static constexpr BoolConstant<(std::same_as<Types, OtherTypes> and ...)> Equal{};
-
   template<typename... OtherTypes>
-    requires(sizeof...(Types) != sizeof...(OtherTypes))
-  static constexpr BoolConstant<false> Equal{};*/
+  static constexpr auto Equal = EqualHelper<TypePack, TypePack<OtherTypes...>>::value;
 
   static constexpr size_t Size = sizeof...(Types);
 
@@ -213,6 +225,9 @@ struct TypePack {
   using Front = typename FrontHelper<Types...>::type;
   using Back  = typename BackHelper<Types...>::type;
 
+  using Head = Front;
+  using Tail = Back;
+
   using Unique = UniqueHelper<Types...>::type;
 
   template<template<typename> typename Predicate>
@@ -229,7 +244,11 @@ struct TypePack {
   using Drop = typename DropHelper<Count, Types...>::type;
 
   using Reverse = typename ReverseHelper<Types...>::type;
+
+  //template<size_t Begin, size_t End>
+  //using SubPack = typename SubPackImpl<Begin, End, Types...>::type;
+  template<size_t Begin, size_t End>
+  using SubPack = typename Drop<Begin>::Reverse::Drop<sizeof...(Types) - End>::Reverse;
 };
 
 } // namespace flp
-
