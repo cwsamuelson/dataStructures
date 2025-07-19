@@ -7,7 +7,7 @@
 
 using namespace flp;
 
-#define TEST_TYPE_BOUNDS(TYPE)                                                                                         \
+#define TEST_TYPE_BOUNDS(TYPE) \
   STATIC_CHECK(std::same_as<DeducedType<Range{ std::numeric_limits<TYPE>::min(), std::numeric_limits<TYPE>::max() }>, TYPE>)
 
 template<class F, std::size_t... Is>
@@ -145,6 +145,38 @@ TEST_CASE("Using ranged integers") {
     u8 x2 = 256;
 
     STATIC_CHECK(x1 + x2 == 512);*/
+  }
+
+  SECTION("Basics") {
+    SECTION("Using ranged integers together") {
+      STATIC_CHECK(RangedInt<{10, 20}>{} == RangedInt<{10, 30}>{});
+      STATIC_CHECK(RangedInt<{10, 20}>{15} == RangedInt<{5, 30}>{15});
+    }
+
+    SECTION("Mixed use with intrinsics") {
+      STATIC_CHECK(RangedInt<{10, 20}>{} == 10);
+      STATIC_CHECK(RangedInt<{10, 20}>{15} == 15);
+      STATIC_CHECK(RangedInt<{10, 20}>{15} <= 16);
+      STATIC_CHECK(RangedInt<{10, 20}>{15} >= 14);
+      STATIC_CHECK(RangedInt<{10, 20}>{15} < 16);
+      STATIC_CHECK(RangedInt<{10, 20}>{15} > 14);
+
+      RangedInt<{10, 20}> r_int{};
+
+      CHECK_NOTHROW(r_int = 15);
+      CHECK(r_int == 15);
+      CHECK(r_int <= 15);
+      CHECK(r_int >= 15);
+
+      CHECK(r_int >= 14);
+      CHECK(r_int <= 16);
+      CHECK(r_int > 14);
+      CHECK(r_int < 16);
+
+      CHECK_THROWS(r_int = 21);
+      CHECK(r_int != 21);
+      CHECK(r_int == 15);
+    }
   }
 }
 

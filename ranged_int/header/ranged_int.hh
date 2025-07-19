@@ -97,7 +97,6 @@ struct DeducedTypeImpl<range> {
 
 }
 
-
 template<Range range>
 using DeducedType = typename DeducedTypeImpl<range>::type;
 
@@ -125,52 +124,81 @@ constexpr static Unconstrained_t unconstrained {};
 template<Range ValueRange>
 struct RangedInt {
   using Type                  = DeducedType<ValueRange>;
-  constexpr static auto range = ValueRange;
+  static constexpr auto range = ValueRange;
 
   Type value = ValueRange.start;
 
-  constexpr RangedInt() noexcept = default;
+  constexpr
+  RangedInt() noexcept = default;
 
   template<typename InputType>
-  constexpr RangedInt(const InputType& input)
+  constexpr
+  RangedInt(const InputType& input)
     : value(input) {
-    VERIFY(input >= ValueRange.start and input <= ValueRange.finish, "");
+    VERIFY(input >= ValueRange.start and input <= ValueRange.finish, "Value({}) doesn't fit in range.", input);
   }
 
   template<Range OtherRange>
-  constexpr RangedInt operator=(const RangedInt<OtherRange>& other) noexcept {
-    VERIFY(OtherRange.start >= ValueRange.start and OtherRange.finish <= ValueRange.finish,
-           "Incompatible ranges for assignment");
+    requires (OtherRange.start >= ValueRange.start and OtherRange.finish <= ValueRange.finish)
+  constexpr
+  RangedInt operator=(const RangedInt<OtherRange>& other) noexcept {
+    VERIFY(other.value >= ValueRange.start and other.value <= ValueRange.finish, "Value({}) doesn't fit in range.", other.value);
 
     value = other.value;
-
-    VERIFY(other.value >= ValueRange.start and other.value <= ValueRange.finish, "");
 
     return *this;
   }
 
+  template<Range range>
+  constexpr friend
+  auto operator<=>(const RangedInt& lhs, const RangedInt<range>& rhs) noexcept {
+    return lhs.value <=> rhs.value;
+  }
+
+  template<std::integral Other>
+  constexpr friend
+  auto operator<=>(const RangedInt& lhs, const Other& rhs) noexcept {
+    return lhs.value <=> rhs;
+  }
+
+  template<Range range>
+  constexpr friend
+  bool operator==(const RangedInt& lhs, const RangedInt<range>& rhs) noexcept {
+    return lhs.value == rhs.value;
+  }
+
+  template<std::integral Other>
+  constexpr friend
+  bool operator==(const RangedInt& lhs, const Other& rhs) noexcept {
+    return lhs.value == rhs;
+  }
+
   template<Range OtherRange>
-  constexpr auto operator+(const RangedInt<OtherRange>& other) noexcept {
+  constexpr
+  auto operator+(const RangedInt<OtherRange>& other) noexcept {
     using WorstCase = WorstCaseRange<ValueRange, OtherRange, std::plus<>>;
     using MathType = typename WorstCase::Type;
     return RangedInt<WorstCase::range>(std::plus<MathType> {}(value, other.value), unconstrained);
   }
 
   template<Range OtherRange>
-  constexpr auto operator-(const RangedInt<OtherRange>& other) noexcept {
+  constexpr
+  auto operator-(const RangedInt<OtherRange>& other) noexcept {
     return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::minus<>>::range>(std::minus {}(value, other.value),
                                                                                   unconstrained);
   }
 
   template<Range OtherRange>
-  constexpr auto operator*(const RangedInt<OtherRange>& other) noexcept {
+  constexpr
+  auto operator*(const RangedInt<OtherRange>& other) noexcept {
     return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::multiplies<>>::range>(
       std::multiplies<> {}(value, other.value), unconstrained);
   }
 
   // the problem with integer division, is that the result is not even remotely likely to be integral
   /*template<Range OtherRange>
-  constexpr auto operator/(const RangedInt<OtherRange>& other) noexcept {
+  constexpr
+  auto operator/(const RangedInt<OtherRange>& other) noexcept {
     return RangedInt<ValueRange / OtherRange>(value / other, unconstrained);
   }*/
 
