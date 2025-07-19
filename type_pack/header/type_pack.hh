@@ -245,8 +245,6 @@ struct TypePack {
 
   using Reverse = typename ReverseHelper<Types...>::type;
 
-  //template<size_t Begin, size_t End>
-  //using SubPack = typename SubPackImpl<Begin, End, Types...>::type;
   template<size_t Begin, size_t End>
   using SubPack = typename Drop<Begin>::Reverse::Drop<sizeof...(Types) - End>::Reverse;
 };

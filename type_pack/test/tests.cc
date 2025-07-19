@@ -202,6 +202,9 @@ TEST_CASE("`TypePack` Reverse") {
 template<size_t>
 struct Foo {};
 
-//TEST_CASE("`TypePack` SubPack") {
-//  STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<1, 2>{} == TypePack<Foo<1>, Foo<2>>{});
-//}
+TEST_CASE("`TypePack` SubPack") {
+  STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<0, 4>{} == TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>{});
+
+  STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<1, 3>{} == TypePack<Foo<1>, Foo<2>>{});
+  STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<1, 2>{} == TypePack<Foo<1>>{});
+}
