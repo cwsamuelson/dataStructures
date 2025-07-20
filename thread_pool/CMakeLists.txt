@@ -8,9 +8,10 @@ set(HEADERS
   header/thread_pool.hh
 )
 set(SOURCES
+  source/thread_pool.cc
 )
 
-common_library(${PROJECT_NAME} INTERFACE
+common_library(${PROJECT_NAME}
   ${HEADERS}
   ${SOURCES}
 )
@@ -24,7 +25,7 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  INTERFACE
+  PUBLIC
   ${BASE_PROJECT}_core
   error_support::error_support
 )
