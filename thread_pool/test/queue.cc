@@ -11,7 +11,7 @@
 
 using namespace flp;
 
-TEST_CASE("Lock-free queue") {
+TEST_CASE("`ThreadPoll::Queue` thread safety") {
   Queue<int> queue;
   const size_t thread_count{1};
   const size_t window_size{10};
@@ -101,4 +101,29 @@ TEST_CASE("Lock-free queue") {
   CHECK(result_count <= window_size * thread_count);
 
   CHECK(result_count == std::accumulate(production_counts.begin(), production_counts.end(), 0));
+}
+
+TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
+  std::mt19937 generator(Catch::rngSeed());
+  std::uniform_int_distribution distribution(1, 10000);
+
+  std::vector<size_t> canonical;
+
+  for (size_t i{}; i < distribution(generator); ++i) {
+    canonical.push_back(distribution(generator));
+  }
+
+  Queue<size_t> queue;
+
+  CHECK(queue.empty());
+
+  for (const auto value : canonical) {
+    queue.push(value);
+
+    CHECK(not queue.empty());
+  }
+
+  for (const auto value : canonical) {
+    CHECK(value == queue.pop());
+  }
 }
