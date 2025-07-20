@@ -42,6 +42,7 @@ add_subdirectory(sparse_set)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
 add_subdirectory(thread_pool)
+add_subdirectory(tribool)
 add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
@@ -93,6 +94,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
   ${PROJECT_NAME}_thread_pool
+  ${PROJECT_NAME}_tribool
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
