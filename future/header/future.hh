@@ -44,7 +44,7 @@ struct SharedStateBase {
 
   SharedStateBase(SharedStateBase&& other) noexcept
   requires std::move_constructible<Type> {
-    buffer.get() = std::move(other.get());
+    buffer.get() = std::move(other.buffer.get());
     exception = std::move(other.exception);
     initialized = true;
     other.initialized = false;
@@ -52,7 +52,7 @@ struct SharedStateBase {
 
   SharedStateBase& operator=(SharedStateBase&& other) noexcept
   requires std::move_constructible<Type> {
-    buffer.get() = std::move(other.get());
+    buffer.get() = std::move(other.buffer.get());
     exception = std::move(other.exception);
     initialized = true;
     other.initialized = false;
