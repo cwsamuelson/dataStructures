@@ -13,9 +13,8 @@ using namespace flp;
 
 TEST_CASE("`ThreadPoll::Queue` thread safety") {
   Queue<int> queue;
-  const size_t thread_count{1};
-  const size_t window_size{10};
-  //const size_t window_size{100000};
+  const size_t thread_count{3};
+  const size_t window_size{100000};
   std::latch latch(thread_count);
 
   CAPTURE(thread_count, window_size);
@@ -39,10 +38,7 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
     latch.arrive_and_wait();
 
     while (not stop_token.stop_requested() and counter < (window_size * (ID + 1))) {
-      if (queue.empty()) {
-        queue.push(counter++);
-        ++produced;
-      } else if (tf_dist(generator)) {
+      if (queue.empty() and tf_dist(generator)) {
         queue.push(counter++);
         ++produced;
       } else {
@@ -58,11 +54,9 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
   }
 
   using namespace std::chrono_literals;
-  std::this_thread::sleep_for(10s);
+  std::this_thread::sleep_for(3s);
 
-  while (not threads.empty()) {
-    threads.pop_back();
-  }
+  threads.clear();
 
   std::vector<size_t> remainder;
   while (not queue.empty()) {
@@ -126,4 +120,46 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
   for (const auto value : canonical) {
     CHECK(value == queue.pop());
   }
+
+  // Just exercising some basic alternating patterns
+  for (size_t cycle_length{1}; cycle_length < 6; ++cycle_length) {
+    for (size_t k{}; k < 3; ++k) {
+      for (size_t i{}; i < cycle_length; ++i) {
+        queue.push(i);
+      }
+      for (size_t i{}; i < cycle_length; ++i) {
+        CHECK(queue.pop() == i);
+      }
+    }
+  }
+}
+
+// attempting to create a situation that would create the 'ABA' problem.
+TEST_CASE("`ThreadPoll::Queue` ABA") {
+  Queue<size_t> queue;
+  const size_t thread_count{3};
+  const size_t window_size{100000};
+  std::latch latch(thread_count);
+
+  auto worker = [](std::stop_token stop_token) {
+    latch.arrive_and_wait();
+
+    while (not stop_token.stop_requested()) {
+      // this is the basic sequence that should cause ABA
+      //auto keep = queue.pop();
+      ///*auto drop = */queue.pop();
+      //queue.push(std::move(keep));
+    }
+  };
+
+  std::vector<std::jthread> threads;
+
+  for (size_t i{}; i < thread_count; ++i) {
+    threads.emplace_back(worker, i);
+  }
+
+  using namespace std::chrono_literals;
+  std::this_thread::sleep_for(3s);
+
+  threads.clear();
 }
