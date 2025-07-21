@@ -3,20 +3,35 @@
 #include <error_help.hh>
 
 #include <atomic>
+#include <optional>
 
 namespace flp {
 
 template<typename Type>
 struct Queue {
+  struct Node;
+  struct Pointer {
+    Node* pointer = nullptr;
+    // This participates in the solution to the ABA problem
+    size_t version{};
+
+    friend auto operator<=>(const Pointer&, const Pointer&) noexcept = default;
+  };
+
   struct Node {
-    // Value does not need to be atomic, so long as `pop` is the only means to
-    //  retrieve the value.
-    // In general, allow the user to determine if atomicity is necessary by
-    //  specifying `Type` to be `std::atomic<Type>`
     Type value;
 
-    std::atomic<Node*> next = nullptr;
+    std::atomic<Pointer> next;
   };
+
+  // I'm not sure the dummy is necessary?
+  // isn't it the same as nullptr?
+  // unless the `dummy.version` value is used..
+  Queue() {
+    auto* dummy = new Node;
+    head.store({.pointer = dummy});
+    tail.store({.pointer = dummy});
+  }
 
   ~Queue() {
     while (not empty()) {
@@ -24,51 +39,68 @@ struct Queue {
     }
   }
 
-  Type pop() {
-    Node* old_head = head.load();
-    Node* new_head = nullptr;
+  void push(const Type& value) {
+    auto* new_node = new Node{value};
+    Pointer t;
+    Pointer next;
 
-    do {
-      if (old_head != nullptr) {
-        new_head = old_head->next.load();
+    // loop
+    while (true) {
+      t = tail.load();
+      next = tail.load().pointer->next.load();
+
+      if (t == tail.load()) {
+        if (next.pointer == nullptr) {
+          if (t.pointer->next.compare_exchange_weak(next, {new_node, next.version + 1})) {
+            break;
+          }
+        } else {
+          tail.compare_exchange_weak(t, {next.pointer, t.version + 1});
+        }
       }
-    } while (not head.compare_exchange_strong(old_head, new_head));
-
-    VERIFY(old_head != nullptr, "Nothing to pop");
-
-    const auto result = std::move(old_head->value);
-
-    if (head.load() == nullptr) {
-      tail.store(head.load());
     }
 
-    delete old_head;
-    return result;
+    tail.compare_exchange_weak(t, {new_node, t.version + 1});
   }
 
-  void push(const Type& value) {
-    Node* old_tail = tail.load();
-    auto* const new_tail = new Node(value);
+  std::optional<Type> pop() {
+    Pointer h;
+    Pointer t;
+    Pointer next;
+    std::optional<Type> result;
 
-    while (not tail.compare_exchange_strong(old_tail, new_tail))
-    {}
+    while (true) {
+      h = head.load();
+      t = tail.load();
+      next = h.pointer->next.load();
 
-    if (old_tail == nullptr) {
-      // if `old_tail` stops being nullptr, somebody else changed it...
-      while (not head.compare_exchange_strong(old_tail, new_tail) and old_tail == nullptr)
-      {}
-    } else {
-      old_tail->next = new_tail;
+      if (h == head.load()) {
+        if (h.pointer == t.pointer) {
+          if (next.pointer == nullptr) {
+            return std::nullopt;
+          }
+          tail.compare_exchange_weak(t, {next.pointer, tail.load().version + 1});
+        } else {
+          result = next.pointer->value;
+          if (head.compare_exchange_weak(h, {next.pointer, h.version + 1})) {
+            break;
+          }
+        }
+      }
     }
+
+    delete h.pointer;
+
+    return result;
   }
 
   [[nodiscard]]
   bool empty() const noexcept {
-    return head == nullptr and tail == nullptr;
+    return head.load().pointer == nullptr and tail.load().pointer == nullptr;
   }
 
-  std::atomic<Node*> head = nullptr;
-  std::atomic<Node*> tail = nullptr;
+  std::atomic<Pointer> head;
+  std::atomic<Pointer> tail;
 };
 
 }

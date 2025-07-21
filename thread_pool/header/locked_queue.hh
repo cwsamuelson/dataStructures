@@ -15,9 +15,17 @@ struct LockedQueue {
   };
 
   LockedQueue() {
-    auto* node = new Node;
-    head = node;
-    tail = node;
+    auto* dummy = new Node;
+    head = dummy;
+    tail = dummy;
+  }
+
+  ~LockedQueue() {
+    while (not empty()) {
+      pop();
+    }
+
+    delete head;
   }
 
   void push(const Type& value) {
@@ -44,6 +52,11 @@ struct LockedQueue {
     delete node;
 
     return result;
+  }
+
+  [[nodiscard]]
+  bool empty() const noexcept {
+    return head == tail;
   }
 
   Node* head = nullptr;

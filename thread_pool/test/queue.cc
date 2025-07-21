@@ -42,7 +42,10 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
         queue.push(counter++);
         ++produced;
       } else {
-        results.push_back(queue.pop());
+        auto opt = queue.pop();
+        if (opt.has_value()) {
+          results.push_back(opt.value());
+        }
       }
     }
   };
@@ -60,7 +63,7 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
 
   std::vector<size_t> remainder;
   while (not queue.empty()) {
-    remainder.push_back(queue.pop());
+    remainder.push_back(queue.pop().value());
   }
 
   result_lists.emplace_back(std::move(remainder));
@@ -118,7 +121,7 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
   }
 
   for (const auto value : canonical) {
-    CHECK(value == queue.pop());
+    CHECK(value == queue.pop().value());
   }
 
   // Just exercising some basic alternating patterns
@@ -128,7 +131,7 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
         queue.push(i);
       }
       for (size_t i{}; i < cycle_length; ++i) {
-        CHECK(queue.pop() == i);
+        CHECK(queue.pop().value() == i);
       }
     }
   }
@@ -141,13 +144,13 @@ TEST_CASE("`ThreadPoll::Queue` ABA") {
   const size_t window_size{100000};
   std::latch latch(thread_count);
 
-  auto worker = [](std::stop_token stop_token) {
+  auto worker = [&latch](std::stop_token stop_token) {
     latch.arrive_and_wait();
 
     while (not stop_token.stop_requested()) {
       // this is the basic sequence that should cause ABA
-      //auto keep = queue.pop();
-      ///*auto drop = */queue.pop();
+      //auto keep = queue.pop().value();
+      ///*auto drop = */queue.pop().value();
       //queue.push(std::move(keep));
     }
   };
@@ -155,7 +158,7 @@ TEST_CASE("`ThreadPoll::Queue` ABA") {
   std::vector<std::jthread> threads;
 
   for (size_t i{}; i < thread_count; ++i) {
-    threads.emplace_back(worker, i);
+    threads.emplace_back(worker);
   }
 
   using namespace std::chrono_literals;

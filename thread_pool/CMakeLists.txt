@@ -5,6 +5,8 @@ project(${BASE_PROJECT}_thread_pool LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/locked_queue.hh
+  header/queue.hh
   header/thread_pool.hh
 )
 set(SOURCES
@@ -26,6 +28,8 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
+  atomic
+
   ${BASE_PROJECT}_core
   error_support::error_support
 )
