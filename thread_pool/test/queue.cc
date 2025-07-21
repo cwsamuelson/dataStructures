@@ -113,6 +113,7 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
   Queue<size_t> queue;
 
   CHECK(queue.empty());
+  CHECK(not queue.pop().has_value());
 
   for (const auto value : canonical) {
     queue.push(value);
@@ -123,6 +124,9 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
   for (const auto value : canonical) {
     CHECK(value == queue.pop().value());
   }
+
+  CHECK(queue.empty());
+  CHECK(not queue.pop().has_value());
 
   // Just exercising some basic alternating patterns
   for (size_t cycle_length{1}; cycle_length < 6; ++cycle_length) {
@@ -135,6 +139,9 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
       }
     }
   }
+
+  CHECK(queue.empty());
+  CHECK(not queue.pop().has_value());
 }
 
 // attempting to create a situation that would create the 'ABA' problem.
