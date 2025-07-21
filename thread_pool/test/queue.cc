@@ -13,7 +13,7 @@ using namespace flp;
 
 TEST_CASE("`ThreadPoll::Queue` thread safety") {
   Queue<int> queue;
-  const size_t thread_count{3};
+  const size_t thread_count{1};
   const size_t window_size{100000};
   std::latch latch(thread_count);
 

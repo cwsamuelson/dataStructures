@@ -96,7 +96,7 @@ struct Queue {
 
   [[nodiscard]]
   bool empty() const noexcept {
-    return head.load().pointer == nullptr and tail.load().pointer == nullptr;
+    return head.load().pointer == tail.load().pointer;
   }
 
   std::atomic<Pointer> head;
