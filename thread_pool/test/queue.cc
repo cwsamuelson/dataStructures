@@ -11,7 +11,7 @@
 
 using namespace flp;
 
-TEST_CASE("`ThreadPoll::Queue` thread safety") {
+TEST_CASE("`ThreadPool::Queue` thread safety") {
   Queue<int> queue;
   const size_t thread_count{20};
   const size_t window_size{100000};
@@ -100,7 +100,7 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
   CHECK(result_count == std::accumulate(production_counts.begin(), production_counts.end(), 0));
 }
 
-TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
+TEST_CASE("`ThreadPool::Queue` behaves as queue") {
   std::mt19937 generator(Catch::rngSeed());
   std::uniform_int_distribution distribution(1, 10000);
 
@@ -145,7 +145,7 @@ TEST_CASE("`ThreadPoll::Queue` behaves as queue") {
 }
 
 // attempting to create a situation that would create the 'ABA' problem.
-TEST_CASE("`ThreadPoll::Queue` ABA") {
+TEST_CASE("`ThreadPool::Queue` ABA") {
   Queue<size_t> queue;
   const size_t thread_count{20};
   const size_t window_size{100000};

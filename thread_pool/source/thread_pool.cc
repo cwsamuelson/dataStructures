@@ -4,17 +4,32 @@
 
 namespace flp {
 
-ThreadPool::ThreadPool(const size_t thread_count) {
+ThreadPool::ThreadPool(const size_t tcount)
+  : thread_count(tcount) {
   threads.reserve(thread_count);
+}
 
+void ThreadPool::run() {
   for (size_t i{}; i < thread_count; ++i) {
-    threads.emplace_back(std::bind_front(&ThreadPool::run, this));
+    threads.emplace_back(std::bind_front(&ThreadPool::run_thread, this));
   }
 }
 
-void ThreadPool::run(std::stop_token stop_token) {
+void ThreadPool::run_thread(std::stop_token stop_token) {
   while (not stop_token.stop_requested()) {
+    try {
+      work.pop().value()();
+    } catch (...) {
+    }
   }
+}
+
+void ThreadPool::stop() {
+  for (auto& thread : threads) {
+    thread.request_stop();
+  }
+
+  //work.clear();
 }
 
 }

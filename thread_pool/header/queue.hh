@@ -34,9 +34,7 @@ struct Queue {
   }
 
   ~Queue() {
-    while (not empty()) {
-      pop();
-    }
+    clear();
   }
 
   void push(const Type& value) {
@@ -97,6 +95,12 @@ struct Queue {
   [[nodiscard]]
   bool empty() const noexcept {
     return head.load().pointer == tail.load().pointer;
+  }
+
+  void clear() {
+    while (not empty()) {
+      pop();
+    }
   }
 
   std::atomic<Pointer> head;
