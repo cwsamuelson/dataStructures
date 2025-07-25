@@ -49,8 +49,8 @@ TEST_CASE("Dimensions") {
   }
 
   SECTION("Single dimensions") {
-    Dimension<TestDimension1 { 1 }> dimension1;
-    Dimension<>                  dimension2;
+    constexpr Dimension<TestDimension1 { 1 }> dimension1;
+    constexpr Dimension<>                  dimension2;
 
     STATIC_CHECK(dimension1 * dimension2 == dimension1);
     STATIC_CHECK(dimension2 * dimension1 == dimension1);

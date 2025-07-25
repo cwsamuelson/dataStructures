@@ -1,5 +1,7 @@
 #pragma once
 
+#include <compare>
+
 namespace flp {
 
 struct TriBool {

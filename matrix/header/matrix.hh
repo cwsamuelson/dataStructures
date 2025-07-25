@@ -6,6 +6,7 @@
 #include <core/concepts.hh>
 
 #include <array>
+#include <functional>
 #include <limits>
 #include <vector>
 

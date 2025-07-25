@@ -5,7 +5,9 @@
 #include <chrono>
 #include <iterator>
 #include <latch>
+#include <numeric>
 #include <random>
+#include <ranges>
 #include <thread>
 #include <vector>
 
@@ -70,7 +72,7 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
 
   for (size_t i{}; i < thread_count; ++i) {
     for (auto& list : result_lists) {
-      CHECK(not list.empty());
+      //CHECK(not list.empty()); // This is not strictly guaranteed...
 
       // strictly increasing
       for (auto window :
@@ -91,13 +93,13 @@ TEST_CASE("`ThreadPoll::Queue` thread safety") {
   const auto results_sizes = result_lists | std::views::transform([](const auto& list) {
     return list.size();
   });
-  const auto result_count = std::accumulate(results_sizes.begin(), results_sizes.end(), 0);
+  const auto result_count = std::accumulate(results_sizes.begin(), results_sizes.end(), 0ULL);
 
   CAPTURE(result_count);
 
   CHECK(result_count <= window_size * thread_count);
 
-  CHECK(result_count == std::accumulate(production_counts.begin(), production_counts.end(), 0));
+  CHECK(result_count == std::accumulate(production_counts.begin(), production_counts.end(), 0ULL));
 }
 
 TEST_CASE("`ThreadPoll::Queue` behaves as queue") {

@@ -14,6 +14,10 @@ ThreadPool::ThreadPool(const size_t thread_count) {
 
 void ThreadPool::run(std::stop_token stop_token) {
   while (not stop_token.stop_requested()) {
+    auto work = queue.pop();
+    if (work.has_value()) {
+      work.value()();
+    }
   }
 }
 

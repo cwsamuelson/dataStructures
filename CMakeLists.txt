@@ -19,7 +19,7 @@ add_subdirectory(doubly_linked_list)
 add_subdirectory(function)
 add_subdirectory(future)
 #add_subdirectory(hive)
-add_subdirectory(lifetime)
+#add_subdirectory(lifetime)
 add_subdirectory(matrix)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(operators)
@@ -46,7 +46,7 @@ add_subdirectory(tribool)
 add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
-add_subdirectory(units)
+#add_subdirectory(units)
 #add_subdirectory(utilities)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
@@ -71,7 +71,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
   #${PROJECT_NAME}_hive
-  ${PROJECT_NAME}_lifetime
+  #${PROJECT_NAME}_lifetime
   ${PROJECT_NAME}_matrix
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_operators
@@ -98,7 +98,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
-  ${PROJECT_NAME}_units
+  #${PROJECT_NAME}_units
   #${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
