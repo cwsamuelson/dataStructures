@@ -31,6 +31,4 @@ TEST_CASE("`ThreadPool`") {
   x = 0;
   pool.post([&x]{ x = 42; });
   CHECK(x == 0);
-
-  pool.
 }

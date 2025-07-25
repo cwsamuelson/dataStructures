@@ -13,18 +13,18 @@ struct ThreadPool {
 
   template<typename Function>
   void post(Function&& function) {
-    work.push(std::forward<Function>(function));
+    queue.push(std::forward<Function>(function));
   }
 
   void stop();
 
+  void run();
+
 private:
-  void run(std::stop_token stop_token);
 
   void run_thread(std::stop_token stop_token);
 
   size_t thread_count{};
-  flp::Queue<std::function<void()>> work;
   std::vector<std::jthread> threads;
   Queue<std::function<void()>> queue;
 };

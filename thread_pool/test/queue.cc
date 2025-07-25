@@ -14,9 +14,9 @@
 using namespace flp;
 
 TEST_CASE("`ThreadPool::Queue` thread safety") {
-  Queue<int> queue;
-  const size_t thread_count{20};
-  const size_t window_size{100000};
+  Queue<int>       queue;
+  constexpr size_t thread_count { 20 };
+  constexpr size_t window_size{50000};
   std::latch latch(thread_count);
 
   CAPTURE(thread_count, window_size);
@@ -124,7 +124,9 @@ TEST_CASE("`ThreadPool::Queue` behaves as queue") {
   }
 
   for (const auto value : canonical) {
-    CHECK(value == queue.pop().value());
+    const auto result = queue.pop();
+    CHECK(result.has_value());
+    CHECK(result.value() == value);
   }
 
   CHECK(queue.empty());

@@ -28,8 +28,6 @@ void ThreadPool::stop() {
   for (auto& thread : threads) {
     thread.request_stop();
   }
-
-  //work.clear();
 }
 
 }
