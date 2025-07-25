@@ -27,4 +27,10 @@ TEST_CASE("`ThreadPool`") {
   latch.wait();
 
   CHECK(x == 42);
+
+  x = 0;
+  pool.post([&x]{ x = 42; });
+  CHECK(x == 0);
+
+  pool.
 }

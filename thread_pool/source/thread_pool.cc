@@ -17,9 +17,9 @@ void ThreadPool::run() {
 
 void ThreadPool::run_thread(std::stop_token stop_token) {
   while (not stop_token.stop_requested()) {
-    try {
-      work.pop().value()();
-    } catch (...) {
+    auto work = queue.pop();
+    if (work.has_value()) {
+      work.value()();
     }
   }
 }

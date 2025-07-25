@@ -4,7 +4,9 @@
 
 #include <concepts>
 #include <filesystem>
+#include <functional>
 #include <string>
+#include <vector>
 
 // In addition to my own ideas for how configuration should be handled, this resource tries to do some similar things:
 // https://github.com/doom/nectarine
@@ -16,7 +18,7 @@ namespace Providers {
 
 template<typename Type, typename Target>
 concept Provider = requires(Type value) {
-  {value()} -> std::same_as<Target>;
+  {std::invoke(value)} -> std::same_as<Target>;
 };
 
 template<typename Target>
@@ -50,6 +52,9 @@ struct Yaml {
 
 }
 
-struct Configuration {};
+template<typename Config>
+struct Configuration {
+  std::vector<std::function<Config()>> providers;
+};
 
 } // namespace flp

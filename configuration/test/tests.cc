@@ -4,5 +4,8 @@
 
 using namespace flp;
 
+struct Config {};
+
 TEST_CASE("configuration") {
+  Configuration<Config> configuration;
 }

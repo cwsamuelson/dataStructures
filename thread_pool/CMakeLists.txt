@@ -28,11 +28,17 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-  atomic
 
   ${BASE_PROJECT}_core
   error_support::error_support
 )
+
+if (NOT WIN32)
+  target_link_libraries(${PROJECT_NAME}
+    PUBLIC
+    atomic
+  )
+endif ()
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 

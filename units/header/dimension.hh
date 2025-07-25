@@ -75,7 +75,7 @@ struct DimensionImpl {
   }
 
   template<auto... OtherDimensions>
-  constexpr auto operator*(const DimensionImpl<OtherDimensions...>& other) noexcept {
+  constexpr auto operator*(const DimensionImpl<OtherDimensions...>& other) const noexcept {
     constexpr auto f = []<typename Dim>(const Dim& Dimension, const DimensionImpl<OtherDimensions...>&) {
       if constexpr (DimensionPack<OtherDimensions...>::template Has<Dim>) {
         return Dim{Dimension + DimensionPack<OtherDimensions...>::template Select<Dim>};
@@ -96,7 +96,7 @@ struct DimensionImpl {
   }
 
   template<auto... OtherDimensions>
-  constexpr auto operator/(const DimensionImpl<OtherDimensions...>& other) noexcept {
+  constexpr auto operator/(const DimensionImpl<OtherDimensions...>& other) const noexcept {
     constexpr auto f = []<typename Dim>(const Dim& dimension, const DimensionImpl<OtherDimensions...>&) {
       if constexpr (DimensionPack<OtherDimensions...>::template Has<Dim>) {
         return Dim{dimension - DimensionPack<OtherDimensions...>::template Select<Dim>};
