@@ -11,11 +11,11 @@ TEST_CASE("`ThreadPool`") {
   std::latch latch(1);
 
   int x{};
-  pool.execute([&x]{
+  pool.post([&x]{
     x = 42;
   });
 
-  pool.execute([&pool, &latch]{
+  pool.post([&pool, &latch]{
     pool.stop();
     latch.count_down();
   });

@@ -7,6 +7,7 @@
 #include <queue>
 
 namespace flp {
+
 template<typename Type, typename Product>
 concept Producer = requires (Type t, Product p) {
   {t.push(p)} -> std::convertible_to<bool>;
@@ -286,7 +287,7 @@ template<typename Product,
 std::pair<PSpawner, CSpawner> create_mpmc(Args&& ...args) {
   auto store = std::make_shared<SType>(std::forward<Args>(args)...);
 
-  return {PSpawner{store}, CSpawner{store}};
+  return { PSpawner{store}, CSpawner{store} };
 }
 
 template<typename Product,
@@ -298,4 +299,5 @@ std::pair<PType, CType> create_spsc(Args&& ...args) {
   auto [producer_spawner, consumer_spawner] = create_mpmc<Product, SType>(std::forward<Args>(args)...);
   return std::make_pair(producer_spawner.spawn(), consumer_spawner.spawn());
 }
+
 }

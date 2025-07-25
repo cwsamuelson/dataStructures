@@ -12,7 +12,7 @@ struct ThreadPool {
   ThreadPool(size_t tcount);
 
   template<typename Function>
-  void execute(Function&& function) {
+  void post(Function&& function) {
     work.push(std::forward<Function>(function));
   }
 
