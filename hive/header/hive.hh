@@ -2,10 +2,9 @@
 
 #include <aligned_buffer.hh>
 
-#include <array>
+#include <cstdint>
 #include <list>
-#include <numeric>
-#include <ranges>
+#include <vector>
 
 namespace flp {
 
@@ -29,214 +28,100 @@ namespace flp {
 // and this will be stored in a container next to the data
 // this helps preserve alignment and contiguity of the data
 
-template<typename Type, std::size_t ChunkSize = 4096>
+template<typename Type>
 struct Hive {
-  struct Chunk {
-    constexpr static std::size_t ObjectCount = ChunkSize / sizeof(Type);
-
-    alignas(ChunkSize) std::array<AlignedTypeBuffer<Type>, ObjectCount> buffer {};
-    std::array<bool, ObjectCount> validity_flags {};
-    size_t                        valid_count {};
-
-    constexpr static size_t MemoryLoss = ChunkSize - sizeof(buffer);
+  struct Block {
+    std::vector<AlignedTypeBuffer<Type>> data;
+    // so long as a block holds less than 255 elements, a skip value will never need to be larger than `uint8_t`
+    std::vector<uint8_t> skip_list;
+    size_t size = 0;
   };
 
-  template<typename T>
-  struct BaseIterator {
-    std::list<Chunk>::iterator chunk_iterator;
-    size_t                     buffer_index;
+  struct Iterator {
+    typename decltype(std::declval<Block>().skip_list)::iterator skip_it;
+    typename decltype(std::declval<Block>().data)::iterator data_it;
 
-    friend bool operator==(const BaseIterator&, const BaseIterator&) = default;
-    friend bool operator!=(const BaseIterator&, const BaseIterator&) = default;
-
-    BaseIterator operator++() {
-      if (buffer_index == Chunk::ObjectCount) {
-        ++chunk_iterator;
-        buffer_index = 0;
-      } else {
-        ++buffer_index;
-      }
-
-      while ((buffer_index + 1) < Chunk::ObjectCount and not chunk_iterator->validity_flags[buffer_index]) {
-        ++buffer_index;
-      }
-      return { chunk_iterator, buffer_index };
+    decltype(auto) operator*(this auto&& self) noexcept {
+      return self.data_it->get();
     }
-    BaseIterator operator--() {
-      if (buffer_index == 0) {
-        --chunk_iterator;
-        buffer_index = Chunk::ObjectCount - 1;
-      } else {
-        --buffer_index;
-      }
-
-      while (buffer_index > 0 and not chunk_iterator->validity_flags[buffer_index]) {
-        --buffer_index;
-      }
-      return { chunk_iterator, buffer_index };
-    }
-    decltype(auto) operator*() const {
-      return chunk_iterator->buffer[buffer_index].get();
-    }
-    decltype(auto) operator*() {
-      return chunk_iterator->buffer[buffer_index].get();
+    decltype(auto) operator->(this auto&& self) noexcept {
+      return &self.data_it->get();
     }
   };
 
-  using iterator       = BaseIterator<Type>;
-  using const_iterator = BaseIterator</*const*/ Type>;
+  constexpr static float block_growth_factor = 1.4F;
+  size_t block_size = 10;
+  std::list<Block> blocks;
 
-  // list helps preserve iterators
-  // allocations are done in chunks to assign with memory management
-  std::list<Chunk> chunks;
-  // skipfield for better performance
+  void new_block() {
+    auto& block = blocks.emplace_back();
 
-  // rule of 0? 🤞🏻
-  /*Hive()                = default;
-  Hive(const Hive&)     = default;
-  Hive(Hive&&) noexcept = default;
+    block.data.resize(block_size);
+    block.skip_list.resize(block_size);
 
-  Hive& operator=(const Hive&)     = default;
-  Hive& operator=(Hive&&) noexcept = default;
+    block.skip_list.at(0) = block_size;
+    block.skip_list.at(block_size - 1) = block_size;
 
-  ~Hive() = default;*/
+    block_size = static_cast<size_t>(block_size * block_growth_factor);
+  }
 
-  // iterators
-  iterator begin() noexcept {
-    auto   iter  = chunks.begin();
-    size_t index = 0;
+  template<typename ...Args>
+  Iterator emplace(Args&&...);
 
-    while (iter != chunks.end() and index < Chunk::ObjectCount and not iter->validity_flags[index]) {
-      ++index;
+  Iterator insert(const Type& value) {
+    auto block_iter = blocks.begin();
+
+    // find a block with space
+    while (block_iter->size == block_iter->data.size() and block_iter != blocks.end()) {
+      ++block_iter;
     }
 
-    return { iter, index };
-  }
-  const_iterator begin() const noexcept {
-    auto   iter  = chunks.begin();
-    size_t index = 0;
-
-    while (index < Chunk::ObjectCount and not iter->validity_flags[index]) {
-      ++index;
+    // allocate if necessary
+    if (block_iter == blocks.end()) {
+      new_block();
+      block_iter = blocks.end();
+      --block_iter;
     }
 
-    return { iter, index };
+    auto data_it = block_iter->data.begin();
+    auto skip_it = block_iter->skip_list.begin();
+
+    while (*skip_it == 0) {
+      ++data_it;
+      ++skip_it;
+    }
+
+    data_it->construct(value);
+    const auto current_block_size = *skip_it;
+    const auto new_block_size = current_block_size - 1;
+
+    const auto new_block_begin = skip_it + 1;
+    const auto new_block_end = (skip_it + current_block_size);
+
+    *skip_it = 0;
+    *new_block_begin = new_block_size;
+    *new_block_end = new_block_size;
+
+    return {skip_it, data_it};
   }
-  // where, precisely, does end point in this case?
-  iterator end() noexcept {
-    return { chunks.end(), 0 };
+  Iterator insert(Type&&);
+
+  void erase(Iterator);
+  void erase(Iterator, Iterator);
+
+  void splice(Hive&& other) {
+    blocks.splice(blocks.end(), other.blocks);
   }
-  const_iterator end() const noexcept {
-    return { chunks.end(), 0 };
-  }
 
-  const_iterator cbegin() const noexcept;
-  const_iterator cend() const noexcept;
-
-  // reverse_iterator       rbegin() noexcept;
-  // const_reverse_iterator rbegin() const noexcept;
-  // reverse_iterator       rend() noexcept;
-  // const_reverse_iterator rend() const noexcept;
-
-  // const_reverse_iterator crbegin() const noexcept;
-  // const_reverse_iterator crend() const noexcept;
-
-  // capacity
   [[nodiscard]]
   bool empty() const noexcept {
-    return chunks.empty();
+    return blocks.empty();
   }
   [[nodiscard]]
-  size_t size() const noexcept {
-    auto valid_range = std::views::transform(chunks, [](const auto& chunk) {
-      return chunk.valid_count;
-    });
-    return std::accumulate(std::begin(valid_range), std::end(valid_range), 0ULL);
-  }
-  [[nodiscard]]
-  size_t capacity() const noexcept {
-    return chunks.size() * Chunk::ObjectCount;
-  }
-
-  // modify
-  template<typename... Args>
-  iterator emplace(Args&&... args) {
-    // I don't think this meets the expected performance characteristics
-    auto chunk_cursor = chunks.begin();
-
-    while (chunk_cursor != chunks.end() and chunk_cursor->valid_count < Chunk::ObjectCount) {
-      ++chunk_cursor;
-    }
-
-    auto& chunk = *chunk_cursor;
-    for (auto& [buffer, flag] : std::views::zip(chunk.buffer, chunk.validity_flags)) {
-      if (not flag) {
-        buffer.construct(std::forward<Args>(args)...);
-        flag = true;
-        break;
-      }
-    }
-  }
-
-  iterator insert(const Type& value) {
-    return insert(1, value);
-  }
-  iterator insert(size_t count, const Type& value) {
-    // I don't think this meets the expected performance characteristics
-    auto   chunk_cursor = chunks.begin();
-    size_t final_insert_index {};
-
-    while (count > 0) {
-      while (chunk_cursor != chunks.end() and chunk_cursor->valid_count == Chunk::ObjectCount) {
-        ++chunk_cursor;
-      }
-
-      if (chunk_cursor == chunks.end()) {
-        chunk_cursor = chunks.emplace(chunks.end());
-      }
-
-      auto& chunk         = *chunk_cursor;
-      auto  chunk_range   = std::views::zip(chunk.buffer, chunk.validity_flags);
-      auto  buffer_cursor = chunk_range.begin();
-      while (buffer_cursor != chunk_range.end() and count > 0 and chunk.valid_count < Chunk::ObjectCount) {
-        auto [buffer, flag] = *buffer_cursor;
-        if (not flag) {
-          buffer.construct(value);
-          flag = true;
-          ++chunk.valid_count;
-          --count;
-          final_insert_index = buffer_cursor - chunk_range.begin();
-        }
-        ++buffer_cursor;
-      }
-    }
-
-    return { chunk_cursor, final_insert_index };
-  }
-
-  iterator erase(const_iterator position) {
-    position.chunk_iterator->buffer[position.buffer_index].destruct();
-    position.chunk_iterator->validity_flags[position.buffer_index] = false;
-    --position.chunk_iterator->valid_count;
-
-    if (position.chunk_iterator->valid_count == 0) {
-      chunks.erase(position.chunk_iterator);
-    }
-
-    return {};
-  }
-
-  void swap(Hive& other) noexcept {
-    std::swap(chunks, other.chunks);
-  }
-
-  void clear() noexcept {
-    auto iter = begin();
-    while (iter != end()) {
-      auto current = iter;
-      ++iter;
-      erase(current);
-    }
+  size_t size() const noexcept;
+  void clear() {
+    // first must destruct all objects
+    blocks.clear();
   }
 };
 

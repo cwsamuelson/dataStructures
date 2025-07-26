@@ -18,7 +18,7 @@ add_subdirectory(doubly_linked_list)
 #add_subdirectory(equation)
 add_subdirectory(function)
 add_subdirectory(future)
-#add_subdirectory(hive)
+add_subdirectory(hive)
 #add_subdirectory(lifetime)
 add_subdirectory(matrix)
 #add_subdirectory(normal_iterator)
@@ -70,7 +70,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_equation
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
-  #${PROJECT_NAME}_hive
+  ${PROJECT_NAME}_hive
   #${PROJECT_NAME}_lifetime
   ${PROJECT_NAME}_matrix
   #${PROJECT_NAME}_normal_iterator

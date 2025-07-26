@@ -4,87 +4,62 @@
 
 using namespace flp;
 
-template<size_t ObjectSize>
-struct S {
-  char A[ObjectSize];
+struct RAIITest {
+  bool default_contsructor = false;
+  bool copy_constructor = false;
+  bool move_constructor = false;
+  bool copy_assignment = false;
+  bool move_assignment = false;
+  bool destructor = false;
+  bool with_args = false;
+
+  template<typename ...Args>
+  RAIITest(Args&& ...args)
+    : with_args(true)
+  {}
+  RAIITest()
+    : default_contsructor(true)
+  {}
+  RAIITest(const RAIITest&)
+    : copy_constructor(true)
+  {}
+  RAIITest(RAIITest&&)
+    : move_constructor(true)
+  {}
+
+  RAIITest& operator=(const RAIITest&) {
+    copy_assignment = true;
+    return *this;
+  }
+  RAIITest& operator=(RAIITest&&) {
+    move_assignment = true;
+    return *this;
+  }
+
+  ~RAIITest() {
+    destructor = true;
+  }
 };
 
 TEST_CASE("Hive") {
-  STATIC_CHECK(Hive<S<1>>::Chunk::MemoryLoss == 0);
-  STATIC_CHECK(Hive<S<2>>::Chunk::MemoryLoss == 0);
-  STATIC_CHECK(Hive<S<3>>::Chunk::MemoryLoss == 1);
-  STATIC_CHECK(Hive<S<4>>::Chunk::MemoryLoss == 0);
-  STATIC_CHECK(Hive<S<5>>::Chunk::MemoryLoss == 1);
+  Hive<RAIITest> hive;
 
-  SECTION("Basic insert/remove") {
-    Hive<int> hive;
+  CHECK(hive.empty());
 
-    CHECK(hive.capacity() == 0);
-    CHECK(hive.size() == 0);
-    CHECK(hive.empty());
-    CHECK(hive.begin() == hive.end());
+  const RAIITest new_value;
+  const auto iter = hive.insert(new_value);
+  CHECK(iter->copy_constructor);
+  CHECK(not iter->default_contsructor);
+  CHECK(not iter->move_constructor);
+  CHECK(not iter->copy_assignment);
+  CHECK(not iter->move_assignment);
+  CHECK(not iter->destructor);
+  CHECK(not iter->with_args);
 
-    hive.insert(0);
-    CHECK(hive.capacity() == 1024);
-    CHECK(hive.size() == 1);
-    CHECK(not hive.empty());
-    CHECK(hive.begin() != hive.end());
+  CHECK(not hive.empty());
 
-    auto iter = hive.insert(1);
-    CHECK(hive.capacity() >= 1024);
-    CHECK(hive.size() == 2);
-    CHECK(not hive.empty());
-
-    hive.erase(iter);
-    CHECK(hive.capacity() == 1024);
-    CHECK(hive.size() == 1);
-    CHECK(not hive.empty());
-
-    hive.clear();
-    CHECK(hive.capacity() == 0);
-    CHECK(hive.size() == 0);
-    CHECK(hive.empty());
-    CHECK(hive.begin() == hive.end());
-
-    for (size_t i {}; i < 1024; ++i) {
-      hive.insert(i);
-    }
-
-    CHECK(hive.capacity() == 1024);
-    CHECK(hive.size() == 1024);
-    CHECK(not hive.empty());
-
-    auto last = hive.insert(1025);
-    CHECK(hive.capacity() == 2048);
-    CHECK(hive.size() == 1025);
-    CHECK(not hive.empty());
-    CHECK((*last) == 1025);
-
-    hive.clear();
-    CHECK(hive.capacity() == 0);
-    CHECK(hive.size() == 0);
-    CHECK(hive.empty());
-    CHECK(hive.begin() == hive.end());
-  }
-
-  SECTION("") {
-    Hive<int> hive;
-
-    hive.insert(1);
-    auto iter = hive.insert(1138);
-    hive.insert(42);
-
-    CHECK(*iter == 1138);
-
-    CHECK(hive.size() == 3);
-    hive.erase(iter);
-    CHECK(hive.size() == 2);
-
-    CHECK(*hive.begin() == 1);
-    CHECK(*(++hive.begin()) == 42);
-    CHECK(*(--hive.end()) == 42);
-    CHECK(*(--(--hive.end())) == 1);
-  }
+  hive.clear();
+  CHECK(hive.empty());
 }
 
 TEST_CASE("Contained object lifetimes") {}
