@@ -79,3 +79,13 @@ constexpr static bool IsNegative = range.start < 0;
 
 } // namespace flp
 
+template<typename Type>
+struct std::formatter<flp::Range<Type>> : std::formatter<std::string_view> {
+  constexpr auto parse(std::format_parse_context& context) {
+    return context.begin();
+  }
+
+  constexpr auto format(const flp::Range<Type>& range, std::format_context& context) {
+    return std::format_to(context.out(), "({}, {})", range.start, range.finish);
+  }
+};
