@@ -38,20 +38,63 @@ struct Hive {
   };
 
   struct Iterator {
-    typename decltype(std::declval<Block>().skip_list)::iterator skip_it;
-    typename decltype(std::declval<Block>().data)::iterator data_it;
+    using value_type = Type;
+    using difference_type = std::ptrdiff_t;
+    using pointer = Type*;
+    using reference = Type&;
+    using iterator_category = std::bidirectional_iterator_tag;
+
+    Hive* hive;
+    typename decltype(std::declval<Hive>().blocks)::iterator block_it;
+    size_t index;
+
+    friend bool operator==(const Iterator& lhs, const Iterator& rhs) noexcept = default;
+    friend auto operator<=>(const Iterator& lhs, const Iterator& rhs) noexcept = default;
 
     decltype(auto) operator*(this auto&& self) noexcept {
-      return self.data_it->get();
+      return self.block_it->data.at(self.index).get();
     }
     decltype(auto) operator->(this auto&& self) noexcept {
-      return &self.data_it->get();
+      return &self.block_it->data.at(self.index).get();
+    }
+
+    Iterator& operator++() noexcept {
+      ++index;
+
+      index += block_it->skip_list.at(index);
+
+      if (index == block_it->data.size()) {
+        ++block_it;
+        index = 0;
+      }
+
+      return *this;
+    }
+
+    Iterator operator++(int) noexcept {
+      Iterator copy = *this;
+      ++(*this);
+      return copy;
+    }
+
+    Iterator& operator--() noexcept {
+      if (index == 0) {
+        --block_it;
+        index = block_it->skip_list.size() - 1;
+        return *this;
+      }
+
+      --index;
+
+      return *this;
+    }
+
+    Iterator operator--(int) noexcept {
+      Iterator copy = *this;
+      --(*this);
+      return copy;
     }
   };
-
-  constexpr static float block_growth_factor = 1.4F;
-  size_t block_size = 10;
-  std::list<Block> blocks;
 
   void new_block() {
     auto& block = blocks.emplace_back();
@@ -66,9 +109,7 @@ struct Hive {
   }
 
   template<typename ...Args>
-  Iterator emplace(Args&&...);
-
-  Iterator insert(const Type& value) {
+  Iterator emplace(Args&&... args) {
     auto block_iter = blocks.begin();
 
     // find a block with space
@@ -91,7 +132,7 @@ struct Hive {
       ++skip_it;
     }
 
-    data_it->construct(value);
+    data_it->construct(std::forward<Args>(args)...);
     const auto current_block_size = *skip_it;
     const auto new_block_size = current_block_size - 1;
 
@@ -102,14 +143,20 @@ struct Hive {
     *new_block_begin = new_block_size;
     *new_block_end = new_block_size;
 
-    return {skip_it, data_it};
+    return { this, block_iter, data_it - block_iter->data.begin() };
   }
-  Iterator insert(Type&&);
 
-  void erase(Iterator);
-  void erase(Iterator, Iterator);
+  Iterator insert(const Type& value) {
+    return emplace(value);
+  }
+  Iterator insert(Type&& value) {
+    return emplace(std::move(value));
+  }
 
-  void splice(Hive&& other) {
+  void erase(Iterator position);
+  void erase(Iterator first, Iterator last);
+
+  void splice(Hive& other) {
     blocks.splice(blocks.end(), other.blocks);
   }
 
@@ -117,12 +164,28 @@ struct Hive {
   bool empty() const noexcept {
     return blocks.empty();
   }
+
   [[nodiscard]]
   size_t size() const noexcept;
-  void clear() {
-    // first must destruct all objects
+  void clear() noexcept(std::is_nothrow_destructible_v<Type>) {
+    for (auto iter = begin(); iter != end(); ++iter) {
+      iter.block_it->data.at(iter.index).destruct();
+    }
+
     blocks.clear();
   }
+
+  decltype(auto) begin(this auto&& self) noexcept {
+    return Iterator { &self, self.blocks.begin(), 0 };
+  }
+
+  decltype(auto) end(this auto&& self) noexcept {
+    return Iterator {  &self,self.blocks.end(), 0 };
+  }
+
+  constexpr static float block_growth_factor = 1.4F;
+  size_t block_size = 10;
+  std::list<Block> blocks;
 };
 
 } // namespace flp
