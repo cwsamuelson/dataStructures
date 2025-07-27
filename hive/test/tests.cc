@@ -3,6 +3,7 @@
 #include <catch2/catch_all.hpp>
 
 #include <optional>
+#include <set>
 
 using namespace flp;
 
@@ -51,6 +52,7 @@ TEST_CASE("Hive") {
 
     CHECK(hive.empty());
     CHECK(hive.size() == 0);
+    CHECK(hive.capacity() == 0);
 
     size_t count{};
     for (auto& _ : hive) {
@@ -74,6 +76,7 @@ TEST_CASE("Hive") {
 
     CHECK(not hive.empty());
     CHECK(hive.size() == 1);
+    CHECK(hive.capacity() == 9);
 
     count = 0;
     for (auto& _ : hive) {
@@ -84,6 +87,7 @@ TEST_CASE("Hive") {
     hive.clear();
     CHECK(hive.empty());
     CHECK(hive.size() == 0);
+    CHECK(hive.capacity() == 0);
     CHECK(destructor_called);
 
     count = 0;
@@ -99,6 +103,7 @@ TEST_CASE("Hive") {
     auto iter1 = hive.emplace();
     auto iter2 = hive.emplace();
     CHECK(hive.size() == 2);
+    CHECK(hive.capacity() == 8);
 
     auto* ptr1 = &*iter1;
     auto* ptr2 = &*iter2;
@@ -109,6 +114,7 @@ TEST_CASE("Hive") {
       hive.erase(iter1);
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 2);
+      CHECK(hive.capacity() == 8);
 
       CHECK(ptr1 == &*new_iter);
     }
@@ -116,6 +122,7 @@ TEST_CASE("Hive") {
     SECTION("Later element") {
       auto iter3 = hive.emplace();
       CHECK(hive.size() == 3);
+      CHECK(hive.capacity() == 7);
       auto* ptr3 = &*iter3;
 
       CHECK(ptr2 != ptr3);
@@ -123,6 +130,7 @@ TEST_CASE("Hive") {
       hive.erase(iter2);
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 3);
+      CHECK(hive.capacity() == 7);
 
       CHECK(ptr2 == &*new_iter);
     }
@@ -135,6 +143,7 @@ TEST_CASE("Hive") {
     auto iter2 = hive.emplace();
     auto iter3 = hive.emplace();
     CHECK(hive.size() == 3);
+    CHECK(hive.capacity() == 7);
 
     SECTION("Empty region after erased point") {
       auto ptr3 = &*iter3;
@@ -142,6 +151,7 @@ TEST_CASE("Hive") {
       hive.erase(iter3);
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 3);
+      CHECK(hive.capacity() == 7);
       auto new_ptr = &*new_iter;
       CHECK(ptr3 == new_ptr);
     }
@@ -152,6 +162,7 @@ TEST_CASE("Hive") {
       hive.erase(iter1);
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 3);
+      CHECK(hive.capacity() == 7);
       auto new_ptr = &*new_iter;
       CHECK(ptr1 == new_ptr);
     }
@@ -169,6 +180,7 @@ TEST_CASE("Hive") {
       auto new_iter2 = hive.emplace();
       auto new_iter3 = hive.emplace();
       CHECK(hive.size() == 3);
+      CHECK(hive.capacity() == 7);
       auto new_ptr1 = &*new_iter1;
       auto new_ptr2 = &*new_iter2;
       auto new_ptr3 = &*new_iter3;
@@ -177,6 +189,29 @@ TEST_CASE("Hive") {
       CHECK(ptr2 == new_ptr2);
       CHECK(ptr3 == new_ptr3);
     }
+  }
+
+  SECTION("Standard algorithms and containers") {
+    Hive<int> hive;
+
+    hive.emplace(42);
+    hive.emplace(1138);
+
+    std::set<int> set;
+    set.insert_range(hive);
+    CHECK(set.size() == 2);
+    CHECK(hive.capacity() == 8);
+    CHECK(set.contains(42));
+    CHECK(set.contains(1138));
+
+    auto filtered = std::ranges::filter_view(hive, [](const int i) {
+      return i > 100;
+    });
+    std::set<int> filtered_set;
+    filtered_set.insert_range(filtered);
+    CHECK(filtered_set.size() == 1);
+    CHECK(hive.capacity() == 9);
+    CHECK(filtered_set.contains(1138));
   }
 }
 
@@ -187,3 +222,27 @@ TEST_CASE("Iterator and reference validity") {}
 TEST_CASE("Random erasure") {}
 
 TEST_CASE("Only one object alive per chunk") {}
+
+TEST_CASE("Evaluate each member function") {
+  SECTION("emplace") {}
+  SECTION("insert") {
+    SECTION("value copy") {}
+    SECTION("value move") {}
+    SECTION("range") {}
+  }
+  SECTION("erase") {
+    SECTION("single element") {}
+    SECTION("range") {}
+  }
+  SECTION("splice") {}
+  SECTION("empty") {}
+  SECTION("size") {}
+  SECTION("clear") {}
+  SECTION("begin") {}
+  SECTION("end") {}
+}
+
+TEST_CASE("Hive formatter") {
+  //Hive<int> hive;
+  //CHECK(std::format("{}", hive) == "[ ]");
+}
