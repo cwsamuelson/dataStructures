@@ -137,7 +137,7 @@ struct Hive {
     const auto new_block_size = current_block_size - 1;
 
     const auto new_block_begin = skip_it + 1;
-    const auto new_block_end = (skip_it + current_block_size);
+    const auto new_block_end = (skip_it + current_block_size - 1);
 
     *skip_it = 0;
     *new_block_begin = new_block_size;
@@ -153,8 +153,56 @@ struct Hive {
     return emplace(std::move(value));
   }
 
-  void erase(Iterator position);
-  void erase(Iterator first, Iterator last);
+  void erase(Iterator position) {
+    position.block_it->data.at(position.index).destruct();
+
+    // if position is next to any empty blocks, extend them
+
+    const auto pre_index = position.index == 0 ? 0 : position.index - 1;
+    const auto post_index = position.index == position.block_it->skip_list.size() - 1 ? position.block_it->skip_list.size() - 1 : position.index + 1;
+
+    if (  position.index != 0
+      and position.block_it->skip_list.at(pre_index) != 0
+      and position.index != position.block_it->skip_list.size() - 1
+      and position.block_it->skip_list.at(post_index) != 0) {
+      // empty on both sides
+      const auto block_start = pre_index - position.block_it->skip_list.at(pre_index) + 1;
+      const auto block_finish = post_index + position.block_it->skip_list.at(post_index) - 1;
+      const auto new_block_size = block_finish - block_start;
+      // update block start
+      position.block_it->skip_list.at(block_start) = new_block_size;
+      // update block end
+      position.block_it->skip_list.at(block_finish) = new_block_size;
+    } else if (position.index != 0 and position.block_it->skip_list.at(pre_index) != 0) {
+      // empty block before
+      const auto block_start = pre_index - position.block_it->skip_list.at(pre_index) + 1;
+      const auto new_block_size = position.block_it->skip_list.at(pre_index) + 1;
+      // update block start
+      position.block_it->skip_list.at(block_start) = new_block_size;
+      position.block_it->skip_list.at(position.index) = new_block_size;
+      position.block_it->skip_list.at(pre_index) = 0;
+    } else if (position.index != position.block_it->skip_list.size() - 1 and position.block_it->skip_list.at(post_index) != 0) {
+      // empty block after
+      const auto block_finish = post_index + position.block_it->skip_list.at(post_index) - 1;
+      const auto new_block_size = position.block_it->skip_list.at(post_index) + 1;
+
+      // update block start
+      position.block_it->skip_list.at(block_finish) = new_block_size;
+      position.block_it->skip_list.at(position.index) = new_block_size;
+      position.block_it->skip_list.at(post_index) = 0;
+    } else {
+      // new single block
+      position.block_it->skip_list.at(position.index) = 1;
+    }
+
+    // erase block?
+  }
+  void erase(Iterator first, Iterator last) {
+    while (first != last) {
+      erase(first);
+      ++first;
+    }
+  }
 
   void splice(Hive& other) {
     blocks.splice(blocks.end(), other.blocks);

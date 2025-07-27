@@ -46,47 +46,128 @@ struct RAIITest {
 };
 
 TEST_CASE("Hive") {
-  Hive<RAIITest> hive;
+  SECTION("Lifetimes and observable state") {
+    Hive<RAIITest> hive;
 
-  CHECK(hive.empty());
+    CHECK(hive.empty());
 
-  size_t count{};
-  for (auto& _ : hive) {
-    ++count;
+    size_t count{};
+    for (auto& _ : hive) {
+      ++count;
+    }
+    CHECK(count == 0);
+
+    RAIITest new_value;
+    bool destructor_called = false;
+    const auto iter = hive.insert(new_value);
+
+    iter->destructor = destructor_called;
+
+    CHECK(iter->copy_constructor);
+    CHECK(not iter->default_contsructor);
+    CHECK(not iter->move_constructor);
+    CHECK(not iter->copy_assignment);
+    CHECK(not iter->move_assignment);
+    CHECK(not iter->with_args);
+    CHECK(not destructor_called);
+
+    CHECK(not hive.empty());
+
+    count = 0;
+    for (auto& _ : hive) {
+      ++count;
+    }
+    CHECK(count == 1);
+
+    hive.clear();
+    CHECK(hive.empty());
+    CHECK(destructor_called);
+
+    count = 0;
+    for (auto& _ : hive) {
+      ++count;
+    }
+    CHECK(count == 0);
   }
-  CHECK(count == 0);
 
-  RAIITest new_value;
-  bool destructor_called = false;
-  const auto iter = hive.insert(new_value);
+  SECTION("Element reuse") {
+    Hive<RAIITest> hive;
 
-  iter->destructor = destructor_called;
+    auto iter1 = hive.emplace();
+    auto iter2 = hive.emplace();
 
-  CHECK(iter->copy_constructor);
-  CHECK(not iter->default_contsructor);
-  CHECK(not iter->move_constructor);
-  CHECK(not iter->copy_assignment);
-  CHECK(not iter->move_assignment);
-  CHECK(not iter->with_args);
-  CHECK(not destructor_called);
+    auto* ptr1 = &*iter1;
+    auto* ptr2 = &*iter2;
 
-  CHECK(not hive.empty());
+    CHECK(ptr1 != ptr2);
 
-  count = 0;
-  for (auto& _ : hive) {
-    ++count;
+    SECTION("First element") {
+      hive.erase(iter1);
+      auto new_iter = hive.emplace();
+
+      CHECK(ptr1 == &*new_iter);
+    }
+
+    SECTION("Later element") {
+      auto iter3 = hive.emplace();
+      auto* ptr3 = &*iter3;
+
+      CHECK(ptr2 != ptr3);
+
+      hive.erase(iter2);
+      auto new_iter = hive.emplace();
+
+      CHECK(ptr2 == &*new_iter);
+    }
   }
-  CHECK(count == 1);
 
-  hive.clear();
-  CHECK(hive.empty());
-  CHECK(destructor_called);
+  SECTION("handling various empty regions") {
+    Hive<RAIITest> hive;
 
-  count = 0;
-  for (auto& _ : hive) {
-    ++count;
+    auto iter1 = hive.emplace();
+    auto iter2 = hive.emplace();
+    auto iter3 = hive.emplace();
+
+    SECTION("Empty region after erased point") {
+      auto ptr3 = &*iter3;
+
+      hive.erase(iter3);
+      auto new_iter = hive.emplace();
+      auto new_ptr = &*new_iter;
+      CHECK(ptr3 == new_ptr);
+    }
+
+    SECTION("Empty region before erased point") {
+      auto ptr1 = &*iter1;
+
+      hive.erase(iter1);
+      auto new_iter = hive.emplace();
+      auto new_ptr = &*new_iter;
+      CHECK(ptr1 == new_ptr);
+    }
+
+    SECTION("Empty region before and after erased point") {
+      auto ptr1 = &*iter1;
+      auto ptr2 = &*iter2;
+      auto ptr3 = &*iter3;
+
+      hive.erase(iter1);
+      hive.erase(iter3);
+
+      hive.erase(iter2);
+
+      auto new_iter1 = hive.emplace();
+      auto new_iter2 = hive.emplace();
+      auto new_iter3 = hive.emplace();
+      auto new_ptr1 = &*new_iter1;
+      auto new_ptr2 = &*new_iter2;
+      auto new_ptr3 = &*new_iter3;
+
+      CHECK(ptr1 == new_ptr1);
+      CHECK(ptr2 == new_ptr2);
+      CHECK(ptr3 == new_ptr3);
+    }
   }
-  CHECK(count == 0);
 }
 
 TEST_CASE("Contained object lifetimes") {}
