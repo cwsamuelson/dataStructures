@@ -50,6 +50,7 @@ TEST_CASE("Hive") {
     Hive<RAIITest> hive;
 
     CHECK(hive.empty());
+    CHECK(hive.size() == 0);
 
     size_t count{};
     for (auto& _ : hive) {
@@ -72,6 +73,7 @@ TEST_CASE("Hive") {
     CHECK(not destructor_called);
 
     CHECK(not hive.empty());
+    CHECK(hive.size() == 1);
 
     count = 0;
     for (auto& _ : hive) {
@@ -81,6 +83,7 @@ TEST_CASE("Hive") {
 
     hive.clear();
     CHECK(hive.empty());
+    CHECK(hive.size() == 0);
     CHECK(destructor_called);
 
     count = 0;
@@ -95,6 +98,7 @@ TEST_CASE("Hive") {
 
     auto iter1 = hive.emplace();
     auto iter2 = hive.emplace();
+    CHECK(hive.size() == 2);
 
     auto* ptr1 = &*iter1;
     auto* ptr2 = &*iter2;
@@ -104,18 +108,21 @@ TEST_CASE("Hive") {
     SECTION("First element") {
       hive.erase(iter1);
       auto new_iter = hive.emplace();
+      CHECK(hive.size() == 2);
 
       CHECK(ptr1 == &*new_iter);
     }
 
     SECTION("Later element") {
       auto iter3 = hive.emplace();
+      CHECK(hive.size() == 3);
       auto* ptr3 = &*iter3;
 
       CHECK(ptr2 != ptr3);
 
       hive.erase(iter2);
       auto new_iter = hive.emplace();
+      CHECK(hive.size() == 3);
 
       CHECK(ptr2 == &*new_iter);
     }
@@ -127,12 +134,14 @@ TEST_CASE("Hive") {
     auto iter1 = hive.emplace();
     auto iter2 = hive.emplace();
     auto iter3 = hive.emplace();
+    CHECK(hive.size() == 3);
 
     SECTION("Empty region after erased point") {
       auto ptr3 = &*iter3;
 
       hive.erase(iter3);
       auto new_iter = hive.emplace();
+      CHECK(hive.size() == 3);
       auto new_ptr = &*new_iter;
       CHECK(ptr3 == new_ptr);
     }
@@ -142,6 +151,7 @@ TEST_CASE("Hive") {
 
       hive.erase(iter1);
       auto new_iter = hive.emplace();
+      CHECK(hive.size() == 3);
       auto new_ptr = &*new_iter;
       CHECK(ptr1 == new_ptr);
     }
@@ -153,12 +163,12 @@ TEST_CASE("Hive") {
 
       hive.erase(iter1);
       hive.erase(iter3);
-
       hive.erase(iter2);
 
       auto new_iter1 = hive.emplace();
       auto new_iter2 = hive.emplace();
       auto new_iter3 = hive.emplace();
+      CHECK(hive.size() == 3);
       auto new_ptr1 = &*new_iter1;
       auto new_ptr2 = &*new_iter2;
       auto new_ptr3 = &*new_iter3;

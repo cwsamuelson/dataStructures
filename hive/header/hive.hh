@@ -214,7 +214,13 @@ struct Hive {
   }
 
   [[nodiscard]]
-  size_t size() const noexcept;
+  size_t size() const noexcept {
+    size_t count{};
+    for (const auto& block : blocks) {
+      count += count_in_block(block);
+    }
+    return count;
+  }
   void clear() noexcept(std::is_nothrow_destructible_v<Type>) {
     for (auto iter = begin(); iter != end(); ++iter) {
       iter.block_it->data.at(iter.index).destruct();
@@ -229,6 +235,23 @@ struct Hive {
 
   decltype(auto) end(this auto&& self) noexcept {
     return Iterator {  &self,self.blocks.end(), 0 };
+  }
+
+  [[nodiscard]]
+  size_t count_in_block(const Block& block) const noexcept {
+    size_t count{};
+    size_t index{};
+    while (index < block.data.size()) {
+      while (index < block.data.size() and block.skip_list.at(index) == 0) {
+        ++count;
+        ++index;
+      }
+      while (index < block.skip_list.size() and block.skip_list.at(index) != 0) {
+        index += block.skip_list.at(index);
+      }
+    }
+
+    return count;
   }
 
   constexpr static float block_growth_factor = 1.4F;
