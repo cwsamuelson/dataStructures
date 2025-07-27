@@ -52,6 +52,14 @@ struct Range {
   constexpr friend Range operator-(const Range& lhs, const Range& rhs) noexcept {
     return { lhs.start - rhs.start, lhs.finish - rhs.finish };
   }
+
+  constexpr friend Range operator+(const Range& range, const Type& shift) noexcept {
+    return { range.start + shift, range.finish + shift };
+  }
+
+  constexpr friend Range operator-(const Range& range, const Type& shift) noexcept {
+    return { range.start - shift, range.finish - shift };
+  }
 };
 
 // based on common_type
@@ -59,6 +67,11 @@ struct Range {
 template<Range range1, Range range2>
 struct CommonRange {
   constexpr static auto Value = Range { std::min(range1.start, range2.start), std::max(range1.finish, range2.finish) };
+};
+
+template<Range range1, Range range2>
+struct SharedRange {
+  constexpr static auto Value = Range { std::max(range1.start, range2.start), std::min(range1.finish, range2.finish) };
 };
 
 template<Range range>
