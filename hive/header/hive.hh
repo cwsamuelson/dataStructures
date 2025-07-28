@@ -51,8 +51,7 @@ struct Hive {
 
   struct Block {
     std::vector<AlignedTypeBuffer<Type>> data;
-    // so long as a block holds less than 255 elements, a skip value will never need to be larger than `uint8_t`
-    std::vector<uint8_t> skip_list;
+    std::vector<uint16_t> skip_list;
     size_t size = 0;
   };
 
@@ -235,7 +234,7 @@ struct Hive {
     return iter;
   }
 
-  void erase(const_iterator position) {
+  void erase(iterator position) {
     position.block_it->data.at(position.index).destruct();
 
     // if position is next to any empty blocks, extend them
@@ -250,7 +249,7 @@ struct Hive {
       // empty on both sides
       const auto block_start = pre_index - position.block_it->skip_list.at(pre_index) + 1;
       const auto block_finish = post_index + position.block_it->skip_list.at(post_index) - 1;
-      const auto new_block_size = block_finish - block_start;
+      const auto new_block_size = block_finish - block_start + 1;
       // update block start
       position.block_it->skip_list.at(block_start) = new_block_size;
       // update block end
@@ -277,9 +276,12 @@ struct Hive {
       position.block_it->skip_list.at(position.index) = 1;
     }
 
-    // erase block?
+    // erase block
+    if (position.block_it->skip_list.at(0) == position.block_it->skip_list.size()) {
+      position.hive->blocks.erase(position.block_it);
+    }
   }
-  void erase(const_iterator first, const_iterator last) {
+  void erase(iterator first, const_iterator last) {
     while (first != last) {
       erase(first);
       ++first;
@@ -314,8 +316,7 @@ struct Hive {
   size_t capacity() const noexcept {
     size_t count{};
     for (const auto& block : blocks) {
-      //count += count_block_capacity(block);
-      count += block.data.size() - count_block_size(block);
+      count += block.data.size();
     }
     return count;
   }
@@ -385,7 +386,7 @@ void swap(const flp::Hive<Type>& x, const flp::Hive<Type>& y) noexcept(noexcept(
 
 }
 
-/*template<typename Type>
+template<typename Type>
 struct std::formatter<flp::Hive<Type>> : std::formatter<std::string_view> {
   bool debug_format = false;
 
@@ -411,7 +412,7 @@ struct std::formatter<flp::Hive<Type>> : std::formatter<std::string_view> {
     return iterator;
   }
 
-  auto format(const flp::Hive<Type>& hive, std::format_context& context) const {
+  constexpr auto format(const flp::Hive<Type>& hive, std::format_context& context) const {
     if (debug_format) {
       std::string placeholder;
       std::format_to(std::back_inserter(placeholder), "(Size: {} Capacity: {}) [", hive.size(), hive.capacity());
@@ -442,6 +443,5 @@ struct std::formatter<flp::Hive<Type>> : std::formatter<std::string_view> {
       std::format_to(std::back_inserter(placeholder), "]");
       return std::formatter<std::string_view>::format(placeholder, context);
     }
-    return std::format_to(context.out(), "");
   }
-};*/
+};
