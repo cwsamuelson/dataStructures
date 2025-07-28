@@ -7,9 +7,6 @@ namespace flp {
 
 template<typename Type>
 struct Range {
-  // signed for negative ranges
-  // but now half of the 64-bit range is unavailable
-  // using Type = signed long long;
   Type start;
   Type finish;
 
@@ -82,10 +79,14 @@ constexpr static bool IsNegative = range.start < 0;
 template<typename Type>
 struct std::formatter<flp::Range<Type>> : std::formatter<std::string_view> {
   constexpr auto parse(std::format_parse_context& context) {
-    return context.begin();
+    auto iter = context.begin();
+    while (iter != context.end() && *iter != '}') {
+      ++iter;
+    }
+    return iter;
   }
 
-  constexpr auto format(const flp::Range<Type>& range, std::format_context& context) {
+  constexpr auto format(const flp::Range<Type>& range, std::format_context& context) const {
     return std::format_to(context.out(), "({}, {})", range.start, range.finish);
   }
 };
