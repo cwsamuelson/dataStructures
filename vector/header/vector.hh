@@ -1,9 +1,12 @@
 #pragma once
 
 #include <aligned_buffer.hh>
+
 #include <error_help.hh>
 
+#include <core/maybe_const.hh>
 #include <core/normal_iterator.hh>
+#include <core/traits.hh>
 
 #include <memory>
 #include <numbers>
@@ -16,9 +19,8 @@ public:
   using value_type      = Type;
   using pointer         = value_type*;
   using reference       = value_type&;
-  using const_reference = const value_type&;
   using const_pointer   = const value_type*;
-  using iterator        = normal_iterator<value_type, Vector>;
+  using const_reference = const value_type&;
   using size_type       = size_t;
 
   static constexpr size_type value_alignment = alignof(value_type);
@@ -189,7 +191,7 @@ public:
     }
   }
 
-  void reserve(const size_type new_capacity) noexcept(std::is_nothrow_move_assignable_v<value_type>) /*does it need to be nothrow destructible too?*/{
+  void reserve(const size_type new_capacity) noexcept(std::is_nothrow_move_assignable_v<value_type>) /*does it need to be nothrow destructible too?*/ {
     if (new_capacity <= current_capacity) {
       return;
     }
@@ -216,33 +218,48 @@ public:
     current_capacity = current_size;
   }
 
-  [[nodiscard]]
-  decltype(auto) begin(this auto&& self) noexcept;
+  //using iterator = normal_iterator<value_type, Vector>;
+  using iterator = pointer;
+  using const_iterator = const_pointer;
+  template<bool IsConst>
+  using maybe_iterator = MaybeConst<value_type, IsConst>*;
 
   [[nodiscard]]
-  decltype(auto) cbegin(this const auto&& self) noexcept;
+  auto begin(this auto&& self) noexcept {
+    return maybe_iterator<IsConst<decltype(self)>>{self.buffer.get()};
+  }
 
   [[nodiscard]]
-  decltype(auto) rbegin(this auto&& self) noexcept;
+  auto end(this auto&& self) noexcept {
+    return maybe_iterator<IsConst<decltype(self)>>{self.buffer.get() + self.current_size};
+  }
 
   [[nodiscard]]
-  decltype(auto) crbegin(this const auto&& self) noexcept;
+  const_pointer cbegin(this const auto&& self) noexcept {
+    return self.buffer.get();
+  }
 
   [[nodiscard]]
-  decltype(auto) end(this auto&& self) noexcept;
+  const_iterator cend(this const auto&& self) noexcept {
+    return self.buffer.get() + self.current_size;
+  }
 
   [[nodiscard]]
-  decltype(auto) cend(this const auto&& self) noexcept;
+  auto rbegin(this auto&& self) noexcept;
 
   [[nodiscard]]
-  decltype(auto) rend(this auto&& self) noexcept;
+  auto rend(this auto&& self) noexcept;
 
   [[nodiscard]]
-  decltype(auto) crend(this const auto&& self) noexcept;
+  auto crbegin(this const auto&& self) noexcept;
 
   [[nodiscard]]
-  iterator Iterator(size_type idx);
+  auto crend(this const auto&& self) noexcept;
+
+  [[nodiscard]]
+  auto Iterator(this const auto&& self, const size_type idx) {
+    return maybe_iterator<IsConst<decltype(self)>>(self.buffer.get() + idx);
+  }
 };
 
 } // namespace flp
-

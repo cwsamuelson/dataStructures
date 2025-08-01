@@ -1,6 +1,7 @@
 #pragma once
 
 #include <aligned_buffer.hh>
+#include <core/maybe_const.hh>
 
 #include <cstdint>
 #include <format>
@@ -31,9 +32,6 @@ namespace flp {
 
 //! @TODO allocator awareness
 
-template<typename Type, bool IsConst>
-using ConditionalConst = std::conditional_t<IsConst, const Type, Type>;
-
 template<typename Type>
 struct Hive {
   template<bool IsConst>
@@ -60,10 +58,10 @@ struct Hive {
     using value_type = Type;
     using difference_type = std::ptrdiff_t;
     using iterator_category = std::bidirectional_iterator_tag;
-    using pointer = ConditionalConst<Type, IsConst>*;
-    using reference = ConditionalConst<Type, IsConst>&;
+    using pointer = MaybeConst<Type, IsConst>*;
+    using reference = MaybeConst<Type, IsConst>&;
 
-    using Container = ConditionalConst<Hive, IsConst>;
+    using Container = MaybeConst<Hive, IsConst>;
     using BlockIterator = typename decltype(std::declval<Hive>().blocks)::iterator;
 
     Container* hive = nullptr;

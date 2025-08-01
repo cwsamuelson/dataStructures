@@ -6,6 +6,7 @@ set(HEADERS
         header/core/additive.hh
         header/core/comparative.hh
         header/core/concepts.hh
+        header/core/maybe_const.hh
         header/core/multiplicative.hh
         header/core/normal_iterator.hh
         header/core/operators.hh

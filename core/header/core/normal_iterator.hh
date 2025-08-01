@@ -19,22 +19,20 @@ public:
   class normal_iterator;
 
 protected:
-  pointer mCurrent;
+  pointer mCurrent = nullptr;
 
 public:
-  normal_iterator()
-    : normal_iterator(nullptr)
+  normal_iterator() noexcept = default;
+  explicit normal_iterator(pointer ptr) noexcept
+    : mCurrent(ptr)
   {}
-  explicit normal_iterator(pointer ptr)
-          : mCurrent(ptr) {
-  }
-  explicit normal_iterator(std::nullptr_t)
-          : mCurrent(nullptr) {
-  }
+  explicit normal_iterator(std::nullptr_t) noexcept
+    : normal_iterator()
+  {}
 
   template<typename T1, typename C1, typename P1>
   normal_iterator(const normal_iterator<T1, C1, P1>& iter)
-          : mCurrent(iter.mCurrent) {
+    : mCurrent(iter.mCurrent) {
   }
 
   [[nodiscard]]
@@ -53,24 +51,10 @@ public:
   }
 
   [[nodiscard]]
-  bool operator==(const normal_iterator& iter) const {
-    return mCurrent == iter.mCurrent;
-  }
+  friend bool operator==(const normal_iterator&, const normal_iterator&) noexcept = default;
 
   [[nodiscard]]
-  bool operator!=(const normal_iterator& iter) const {
-    return !((*this) == iter);
-  }
-
-  [[nodiscard]]
-  bool operator<(const normal_iterator& other) const {
-    return mCurrent < other.mCurrent;
-  }
-
-  [[nodiscard]]
-  bool operator>(const normal_iterator& other) const {
-    return mCurrent > other.mCurrent;
-  }
+  friend auto operator<=>(const normal_iterator&, const normal_iterator&) noexcept = default;
 
   [[nodiscard]]
   reference operator*() const {
@@ -108,9 +92,9 @@ namespace std {
 template<typename Type, typename CONTAINER>
 struct iterator_traits<flp::normal_iterator<Type, CONTAINER>> {
 public:
-  typedef typename flp::normal_iterator<Type, CONTAINER>::value_type value_type;
-  typedef unsigned int difference_type;
-  typedef random_access_iterator_tag iterator_category;
+  using value_type = typename flp::normal_iterator<Type, CONTAINER>::value_type;
+  using difference_type = unsigned int;
+  using iterator_category = random_access_iterator_tag;
 };
 
 }
