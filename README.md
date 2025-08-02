@@ -1,7 +1,7 @@
 # Documentation
 
 This is an umbrella project for various code/tools/utilities I have thought of, or decided to replicate for practice.
-Each sub-project/directory will have its own more detailed README to cover its specific contents.
+Each subproject/directory will have its own more detailed README to cover its specific contents.
 
 ## Examples
 
@@ -88,7 +88,7 @@ nothing can be guaranteed. Improvement changes and ideas are welcome!
 
 # TODO
 
-- Create sub-project READMEs. I'd like them to be reasonably good quality, so this will take time and focus. It also
+- Create subproject READMEs. I'd like them to be reasonably good quality, so this will take time and focus. It also
   implies some level of completeness of the piece it documents, which many of these are certainly not.
 - Add any other
   useful '[community health files](https://github.com/orgs/community/discussions/86658#discussioncomment-9116451)'
@@ -97,7 +97,7 @@ nothing can be guaranteed. Improvement changes and ideas are welcome!
 
 # Contributors
 
-At this time I am the only contributor. Feel free to provide a PR or issue with ideas or changes!
+At this time I am the only contributor. Feel free to provide a PR or issue with ideas, changes or fixes!
 
 # Copyright
 
