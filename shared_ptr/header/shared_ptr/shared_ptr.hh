@@ -35,7 +35,9 @@ struct SharedPointer {
 
   SharedPointer(const SharedPointer& other)
     : control_block(other.control_block) {
-    increment();
+    if (control_block != nullptr) {
+      increment();
+    }
   }
 
   SharedPointer(SharedPointer&& other)
@@ -64,7 +66,9 @@ struct SharedPointer {
   }
 
   ~SharedPointer() {
-    decrement();
+    if (control_block != nullptr) {
+      decrement();
+    }
   }
 
   [[nodiscard]]
