@@ -48,7 +48,7 @@ struct RAIISignaler {
   }
 };
 
-TEST_CASE("Aligned buffer alignment and size") {
+TEST_CASE("`AlignedTypeBuffer` alignment and size") {
   STATIC_CHECK(alignof(AlignedTypeBuffer<size_t>) == alignof(size_t));
   STATIC_CHECK(sizeof(AlignedTypeBuffer<size_t>) == sizeof(size_t));
 
@@ -56,7 +56,7 @@ TEST_CASE("Aligned buffer alignment and size") {
   STATIC_CHECK(sizeof(AlignedTypeBuffer<S>) == sizeof(S));
 }
 
-TEST_CASE("Aligned buffer construct/destruct") {
+TEST_CASE("`AlignedTypeBuffer` construct/destruct") {
   AlignedTypeBuffer<RAIISignaler> buffer;
 
   // technically UB, since the signaler lifetime hasn't started yet..

@@ -28,17 +28,17 @@ struct AlignedTypeBuffer : AlignedBuffer<sizeof(Type), alignof(Type)> {
   }
 
   void destruct() noexcept(std::is_nothrow_destructible_v<Type>) {
-    std::launder<Type*>(&Base::storage)->~Type();
+    std::launder<Type>(reinterpret_cast<Type*>(Base::storage.data()))->~Type();
   }
 
   [[nodiscard]]
   Type& get() noexcept {
-    return *std::launder<Type*>(&Base::storage);
+    return *std::launder<Type>(reinterpret_cast<Type*>(Base::storage.data()));
   }
 
   [[nodiscard]]
   const Type& get() const noexcept {
-    return *std::launder<Type*>(&Base::storage);
+    return *std::launder<const Type>(reinterpret_cast<const Type*>(Base::storage.data()));
   }
 };
 
