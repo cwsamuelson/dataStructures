@@ -36,7 +36,7 @@ private:
     return Buffer { new AlignedTypeBuffer<Type>[element_count] };
   }
 
-  void ensure_size(const size_type ensured_size) {
+  void ensure_size(const size_type ensured_size) noexcept(noexcept(reserve(size_t{}))) {
     if (ensured_size > current_capacity) {
       if (current_size == 0) {
         reserve(4);
@@ -51,7 +51,7 @@ private:
   }
 
 public:
-  Vector() = default;
+  Vector() noexcept = default;
 
   Vector(const Vector& other) noexcept(std::is_nothrow_copy_constructible_v<value_type>) {
     reserve(other.size());
@@ -68,17 +68,18 @@ public:
       push_back(element);
     }
   }
+
   Vector& operator=(Vector&&) noexcept(std::is_nothrow_move_constructible_v<value_type>) = default;
 
   ~Vector() noexcept(std::is_nothrow_destructible_v<value_type>) {
     clear();
   }
 
-  Vector(const size_type capacity) {
+  Vector(const size_type capacity) noexcept(noexcept(reserve(size_t{}))) {
     reserve(capacity);
   }
 
-  Vector(const_reference val, size_type count) {
+  Vector(const_reference val, size_type count) noexcept(noexcept(reserve(size_t{}))) {
     reserve(count);
     for (size_t i{}; i < count; ++i) {
       push_back(val);

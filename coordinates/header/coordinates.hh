@@ -10,26 +10,41 @@ struct DiscreteTag;
 struct ContinuousTag;
 struct WidthTag;
 struct HeightTag;
+struct LengthTag;
 struct XCoordinateTag;
 struct YCoordinateTag;
+struct ZCoordinateTag;
+struct WCoordinateTag;
 
 template<typename Type>
 using WidthImpl  = TaggedType<Type, WidthTag>;
 template<typename Type>
 using HeightImpl = TaggedType<Type, HeightTag>;
 template<typename Type>
+using LengthImpl = TaggedType<Type, LengthTag>;
+template<typename Type>
 using XCoordinateImpl = TaggedType<Type, XCoordinateTag>;
 template<typename Type>
 using YCoordinateImpl = TaggedType<Type, YCoordinateTag>;
+template<typename Type>
+using ZCoordinateImpl = TaggedType<Type, ZCoordinateTag>;
+template<typename Type>
+using WCoordinateImpl = TaggedType<Type, WCoordinateTag>;
 
 template<typename>
 struct Width;
 template<typename>
 struct Height;
 template<typename>
+struct Length;
+template<typename>
 struct XCoordinate;
 template<typename>
 struct YCoordinate;
+template<typename>
+struct ZCoordinate;
+template<typename>
+struct WCoordinate;
 
 template<>
 struct Width<DiscreteTag> : WidthImpl<size_t> {};
@@ -38,16 +53,28 @@ template<>
 struct Height<DiscreteTag> : HeightImpl<size_t> {};
 
 template<>
+struct Length<DiscreteTag> : LengthImpl<size_t> {};
+
+template<>
 struct XCoordinate<DiscreteTag> : XCoordinateImpl<size_t> {};
 
 template<>
 struct YCoordinate<DiscreteTag> : YCoordinateImpl<size_t> {};
 
 template<>
+struct ZCoordinate<DiscreteTag> : ZCoordinateImpl<size_t> {};
+
+template<>
+struct WCoordinate<DiscreteTag> : WCoordinateImpl<size_t> {};
+
+template<>
 struct Width<ContinuousTag> : WidthImpl<float> {};
 
 template<>
 struct Height<ContinuousTag> : HeightImpl<float> {};
+
+template<>
+struct Length<ContinuousTag> : LengthImpl<float> {};
 
 template<>
 struct XCoordinate<ContinuousTag> : XCoordinateImpl<float> {};
@@ -145,4 +172,3 @@ static_assert(not std::is_same_v<ContinuousWidth, ContinuousHeight>);
 static_assert(not std::is_same_v<ContinuousXCoordinate, ContinuousYCoordinate>);
 
 } // namespace flp
-
