@@ -1,6 +1,6 @@
 #pragma once
 
-#include  "overload.hh"
+#include  "core/overloads.hh"
 
 #include <functional>
 #include <optional>
@@ -116,7 +116,7 @@ struct Expected {
   [[nodiscard]]
   constexpr
   bool has_value() const noexcept {
-    return std::visit(Overload {
+    return std::visit(Overloads {
       [](const Type&) {
         return true;
       },
@@ -129,7 +129,7 @@ struct Expected {
   [[nodiscard]]
   constexpr
   bool has_error() const noexcept {
-    return std::visit(Overload {
+    return std::visit(Overloads {
       [](const Error&) {
         return true;
       },
@@ -141,7 +141,7 @@ struct Expected {
 
   constexpr
   const Type& value() const {
-    return std::visit(Overload {
+    return std::visit(Overloads {
       [](Type& value) {
         return value;
       },
@@ -153,7 +153,7 @@ struct Expected {
 
   constexpr
   const Error& error() const {
-    return std::visit(Overload {
+    return std::visit(Overloads {
       [](Error& error) {
         return error;
       },
