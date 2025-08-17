@@ -45,4 +45,3 @@ TEST_CASE("dimensions") {
   DiscreteDimensions dd;
   ContinuousDimensions cd;
 }
-

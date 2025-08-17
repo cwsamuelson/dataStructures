@@ -12,7 +12,7 @@ namespace flp {
  * value while `char * const` reflects constness of the underlying object.
  * Likewise `std::unique_ptr` and `std::shared_ptr` have the same issue where
  * `const std::unique_ptr<Type>` and `std::unique_ptr<const Type>` have different
- * semantics.  Box does not distinguish in this way.  The value of Box is tied
+ * semantics.  `Box` does not distinguish in this way.  The value of Box is tied
  * to the underlying object.  This is reflected in the dereference operator
  * returning a const value when Box is const; additionally Box doesn't allow
  * itself to be null; the underlying unique_ptr always has a value.
@@ -31,8 +31,8 @@ namespace flp {
  * };
  * @endcode
  *
- * Since Box is just a pointer, a recursive type such as `Expression` is
- * possible, since its type doesn't inflate infinitely, but is nicer to work
+ * Since Box is implemented as a pointer, a recursive type such as `Expression`
+ * is possible, since its type doesn't inflate infinitely, but is nicer to work
  * with than `using Expression = std::variant<..., std::unique_ptr<AddExpression>>;`,
  * and preserves `const`ness of the underlying object with the `const`ness of
  * the `Box` itself.

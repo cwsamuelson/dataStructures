@@ -9,21 +9,21 @@ set(HEADERS
 set(SOURCES
 )
 
-common_library(${PROJECT_NAME}
-               ${HEADERS}
-               ${SOURCES}
+common_library(${PROJECT_NAME} INTERFACE
+  ${HEADERS}
+  ${SOURCES}
 )
 
 target_sources(${PROJECT_NAME}
-               PUBLIC
-               FILE_SET public_headers
-               TYPE HEADERS
-               BASE_DIRS header
-               FILES ${HEADERS}
+  INTERFACE
+  FILE_SET public_headers
+  TYPE HEADERS
+  BASE_DIRS header
+  FILES ${HEADERS}
 )
 
 target_link_libraries(${PROJECT_NAME}
-                      PUBLIC
+  INTERFACE
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
