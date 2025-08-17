@@ -21,11 +21,15 @@ void push_context(std::shared_ptr<AllocatorBase> allocator);
 
 void push_context(std::shared_ptr<LoggerBase> logger);
 
+//void push_context(ErrorPolicy policy);
+
 const ContextFrame& context();
 
 std::shared_ptr<AllocatorBase> allocator();
 
 std::shared_ptr<LoggerBase> logger();
+
+//error_policy();
 
 struct ScopedContext {
   template<typename ...Args>

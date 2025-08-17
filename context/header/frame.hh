@@ -1,6 +1,7 @@
 #pragma once
 
 #include <allocator/base.hh>
+#include <error/error.hh>
 #include <logger/base.hh>
 
 #include <memory>
@@ -13,7 +14,9 @@ namespace flp {
 struct ContextFrame {
   std::shared_ptr<AllocatorBase> allocator;
   std::shared_ptr<LoggerBase> logger;
-  // error handling
+  //std::shared_ptr<> error_policy;
+  // or
+  //ErrorPolicy error_policy;
   // contracts
   // concurrency
   // coroutine handling?

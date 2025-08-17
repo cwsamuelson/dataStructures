@@ -42,6 +42,9 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   error_support::error_support
+
+  ${BASE_PROJECT}_box
+  ${BASE_PROJECT}_expected
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
