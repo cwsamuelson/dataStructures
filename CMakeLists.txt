@@ -55,6 +55,7 @@ add_subdirectory(type_set)
 #add_subdirectory(utilities)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
+add_subdirectory(variant)
 add_subdirectory(vector)
 #add_subdirectory(versioning)
 
@@ -112,6 +113,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
+  ${PROJECT_NAME}_variant
   ${PROJECT_NAME}_vector
   #${PROJECT_NAME}_versioning
 )

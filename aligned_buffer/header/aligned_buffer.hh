@@ -14,8 +14,9 @@ namespace flp {
 template<size_t AllocationSize, size_t AllocationAlignment>
 struct AlignedBuffer {
   static constexpr size_t Size = AllocationSize;
+  static constexpr size_t Alignment = AllocationAlignment;
 
-  alignas(AllocationAlignment) std::array<std::byte, Size> storage;
+  alignas(Alignment) std::array<std::byte, Size> storage;
 };
 
 template<typename Type>
