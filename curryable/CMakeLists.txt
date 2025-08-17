@@ -5,6 +5,7 @@ project(${BASE_PROJECT}_curryable LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/core/curryable.hh
 )
 set(SOURCES
 )
@@ -24,6 +25,7 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
+  ${BASE_PROJECT}_type_pack
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)

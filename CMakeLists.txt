@@ -12,6 +12,7 @@ add_subdirectory(configuration)
 add_subdirectory(context)
 add_subdirectory(coordinates)
 add_subdirectory(core)
+add_subdirectory(curryable)
 add_subdirectory(delegate)
 add_subdirectory(doubly_linked_list)
 #add_subdirectory(ecs)
@@ -66,6 +67,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_context
   ${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
+  ${PROJECT_NAME}_curryable
   ${PROJECT_NAME}_delegate
   ${PROJECT_NAME}_doubly_linked_list
   #${PROJECT_NAME}_ecs

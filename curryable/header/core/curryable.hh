@@ -1,14 +1,22 @@
 #pragma once
 
+#include <type_pack.hh>
+
 #include <functional>
 
 namespace flp {
 
-template<typename>
+template<typename, typename...>
 struct Curryable;
 
-template<typename Ret, typename... Args>
-struct Curryable<Ret(Args...)> {
+template<typename Ret, typename... Args, typename ...Parameters>
+struct Curryable<Ret(Args...), Parameters...> {
+  template<typename ...Ts>
+  struct CurryHelper {
+    template<typename ...Input>
+    using type = Curryable<Ret(Args..., Ts...), Parameters..., Input...>;
+  };
+
   template<typename Functor>
   Curryable(Functor&& functor)
     : function(std::forward<Functor>(functor))
@@ -16,14 +24,21 @@ struct Curryable<Ret(Args...)> {
 
   //template<typename ...Input>
   //decltype(auto) operator()(Input&& ...args) {
-  // This is the currying.  Return another curryable with different argument types
-  // A `TypePack` may be useful here
+  //  return typename TypePack<Args...>::template Drop<sizeof...(Input)>::template Rebind<CurryHelper> {
+  //    [this, inputs = ...std::forward<Input>(args)]() {
+  //      function(parameters, inputs...);
+  //      return std::apply(function, parameters);
+  //    }
+  //  };
   //}
 
-  Ret operator()(Args&&... args) {
-    return function(std::forward<Args>(args)...);
+  template<typename ...Arguments>
+    requires (sizeof...(Arguments) == sizeof...(Args))
+  Ret operator()(Arguments&&... args) {
+    return function(std::forward<Arguments>(args)...);
   }
 
+  std::tuple<Parameters...> parameters;
   std::function<Ret(Args...)> function;
 };
 
