@@ -1,5 +1,7 @@
 #pragma once
 
+#include "shapes/vec2.hh"
+
 namespace flp {
 
 struct vec3 {
@@ -21,6 +23,20 @@ struct vec3 {
     : x(a)
     , y(b)
     , z(c)
+  {}
+
+  constexpr
+  vec3(const vec2& vec, const float f)
+    : x(vec.x)
+    , y(vec.y)
+    , z(f)
+  {}
+
+  constexpr
+  vec3(const float f, const vec2& vec)
+    : x(f)
+    , y(vec.x)
+    , z(vec.y)
   {}
 
   float x{};

@@ -24,8 +24,10 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
-  ${BASE_PROJECT}_core
   error_support::error_support
+
+  ${BASE_PROJECT}_core
+  ${BASE_PROJECT}_shape
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
