@@ -5,7 +5,10 @@ project(${BASE_PROJECT}_affine LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/affine.hh
+  #header/affine.hh
+  header/point.hh
+  header/vec.hh
+  header/vector.hh
 )
 set(SOURCES
 )
