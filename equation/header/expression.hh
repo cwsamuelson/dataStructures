@@ -17,9 +17,10 @@ struct Expression {
   using PlusResult = std::conditional_t<std::same_as<AddResult, MulResult>, AddResult, Type>;
   using MinusResult = std::conditional_t<std::same_as<SubResult, DivResult>, SubResult, Type>;
 
-  using result_type = std::conditional_t<std::same_as<PlusResult, MinusResult>, PlusResult, Type>;
+  //using result_type = std::conditional_t<std::same_as<PlusResult, MinusResult>, PlusResult, Type>;
 
-  virtual result_type evaluate() const = 0;
+  [[nodiscard]]
+  virtual Type evaluate() const = 0;
 };
 
 }

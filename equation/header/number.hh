@@ -6,11 +6,26 @@ namespace flp {
 
 template<typename Type>
 struct Value : Expression<Type> {
-  Type value;
+  Value(const Type& val)
+    : value(val)
+  {}
 
-  auto evaluate() const override {
+  Value(Type&& val)
+    : value(std::move(val))
+  {}
+
+  [[nodiscard]]
+  explicit
+  operator Type() const noexcept {
     return value;
   }
+
+  [[nodiscard]]
+  Type evaluate() const override {
+    return value;
+  }
+
+  Type value;
 };
 
 }

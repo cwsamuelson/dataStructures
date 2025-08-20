@@ -3,32 +3,39 @@
 #include <expression.hh>
 
 #include <concepts>
+#include <functional>
 
 namespace flp {
 
-template<typename Type, std::derived_from<Expression> LHS, std::derived_from<Expression> RHS>
-struct BinaryExpression : Expression<Type> {
+template<typename Type,
+  std::derived_from<Expression<Type>> LHS,
+  std::derived_from<Expression<Type>> RHS,
+  typename OP
+>
+struct GenericBinary : Expression<Type> {
+  GenericBinary(LHS l, RHS r, OP op)
+    : lhs(std::move(l))
+    , rhs(std::move(r))
+    , operation(op)
+  {}
+
   LHS lhs;
   RHS rhs;
-};
-
-namespace {
-template<typename Type, typename LHS, typename RHS, typename OP>
-struct GenericBinary : BinaryExpression<Type, LHS, RHS> {
   OP operation;
 
-  Base_t::result_type evaluate() const override {
+  [[nodiscard]]
+  Type evaluate() const override {
     return operation(lhs.evaluate(), rhs.evaluate());
   }
 };
-}
 
-template<typename Type, std::derived_from<Expression> LHS, std::derived_from<Expression> RHS>
-using AdditionExpression = GenericBinary<Type, LHS, RHS, std::plus<>>;
-
-template<std::derived_from<Expression> LHS, std::derived_from<Expression> RHS>
+template<typename LHS, typename RHS>
 auto operator+(LHS lhs, RHS rhs) {
-  return AdditionExpression(std::move(lhs), std::move(rhs));
+  return GenericBinary<
+    std::common_type_t<
+      decltype(std::declval<LHS>().evaluate()),
+      decltype(std::declval<LHS>().evaluate())
+    >, LHS, RHS, std::plus<>>(std::move(lhs), std::move(rhs), {});
 }
 
 }

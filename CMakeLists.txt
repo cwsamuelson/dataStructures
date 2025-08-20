@@ -18,7 +18,7 @@ add_subdirectory(curryable)
 add_subdirectory(delegate)
 add_subdirectory(doubly_linked_list)
 #add_subdirectory(ecs)
-#add_subdirectory(equation)
+add_subdirectory(equation)
 add_subdirectory(expected)
 #add_subdirectory(expr_template)
 add_subdirectory(function)
@@ -78,7 +78,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_delegate
   ${PROJECT_NAME}_doubly_linked_list
   #${PROJECT_NAME}_ecs
-  #${PROJECT_NAME}_equation
+  ${PROJECT_NAME}_equation
   ${PROJECT_NAME}_expected
   #${PROJECT_NAME}_expr_template
   ${PROJECT_NAME}_function
