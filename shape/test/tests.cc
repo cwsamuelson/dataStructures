@@ -225,6 +225,11 @@ TEST_CASE("Shapes: swizzling") {
     CHECK(vec.xy() == vec2{ 1.f, 2.f });
     CHECK(vec.yx() == vec2{ 2.f, 1.f });
     CHECK(vec.yy() == vec2{ 2.f, 2.f });
+
+    vec.xx() = vec2{ 3.f, 4.f };
+    CHECK(vec == vec2{ 4.f, 2.f });
+    CHECK(vec.x == 4.f);
+    CHECK(vec.y == 2.f);
   }
 
   SECTION("vec3") {
