@@ -5,9 +5,11 @@ project(${BASE_PROJECT}_equation LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/binary_expression.hh
   header/equation.hh
   header/expression.hh
   header/number.hh
+  header/unary_expression.hh
 )
 set(SOURCES
 )
@@ -34,4 +36,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

@@ -1,5 +1,6 @@
 #include <number.hh>
 #include <binary_expression.hh>
+#include <unary_expression.hh>
 
 #include <catch2/catch_all.hpp>
 
@@ -39,6 +40,18 @@ TEST_CASE("`Equation`: `Value`") {
       const auto division = val1 / val2;
 
       CHECK(division.evaluate() == 42.f / 69.f);
+    }
+
+    SECTION("Unary plus") {
+      const auto posate = +val1;
+
+      CHECK(posate.evaluate() == +42.f);
+    }
+
+    SECTION("Unary minus") {
+      const auto negate = -val1;
+
+      CHECK(negate.evaluate() == -42.f);
     }
   }
 }
