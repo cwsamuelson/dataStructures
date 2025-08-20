@@ -14,12 +14,31 @@ TEST_CASE("`Equation`: `Value`") {
   }
 
   SECTION("`Value` math") {
-    const Value<float> v1{42.f};
-    const Value<float> v2{69.f};
+    const Value<float> val1{42.f};
+    const Value<float> val2{69.f};
 
-    const auto addition = v1 + v2;
+    SECTION("Addition") {
+      const auto addition = val1 + val2;
 
-    CHECK(addition.evaluate() == 42 + 69);
-    CHECK(addition.evaluate() == 111);
+      CHECK(addition.evaluate() == 42 + 69);
+    }
+
+    SECTION("Subtraction") {
+      const auto subtraction = val1 - val2;
+
+      CHECK(subtraction.evaluate() == 42 - 69);
+    }
+
+    SECTION("Multiplication") {
+      const auto multiplication = val1 * val2;
+
+      CHECK(multiplication.evaluate() == 42 * 69);
+    }
+
+    SECTION("Division") {
+      const auto division = val1 / val2;
+
+      CHECK(division.evaluate() == 42.f / 69.f);
+    }
   }
 }

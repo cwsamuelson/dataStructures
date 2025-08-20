@@ -29,13 +29,36 @@ struct GenericBinary : Expression<Type> {
   }
 };
 
-template<typename LHS, typename RHS>
-auto operator+(LHS lhs, RHS rhs) {
-  return GenericBinary<
+template<typename LHS, typename RHS, template<typename=void> typename OP>
+using ArithmeticBinary = GenericBinary<
     std::common_type_t<
       decltype(std::declval<LHS>().evaluate()),
       decltype(std::declval<LHS>().evaluate())
-    >, LHS, RHS, std::plus<>>(std::move(lhs), std::move(rhs), {});
+    >, LHS, RHS, OP<>>;
+
+template<typename LHS, typename RHS>
+auto operator+(LHS lhs, RHS rhs) {
+  return ArithmeticBinary<LHS, RHS, std::plus>(std::move(lhs), std::move(rhs), {});
+}
+
+template<typename LHS, typename RHS>
+auto operator-(LHS lhs, RHS rhs) {
+  return ArithmeticBinary<LHS, RHS, std::minus>(std::move(lhs), std::move(rhs), {});
+}
+
+template<typename LHS, typename RHS>
+auto operator*(LHS lhs, RHS rhs) {
+  return ArithmeticBinary<LHS, RHS, std::multiplies>(std::move(lhs), std::move(rhs), {});
+}
+
+template<typename LHS, typename RHS>
+auto operator/(LHS lhs, RHS rhs) {
+  return ArithmeticBinary<LHS, RHS, std::divides>(std::move(lhs), std::move(rhs), {});
+}
+
+template<typename LHS, typename RHS>
+auto operator%(LHS lhs, RHS rhs) {
+  return ArithmeticBinary<LHS, RHS, std::modulus>(std::move(lhs), std::move(rhs), {});
 }
 
 }
