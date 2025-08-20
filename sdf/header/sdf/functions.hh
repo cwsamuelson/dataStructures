@@ -1,5 +1,6 @@
 #pragma once
 
+#include "shapes/functions.hh"
 #include "shapes/vec2.hh"
 #include "shapes/vec3.hh"
 
