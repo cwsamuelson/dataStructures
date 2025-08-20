@@ -5,7 +5,6 @@
 //using namespace flp;
 
 TEST_CASE("`SDF`: 3D") {
-  //DDD
   //float sdSphere(const vec3 p, const float s) noexcept 
   //float sdBox(const vec3 p, const vec3 b) noexcept 
   //float sdRoundBox(const vec3 p, const vec3 b, const float r) noexcept 

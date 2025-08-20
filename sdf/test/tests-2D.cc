@@ -5,8 +5,10 @@
 //using namespace flp;
 
 TEST_CASE("`SDF`: 2D") {
-  // DD
   //float sdCircle(vec2 p, float r) noexcept 
+  //STATIC_CHECK(sdCircle({1.f, 0.f}, 0.f) > 0.f);
+  //STATIC_CHECK(sdCircle({ 0.f, 0.f }, 1.f) < 0.f);
+
   //float sdRoundedBox(vec2 p, vec2 b, vec4 r) noexcept 
   //float sdChamferBox(vec2 p, vec2 b, float chamfer) noexcept 
   //float sdBox(vec2 p, vec2 b) noexcept 

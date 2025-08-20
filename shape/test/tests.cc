@@ -1,4 +1,5 @@
 #include <shapes/functions.hh>
+#include <shapes/swizzling.hh>
 #include <shapes/vec2.hh>
 #include <shapes/vec3.hh>
 
@@ -217,4 +218,18 @@ TEST_CASE("Shapes: functions") {
 }
 
 TEST_CASE("Shapes: swizzling") {
+  SECTION("vec2") {
+    vec2 vec(1.f, 2.f);
+
+    CHECK(vec.xx() == vec2{ 1.f, 1.f });
+    CHECK(vec.xy() == vec2{ 1.f, 2.f });
+    CHECK(vec.yx() == vec2{ 2.f, 1.f });
+    CHECK(vec.yy() == vec2{ 2.f, 2.f });
+  }
+
+  SECTION("vec3") {
+  }
+
+  SECTION("vec3") {
+  }
 }

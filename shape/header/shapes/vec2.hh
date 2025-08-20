@@ -1,11 +1,12 @@
 #pragma once
 
+#include "shapes/swizzling.hh"
+
+#include <type_traits>
+
 namespace flp {
 
 struct vec2 {
-  //Swiz2(vec2, 2)
-  //Swiz3(vec2, 2)
-
   constexpr
   vec2() noexcept
     : vec2(0.F)
@@ -27,32 +28,7 @@ struct vec2 {
 
   // swizzling!
   // It's frankly a smidge obnoxious
-  //constexpr
-  //XX2 xx() const noexcept;
-  //constexpr
-  //XY2 xy() const noexcept;
-  //constexpr
-  //YZ2 yx() const noexcept;
-  //constexpr
-  //YY2 yy() const noexcept;
-
-  //constexpr
-  //XXX2 xxx() const noexcept;
-  //constexpr
-  //XXY2 xxy() const noexcept;
-  //constexpr
-  //vec3 xyx() const noexcept;
-  //constexpr
-  //vec3 xyy() const noexcept;
-
-  //constexpr
-  //vec3 yxx() const noexcept;
-  //constexpr
-  //vec3 yxy() const noexcept;
-  //constexpr
-  //vec3 yyx() const noexcept;
-  //constexpr
-  //vec3 yyy() const noexcept;
+  Swiz2(vec2, 2);
 
   friend auto operator<=>(const vec2&, const vec2&) noexcept = default;
 };

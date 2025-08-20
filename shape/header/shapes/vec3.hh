@@ -5,9 +5,6 @@
 namespace flp {
 
 struct vec3 {
-  //Swiz2(vec3, 3)
-  //Swiz3(vec3, 3)
-
   constexpr
   vec3() noexcept
     : vec3(0.F)
