@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shapes/vec2.hh"
+#include "shapes/swizzling.hh"
 
 namespace flp {
 
@@ -41,6 +41,8 @@ struct vec3 {
   float z{};
 
   friend auto operator<=>(const vec3&, const vec3&) noexcept = default;
+
+  Swiz3All
 };
 
 constexpr

@@ -1,11 +1,10 @@
 #pragma once
 
+#include "shapes/swizzling.hh"
+
 namespace flp {
 
 struct vec4 {
-  //Swiz2(vec4, 3)
-  //Swiz3(vec4, 3)
-
   constexpr
   vec4() noexcept
     : vec4(0.F)
@@ -78,6 +77,8 @@ struct vec4 {
   float w{};
 
   friend auto operator<=>(const vec4&, const vec4&) noexcept = default;
+
+  Swiz4All
 };
 
 constexpr

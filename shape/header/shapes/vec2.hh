@@ -26,11 +26,9 @@ struct vec2 {
   float x{};
   float y{};
 
-  // swizzling!
-  // It's frankly a smidge obnoxious
-  Swiz2(vec2, 2);
-
   friend auto operator<=>(const vec2&, const vec2&) noexcept = default;
+
+  Swiz2All
 };
 
 constexpr
