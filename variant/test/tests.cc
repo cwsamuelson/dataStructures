@@ -26,3 +26,10 @@ TEST_CASE("`Variant`") {
   STATIC_CHECK(sizeof(Variant<int, int, int, int>) == sizeof(Variant<int>));
   STATIC_CHECK(sizeof(Variant<uint8_t, double>) == sizeof(Variant<double>));
 }
+
+TEST_CASE("`Variant`: get") {
+  Variant<int, float> variant;
+
+  STATIC_CHECK(std::same_as<std::remove_reference_t<decltype(get<0>(variant))>, int>);
+  STATIC_CHECK(std::same_as<std::remove_reference_t<decltype(get<1>(variant))>, float>);
+}

@@ -30,6 +30,7 @@ target_link_libraries(${PROJECT_NAME}
   ${BASE_PROJECT}_algorithms
   ${BASE_PROJECT}_aligned_buffer
   ${BASE_PROJECT}_core
+  ${BASE_PROJECT}_type_pack
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
