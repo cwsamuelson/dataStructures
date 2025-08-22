@@ -208,3 +208,9 @@ TEST_CASE("`TypePack` SubPack") {
   STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<1, 3>{} == TypePack<Foo<1>, Foo<2>>{});
   STATIC_CHECK(TypePack<Foo<0>, Foo<1>, Foo<2>, Foo<3>>::SubPack<1, 2>{} == TypePack<Foo<1>>{});
 }
+
+TEST_CASE("`TypePack` Get") {
+  STATIC_CHECK(std::same_as<typename TypePack<int, float, unsigned int>::Get<0>, int>);
+  STATIC_CHECK(std::same_as<typename TypePack<int, float, unsigned int>::Get<1>, float>);
+  STATIC_CHECK(std::same_as<typename TypePack<int, float, unsigned int>::Get<2>, unsigned int>);
+}

@@ -247,6 +247,9 @@ struct TypePack {
 
   template<size_t Begin, size_t End>
   using SubPack = typename Drop<Begin>::Reverse::template Drop<sizeof...(Types) - End>::Reverse;
+
+  template<size_t Index>
+  using Get = typename Drop<Index>::Front;
 };
 
 } // namespace flp
