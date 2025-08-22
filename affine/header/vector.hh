@@ -25,6 +25,11 @@ struct Vector {
     : vec{ std::forward<First>(first), std::forward<Rest>(values)... }
   {}
 
+  constexpr
+  Vector(const Vec<Type, Size>& v)
+    : vec(v)
+  {}
+
   friend constexpr auto operator<=>(const Vector&, const Vector&) noexcept = default;
 
   Vec<Type, Size> vec;
@@ -33,73 +38,37 @@ struct Vector {
 template<typename Type, size_t Size>
 constexpr
 Vector<Type, Size> operator+(const Vector<Type, Size>& vec1, const Vector<Type, Size>& vec2) noexcept {
-  Vector<Type, Size> result;
-
-  for (const auto& [r, c1, c2] : std::views::zip(result, vec1, vec2)) {
-    r = c1 + c2;
-  }
-
-  return result;
+  return vec1.vec + vec2.vec;
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vector<Type, Size> operator-(const Vector<Type, Size>& vec1, const Vector<Type, Size>& vec2) noexcept {
-  Vector<Type, Size> result;
-
-  for (const auto& [r, c1, c2] : std::views::zip(result, vec1, vec2)) {
-    r = c1 - c2;
-  }
-
-  return result;
+  return vec1.vec - vec2.vec;
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vector<Type, Size> operator*(const Vector<Type, Size>& vector, const std::floating_point auto& scalar) noexcept {
-  Vector<Type, Size> result;
-
-  for (const auto& [r, component] : std::views::zip(result, vector)) {
-    r = component * scalar;
-  }
-
-  return result;
+  return vector.vec * scalar;
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vector<Type, Size> operator*(const std::floating_point auto& scalar, const Vector<Type, Size>& vector) noexcept {
-  Vector<Type, Size> result;
-
-  for (const auto& [r, component] : std::views::zip(result, vector)) {
-    r = component * scalar;
-  }
-
-  return result;
+  return scalar * vector.vec;
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vector<Type, Size> operator/(const Vector<Type, Size>& vector, const std::floating_point auto& scalar) noexcept {
-  Vector<Type, Size> result;
-
-  for (const auto& [r, component] : std::views::zip(result, vector)) {
-    r = component / scalar;
-  }
-
-  return result;
+  return vector.vec / scalar;
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vector<Type, Size> operator/(const std::floating_point auto& scalar, const Vector<Type, Size>& vector) noexcept {
-  Vector<Type, Size> result;
-
-  for (const auto& [r, component] : std::views::zip(result, vector)) {
-    r = component / scalar;
-  }
-
-  return result;
+  return scalar / vector.vec;
 }
 
 template<typename Type, size_t Size>

@@ -96,4 +96,64 @@ Vec<Type, Size> operator-(const Vec<Type, Size>& vec1, const Vec<Type, Size>& ve
   return combine(vec1, vec2, std::minus<>{});
 }
 
+template<typename Type, size_t Size>
+constexpr
+Vec<Type, Size> operator*(const Vec<Type, Size>& vec1, const Vec<Type, Size>& vec2) noexcept {
+  return combine(vec1, vec2, std::multiplies<>{});
+}
+
+template<typename Type, size_t Size>
+constexpr
+Vec<Type, Size> operator/(const Vec<Type, Size>& vec1, const Vec<Type, Size>& vec2) noexcept {
+  return combine(vec1, vec2, std::divides<>{});
+}
+
+template<typename Type, size_t Size>
+constexpr
+Vec<Type, Size> operator*(const std::floating_point auto& scalar, const Vec<Type, Size>& vec) noexcept {
+  auto result = vec;
+
+  for (auto& component : result) {
+    component = scalar * component;
+  }
+
+  return result;
+}
+
+template<typename Type, size_t Size>
+constexpr
+Vec<Type, Size> operator/(const std::floating_point auto& scalar, const Vec<Type, Size>& vec) noexcept {
+  auto result = vec;
+
+  for (auto& component : result) {
+    component = scalar / component;
+  }
+
+  return result;
+}
+
+template<typename Type, size_t Size>
+constexpr
+Vec<Type, Size> operator*(const Vec<Type, Size>& vec, const std::floating_point auto& scalar) noexcept {
+  auto result = vec;
+
+  for (auto& component : result) {
+    component *= scalar;
+  }
+
+  return result;
+}
+
+template<typename Type, size_t Size>
+constexpr
+Vec<Type, Size> operator/(const Vec<Type, Size>& vec, const std::floating_point auto& scalar) noexcept {
+  auto result = vec;
+
+  for (auto& component : result) {
+    component /= scalar;
+  }
+
+  return result;
+}
+
 }
