@@ -6,8 +6,8 @@
 
 using namespace flp;
 
-SCENARIO("Utilities") {
-  GIVEN("A boost::shared_ptr") {
+TEST_CASE("`utilities`: memory") {
+  GIVEN("`boost::shared_ptr`") {
     auto pointer = boost::make_shared<int>(42);
 
     WHEN("Using the pointer is used with a std::shared_ptr interface") {
@@ -20,7 +20,7 @@ SCENARIO("Utilities") {
     }
   }
 
-  GIVEN("A std::shared_ptr") {
+  GIVEN("`std::shared_ptr`") {
     auto pointer = std::make_shared<int>(42);
 
     WHEN("Using the pointer is used with a boost::shared_ptr interface") {
@@ -34,3 +34,8 @@ SCENARIO("Utilities") {
   }
 }
 
+TEST_CASE("`utilities`: static_loops") {
+}
+
+TEST_CASE("`utilities`: file reading") {
+}

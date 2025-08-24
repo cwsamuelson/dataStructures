@@ -5,7 +5,9 @@ project(${BASE_PROJECT}_utilities LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/file_handling.hh
   header/memory.hh
+  header/static_loops.hh
 )
 set(SOURCES
 )
