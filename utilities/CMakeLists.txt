@@ -5,14 +5,15 @@ project(${BASE_PROJECT}_utilities LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/file_handling.hh
+  header/file_io/file_handling.hh
   header/memory.hh
   header/static_loops.hh
 )
 set(SOURCES
+  source/file_io.cc
 )
 
-common_library(${PROJECT_NAME} INTERFACE
+common_library(${PROJECT_NAME}
   ${HEADERS}
   ${SOURCES}
 )
@@ -26,7 +27,7 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  INTERFACE
+  PUBLIC
   error_support::error_support
 )
 
