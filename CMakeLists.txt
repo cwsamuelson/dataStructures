@@ -24,10 +24,12 @@ add_subdirectory(doubly_linked_list)
 add_subdirectory(equation)
 add_subdirectory(expected)
 #add_subdirectory(expr_template)
+#add_subdirectory(flat-map)
 add_subdirectory(function)
 add_subdirectory(future)
 add_subdirectory(gap_buffer)
 #add_subdirectory(geometry)
+#add_subdirectory(hash-map)
 #add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
 add_subdirectory(inplace_vector)
@@ -49,6 +51,7 @@ add_subdirectory(property)
 add_subdirectory(ranged_int)
 #add_subdirectory(ranges)
 add_subdirectory(ratio)
+#add_subdirectory(red-black-tree)
 #add_subdirectory(ref_count)
 #add_subdirectory(regex)
 add_subdirectory(resource_pack)
@@ -106,10 +109,12 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_equation
   ${PROJECT_NAME}_expected
   #${PROJECT_NAME}_expr_template
+  #${PROJECT_NAME}_flat-map
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
   ${PROJECT_NAME}_gap_buffer
   #${PROJECT_NAME}_geometry
+  #${PROJECT_NAME}_hash-map
   #${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive
   ${PROJECT_NAME}_inplace_vector
@@ -131,6 +136,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_ranged_int
   #${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
+  #${PROJECT_NAME}_red-black-tree
   #${PROJECT_NAME}_ref_count
   #${PROJECT_NAME}_regex
   ${PROJECT_NAME}_resource_pack
