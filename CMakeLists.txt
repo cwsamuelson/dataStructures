@@ -24,7 +24,7 @@ add_subdirectory(expected)
 #add_subdirectory(expr_template)
 add_subdirectory(function)
 add_subdirectory(future)
-#add_subdirectory(gap_buffer)
+add_subdirectory(gap_buffer)
 #add_subdirectory(geometry)
 #add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
@@ -101,7 +101,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_expr_template
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
-  #${PROJECT_NAME}_gap_buffer
+  ${PROJECT_NAME}_gap_buffer
   #${PROJECT_NAME}_geometry
   #${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive
