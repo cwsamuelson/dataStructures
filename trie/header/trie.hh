@@ -8,8 +8,7 @@ template<typename Type>
 struct Trie {
   Type value;
   std::vector<Trie> children;
-  bool termaniting = false;
+  bool terminating = false;
 };
 
 } // namespace flp
-
