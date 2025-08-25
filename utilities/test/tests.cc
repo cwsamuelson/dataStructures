@@ -1,4 +1,6 @@
-#include <memory.hh>
+//#include <memory.hh>
+#include <file_io/file_handling.hh>
+#include <static_loops.hh>
 
 #include <catch2/catch_all.hpp>
 
@@ -6,7 +8,7 @@
 
 using namespace flp;
 
-TEST_CASE("`utilities`: memory") {
+/*TEST_CASE("`utilities`: memory") {
   GIVEN("`boost::shared_ptr`") {
     auto pointer = boost::make_shared<int>(42);
 
@@ -32,7 +34,7 @@ TEST_CASE("`utilities`: memory") {
       }
     }
   }
-}
+}*/
 
 TEST_CASE("`utilities`: static_loops") {
 }

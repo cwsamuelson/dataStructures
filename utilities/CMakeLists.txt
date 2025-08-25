@@ -6,7 +6,7 @@ find_package(error_support REQUIRED)
 
 set(HEADERS
   header/file_io/file_handling.hh
-  header/memory.hh
+  #header/memory.hh
   header/static_loops.hh
 )
 set(SOURCES
