@@ -8,6 +8,7 @@ find_package(cmake_scripts REQUIRED)
 add_subdirectory(affine)
 add_subdirectory(algorithms)
 add_subdirectory(aligned_buffer)
+#add_subdirectory(allocator)
 add_subdirectory(box)
 add_subdirectory(colors)
 add_subdirectory(configuration)
@@ -23,10 +24,15 @@ add_subdirectory(expected)
 #add_subdirectory(expr_template)
 add_subdirectory(function)
 add_subdirectory(future)
+#add_subdirectory(gap_buffer)
+#add_subdirectory(geometry)
+#add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
 add_subdirectory(inplace_vector)
+#add_subdirectory(json)
 #add_subdirectory(lifetime)
 add_subdirectory(matrix)
+#add_subdirectory(memory_pool)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(operators)
 add_subdirectory(optional)
@@ -34,29 +40,37 @@ add_subdirectory(optional)
 add_subdirectory(polynomial)
 add_subdirectory(process_manager)
 add_subdirectory(producer_consumer)
+add_subdirectory(profiler)
 add_subdirectory(property)
 add_subdirectory(ranged_int)
+#add_subdirectory(ranges)
 add_subdirectory(ratio)
+#add_subdirectory(ref_count)
+#add_subdirectory(regex)
 add_subdirectory(resource_pack)
 add_subdirectory(ring_buffer)
 add_subdirectory(ring_view)
+#add_subdirectory(rope)
 #add_subdirectory(scheduler)
 add_subdirectory(sdf)
-add_subdirectory(singly_linked_list)
 add_subdirectory(shape)
 add_subdirectory(shared_ptr)
+add_subdirectory(singly_linked_list)
 add_subdirectory(smart_enum)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
+#add_subdirectory(spline)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
+#add_subdirectory(tagged_arguments)
 add_subdirectory(thread_pool)
 add_subdirectory(tribool)
+#add_subdirectory(trie)
 add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
-#add_subdirectory(units)
 add_subdirectory(unique_ptr)
+#add_subdirectory(units)
 add_subdirectory(utilities)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
@@ -71,6 +85,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_affine
   ${PROJECT_NAME}_algorithms
   ${PROJECT_NAME}_aligned_buffer
+  #${PROJECT_NAME}_allocator
   ${PROJECT_NAME}_box
   ${PROJECT_NAME}_colors
   ${PROJECT_NAME}_configuration
@@ -86,10 +101,15 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_expr_template
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
+  #${PROJECT_NAME}_gap_buffer
+  #${PROJECT_NAME}_geometry
+  #${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive
   ${PROJECT_NAME}_inplace_vector
+  #${PROJECT_NAME}_json
   #${PROJECT_NAME}_lifetime
   ${PROJECT_NAME}_matrix
+  #${PROJECT_NAME}_memory_pool
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
@@ -97,29 +117,37 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_process_manager
   ${PROJECT_NAME}_producer_consumer
+  ${PROJECT_NAME}_profiler
   ${PROJECT_NAME}_property
   ${PROJECT_NAME}_ranged_int
+  #${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
+  #${PROJECT_NAME}_ref_count
+  #${PROJECT_NAME}_regex
   ${PROJECT_NAME}_resource_pack
   ${PROJECT_NAME}_ring_buffer
   ${PROJECT_NAME}_ring_view
+  #${PROJECT_NAME}_rope
   #${PROJECT_NAME}_scheduler
   ${PROJECT_NAME}_sdf
-  ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_shape
   ${PROJECT_NAME}_shared_ptr
+  ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_smart_enum
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
+  #${PROJECT_NAME}_spline
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
+  #${PROJECT_NAME}_tagged_arguments
   ${PROJECT_NAME}_thread_pool
   ${PROJECT_NAME}_tribool
+  #${PROJECT_NAME}_trie
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
-  #${PROJECT_NAME}_units
   ${PROJECT_NAME}_unique_ptr
+  #${PROJECT_NAME}_units
   ${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
@@ -129,4 +157,3 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 enable_testing()
-
