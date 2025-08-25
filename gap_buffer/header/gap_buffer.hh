@@ -198,6 +198,25 @@ struct GapBuffer {
     return buffer_sequence.size();
   }
 
+  [[nodiscard]]
+  decltype(auto) operator[](this auto&& self, size_t index) {
+    auto buf_iter = self.buffer_sequence.begin();
+    while (index > buf_iter->size()) {
+      index -= buf_iter->size();
+      ++buf_iter;
+    }
+
+    return (*buf_iter)[index];
+  }
+
+  decltype(auto) front(this auto&& self) {
+    return self.buffer_sequence.front().front();
+  }
+
+  decltype(auto) back(this auto&& self) {
+    return self.buffer_sequence.back().back();
+  }
+
   void push_back(const char c) {
     if (not buffer_sequence.empty()) {
       auto& buffer = buffer_sequence.emplace_back();
@@ -209,7 +228,50 @@ struct GapBuffer {
 
   void push_back(Type string) {
     auto& buffer = buffer_sequence.emplace_back(std::move(string));
-    buffer.reserve(block_size);
+    //buffer.reserve(block_size);// ?
+  }
+
+  GapBuffer& operator+=(const GapBuffer& other) {
+    for (auto& buffer : other.buffer_sequence) {
+      buffer_sequence.emplace_back(buffer);
+    }
+
+    return *this;
+  }
+
+  GapBuffer& operator+=(GapBuffer&& other) {
+    for (auto& buffer : other.buffer_sequence) {
+      buffer_sequence.emplace_back(std::move(buffer));
+    }
+    other.buffer_sequence.clear();
+
+    return *this;
+  }
+
+  GapBuffer operator+(const GapBuffer& other) {
+    return GapBuffer(*this) += other;
+  }
+
+  GapBuffer operator+(GapBuffer&& other) {
+    return GapBuffer(*this) += std::move(other);
+  }
+
+  GapBuffer& operator+=(const std::string& string) {
+    buffer_sequence.emplace_back(string);
+    return *this;
+  }
+
+  GapBuffer& operator+=(std::string&& string) {
+    buffer_sequence.emplace_back(std::move(string));
+    return *this;
+  }
+
+  GapBuffer operator+(const std::string& string) {
+    return GapBuffer(*this) += string;
+  }
+
+  GapBuffer operator+(std::string&& string) {
+    return GapBuffer(*this) += std::move(string);
   }
 
   [[nodiscard]]

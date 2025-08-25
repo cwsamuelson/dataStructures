@@ -26,6 +26,17 @@ TEST_CASE("`GapBuffer`: `GapString`") {
   CHECK(not string.empty());
   CHECK(string == "TEST TEXT");
   CHECK(string == std::string("TEST TEXT"));
+  CHECK(string[0] == 'T');
+  CHECK(string[1] == 'E');
+  CHECK(string[2] == 'S');
+  CHECK(string[3] == 'T');
+  CHECK(string.front() == 'T');
+  CHECK(string.back() == 'T');
+  string.front() = 'A';
+  string.back() = 'B';
+  CHECK(string.front() == 'A');
+  CHECK(string.back() == 'B');
+  CHECK(string == "AEST TEXB");
 
   string = std::string("TEST TEXT");
   CHECK(string.size() == 9);
@@ -33,13 +44,28 @@ TEST_CASE("`GapBuffer`: `GapString`") {
   CHECK(not string.empty());
   CHECK(string == "TEST TEXT");
   CHECK(string == std::string("TEST TEXT"));
+  CHECK(string[0] == 'T');
+  CHECK(string[1] == 'E');
+  CHECK(string[2] == 'S');
+  CHECK(string[3] == 'T');
+  CHECK(string.front() == 'T');
+  CHECK(string.back() == 'T');
 
   string = "xxx";
   CHECK(string < "xxxx");
   CHECK(string > "xx");
   CHECK(string < GapString("xxxx"));
   CHECK(string > GapString("xx"));
+  CHECK(string[0] == 'x');
+  CHECK(string[1] == 'x');
+  CHECK(string[2] == 'x');
+  CHECK(string.front() == 'x');
+  CHECK(string.back() == 'x');
+
   string = "A";
   CHECK(string < "B");
   CHECK(string < GapString("B"));
+  CHECK(string[0] == 'A');
+  CHECK(string.front() == 'A');
+  CHECK(string.back() == 'A');
 }
