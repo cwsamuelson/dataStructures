@@ -45,6 +45,7 @@ add_subdirectory(sdf)
 add_subdirectory(singly_linked_list)
 add_subdirectory(shape)
 add_subdirectory(shared_ptr)
+add_subdirectory(smart_enum)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 #add_subdirectory(std_hive)
@@ -106,6 +107,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_shape
   ${PROJECT_NAME}_shared_ptr
+  ${PROJECT_NAME}_smart_enum
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   #${PROJECT_NAME}_std_hive
