@@ -56,6 +56,7 @@ add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
 #add_subdirectory(units)
+add_subdirectory(unique_ptr)
 add_subdirectory(utilities)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
@@ -118,6 +119,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
   #${PROJECT_NAME}_units
+  ${PROJECT_NAME}_unique_ptr
   ${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set

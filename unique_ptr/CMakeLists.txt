@@ -5,7 +5,7 @@ project(${BASE_PROJECT}_unique_ptr LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/template.hh
+  header/unique_ptr.hh
 )
 set(SOURCES
 )
