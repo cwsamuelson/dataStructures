@@ -112,6 +112,9 @@ TEST_CASE("Hive") {
 
     SECTION("First element") {
       hive.erase(iter1);
+      CHECK(hive.size() == 1);
+      CHECK(hive.capacity() == 10);
+
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 2);
       CHECK(hive.capacity() == 10);
@@ -128,6 +131,9 @@ TEST_CASE("Hive") {
       CHECK(ptr2 != ptr3);
 
       hive.erase(iter2);
+      CHECK(hive.size() == 2);
+      CHECK(hive.capacity() == 10);
+
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 3);
       CHECK(hive.capacity() == 10);
@@ -149,6 +155,9 @@ TEST_CASE("Hive") {
       auto ptr3 = &*iter3;
 
       hive.erase(iter3);
+      CHECK(hive.size() == 2);
+      CHECK(hive.capacity() == 10);
+
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 3);
       CHECK(hive.capacity() == 10);
@@ -160,6 +169,9 @@ TEST_CASE("Hive") {
       auto ptr1 = &*iter1;
 
       hive.erase(iter1);
+      CHECK(hive.size() == 2);
+      CHECK(hive.capacity() == 10);
+
       auto new_iter = hive.emplace();
       CHECK(hive.size() == 3);
       CHECK(hive.capacity() == 10);
@@ -170,6 +182,8 @@ TEST_CASE("Hive") {
     SECTION("Empty region before and after erased point") {
       hive.emplace(); // prevent block from being deleted
 
+      CHECK(hive.size() == 4);
+
       auto* ptr1 = &*iter1;
       auto* ptr2 = &*iter2;
       auto* ptr3 = &*iter3;
@@ -177,6 +191,8 @@ TEST_CASE("Hive") {
       hive.erase(iter1);
       hive.erase(iter3);
       hive.erase(iter2);
+
+      CHECK(hive.size() == 1);
 
       auto new_iter1 = hive.emplace();
       auto new_iter2 = hive.emplace();
