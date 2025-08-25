@@ -9,6 +9,8 @@ add_subdirectory(affine)
 add_subdirectory(algorithms)
 add_subdirectory(aligned_buffer)
 #add_subdirectory(allocator)
+#add_subdirectory(b+-tree)
+#add_subdirectory(b-tree)
 add_subdirectory(box)
 add_subdirectory(colors)
 add_subdirectory(configuration)
@@ -34,6 +36,7 @@ add_subdirectory(inplace_vector)
 add_subdirectory(matrix)
 #add_subdirectory(memory_pool)
 #add_subdirectory(normal_iterator)
+#add_subdirectory(oct-tree)
 #add_subdirectory(operators)
 add_subdirectory(optional)
 #add_subdirectory(polymorphic_value)
@@ -42,6 +45,7 @@ add_subdirectory(process_manager)
 add_subdirectory(producer_consumer)
 add_subdirectory(profiler)
 add_subdirectory(property)
+#add_subdirectory(quad-tree)
 add_subdirectory(ranged_int)
 #add_subdirectory(ranges)
 add_subdirectory(ratio)
@@ -53,6 +57,7 @@ add_subdirectory(ring_view)
 #add_subdirectory(rope)
 #add_subdirectory(scheduler)
 add_subdirectory(sdf)
+#add_subdirectory(segment-tree)
 add_subdirectory(shape)
 add_subdirectory(shared_ptr)
 add_subdirectory(singly_linked_list)
@@ -86,6 +91,8 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_algorithms
   ${PROJECT_NAME}_aligned_buffer
   #${PROJECT_NAME}_allocator
+  #${PROJECT_NAME}_b+-tree
+  #${PROJECT_NAME}_b-tree
   ${PROJECT_NAME}_box
   ${PROJECT_NAME}_colors
   ${PROJECT_NAME}_configuration
@@ -111,6 +118,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_matrix
   #${PROJECT_NAME}_memory_pool
   #${PROJECT_NAME}_normal_iterator
+  #${PROJECT_NAME}_oct-tree
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
   #${PROJECT_NAME}_polymorphic_value
@@ -119,6 +127,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_profiler
   ${PROJECT_NAME}_property
+  #${PROJECT_NAME}_quad-tree
   ${PROJECT_NAME}_ranged_int
   #${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
@@ -130,6 +139,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_rope
   #${PROJECT_NAME}_scheduler
   ${PROJECT_NAME}_sdf
+  #${PROJECT_NAME}_segment-tree
   ${PROJECT_NAME}_shape
   ${PROJECT_NAME}_shared_ptr
   ${PROJECT_NAME}_singly_linked_list
