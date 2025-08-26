@@ -1,11 +1,11 @@
-#include <gap_buffer.hh>
+#include <chunked_array.hh>
 
 #include <catch2/catch_all.hpp>
 
 using namespace flp;
 
-TEST_CASE("`GapBuffer`: `GapString`") {
-  GapString string;
+TEST_CASE("`ChunkedArray`: `ChunkedString`") {
+  ChunkedString string;
   CHECK(string.size() == 0);
   CHECK(string.capacity() == 0);
   CHECK(string.empty());
@@ -54,8 +54,8 @@ TEST_CASE("`GapBuffer`: `GapString`") {
   string = "xxx";
   CHECK(string < "xxxx");
   CHECK(string > "xx");
-  CHECK(string < GapString("xxxx"));
-  CHECK(string > GapString("xx"));
+  CHECK(string < ChunkedString("xxxx"));
+  CHECK(string > ChunkedString("xx"));
   CHECK(string[0] == 'x');
   CHECK(string[1] == 'x');
   CHECK(string[2] == 'x');
@@ -64,7 +64,7 @@ TEST_CASE("`GapBuffer`: `GapString`") {
 
   string = "A";
   CHECK(string < "B");
-  CHECK(string < GapString("B"));
+  CHECK(string < ChunkedString("B"));
   CHECK(string[0] == 'A');
   CHECK(string.front() == 'A');
   CHECK(string.back() == 'A');

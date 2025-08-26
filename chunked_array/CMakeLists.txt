@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_gap_buffer LANGUAGES CXX)
+project(${BASE_PROJECT}_chunked_array LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/gap_buffer.hh
+  header/chunked_array.hh
 )
 set(SOURCES
 )

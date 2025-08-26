@@ -9,10 +9,14 @@
 
 namespace flp {
 
+// When I wrote this, I thought I was writing the `GapBuffer`, but soon realized
+// I was confused.  The result is something approximating `Hive` for strings.
+// It's incomplete, but may be suitable for text editing.
+
 /* At the cost of memory overhead, makes arbitrary insertions much faster
  */
 template<typename Type>
-struct GapBuffer {
+struct ChunkedArray {
   template<bool IsConst>
   struct Iterator;
 
@@ -27,7 +31,7 @@ struct GapBuffer {
     using pointer = MaybeConst<value_type, IsConst>*;
     using reference = MaybeConst<value_type, IsConst>&;
 
-    using Container = MaybeConst<GapBuffer, IsConst>;
+    using Container = MaybeConst<ChunkedArray, IsConst>;
     using BlockIterator = decltype(std::declval<std::remove_reference_t<Container>>().buffer_sequence.begin());
 
     Container* buffer = nullptr;
@@ -128,16 +132,16 @@ struct GapBuffer {
   };
 
   constexpr
-  GapBuffer() noexcept = default;
+  ChunkedArray() noexcept = default;
 
   constexpr
-  GapBuffer(Type string)
+  ChunkedArray(Type string)
     : buffer_sequence(1, std::move(string)) {
     buffer_sequence.front().reserve(block_size);
   }
 
   constexpr
-  GapBuffer& operator=(Type string) {
+  ChunkedArray& operator=(Type string) {
     for (auto& buffer : buffer_sequence) {
       buffer.clear();
     }
@@ -153,16 +157,16 @@ struct GapBuffer {
   }
 
   constexpr
-  GapBuffer(const GapBuffer&) = default;
+  ChunkedArray(const ChunkedArray&) = default;
   constexpr
-  GapBuffer(GapBuffer&&) noexcept = default;
+  ChunkedArray(ChunkedArray&&) noexcept = default;
 
   constexpr
-  GapBuffer& operator=(const GapBuffer&) = default;
+  ChunkedArray& operator=(const ChunkedArray&) = default;
   constexpr
-  GapBuffer& operator=(GapBuffer&&) noexcept = default;
+  ChunkedArray& operator=(ChunkedArray&&) noexcept = default;
 
-  ~GapBuffer() noexcept = default;
+  ~ChunkedArray() noexcept = default;
 
   [[nodiscard]]
   bool empty() const noexcept {
@@ -231,7 +235,7 @@ struct GapBuffer {
     //buffer.reserve(block_size);// ?
   }
 
-  GapBuffer& operator+=(const GapBuffer& other) {
+  ChunkedArray& operator+=(const ChunkedArray& other) {
     for (auto& buffer : other.buffer_sequence) {
       buffer_sequence.emplace_back(buffer);
     }
@@ -239,7 +243,7 @@ struct GapBuffer {
     return *this;
   }
 
-  GapBuffer& operator+=(GapBuffer&& other) {
+  ChunkedArray& operator+=(ChunkedArray&& other) {
     for (auto& buffer : other.buffer_sequence) {
       buffer_sequence.emplace_back(std::move(buffer));
     }
@@ -248,30 +252,30 @@ struct GapBuffer {
     return *this;
   }
 
-  GapBuffer operator+(const GapBuffer& other) {
-    return GapBuffer(*this) += other;
+  ChunkedArray operator+(const ChunkedArray& other) {
+    return ChunkedArray(*this) += other;
   }
 
-  GapBuffer operator+(GapBuffer&& other) {
-    return GapBuffer(*this) += std::move(other);
+  ChunkedArray operator+(ChunkedArray&& other) {
+    return ChunkedArray(*this) += std::move(other);
   }
 
-  GapBuffer& operator+=(const std::string& string) {
+  ChunkedArray& operator+=(const std::string& string) {
     buffer_sequence.emplace_back(string);
     return *this;
   }
 
-  GapBuffer& operator+=(std::string&& string) {
+  ChunkedArray& operator+=(std::string&& string) {
     buffer_sequence.emplace_back(std::move(string));
     return *this;
   }
 
-  GapBuffer operator+(const std::string& string) {
-    return GapBuffer(*this) += string;
+  ChunkedArray operator+(const std::string& string) {
+    return ChunkedArray(*this) += string;
   }
 
-  GapBuffer operator+(std::string&& string) {
-    return GapBuffer(*this) += std::move(string);
+  ChunkedArray operator+(std::string&& string) {
+    return ChunkedArray(*this) += std::move(string);
   }
 
   [[nodiscard]]
@@ -282,7 +286,7 @@ struct GapBuffer {
     return string;
   }
 
-  friend auto operator<=>(const GapBuffer& lhs, const GapBuffer& rhs) noexcept {
+  friend auto operator<=>(const ChunkedArray& lhs, const ChunkedArray& rhs) noexcept {
     auto lhs_iter = lhs.begin();
     auto rhs_iter = rhs.begin();
 
@@ -307,7 +311,7 @@ struct GapBuffer {
 
   friend
   std::strong_ordering operator<=>(
-    const GapBuffer& buffer,
+    const ChunkedArray& buffer,
     const char* string
   ) noexcept {
     return buffer <=> std::string_view(string);
@@ -315,7 +319,7 @@ struct GapBuffer {
 
   friend
   std::strong_ordering operator<=>(
-    const GapBuffer& buffer,
+    const ChunkedArray& buffer,
     const std::string_view& string
   ) noexcept {
     auto buf_iter = buffer.begin();
@@ -342,7 +346,7 @@ struct GapBuffer {
 
   [[nodiscard]]
   friend
-  bool operator==(const GapBuffer& buffer, const std::string_view& string) {
+  bool operator==(const ChunkedArray& buffer, const std::string_view& string) {
     auto buf_iter = buffer.begin();
     auto str_iter = string.begin();
 
@@ -378,6 +382,6 @@ struct GapBuffer {
   std::vector<Type> buffer_sequence;
 };
 
-using GapString = GapBuffer<std::string>;
+using ChunkedString = ChunkedArray<std::string>;
 
 } // namespace flp
