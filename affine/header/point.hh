@@ -42,14 +42,14 @@ struct Point {
 
 template<typename Type, size_t Size>
 constexpr
-Vector<Type, Size> operator-(const Point<Type, Size>& point1, const Point<Type, Size>& point2) noexcept {
-  return point1.vec - point2.vec;
+Point<Type, Size> operator+(const Point<Type, Size>& point, const Vector<Type, Size>& vector) noexcept {
+  return point.vec + vector.vec;
 }
 
 template<typename Type, size_t Size>
 constexpr
-Point<Type, Size> operator+(const Point<Type, Size>& point, const Vector<Type, Size>& vector) noexcept {
-  return point.vec + vector.vec;
+Vector<Type, Size> operator-(const Point<Type, Size>& point1, const Point<Type, Size>& point2) noexcept {
+  return point1.vec - point2.vec;
 }
 
 }

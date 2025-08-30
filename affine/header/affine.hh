@@ -17,7 +17,9 @@ struct Vector {
 };
 
 template<typename Type>
-constexpr Point<Type> O {};
+constexpr Point<Type> Origin {};
+template<typename Type>
+static constexpr auto& O = Origin<Type>;
 
 // A basis vector is part of an affine reference frame
 // or otherwise part of a coordinate system

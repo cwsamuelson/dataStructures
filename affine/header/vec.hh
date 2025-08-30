@@ -75,11 +75,35 @@ constexpr
 auto combine(const Vec<Type, Size>& vec1, const Vec<Type, Size>& vec2, Functor&& functor) noexcept {
   using FResult = decltype(functor(std::declval<Type>(), std::declval<Type>()));
 
-  return Vec<FResult, Size>{
+  return Vec<FResult, Size>{ 
       std::views::zip(vec1.components, vec2.components)
     | std::views::transform([&functor](const auto& pair) {
       const auto& [x, y] = pair;
       return functor(x, y);
+    })
+  };
+}
+
+template<typename Type, size_t Size, typename Functor, std::floating_point FloatPt>
+constexpr
+auto combine(const Vec<Type, Size>& vec, const FloatPt&& scalar, Functor&& functor) noexcept {
+  using FResult = decltype(functor(std::declval<Type>(), std::declval<FloatPt>()));
+
+  return Vec<FResult, Size> {
+    vec | std::views::transform([&functor, &scalar](const auto& component) {
+      return functor(component, scalar);
+    })
+  };
+}
+
+template<typename Type, size_t Size, typename Functor, std::floating_point FloatPt>
+constexpr
+auto combine(const FloatPt&& scalar, const Vec<Type, Size>& vec, Functor&& functor) noexcept {
+  using FResult = decltype(functor(std::declval<FloatPt>(), std::declval<Type>()));
+
+  return Vec<FResult, Size> {
+    vec | std::views::transform([&functor, &scalar](const auto& component) {
+      return functor(scalar, component);
     })
   };
 }
@@ -111,49 +135,25 @@ Vec<Type, Size> operator/(const Vec<Type, Size>& vec1, const Vec<Type, Size>& ve
 template<typename Type, size_t Size>
 constexpr
 Vec<Type, Size> operator*(const std::floating_point auto& scalar, const Vec<Type, Size>& vec) noexcept {
-  auto result = vec;
-
-  for (auto& component : result) {
-    component = scalar * component;
-  }
-
-  return result;
+  return combine(scalar, vec, std::multiplies<>{});
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vec<Type, Size> operator/(const std::floating_point auto& scalar, const Vec<Type, Size>& vec) noexcept {
-  auto result = vec;
-
-  for (auto& component : result) {
-    component = scalar / component;
-  }
-
-  return result;
+  return combine(scalar, vec, std::divides<>{});
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vec<Type, Size> operator*(const Vec<Type, Size>& vec, const std::floating_point auto& scalar) noexcept {
-  auto result = vec;
-
-  for (auto& component : result) {
-    component *= scalar;
-  }
-
-  return result;
+  return combine(vec, scalar, std::multiplies<>{});
 }
 
 template<typename Type, size_t Size>
 constexpr
 Vec<Type, Size> operator/(const Vec<Type, Size>& vec, const std::floating_point auto& scalar) noexcept {
-  auto result = vec;
-
-  for (auto& component : result) {
-    component /= scalar;
-  }
-
-  return result;
+  return combine(vec, scalar, std::divides<>{});
 }
 
 }
