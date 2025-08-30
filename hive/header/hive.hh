@@ -10,7 +10,12 @@
 
 namespace flp {
 
-// 'bucket array'
+// # Aliases
+// - `Hive`
+// - `Colony`
+// - `BucketArray`
+// - `SegmentedDynamicArray`
+// - `UnrolledLinkedList`
 
 // questions:
 // how should the block size be defined?

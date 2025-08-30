@@ -1,3 +1,5 @@
+#pragma once
+
 // https://eigen.tuxfamily.org/dox/group__TutorialSlicingIndexing.html
 //! @TODO compare against the other interface, too..
 // the mixins might be valuable...
@@ -6,6 +8,7 @@
 #include <core/concepts.hh>
 
 #include <array>
+#include <concepts>
 #include <functional>
 #include <limits>
 #include <vector>
@@ -20,8 +23,8 @@ using Width  = TaggedType<size_t, WidthTag>;
 using Height = TaggedType<size_t, HeightTag>;
 using XIndex = TaggedType<size_t, XIndexTag>;
 using YIndex = TaggedType<size_t, YIndexTag>;
-static_assert(not std::is_same_v<Width, Height>);
-static_assert(not std::is_same_v<XIndex, YIndex>);
+static_assert(not std::same_as<Width, Height>);
+static_assert(not std::same_as<XIndex, YIndex>);
 
 // transposition of arguments?
 constexpr auto operator+(const Width& lhs, const Height& rhs) noexcept {
