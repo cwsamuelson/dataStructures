@@ -197,6 +197,10 @@ struct ChunkedArray {
     return total;
   }
 
+  void clear() noexcept {
+    buffer_sequence.clear();
+  }
+
   [[nodiscard]]
   size_t bucket_count() const noexcept {
     return buffer_sequence.size();
