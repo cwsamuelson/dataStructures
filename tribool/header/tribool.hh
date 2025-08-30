@@ -10,6 +10,7 @@ struct TriBool {
     False,
     Indeterminate,
     X = Indeterminate,
+    Z,
   };
 
   using enum State;
