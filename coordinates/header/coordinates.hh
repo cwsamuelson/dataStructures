@@ -8,13 +8,24 @@ namespace flp {
 
 struct DiscreteTag;
 struct ContinuousTag;
-struct WidthTag;
-struct HeightTag;
-struct LengthTag;
 struct XCoordinateTag;
 struct YCoordinateTag;
 struct ZCoordinateTag;
 struct WCoordinateTag;
+
+template<size_t Dimension>
+struct BasisTag {};
+
+template<typename Type, size_t Dimension>
+using Basis = TaggedType<Type, BasisTag<Dimension>>;
+template<typename Type>
+using XBasis = Basis<Type, 0>;
+template<typename Type>
+using YBasis = Basis<Type, 1>;
+template<typename Type>
+using ZBasis = Basis<Type, 2>;
+template<typename Type>
+using WBasis = Basis<Type, 3>;
 
 template<typename Type>
 using WidthImpl  = TaggedType<Type, WidthTag>;
