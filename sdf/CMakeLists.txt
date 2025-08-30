@@ -4,7 +4,8 @@ project(${BASE_PROJECT}_sdf LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/sdf/functions.hh
+  header/sdf/2D.hh
+  header/sdf/3D.hh
 )
 set(SOURCES
 )
@@ -34,4 +35,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

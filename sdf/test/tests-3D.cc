@@ -1,4 +1,4 @@
-//#include <sdf/functions.hh>
+//#include <sdf/3D.hh>
 
 #include <catch2/catch_all.hpp>
 

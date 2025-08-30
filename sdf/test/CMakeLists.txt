@@ -17,4 +17,3 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
-
