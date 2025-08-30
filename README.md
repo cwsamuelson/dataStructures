@@ -1,4 +1,4 @@
-# Documentation
+# Galactic Structures
 
 This is an umbrella project for various code/tools/utilities I have thought of, or decided to replicate for practice.
 Each subproject/directory will have its own more detailed README to cover its specific contents.
@@ -76,7 +76,7 @@ timer
 traits
 tuple
 
-# Goals
+## Goals
 
 The primary function for this project for me is practice of varying kinds. It is also a useful collection of 'previous
 art' for myself that I can pull from when working on other things. I use this to implement 'normal' things like std::
@@ -86,7 +86,7 @@ sometimes 'experimental' nature of what I'm working on and thinking about, code 
 standards. It is my goal that eventually it will, but given the often necessarily WIP nature of many of this code,
 nothing can be guaranteed. Improvement changes and ideas are welcome!
 
-# TODO
+## TODO
 
 - Create subproject READMEs. I'd like them to be reasonably good quality, so this will take time and focus. It also
   implies some level of completeness of the piece it documents, which many of these are certainly not.
@@ -95,15 +95,30 @@ nothing can be guaranteed. Improvement changes and ideas are welcome!
 - Add project badges
 - Find and leverage the open source guidelines
 
-# Contributors
+## Code organization
+WIP
+
+## File organization
+WIP
+
+## Namespace
+Currently everything exists under the `flp` namespace.  This stands for 'Four Light Productions', and is a reference to the Star Trek episode 'Chain of Command'.  It represents integrity and truth.  Since I use this code as a reference/source of truth frequently, it seems appropriate.
+
+Alternatives I've considered:
+- cws
+  - CodeWright's Standard
+- lcrs
+  - Low-level C++ Reference Suite
+
+## Contributors
 
 At this time I am the only contributor. Feel free to provide a PR or issue with ideas, changes or fixes!
 
-# Copyright
+## Copyright
 
-© 2013-2024 Chris Samuelson. All rights reserved.
+© 2013-2025 Chris Samuelson. All rights reserved.
 
-# [Licensing](https://choosealicense.com/licenses/gpl-3.0/)
+## [Licensing](https://choosealicense.com/licenses/gpl-3.0/)
 
 This project is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0-standalone.html).
 
