@@ -1,10 +1,10 @@
-#include <polynomial.hh>
+#include <polynomial-nd.hh>
 
 #include <catch2/catch_all.hpp>
 
 using namespace flp;
 
-TEST_CASE("`Polynomial` Coordinates") {
+TEST_CASE("`PolynomialND` Coordinates") {
   SECTION("Dimensionality") {
     STATIC_CHECK(sizeof(Point1D<size_t>) == 1 * sizeof(size_t));
     STATIC_CHECK(sizeof(Point2D<size_t>) == 2 * sizeof(size_t));
@@ -33,14 +33,13 @@ TEST_CASE("`Polynomial` Coordinates") {
   }
 }
 
-TEST_CASE("`Polynomial`") {
+TEST_CASE("`PolynomialND`") {
   SECTION("basic") {
-    /*Polynomial<> polynomial{1};
+    /*PolynomialND<> polynomialND{1};
 
-    STATIC_CHECK(polynomial(0) == 1);
-    STATIC_CHECK(polynomial(1) == 1);
-    STATIC_CHECK(polynomial(2) == 1);
-    STATIC_CHECK(polynomial(3) == 1);*/
+    STATIC_CHECK(polynomialND(0) == 1);
+    STATIC_CHECK(polynomialND(1) == 1);
+    STATIC_CHECK(polynomialND(2) == 1);
+    STATIC_CHECK(polynomialND(3) == 1);*/
   }
 }
-

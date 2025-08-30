@@ -5,12 +5,15 @@ project(${BASE_PROJECT}_polynomial LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/polynomial.hh
+  header/polynomial-2d.hh
+  header/polynomial-nd.hh
 )
 set(SOURCES
 )
 
 common_library(${PROJECT_NAME} INTERFACE
+  CXX_STANDARD 26
+
   ${HEADERS}
   ${SOURCES}
 )

@@ -129,38 +129,38 @@ struct PolyStorage<Type, 1> {
 // leaving double for higher precision for now
 // this absolutely should support u8/s8 etc
 template<typename NumberType = double, size_t Dimensionality = 1>
-struct Polynomial {
+struct PolynomialND {
   using PointType = NDPoint<NumberType, Dimensionality>;
   using Storage   = PolyStorage<NumberType, Dimensionality>::type;
 
-  Polynomial() = default;
+  PolynomialND() = default;
 
-  Polynomial(std::initializer_list<PointType> coeffs);
+  PolynomialND(std::initializer_list<PointType> coeffs);
 
-  Polynomial(const Polynomial&)     = default;
-  Polynomial(Polynomial&&) noexcept = default;
+  PolynomialND(const PolynomialND&)     = default;
+  PolynomialND(PolynomialND&&) noexcept = default;
 
-  Polynomial& operator=(const Polynomial&)     = default;
-  Polynomial& operator=(Polynomial&&) noexcept = default;
+  PolynomialND& operator=(const PolynomialND&)     = default;
+  PolynomialND& operator=(PolynomialND&&) noexcept = default;
 
-  ~Polynomial() = default;
+  ~PolynomialND() = default;
 
-  friend auto operator<=>(const Polynomial&, const Polynomial&) noexcept = default;
+  friend auto operator<=>(const PolynomialND&, const PolynomialND&) noexcept = default;
 
-  Polynomial& operator+();
+  PolynomialND& operator+();
 
-  Polynomial& operator+=(const Polynomial&);
-  Polynomial& operator-=(const Polynomial&);
-  Polynomial& operator*=(const Polynomial&);
-  Polynomial& operator/=(const Polynomial&);
+  PolynomialND& operator+=(const PolynomialND&);
+  PolynomialND& operator-=(const PolynomialND&);
+  PolynomialND& operator*=(const PolynomialND&);
+  PolynomialND& operator/=(const PolynomialND&);
 
   template<size_t OtherDimensionality>
-  Polynomial& operator*=(const PointType& value);
+  PolynomialND& operator*=(const PointType& value);
   template<size_t OtherDimensionality>
-  Polynomial& operator/=(const PointType& value);
+  PolynomialND& operator/=(const PointType& value);
 
   [[nodiscard]]
-  Polynomial operator-() const;
+  PolynomialND operator-() const;
 
   [[nodiscard]] decltype(auto) operator[](const size_t index);
 
@@ -174,11 +174,11 @@ struct Polynomial {
   size_t order() const;
 
   [[nodiscard]]
-  Polynomial derive() const;
+  PolynomialND derive() const;
   [[nodiscard]]
-  Polynomial antiderive() const;
+  PolynomialND antiderive() const;
   [[nodiscard]]
-  Polynomial integrate(const NumberType upper_bound, const NumberType lower_bound) const;
+  PolynomialND integrate(const NumberType upper_bound, const NumberType lower_bound) const;
 
 private:
   std::vector<NumberType> coefficients;
