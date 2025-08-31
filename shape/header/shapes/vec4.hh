@@ -101,4 +101,14 @@ vec4 operator*(const vec4& vec, const float scale) noexcept {
   return { vec.x * scale, vec.y * scale, vec.z * scale, vec.w * scale };
 }
 
+constexpr
+vec4 operator/(const float scale, const vec4& vec) noexcept {
+  return { vec.x / scale, vec.y / scale, vec.z / scale, vec.w / scale };
+}
+
+constexpr
+vec4 operator/(const vec4& vec, const float scale) noexcept {
+  return { vec.x / scale, vec.y / scale, vec.z / scale, vec.w / scale };
+}
+
 }

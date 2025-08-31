@@ -2,6 +2,7 @@
 
 #include "shapes/functions.hh"
 #include "shapes/vec2.hh"
+#include "shapes/mat2.hh"
 
 namespace flp {
 
@@ -14,10 +15,10 @@ float sdCircle(const vec2 p, float r) noexcept {
 // Rounded Box - exact   (https://www.shadertoy.com/view/4llXD7 and https://www.youtube.com/watch?v=s5NGeUV2EyU)
 constexpr
 float sdRoundedBox(const vec2 p, vec2 b, vec4 r) noexcept {
-  r.xy() = (p.x > 0.0) ? r.xy() : r.zw();
+  r.xy() = (p.x > 0.0) ? vec2(r.xy()) : vec2(r.zw());
   r.x  = (p.y > 0.0) ? r.x  : r.y;
 
-  vec2 q = abs(p) - b + r.x;
+  const vec2 q = abs(p) - b + r.x;
   return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r.x;
 }
 
@@ -25,7 +26,7 @@ float sdRoundedBox(const vec2 p, vec2 b, vec4 r) noexcept {
 constexpr
 float sdChamferBox(vec2 p, vec2 b, float chamfer) noexcept {
   p = abs(p) - b;
-  p = (p.y > p.x) ? p.yx() : p.xy();
+  p = (p.y > p.x) ? vec2(p.yx()) : vec2(p.xy());
   p.y += chamfer;
 
   const float k = 1.0 - sqrt(2.0);
@@ -52,9 +53,9 @@ constexpr
 float sdOrientedBox(const vec2 p, vec2 a, vec2 b, float th) noexcept {
   const float l = length(b - a);
   const vec2  d = (b - a) / l;
-  vec2  q = (p - (a + b) * 0.5);
-        q = mat2(d.x, -d.y, d.y, d.x) * q;
-        q = abs(q) - vec2(l, th) * 0.5;
+  vec2 q = (p - (a + b) * 0.5);
+  q = mat2(d.x, -d.y, d.y, d.x) * q;
+  q = abs(q) - vec2(l, th) * 0.5;
   return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0);
 }
 
@@ -67,9 +68,6 @@ float sdSegment(const vec2 p, vec2 a, vec2 b) noexcept {
 }
 
 // Rhombus - exact   (https://www.shadertoy.com/view/XdXcRB)
-constexpr
-float ndot(const vec2 a, const vec2 b) noexcept { return a.x * b.x - a.y * b.y; }
-
 constexpr
 float sdRhombus(vec2 p, vec2 b) noexcept {
   p = abs(p);
@@ -95,11 +93,13 @@ constexpr
 float sdParallelogram(vec2 p, float wi, float he, float sk) noexcept {
   const vec2 e = vec2(sk, he);
   p = (p.y<0.0) ? -p : p;
-  const vec2  w = p - e; w.x -= clamp(w.x, -wi, wi);
+  vec2  w = p - e;
+  w.x -= clamp(w.x, -wi, wi);
   vec2  d = vec2(dot(w, w), -w.y);
   const float s = p.x * e.y - p.y * e.x;
   p = (s<0.0) ? -p : p;
-  const vec2  v = p - vec2(wi, 0); v -= e * clamp(dot(v, e) / dot(e, e), -1.0, 1.0);
+  vec2  v = p - vec2(wi, 0);
+  v -= e * clamp(dot(v, e) / dot(e, e), -1.0, 1.0);
   d = min(d, vec2(dot(v, v), wi * he - abs(s)));
   return sqrt(d.x) * sign(-d.y);
 }
@@ -134,15 +134,15 @@ float sdTriangleIsosceles(vec2 p, vec2 q) noexcept {
 // Triangle - exact   (https://www.shadertoy.com/view/XsXSz4)
 constexpr
 float sdTriangle(vec2 p, vec2 p0, vec2 p1, vec2 p2) noexcept {
-  vec2 e0 = p1 - p0, e1 = p2 - p1, e2 = p0 - p2;
-  vec2 v0 = p -p0, v1 = p -p1, v2 = p -p2;
-  vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot(e0, e0), 0.0, 1.0);
-  vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot(e1, e1), 0.0, 1.0);
-  vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot(e2, e2), 0.0, 1.0);
-  float s = sign(e0.x * e2.y - e0.y * e2.x);
-  vec2 d = min(min(vec2(dot(pq0, pq0), s * (v0.x * e0.y - v0.y * e0.x)),
-                   vec2(dot(pq1, pq1), s * (v1.x * e1.y - v1.y * e1.x))),
-                   vec2(dot(pq2, pq2), s * (v2.x * e2.y - v2.y * e2.x)));
+  const vec2 e0 = p1 - p0, e1 = p2 - p1, e2 = p0 - p2;
+  const vec2 v0 = p -p0, v1 = p -p1, v2 = p -p2;
+  const vec2 pq0 = v0 - e0 * clamp(dot(v0, e0) / dot(e0, e0), 0.0, 1.0);
+  const vec2 pq1 = v1 - e1 * clamp(dot(v1, e1) / dot(e1, e1), 0.0, 1.0);
+  const vec2 pq2 = v2 - e2 * clamp(dot(v2, e2) / dot(e2, e2), 0.0, 1.0);
+  const float s = sign(e0.x * e2.y - e0.y * e2.x);
+  const vec2 d = min(min(vec2(dot(pq0, pq0), s * (v0.x * e0.y - v0.y * e0.x)),
+                         vec2(dot(pq1, pq1), s * (v1.x * e1.y - v1.y * e1.x))),
+                         vec2(dot(pq2, pq2), s * (v2.x * e2.y - v2.y * e2.x)));
   return -sqrt(d.x) * sign(d.y);
 }
 
@@ -150,15 +150,18 @@ float sdTriangle(vec2 p, vec2 p0, vec2 p1, vec2 p2) noexcept {
 constexpr
 float sdUnevenCapsule(vec2 p, float r1, float r2, float h) noexcept {
   p.x = abs(p.x);
-  float b = (r1 - r2) / h;
-  float a = sqrt(1.0 - b * b);
-  float k = dot(p, vec2(-b, a));
+  const float b = (r1 - r2) / h;
+  const float a = sqrt(1.0 - b * b);
+  const float k = dot(p, vec2(-b, a));
+
   if (k < 0.0) {
     return length(p) - r1;
   }
+
   if (k > a * h) {
     return length(p - vec2(0.0, h)) - r2;
   }
+
   return dot(p, vec2(a, b)) - r1;
 }
 
@@ -246,17 +249,17 @@ float sdStar(vec2 p, float r, int n, float m) noexcept {
 constexpr
 float sdPie(vec2 p, vec2 c, float r) noexcept {
   p.x = abs(p.x);
-  float l = length(p) - r;
-  float m = length(p - c * clamp(dot(p, c), 0.0, r));// c=sin / cos of aperture
+  const float l = length(p) - r;
+  const float m = length(p - c * clamp(dot(p, c), 0.0, r));// c=sin / cos of aperture
   return max(l, m * sign(c.y * p.x - c.x * p.y));
 }
 
 // Cut Disk - exact   (https://www.shadertoy.com/view/ftVXRc)
 constexpr
 float sdCutDisk(vec2 p, float r, float h) noexcept {
-  float w = sqrt(r * r - h * h);// constant for any given shape
+  const float w = sqrt(r * r - h * h);// constant for any given shape
   p.x = abs(p.x);
-  float s = max((h - r) * p.x * p.x + w * w * (h + r - 2.0 * p.y), h * p.x - w * p.y);
+  const float s = max((h - r) * p.x * p.x + w * w * (h + r - 2.0 * p.y), h * p.x - w * p.y);
   return (s < 0.0) ? length(p) - r :
          (p.x < w) ? h - p.y     :
                    length(p - vec2(w, h));

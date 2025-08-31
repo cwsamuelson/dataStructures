@@ -23,6 +23,72 @@ struct vec2 {
     , y(b)
   {}
 
+  constexpr
+  friend
+  vec2 operator-(const vec2& vec) noexcept {
+    return { -vec.x, -vec.y };
+  }
+
+  constexpr
+  vec2& operator+=(const vec2& other) noexcept {
+    x += other.x;
+    y += other.y;
+
+    return *this;
+  }
+
+  constexpr
+  vec2& operator-=(const vec2& other) noexcept {
+    x -= other.x;
+    y -= other.y;
+
+    return *this;
+  }
+
+  constexpr
+  vec2& operator*=(const vec2& other) noexcept {
+    x *= other.x;
+    y *= other.y;
+
+    return *this;
+  }
+
+  constexpr
+  vec2& operator/=(const vec2& other) noexcept {
+    x /= other.x;
+    y /= other.y;
+
+    return *this;
+  }
+
+  friend
+  constexpr
+  vec2 operator+(const vec2& lhs, const vec2& rhs) noexcept {
+    vec2 other = lhs;
+    return other += rhs;
+  }
+
+  friend
+  constexpr
+  vec2 operator-(const vec2& lhs, const vec2& rhs) noexcept {
+    vec2 other = lhs;
+    return other -= rhs;
+  }
+
+  friend
+  constexpr
+  vec2 operator*(const vec2& lhs, const vec2& rhs) noexcept {
+    vec2 other = lhs;
+    return other *= rhs;
+  }
+
+  friend
+  constexpr
+  vec2 operator/(const vec2& lhs, const vec2& rhs) noexcept {
+    vec2 other = lhs;
+    return other /= rhs;
+  }
+
   float x{};
   float y{};
 
@@ -32,16 +98,6 @@ struct vec2 {
 };
 
 constexpr
-vec2 operator+(const vec2& lhs, const vec2& rhs) noexcept {
-  return { lhs.x + rhs.x, lhs.y + rhs.y };
-}
-
-constexpr
-vec2 operator-(const vec2& lhs, const vec2& rhs) noexcept {
-  return { lhs.x - rhs.x, lhs.y - rhs.y };
-}
-
-constexpr
 vec2 operator*(const vec2& vec, const float scale) noexcept {
   return { vec.x * scale, vec.y * scale };
 }
@@ -49,6 +105,16 @@ vec2 operator*(const vec2& vec, const float scale) noexcept {
 constexpr
 vec2 operator*(const float scale, const vec2& vec) noexcept {
   return { vec.x * scale, vec.y * scale };
+}
+
+constexpr
+vec2 operator/(const vec2& vec, const float scale) noexcept {
+  return { vec.x / scale, vec.y / scale };
+}
+
+constexpr
+vec2 operator/(const float scale, const vec2& vec) noexcept {
+  return { vec.x / scale, vec.y / scale };
 }
 
 }

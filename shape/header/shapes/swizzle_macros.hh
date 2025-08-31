@@ -1,5 +1,13 @@
 #pragma once
 
+namespace flp {
+
+struct vec2;
+struct vec3;
+struct vec4;
+
+}
+
 #define SwizMember(TYPE, NAME) \
   constexpr \
   TYPE NAME() noexcept { \
@@ -7,11 +15,11 @@
   }
 
 #define Swiz2Type(Vec, name, x, y) \
-  using name = XY<Vec, decltype(std::declval<Vec>().x), &Vec::x, &Vec::y>;
+  using name = XY_<vec2, Vec, decltype(std::declval<Vec>().x), &Vec::x, &Vec::y>;
 #define Swiz3Type(Vec, name, x, y, z) \
-  using name = XYZ<Vec, decltype(std::declval<Vec>().x), &Vec::x, &Vec::y, &Vec::z>;
+  using name = XYZ_<vec3, Vec, decltype(std::declval<Vec>().x), &Vec::x, &Vec::y, &Vec::z>;
 #define Swiz4Type(Vec, name, x, y, z, w) \
-  using name = XYZW<Vec, decltype(std::declval<Vec>().x), &Vec::x, &Vec::y, &Vec::z, &Vec::w>;
+  using name = XYZW_<vec4, Vec, decltype(std::declval<Vec>().x), &Vec::x, &Vec::y, &Vec::z, &Vec::w>;
 
 /*!
  * @param Vec vecN host type
