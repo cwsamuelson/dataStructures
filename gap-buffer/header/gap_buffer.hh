@@ -143,7 +143,7 @@ struct GapBuffer {
   constexpr
   explicit
   operator Type(this auto&& self) noexcept {
-    const auto s = size();
+    const auto s = self.size();
 
     std::string_view p1(self.data(), self.gap.start);
     std::string_view p2(self.data() + self.gap.end, s - self.gap.end);
@@ -162,7 +162,6 @@ struct GapBuffer {
     return gap.start;
   }
 
-  [[nodiscard]]
   void cursor(const size_t index) noexcept {
     const signed long long offset = gap.start - index;
     const size_t size = gap.end - gap.start;

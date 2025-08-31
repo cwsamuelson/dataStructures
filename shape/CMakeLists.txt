@@ -10,11 +10,9 @@ set(HEADERS
   header/shapes/mat3.hh
   header/shapes/mat4.hh
   header/shapes/shapes.hh
-  header/shapes/swizzle_macros.hh
-  header/shapes/swizzling.hh
-  header/shapes/vec2.hh
-  header/shapes/vec3.hh
-  header/shapes/vec4.hh
+  header/shapes/swizzle.hh
+  header/shapes/vec.hh
+  header/shapes/vecn.hh
 )
 set(SOURCES
 )
