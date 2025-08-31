@@ -1,4 +1,4 @@
-#include <algorithms/max.hh>
+#include <algorithms/numerics.hh>
 
 #include <catch2/catch_all.hpp>
 

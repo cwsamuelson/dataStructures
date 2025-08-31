@@ -7,7 +7,7 @@ find_package(error_support REQUIRED)
 set(HEADERS
   header/algorithms/comparison.hh
   header/algorithms/fuzzy.hh
-  header/algorithms/max.hh
+  header/algorithms/numerics.hh
   header/algorithms/sort.hh
 )
 set(SOURCES

@@ -3,6 +3,7 @@
 #include "algorithms/comparison.hh"
 
 #include <optional>
+#include <utility>
 
 namespace flp {
 
@@ -40,4 +41,30 @@ decltype(auto) min(const Type& a, const Type& b) {
   return min(a, b, Less{});
 }
 
-} // namespace flp
+template<typename Type>
+constexpr
+auto abs(const Type& value) noexcept {
+  if (value < 0) {
+    return -value;
+  }
+
+  return value;
+}
+
+template<typename Type>
+constexpr
+auto gcd(Type value1, Type value2) noexcept {
+  while (value2 != 0) {
+    value1 = std::exchange(value2, value1 % value2);
+  }
+
+  return value1;
+}
+
+template<typename Type>
+constexpr
+auto lcm(Type value1, Type value2) noexcept {
+  return abs(value1 * value2) / gcd(value1, value2);
+}
+
+}

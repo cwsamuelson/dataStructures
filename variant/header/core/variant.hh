@@ -1,6 +1,6 @@
 #pragma once
 
-#include "algorithms/max.hh"
+#include "algorithms/numerics.hh"
 #include "aligned_buffer.hh"
 #include "type_pack.hh"
 
