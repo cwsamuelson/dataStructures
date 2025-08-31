@@ -4,20 +4,13 @@
 
 using namespace flp;
 
-TEST_CASE("Ratio") {
-  SECTION("As value") {
-    STATIC_CHECK(RatioValue{ 1, 1 } == 1.0);
-    STATIC_CHECK(RatioValue{ 1, 2 } == .5);
-    STATIC_CHECK(RatioValue{ 2, 2 } == 1.0);
-    STATIC_CHECK(RatioValue{ 2, 1 } == 2.0);
-  }
+//! @NOTE Some of the equality checks have additional parens; gcc wouldn't compile without them.
 
-  SECTION("As type") {
-    STATIC_CHECK(RatioType<1, 1>{} == 1.0);
-    STATIC_CHECK(RatioType<1, 2>{} == .5);
-    STATIC_CHECK(RatioType<2, 2>{} == 1.0);
-    STATIC_CHECK(RatioType<2, 1>{} == 2.0);
-  }
+TEST_CASE("`Ratio`") {
+  STATIC_CHECK(Ratio{ 1, 1 } == 1.0);
+  STATIC_CHECK(Ratio{ 1, 2 } == .5);
+  STATIC_CHECK(Ratio{ 2, 2 } == 1.0);
+  STATIC_CHECK(Ratio{ 2, 1 } == 2.0);
 }
 
 template<typename R>
@@ -30,72 +23,84 @@ struct T {
   static constexpr auto value = R;
 };
 
-template<RatioValue R>
+template<Ratio R>
 struct U {
   static constexpr auto value = R;
 };
 
-TEST_CASE("Template parameter") {
-  STATIC_CHECK(S<RatioType<1, 1>>::type{} == 1.0);
+TEST_CASE("`Ratio`: Template parameter") {
+  STATIC_CHECK(T<Ratio{1, 1}>::value == 1.0);
 
-  STATIC_CHECK(T<RatioValue{1, 1}>::value == 1.0);
-
-  STATIC_CHECK(U<RatioValue{1, 1}>::value == 1.0);
+  STATIC_CHECK(U<Ratio{1, 1}>::value == 1.0);
 }
 
-TEST_CASE("Comparison") {
-  const auto N = GENERATE(1ULL, 2ULL);
-  const auto D = GENERATE(1ULL, 2ULL);
+TEST_CASE("`Ratio`: Comparison") {
+  const auto N = GENERATE(2ULL, 3ULL);
+  const auto D = GENERATE(2ULL, 3ULL);
 
   SECTION("Equality") {
-    const RatioValue X { N, D };
-    const RatioValue Y { N, D };
-    CHECK(X == Y);
+    const Ratio X { N, D };
+    const Ratio Y { N, D };
+
+    CAPTURE(X, Y);
+
+    CHECK((X == Y));
     CHECK(X <= Y);
     CHECK(X >= Y);
   }
 
   SECTION("Less") {
-    const RatioValue Y { N, D };
+    const Ratio Y { N, D };
+
+    CAPTURE(Y);
 
     SECTION("By numerator") {
-      const RatioValue X { N - 1, D };
+      const Ratio X { N - 1, D };
 
-      CHECK(X != Y);
+      CAPTURE(X);
+
+      CHECK((X != Y));
       CHECK(X < Y);
       CHECK(X <= Y);
     }
 
     SECTION("By denominator") {
-      const RatioValue X { N, D + 1 };
+      const Ratio X { N, D + 1 };
 
-      CHECK(X != Y);
+      CAPTURE(X);
+
+      CHECK((X != Y));
       CHECK(X < Y);
       CHECK(X <= Y);
     }
   }
 
-  SECTION("More") {
-    const RatioValue Y { N, D };
+  SECTION("Greater") {
+    const Ratio Y { N, D };
+
+    CAPTURE(Y);
 
     SECTION("By numerator") {
-      const RatioValue X { N + 1, D };
+      const Ratio X { N + 1, D };
 
-      CHECK(X != Y);
+      CAPTURE(X);
+
+      CHECK((X != Y));
       CHECK(X > Y);
       CHECK(X >= Y);
     }
 
     SECTION("By denominator") {
-      const RatioValue X { N, D - 1 };
+      const Ratio X { N, D - 1 };
 
-      CHECK(X != Y);
+      CAPTURE(X);
+
+      CHECK((X != Y));
       CHECK(X > Y);
       CHECK(X >= Y);
     }
   }
 }
 
-TEST_CASE("Divide by zero") {
+TEST_CASE("`Ratio`: Divide by zero") {
 }
-
