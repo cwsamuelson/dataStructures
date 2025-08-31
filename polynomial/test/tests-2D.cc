@@ -195,6 +195,7 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial[1] == 0.f);
 
         const auto roots = polynomial.solve();
+        CHECK(roots.empty());
       }
 
       SECTION("linear only") {
@@ -205,6 +206,8 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial[1] == 1.f);
 
         const auto roots = polynomial.solve();
+        CHECK(roots == std::set{ 0.f });
+        CHECK(polynomial.solve() == std::set{ 0.f });
       }
 
       SECTION("1s") {
@@ -215,6 +218,8 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial[1] == 1.f);
 
         const auto roots = polynomial.solve();
+        CHECK(roots == std::set{ -1.f });
+        CHECK(polynomial.solve() == std::set{ -1.f });
       }
 
       SECTION("Random coefficients") {
@@ -228,7 +233,7 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial[0] == constant);
         CHECK(polynomial[1] == linear);
 
-        const auto roots = polynomial.solve();
+        CHECK(polynomial.solve() == std::set{ -constant / linear });
       }
     }
 
@@ -241,7 +246,7 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial[1] == 0.f);
         CHECK(polynomial[2] == 0.f);
 
-        const auto roots = polynomial.solve();
+        CHECK(polynomial.solve().empty());
       }
 
       SECTION("quad only") {
@@ -252,7 +257,27 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial[1] == 0.f);
         CHECK(polynomial[2] == 1.f);
 
-        const auto roots = polynomial.solve();
+        CHECK(polynomial.solve() == std::set{ 0.f });
+      }
+
+      SECTION("From multiplied linear `Polynomial`s") {
+        SECTION("Simple") {
+          const Polynomial2D<float> lin1{ 5.f, 1.f };
+          const Polynomial2D<float> lin2{ 4.f, 1.f };
+
+          const auto poly = lin1 * lin2;
+
+          CHECK(poly.solve() == std::set{ -4.f, -5.f });
+        }
+
+        SECTION("Less intuitive") {
+          const Polynomial2D<float> lin1{ 5.f, 2.f };
+          const Polynomial2D<float> lin2{ 4.f, 2.f };
+
+          const auto poly = lin1 * lin2;
+
+          CHECK(poly.solve() == std::set{ -2.f, -2.5f });
+        }
       }
 
       SECTION("Random coefficients") {
