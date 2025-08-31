@@ -225,347 +225,352 @@ TEST_CASE("Shapes: functions") {
 }
 
 TEST_CASE("Shapes: swizzling") {
-  fvec2 vec(1.f, 2.f);
-}
+  SECTION("fvec2") {
+    fvec2 vec(1.f, 2.f);
 
-//TEST_CASE("Shapes: swizzling") {
-//  SECTION("fvec2") {
-//    fvec2 vec(1.f, 2.f);
-//
-//    SECTION("fvec2 result") {
-//      CHECK(vec.xx() == fvec2{ 1.f, 1.f });
-//      CHECK(vec.xy() == fvec2{ 1.f, 2.f });
-//      CHECK(vec.yx() == fvec2{ 2.f, 1.f });
-//      CHECK(vec.yy() == fvec2{ 2.f, 2.f });
-//
-//      vec.xx() = fvec2{ 3.f, 4.f };
-//      CHECK(vec == fvec2{ 4.f, 2.f });
-//      CHECK(vec.x == 4.f);
-//      CHECK(vec.y == 2.f);
-//    }
-//
-//    SECTION("fvec3 result") {
-//    }
-//
-//    SECTION("fvec4 result") {
-//    }
-//  }
-//
-//  SECTION("fvec3") {
-//    fvec3 vec(1.f, 2.f, 3.f);
-//
-//    SECTION("fvec2 result") {
-//      //CHECK(vec.xx() == fvec2{ 1.f, 1.f });
-//      //CHECK(vec.xy() == fvec2{ 1.f, 2.f });
-//      //CHECK(vec.yx() == fvec2{ 2.f, 1.f });
-//      //CHECK(vec.yy() == fvec2{ 2.f, 2.f });
-//
-//      //vec.xx() = fvec2{ 3.f, 4.f };
-//      //CHECK(vec == fvec2{ 4.f, 2.f });
-//      //CHECK(vec.x == 4.f);
-//      //CHECK(vec.y == 2.f);
-//    }
-//
-//    SECTION("fvec3 result") {
-//      CHECK(vec.xxx() == fvec3{ 1.f, 1.f, 1.f });
-//      CHECK(vec.xxy() == fvec3{ 1.f, 1.f, 2.f });
-//      CHECK(vec.xxz() == fvec3{ 1.f, 1.f, 3.f });
-//      CHECK(vec.xyx() == fvec3{ 1.f, 2.f, 1.f });
-//      CHECK(vec.xyy() == fvec3{ 1.f, 2.f, 2.f });
-//      CHECK(vec.xyz() == fvec3{ 1.f, 2.f, 3.f });
-//      CHECK(vec.xzx() == fvec3{ 1.f, 3.f, 1.f });
-//      CHECK(vec.xzy() == fvec3{ 1.f, 3.f, 2.f });
-//      CHECK(vec.xzz() == fvec3{ 1.f, 3.f, 3.f });
-//      CHECK(vec.yxx() == fvec3{ 2.f, 1.f, 1.f });
-//      CHECK(vec.yxy() == fvec3{ 2.f, 1.f, 2.f });
-//      CHECK(vec.yxz() == fvec3{ 2.f, 1.f, 3.f });
-//      CHECK(vec.yyx() == fvec3{ 2.f, 2.f, 1.f });
-//      CHECK(vec.yyy() == fvec3{ 2.f, 2.f, 2.f });
-//      CHECK(vec.yyz() == fvec3{ 2.f, 2.f, 3.f });
-//      CHECK(vec.yzx() == fvec3{ 2.f, 3.f, 1.f });
-//      CHECK(vec.yzy() == fvec3{ 2.f, 3.f, 2.f });
-//      CHECK(vec.yzz() == fvec3{ 2.f, 3.f, 3.f });
-//      CHECK(vec.zxx() == fvec3{ 3.f, 1.f, 1.f });
-//      CHECK(vec.zxy() == fvec3{ 3.f, 1.f, 2.f });
-//      CHECK(vec.zxz() == fvec3{ 3.f, 1.f, 3.f });
-//      CHECK(vec.zyx() == fvec3{ 3.f, 2.f, 1.f });
-//      CHECK(vec.zyy() == fvec3{ 3.f, 2.f, 2.f });
-//      CHECK(vec.zyz() == fvec3{ 3.f, 2.f, 3.f });
-//      CHECK(vec.zzx() == fvec3{ 3.f, 3.f, 1.f });
-//      CHECK(vec.zzy() == fvec3{ 3.f, 3.f, 2.f });
-//      CHECK(vec.zzz() == fvec3{ 3.f, 3.f, 3.f });
-//    }
-//
-//    SECTION("fvec4 result") {
-//    }
-//  }
-//
-//  SECTION("fvec4") {
-//    fvec4 vec(1.f, 2.f, 3.f, 4.f);
-//
-//    SECTION("fvec2 result") {
-//    }
-//
-//    SECTION("fvec3 result") {
-//    }
-//
-//    SECTION("fvec4 result") {
-//      CHECK(vec.xxxx() == fvec4{ 1.f, 1.f, 1.f, 1.f });
-//      CHECK(vec.xxxy() == fvec4{ 1.f, 1.f, 1.f, 2.f });
-//      CHECK(vec.xxxz() == fvec4{ 1.f, 1.f, 1.f, 3.f });
-//      CHECK(vec.xxxw() == fvec4{ 1.f, 1.f, 1.f, 4.f });
-//      CHECK(vec.xxyx() == fvec4{ 1.f, 1.f, 2.f, 1.f });
-//      CHECK(vec.xxyy() == fvec4{ 1.f, 1.f, 2.f, 2.f });
-//      CHECK(vec.xxyz() == fvec4{ 1.f, 1.f, 2.f, 3.f });
-//      CHECK(vec.xxyw() == fvec4{ 1.f, 1.f, 2.f, 4.f });
-//      CHECK(vec.xxzx() == fvec4{ 1.f, 1.f, 3.f, 1.f });
-//      CHECK(vec.xxzy() == fvec4{ 1.f, 1.f, 3.f, 2.f });
-//      CHECK(vec.xxzz() == fvec4{ 1.f, 1.f, 3.f, 3.f });
-//      CHECK(vec.xxzw() == fvec4{ 1.f, 1.f, 3.f, 4.f });
-//      CHECK(vec.xxwx() == fvec4{ 1.f, 1.f, 4.f, 1.f });
-//      CHECK(vec.xxwy() == fvec4{ 1.f, 1.f, 4.f, 2.f });
-//      CHECK(vec.xxwz() == fvec4{ 1.f, 1.f, 4.f, 3.f });
-//      CHECK(vec.xxww() == fvec4{ 1.f, 1.f, 4.f, 4.f });
-//      CHECK(vec.xyxx() == fvec4{ 1.f, 2.f, 1.f, 1.f });
-//      CHECK(vec.xyxy() == fvec4{ 1.f, 2.f, 1.f, 2.f });
-//      CHECK(vec.xyxz() == fvec4{ 1.f, 2.f, 1.f, 3.f });
-//      CHECK(vec.xyxw() == fvec4{ 1.f, 2.f, 1.f, 4.f });
-//      CHECK(vec.xyyx() == fvec4{ 1.f, 2.f, 2.f, 1.f });
-//      CHECK(vec.xyyy() == fvec4{ 1.f, 2.f, 2.f, 2.f });
-//      CHECK(vec.xyyz() == fvec4{ 1.f, 2.f, 2.f, 3.f });
-//      CHECK(vec.xyyw() == fvec4{ 1.f, 2.f, 2.f, 4.f });
-//      CHECK(vec.xyzx() == fvec4{ 1.f, 2.f, 3.f, 1.f });
-//      CHECK(vec.xyzy() == fvec4{ 1.f, 2.f, 3.f, 2.f });
-//      CHECK(vec.xyzz() == fvec4{ 1.f, 2.f, 3.f, 3.f });
-//      CHECK(vec.xyzw() == fvec4{ 1.f, 2.f, 3.f, 4.f });
-//      CHECK(vec.xywx() == fvec4{ 1.f, 2.f, 4.f, 1.f });
-//      CHECK(vec.xywy() == fvec4{ 1.f, 2.f, 4.f, 2.f });
-//      CHECK(vec.xywz() == fvec4{ 1.f, 2.f, 4.f, 3.f });
-//      CHECK(vec.xyww() == fvec4{ 1.f, 2.f, 4.f, 4.f });
-//      CHECK(vec.xzxx() == fvec4{ 1.f, 3.f, 1.f, 1.f });
-//      CHECK(vec.xzxy() == fvec4{ 1.f, 3.f, 1.f, 2.f });
-//      CHECK(vec.xzxz() == fvec4{ 1.f, 3.f, 1.f, 3.f });
-//      CHECK(vec.xzxw() == fvec4{ 1.f, 3.f, 1.f, 4.f });
-//      CHECK(vec.xzyx() == fvec4{ 1.f, 3.f, 2.f, 1.f });
-//      CHECK(vec.xzyy() == fvec4{ 1.f, 3.f, 2.f, 2.f });
-//      CHECK(vec.xzyz() == fvec4{ 1.f, 3.f, 2.f, 3.f });
-//      CHECK(vec.xzyw() == fvec4{ 1.f, 3.f, 2.f, 4.f });
-//      CHECK(vec.xzzx() == fvec4{ 1.f, 3.f, 3.f, 1.f });
-//      CHECK(vec.xzzy() == fvec4{ 1.f, 3.f, 3.f, 2.f });
-//      CHECK(vec.xzzz() == fvec4{ 1.f, 3.f, 3.f, 3.f });
-//      CHECK(vec.xzzw() == fvec4{ 1.f, 3.f, 3.f, 4.f });
-//      CHECK(vec.xzwx() == fvec4{ 1.f, 3.f, 4.f, 1.f });
-//      CHECK(vec.xzwy() == fvec4{ 1.f, 3.f, 4.f, 2.f });
-//      CHECK(vec.xzwz() == fvec4{ 1.f, 3.f, 4.f, 3.f });
-//      CHECK(vec.xzww() == fvec4{ 1.f, 3.f, 4.f, 4.f });
-//      CHECK(vec.xwxx() == fvec4{ 1.f, 4.f, 1.f, 1.f });
-//      CHECK(vec.xwxy() == fvec4{ 1.f, 4.f, 1.f, 2.f });
-//      CHECK(vec.xwxz() == fvec4{ 1.f, 4.f, 1.f, 3.f });
-//      CHECK(vec.xwxw() == fvec4{ 1.f, 4.f, 1.f, 4.f });
-//      CHECK(vec.xwyx() == fvec4{ 1.f, 4.f, 2.f, 1.f });
-//      CHECK(vec.xwyy() == fvec4{ 1.f, 4.f, 2.f, 2.f });
-//      CHECK(vec.xwyz() == fvec4{ 1.f, 4.f, 2.f, 3.f });
-//      CHECK(vec.xwyw() == fvec4{ 1.f, 4.f, 2.f, 4.f });
-//      CHECK(vec.xwzx() == fvec4{ 1.f, 4.f, 3.f, 1.f });
-//      CHECK(vec.xwzy() == fvec4{ 1.f, 4.f, 3.f, 2.f });
-//      CHECK(vec.xwzz() == fvec4{ 1.f, 4.f, 3.f, 3.f });
-//      CHECK(vec.xwzw() == fvec4{ 1.f, 4.f, 3.f, 4.f });
-//      CHECK(vec.xwwx() == fvec4{ 1.f, 4.f, 4.f, 1.f });
-//      CHECK(vec.xwwy() == fvec4{ 1.f, 4.f, 4.f, 2.f });
-//      CHECK(vec.xwwz() == fvec4{ 1.f, 4.f, 4.f, 3.f });
-//      CHECK(vec.xwww() == fvec4{ 1.f, 4.f, 4.f, 4.f });
-//      CHECK(vec.yxxx() == fvec4{ 2.f, 1.f, 1.f, 1.f });
-//      CHECK(vec.yxxy() == fvec4{ 2.f, 1.f, 1.f, 2.f });
-//      CHECK(vec.yxxz() == fvec4{ 2.f, 1.f, 1.f, 3.f });
-//      CHECK(vec.yxxw() == fvec4{ 2.f, 1.f, 1.f, 4.f });
-//      CHECK(vec.yxyx() == fvec4{ 2.f, 1.f, 2.f, 1.f });
-//      CHECK(vec.yxyy() == fvec4{ 2.f, 1.f, 2.f, 2.f });
-//      CHECK(vec.yxyz() == fvec4{ 2.f, 1.f, 2.f, 3.f });
-//      CHECK(vec.yxyw() == fvec4{ 2.f, 1.f, 2.f, 4.f });
-//      CHECK(vec.yxzx() == fvec4{ 2.f, 1.f, 3.f, 1.f });
-//      CHECK(vec.yxzy() == fvec4{ 2.f, 1.f, 3.f, 2.f });
-//      CHECK(vec.yxzz() == fvec4{ 2.f, 1.f, 3.f, 3.f });
-//      CHECK(vec.yxzw() == fvec4{ 2.f, 1.f, 3.f, 4.f });
-//      CHECK(vec.yxwx() == fvec4{ 2.f, 1.f, 4.f, 1.f });
-//      CHECK(vec.yxwy() == fvec4{ 2.f, 1.f, 4.f, 2.f });
-//      CHECK(vec.yxwz() == fvec4{ 2.f, 1.f, 4.f, 3.f });
-//      CHECK(vec.yxww() == fvec4{ 2.f, 1.f, 4.f, 4.f });
-//      CHECK(vec.yyxx() == fvec4{ 2.f, 2.f, 1.f, 1.f });
-//      CHECK(vec.yyxy() == fvec4{ 2.f, 2.f, 1.f, 2.f });
-//      CHECK(vec.yyxz() == fvec4{ 2.f, 2.f, 1.f, 3.f });
-//      CHECK(vec.yyxw() == fvec4{ 2.f, 2.f, 1.f, 4.f });
-//      CHECK(vec.yyyx() == fvec4{ 2.f, 2.f, 2.f, 1.f });
-//      CHECK(vec.yyyy() == fvec4{ 2.f, 2.f, 2.f, 2.f });
-//      CHECK(vec.yyyz() == fvec4{ 2.f, 2.f, 2.f, 3.f });
-//      CHECK(vec.yyyw() == fvec4{ 2.f, 2.f, 2.f, 4.f });
-//      CHECK(vec.yyzx() == fvec4{ 2.f, 2.f, 3.f, 1.f });
-//      CHECK(vec.yyzy() == fvec4{ 2.f, 2.f, 3.f, 2.f });
-//      CHECK(vec.yyzz() == fvec4{ 2.f, 2.f, 3.f, 3.f });
-//      CHECK(vec.yyzw() == fvec4{ 2.f, 2.f, 3.f, 4.f });
-//      CHECK(vec.yywx() == fvec4{ 2.f, 2.f, 4.f, 1.f });
-//      CHECK(vec.yywy() == fvec4{ 2.f, 2.f, 4.f, 2.f });
-//      CHECK(vec.yywz() == fvec4{ 2.f, 2.f, 4.f, 3.f });
-//      CHECK(vec.yyww() == fvec4{ 2.f, 2.f, 4.f, 4.f });
-//      CHECK(vec.yzxx() == fvec4{ 2.f, 3.f, 1.f, 1.f });
-//      CHECK(vec.yzxy() == fvec4{ 2.f, 3.f, 1.f, 2.f });
-//      CHECK(vec.yzxz() == fvec4{ 2.f, 3.f, 1.f, 3.f });
-//      CHECK(vec.yzxw() == fvec4{ 2.f, 3.f, 1.f, 4.f });
-//      CHECK(vec.yzyx() == fvec4{ 2.f, 3.f, 2.f, 1.f });
-//      CHECK(vec.yzyy() == fvec4{ 2.f, 3.f, 2.f, 2.f });
-//      CHECK(vec.yzyz() == fvec4{ 2.f, 3.f, 2.f, 3.f });
-//      CHECK(vec.yzyw() == fvec4{ 2.f, 3.f, 2.f, 4.f });
-//      CHECK(vec.yzzx() == fvec4{ 2.f, 3.f, 3.f, 1.f });
-//      CHECK(vec.yzzy() == fvec4{ 2.f, 3.f, 3.f, 2.f });
-//      CHECK(vec.yzzz() == fvec4{ 2.f, 3.f, 3.f, 3.f });
-//      CHECK(vec.yzzw() == fvec4{ 2.f, 3.f, 3.f, 4.f });
-//      CHECK(vec.yzwx() == fvec4{ 2.f, 3.f, 4.f, 1.f });
-//      CHECK(vec.yzwy() == fvec4{ 2.f, 3.f, 4.f, 2.f });
-//      CHECK(vec.yzwz() == fvec4{ 2.f, 3.f, 4.f, 3.f });
-//      CHECK(vec.yzww() == fvec4{ 2.f, 3.f, 4.f, 4.f });
-//      CHECK(vec.ywxx() == fvec4{ 2.f, 4.f, 1.f, 1.f });
-//      CHECK(vec.ywxy() == fvec4{ 2.f, 4.f, 1.f, 2.f });
-//      CHECK(vec.ywxz() == fvec4{ 2.f, 4.f, 1.f, 3.f });
-//      CHECK(vec.ywxw() == fvec4{ 2.f, 4.f, 1.f, 4.f });
-//      CHECK(vec.ywyx() == fvec4{ 2.f, 4.f, 2.f, 1.f });
-//      CHECK(vec.ywyy() == fvec4{ 2.f, 4.f, 2.f, 2.f });
-//      CHECK(vec.ywyz() == fvec4{ 2.f, 4.f, 2.f, 3.f });
-//      CHECK(vec.ywyw() == fvec4{ 2.f, 4.f, 2.f, 4.f });
-//      CHECK(vec.ywzx() == fvec4{ 2.f, 4.f, 3.f, 1.f });
-//      CHECK(vec.ywzy() == fvec4{ 2.f, 4.f, 3.f, 2.f });
-//      CHECK(vec.ywzz() == fvec4{ 2.f, 4.f, 3.f, 3.f });
-//      CHECK(vec.ywzw() == fvec4{ 2.f, 4.f, 3.f, 4.f });
-//      CHECK(vec.ywwx() == fvec4{ 2.f, 4.f, 4.f, 1.f });
-//      CHECK(vec.ywwy() == fvec4{ 2.f, 4.f, 4.f, 2.f });
-//      CHECK(vec.ywwz() == fvec4{ 2.f, 4.f, 4.f, 3.f });
-//      CHECK(vec.ywww() == fvec4{ 2.f, 4.f, 4.f, 4.f });
-//      CHECK(vec.zxxx() == fvec4{ 3.f, 1.f, 1.f, 1.f });
-//      CHECK(vec.zxxy() == fvec4{ 3.f, 1.f, 1.f, 2.f });
-//      CHECK(vec.zxxz() == fvec4{ 3.f, 1.f, 1.f, 3.f });
-//      CHECK(vec.zxxw() == fvec4{ 3.f, 1.f, 1.f, 4.f });
-//      CHECK(vec.zxyx() == fvec4{ 3.f, 1.f, 2.f, 1.f });
-//      CHECK(vec.zxyy() == fvec4{ 3.f, 1.f, 2.f, 2.f });
-//      CHECK(vec.zxyz() == fvec4{ 3.f, 1.f, 2.f, 3.f });
-//      CHECK(vec.zxyw() == fvec4{ 3.f, 1.f, 2.f, 4.f });
-//      CHECK(vec.zxzx() == fvec4{ 3.f, 1.f, 3.f, 1.f });
-//      CHECK(vec.zxzy() == fvec4{ 3.f, 1.f, 3.f, 2.f });
-//      CHECK(vec.zxzz() == fvec4{ 3.f, 1.f, 3.f, 3.f });
-//      CHECK(vec.zxzw() == fvec4{ 3.f, 1.f, 3.f, 4.f });
-//      CHECK(vec.zxwx() == fvec4{ 3.f, 1.f, 4.f, 1.f });
-//      CHECK(vec.zxwy() == fvec4{ 3.f, 1.f, 4.f, 2.f });
-//      CHECK(vec.zxwz() == fvec4{ 3.f, 1.f, 4.f, 3.f });
-//      CHECK(vec.zxww() == fvec4{ 3.f, 1.f, 4.f, 4.f });
-//      CHECK(vec.zyxx() == fvec4{ 3.f, 2.f, 1.f, 1.f });
-//      CHECK(vec.zyxy() == fvec4{ 3.f, 2.f, 1.f, 2.f });
-//      CHECK(vec.zyxz() == fvec4{ 3.f, 2.f, 1.f, 3.f });
-//      CHECK(vec.zyxw() == fvec4{ 3.f, 2.f, 1.f, 4.f });
-//      CHECK(vec.zyyx() == fvec4{ 3.f, 2.f, 2.f, 1.f });
-//      CHECK(vec.zyyy() == fvec4{ 3.f, 2.f, 2.f, 2.f });
-//      CHECK(vec.zyyz() == fvec4{ 3.f, 2.f, 2.f, 3.f });
-//      CHECK(vec.zyyw() == fvec4{ 3.f, 2.f, 2.f, 4.f });
-//      CHECK(vec.zyzx() == fvec4{ 3.f, 2.f, 3.f, 1.f });
-//      CHECK(vec.zyzy() == fvec4{ 3.f, 2.f, 3.f, 2.f });
-//      CHECK(vec.zyzz() == fvec4{ 3.f, 2.f, 3.f, 3.f });
-//      CHECK(vec.zyzw() == fvec4{ 3.f, 2.f, 3.f, 4.f });
-//      CHECK(vec.zywx() == fvec4{ 3.f, 2.f, 4.f, 1.f });
-//      CHECK(vec.zywy() == fvec4{ 3.f, 2.f, 4.f, 2.f });
-//      CHECK(vec.zywz() == fvec4{ 3.f, 2.f, 4.f, 3.f });
-//      CHECK(vec.zyww() == fvec4{ 3.f, 2.f, 4.f, 4.f });
-//      CHECK(vec.zzxx() == fvec4{ 3.f, 3.f, 1.f, 1.f });
-//      CHECK(vec.zzxy() == fvec4{ 3.f, 3.f, 1.f, 2.f });
-//      CHECK(vec.zzxz() == fvec4{ 3.f, 3.f, 1.f, 3.f });
-//      CHECK(vec.zzxw() == fvec4{ 3.f, 3.f, 1.f, 4.f });
-//      CHECK(vec.zzyx() == fvec4{ 3.f, 3.f, 2.f, 1.f });
-//      CHECK(vec.zzyy() == fvec4{ 3.f, 3.f, 2.f, 2.f });
-//      CHECK(vec.zzyz() == fvec4{ 3.f, 3.f, 2.f, 3.f });
-//      CHECK(vec.zzyw() == fvec4{ 3.f, 3.f, 2.f, 4.f });
-//      CHECK(vec.zzzx() == fvec4{ 3.f, 3.f, 3.f, 1.f });
-//      CHECK(vec.zzzy() == fvec4{ 3.f, 3.f, 3.f, 2.f });
-//      CHECK(vec.zzzz() == fvec4{ 3.f, 3.f, 3.f, 3.f });
-//      CHECK(vec.zzzw() == fvec4{ 3.f, 3.f, 3.f, 4.f });
-//      CHECK(vec.zzwx() == fvec4{ 3.f, 3.f, 4.f, 1.f });
-//      CHECK(vec.zzwy() == fvec4{ 3.f, 3.f, 4.f, 2.f });
-//      CHECK(vec.zzwz() == fvec4{ 3.f, 3.f, 4.f, 3.f });
-//      CHECK(vec.zzww() == fvec4{ 3.f, 3.f, 4.f, 4.f });
-//      CHECK(vec.zwxx() == fvec4{ 3.f, 4.f, 1.f, 1.f });
-//      CHECK(vec.zwxy() == fvec4{ 3.f, 4.f, 1.f, 2.f });
-//      CHECK(vec.zwxz() == fvec4{ 3.f, 4.f, 1.f, 3.f });
-//      CHECK(vec.zwxw() == fvec4{ 3.f, 4.f, 1.f, 4.f });
-//      CHECK(vec.zwyx() == fvec4{ 3.f, 4.f, 2.f, 1.f });
-//      CHECK(vec.zwyy() == fvec4{ 3.f, 4.f, 2.f, 2.f });
-//      CHECK(vec.zwyz() == fvec4{ 3.f, 4.f, 2.f, 3.f });
-//      CHECK(vec.zwyw() == fvec4{ 3.f, 4.f, 2.f, 4.f });
-//      CHECK(vec.zwzx() == fvec4{ 3.f, 4.f, 3.f, 1.f });
-//      CHECK(vec.zwzy() == fvec4{ 3.f, 4.f, 3.f, 2.f });
-//      CHECK(vec.zwzz() == fvec4{ 3.f, 4.f, 3.f, 3.f });
-//      CHECK(vec.zwzw() == fvec4{ 3.f, 4.f, 3.f, 4.f });
-//      CHECK(vec.zwwx() == fvec4{ 3.f, 4.f, 4.f, 1.f });
-//      CHECK(vec.zwwy() == fvec4{ 3.f, 4.f, 4.f, 2.f });
-//      CHECK(vec.zwwz() == fvec4{ 3.f, 4.f, 4.f, 3.f });
-//      CHECK(vec.zwww() == fvec4{ 3.f, 4.f, 4.f, 4.f });
-//      CHECK(vec.wxxx() == fvec4{ 4.f, 1.f, 1.f, 1.f });
-//      CHECK(vec.wxxy() == fvec4{ 4.f, 1.f, 1.f, 2.f });
-//      CHECK(vec.wxxz() == fvec4{ 4.f, 1.f, 1.f, 3.f });
-//      CHECK(vec.wxxw() == fvec4{ 4.f, 1.f, 1.f, 4.f });
-//      CHECK(vec.wxyx() == fvec4{ 4.f, 1.f, 2.f, 1.f });
-//      CHECK(vec.wxyy() == fvec4{ 4.f, 1.f, 2.f, 2.f });
-//      CHECK(vec.wxyz() == fvec4{ 4.f, 1.f, 2.f, 3.f });
-//      CHECK(vec.wxyw() == fvec4{ 4.f, 1.f, 2.f, 4.f });
-//      CHECK(vec.wxzx() == fvec4{ 4.f, 1.f, 3.f, 1.f });
-//      CHECK(vec.wxzy() == fvec4{ 4.f, 1.f, 3.f, 2.f });
-//      CHECK(vec.wxzz() == fvec4{ 4.f, 1.f, 3.f, 3.f });
-//      CHECK(vec.wxzw() == fvec4{ 4.f, 1.f, 3.f, 4.f });
-//      CHECK(vec.wxwx() == fvec4{ 4.f, 1.f, 4.f, 1.f });
-//      CHECK(vec.wxwy() == fvec4{ 4.f, 1.f, 4.f, 2.f });
-//      CHECK(vec.wxwz() == fvec4{ 4.f, 1.f, 4.f, 3.f });
-//      CHECK(vec.wxww() == fvec4{ 4.f, 1.f, 4.f, 4.f });
-//      CHECK(vec.wyxx() == fvec4{ 4.f, 2.f, 1.f, 1.f });
-//      CHECK(vec.wyxy() == fvec4{ 4.f, 2.f, 1.f, 2.f });
-//      CHECK(vec.wyxz() == fvec4{ 4.f, 2.f, 1.f, 3.f });
-//      CHECK(vec.wyxw() == fvec4{ 4.f, 2.f, 1.f, 4.f });
-//      CHECK(vec.wyyx() == fvec4{ 4.f, 2.f, 2.f, 1.f });
-//      CHECK(vec.wyyy() == fvec4{ 4.f, 2.f, 2.f, 2.f });
-//      CHECK(vec.wyyz() == fvec4{ 4.f, 2.f, 2.f, 3.f });
-//      CHECK(vec.wyyw() == fvec4{ 4.f, 2.f, 2.f, 4.f });
-//      CHECK(vec.wyzx() == fvec4{ 4.f, 2.f, 3.f, 1.f });
-//      CHECK(vec.wyzy() == fvec4{ 4.f, 2.f, 3.f, 2.f });
-//      CHECK(vec.wyzz() == fvec4{ 4.f, 2.f, 3.f, 3.f });
-//      CHECK(vec.wyzw() == fvec4{ 4.f, 2.f, 3.f, 4.f });
-//      CHECK(vec.wywx() == fvec4{ 4.f, 2.f, 4.f, 1.f });
-//      CHECK(vec.wywy() == fvec4{ 4.f, 2.f, 4.f, 2.f });
-//      CHECK(vec.wywz() == fvec4{ 4.f, 2.f, 4.f, 3.f });
-//      CHECK(vec.wyww() == fvec4{ 4.f, 2.f, 4.f, 4.f });
-//      CHECK(vec.wzxx() == fvec4{ 4.f, 3.f, 1.f, 1.f });
-//      CHECK(vec.wzxy() == fvec4{ 4.f, 3.f, 1.f, 2.f });
-//      CHECK(vec.wzxz() == fvec4{ 4.f, 3.f, 1.f, 3.f });
-//      CHECK(vec.wzxw() == fvec4{ 4.f, 3.f, 1.f, 4.f });
-//      CHECK(vec.wzyx() == fvec4{ 4.f, 3.f, 2.f, 1.f });
-//      CHECK(vec.wzyy() == fvec4{ 4.f, 3.f, 2.f, 2.f });
-//      CHECK(vec.wzyz() == fvec4{ 4.f, 3.f, 2.f, 3.f });
-//      CHECK(vec.wzyw() == fvec4{ 4.f, 3.f, 2.f, 4.f });
-//      CHECK(vec.wzzx() == fvec4{ 4.f, 3.f, 3.f, 1.f });
-//      CHECK(vec.wzzy() == fvec4{ 4.f, 3.f, 3.f, 2.f });
-//      CHECK(vec.wzzz() == fvec4{ 4.f, 3.f, 3.f, 3.f });
-//      CHECK(vec.wzzw() == fvec4{ 4.f, 3.f, 3.f, 4.f });
-//      CHECK(vec.wzwx() == fvec4{ 4.f, 3.f, 4.f, 1.f });
-//      CHECK(vec.wzwy() == fvec4{ 4.f, 3.f, 4.f, 2.f });
-//      CHECK(vec.wzwz() == fvec4{ 4.f, 3.f, 4.f, 3.f });
-//      CHECK(vec.wzww() == fvec4{ 4.f, 3.f, 4.f, 4.f });
-//      CHECK(vec.wwxx() == fvec4{ 4.f, 4.f, 1.f, 1.f });
-//      CHECK(vec.wwxy() == fvec4{ 4.f, 4.f, 1.f, 2.f });
-//      CHECK(vec.wwxz() == fvec4{ 4.f, 4.f, 1.f, 3.f });
-//      CHECK(vec.wwxw() == fvec4{ 4.f, 4.f, 1.f, 4.f });
-//      CHECK(vec.wwyx() == fvec4{ 4.f, 4.f, 2.f, 1.f });
-//      CHECK(vec.wwyy() == fvec4{ 4.f, 4.f, 2.f, 2.f });
-//      CHECK(vec.wwyz() == fvec4{ 4.f, 4.f, 2.f, 3.f });
-//      CHECK(vec.wwyw() == fvec4{ 4.f, 4.f, 2.f, 4.f });
-//      CHECK(vec.wwzx() == fvec4{ 4.f, 4.f, 3.f, 1.f });
-//      CHECK(vec.wwzy() == fvec4{ 4.f, 4.f, 3.f, 2.f });
-//      CHECK(vec.wwzz() == fvec4{ 4.f, 4.f, 3.f, 3.f });
-//      CHECK(vec.wwzw() == fvec4{ 4.f, 4.f, 3.f, 4.f });
-//      CHECK(vec.wwwx() == fvec4{ 4.f, 4.f, 4.f, 1.f });
-//      CHECK(vec.wwwy() == fvec4{ 4.f, 4.f, 4.f, 2.f });
-//      CHECK(vec.wwwz() == fvec4{ 4.f, 4.f, 4.f, 3.f });
-//      CHECK(vec.wwww() == fvec4{ 4.f, 4.f, 4.f, 4.f });
-//    }
-//  }
-//}
+    SECTION("fvec2 result") {
+      CHECK(vec("xx"_swz) == fvec2{ 1.f, 1.f });
+      CHECK(vec("xy"_swz) == fvec2{ 1.f, 2.f });
+      CHECK(vec("yx"_swz) == fvec2{ 2.f, 1.f });
+      CHECK(vec("yy"_swz) == fvec2{ 2.f, 2.f });
+
+      // vec("xx"_swz) = fvec2{ 3.f, 4.f };
+      // CHECK(vec == fvec2{ 4.f, 2.f });
+      // CHECK(vec.x == 4.f);
+      // CHECK(vec.y == 2.f);
+    }
+
+    SECTION("fvec3 result") {
+    }
+
+    SECTION("fvec4 result") {
+    }
+  }
+
+  SECTION("fvec3") {
+    fvec3 vec(1.f, 2.f, 3.f);
+
+    //SECTION("fvec2 result") {
+    //  CHECK(vec("xx"_swz) == fvec2{ 1.f, 1.f });
+    //  CHECK(vec("xy"_swz) == fvec2{ 1.f, 2.f });
+    //  CHECK(vec("yx"_swz) == fvec2{ 2.f, 1.f });
+    //  CHECK(vec("yy"_swz) == fvec2{ 2.f, 2.f });
+
+    //  // vec("xx"_swz) = fvec2{ 3.f, 4.f };
+    //  // CHECK(vec == fvec2{ 4.f, 2.f });
+    //  // CHECK(vec.x == 4.f);
+    //  // CHECK(vec.y == 2.f);
+    //}
+
+    SECTION("fvec3 result") {
+      CHECK(vec("xxx"_swz) == fvec3{ 1.f, 1.f, 1.f });
+      CHECK(vec("xxy"_swz) == fvec3{ 1.f, 1.f, 2.f });
+      CHECK(vec("xxz"_swz) == fvec3{ 1.f, 1.f, 3.f });
+      CHECK(vec("xyx"_swz) == fvec3{ 1.f, 2.f, 1.f });
+      CHECK(vec("xyy"_swz) == fvec3{ 1.f, 2.f, 2.f });
+      CHECK(vec("xyz"_swz) == fvec3{ 1.f, 2.f, 3.f });
+      CHECK(vec("xzx"_swz) == fvec3{ 1.f, 3.f, 1.f });
+      CHECK(vec("xzy"_swz) == fvec3{ 1.f, 3.f, 2.f });
+      CHECK(vec("xzz"_swz) == fvec3{ 1.f, 3.f, 3.f });
+      CHECK(vec("yxx"_swz) == fvec3{ 2.f, 1.f, 1.f });
+      CHECK(vec("yxy"_swz) == fvec3{ 2.f, 1.f, 2.f });
+      CHECK(vec("yxz"_swz) == fvec3{ 2.f, 1.f, 3.f });
+      CHECK(vec("yyx"_swz) == fvec3{ 2.f, 2.f, 1.f });
+      CHECK(vec("yyy"_swz) == fvec3{ 2.f, 2.f, 2.f });
+      CHECK(vec("yyz"_swz) == fvec3{ 2.f, 2.f, 3.f });
+      CHECK(vec("yzx"_swz) == fvec3{ 2.f, 3.f, 1.f });
+      CHECK(vec("yzy"_swz) == fvec3{ 2.f, 3.f, 2.f });
+      CHECK(vec("yzz"_swz) == fvec3{ 2.f, 3.f, 3.f });
+      CHECK(vec("zxx"_swz) == fvec3{ 3.f, 1.f, 1.f });
+      CHECK(vec("zxy"_swz) == fvec3{ 3.f, 1.f, 2.f });
+      CHECK(vec("zxz"_swz) == fvec3{ 3.f, 1.f, 3.f });
+      CHECK(vec("zyx"_swz) == fvec3{ 3.f, 2.f, 1.f });
+      CHECK(vec("zyy"_swz) == fvec3{ 3.f, 2.f, 2.f });
+      CHECK(vec("zyz"_swz) == fvec3{ 3.f, 2.f, 3.f });
+      CHECK(vec("zzx"_swz) == fvec3{ 3.f, 3.f, 1.f });
+      CHECK(vec("zzy"_swz) == fvec3{ 3.f, 3.f, 2.f });
+      CHECK(vec("zzz"_swz) == fvec3{ 3.f, 3.f, 3.f });
+    }
+
+    SECTION("fvec4 result") {
+    }
+  }
+
+  SECTION("fvec4") {
+    fvec4 vec(1.f, 2.f, 3.f, 4.f);
+
+    //SECTION("fvec2 result") {
+    //  CHECK(vec("xx"_swz) == fvec2{ 1.f, 1.f });
+    //  CHECK(vec("xy"_swz) == fvec2{ 1.f, 2.f });
+    //  CHECK(vec("yx"_swz) == fvec2{ 2.f, 1.f });
+    //  CHECK(vec("yy"_swz) == fvec2{ 2.f, 2.f });
+
+    //  // vec("xx"_swz) = fvec2{ 3.f, 4.f };
+    //  // CHECK(vec == fvec2{ 4.f, 2.f });
+    //  // CHECK(vec.x == 4.f);
+    //  // CHECK(vec.y == 2.f);
+    //}
+
+    SECTION("fvec3 result") {
+    }
+
+    SECTION("fvec4 result") {
+      CHECK(vec("xxxx"_swz) == fvec4{ 1.f, 1.f, 1.f, 1.f });
+      CHECK(vec("xxxy"_swz) == fvec4{ 1.f, 1.f, 1.f, 2.f });
+      CHECK(vec("xxxz"_swz) == fvec4{ 1.f, 1.f, 1.f, 3.f });
+      CHECK(vec("xxxw"_swz) == fvec4{ 1.f, 1.f, 1.f, 4.f });
+      CHECK(vec("xxyx"_swz) == fvec4{ 1.f, 1.f, 2.f, 1.f });
+      CHECK(vec("xxyy"_swz) == fvec4{ 1.f, 1.f, 2.f, 2.f });
+      CHECK(vec("xxyz"_swz) == fvec4{ 1.f, 1.f, 2.f, 3.f });
+      CHECK(vec("xxyw"_swz) == fvec4{ 1.f, 1.f, 2.f, 4.f });
+      CHECK(vec("xxzx"_swz) == fvec4{ 1.f, 1.f, 3.f, 1.f });
+      CHECK(vec("xxzy"_swz) == fvec4{ 1.f, 1.f, 3.f, 2.f });
+      CHECK(vec("xxzz"_swz) == fvec4{ 1.f, 1.f, 3.f, 3.f });
+      CHECK(vec("xxzw"_swz) == fvec4{ 1.f, 1.f, 3.f, 4.f });
+      CHECK(vec("xxwx"_swz) == fvec4{ 1.f, 1.f, 4.f, 1.f });
+      CHECK(vec("xxwy"_swz) == fvec4{ 1.f, 1.f, 4.f, 2.f });
+      CHECK(vec("xxwz"_swz) == fvec4{ 1.f, 1.f, 4.f, 3.f });
+      CHECK(vec("xxww"_swz) == fvec4{ 1.f, 1.f, 4.f, 4.f });
+      CHECK(vec("xyxx"_swz) == fvec4{ 1.f, 2.f, 1.f, 1.f });
+      CHECK(vec("xyxy"_swz) == fvec4{ 1.f, 2.f, 1.f, 2.f });
+      CHECK(vec("xyxz"_swz) == fvec4{ 1.f, 2.f, 1.f, 3.f });
+      CHECK(vec("xyxw"_swz) == fvec4{ 1.f, 2.f, 1.f, 4.f });
+      CHECK(vec("xyyx"_swz) == fvec4{ 1.f, 2.f, 2.f, 1.f });
+      CHECK(vec("xyyy"_swz) == fvec4{ 1.f, 2.f, 2.f, 2.f });
+      CHECK(vec("xyyz"_swz) == fvec4{ 1.f, 2.f, 2.f, 3.f });
+      CHECK(vec("xyyw"_swz) == fvec4{ 1.f, 2.f, 2.f, 4.f });
+      CHECK(vec("xyzx"_swz) == fvec4{ 1.f, 2.f, 3.f, 1.f });
+      CHECK(vec("xyzy"_swz) == fvec4{ 1.f, 2.f, 3.f, 2.f });
+      CHECK(vec("xyzz"_swz) == fvec4{ 1.f, 2.f, 3.f, 3.f });
+      CHECK(vec("xyzw"_swz) == fvec4{ 1.f, 2.f, 3.f, 4.f });
+      CHECK(vec("xywx"_swz) == fvec4{ 1.f, 2.f, 4.f, 1.f });
+      CHECK(vec("xywy"_swz) == fvec4{ 1.f, 2.f, 4.f, 2.f });
+      CHECK(vec("xywz"_swz) == fvec4{ 1.f, 2.f, 4.f, 3.f });
+      CHECK(vec("xyww"_swz) == fvec4{ 1.f, 2.f, 4.f, 4.f });
+      CHECK(vec("xzxx"_swz) == fvec4{ 1.f, 3.f, 1.f, 1.f });
+      CHECK(vec("xzxy"_swz) == fvec4{ 1.f, 3.f, 1.f, 2.f });
+      CHECK(vec("xzxz"_swz) == fvec4{ 1.f, 3.f, 1.f, 3.f });
+      CHECK(vec("xzxw"_swz) == fvec4{ 1.f, 3.f, 1.f, 4.f });
+      CHECK(vec("xzyx"_swz) == fvec4{ 1.f, 3.f, 2.f, 1.f });
+      CHECK(vec("xzyy"_swz) == fvec4{ 1.f, 3.f, 2.f, 2.f });
+      CHECK(vec("xzyz"_swz) == fvec4{ 1.f, 3.f, 2.f, 3.f });
+      CHECK(vec("xzyw"_swz) == fvec4{ 1.f, 3.f, 2.f, 4.f });
+      CHECK(vec("xzzx"_swz) == fvec4{ 1.f, 3.f, 3.f, 1.f });
+      CHECK(vec("xzzy"_swz) == fvec4{ 1.f, 3.f, 3.f, 2.f });
+      CHECK(vec("xzzz"_swz) == fvec4{ 1.f, 3.f, 3.f, 3.f });
+      CHECK(vec("xzzw"_swz) == fvec4{ 1.f, 3.f, 3.f, 4.f });
+      CHECK(vec("xzwx"_swz) == fvec4{ 1.f, 3.f, 4.f, 1.f });
+      CHECK(vec("xzwy"_swz) == fvec4{ 1.f, 3.f, 4.f, 2.f });
+      CHECK(vec("xzwz"_swz) == fvec4{ 1.f, 3.f, 4.f, 3.f });
+      CHECK(vec("xzww"_swz) == fvec4{ 1.f, 3.f, 4.f, 4.f });
+      CHECK(vec("xwxx"_swz) == fvec4{ 1.f, 4.f, 1.f, 1.f });
+      CHECK(vec("xwxy"_swz) == fvec4{ 1.f, 4.f, 1.f, 2.f });
+      CHECK(vec("xwxz"_swz) == fvec4{ 1.f, 4.f, 1.f, 3.f });
+      CHECK(vec("xwxw"_swz) == fvec4{ 1.f, 4.f, 1.f, 4.f });
+      CHECK(vec("xwyx"_swz) == fvec4{ 1.f, 4.f, 2.f, 1.f });
+      CHECK(vec("xwyy"_swz) == fvec4{ 1.f, 4.f, 2.f, 2.f });
+      CHECK(vec("xwyz"_swz) == fvec4{ 1.f, 4.f, 2.f, 3.f });
+      CHECK(vec("xwyw"_swz) == fvec4{ 1.f, 4.f, 2.f, 4.f });
+      CHECK(vec("xwzx"_swz) == fvec4{ 1.f, 4.f, 3.f, 1.f });
+      CHECK(vec("xwzy"_swz) == fvec4{ 1.f, 4.f, 3.f, 2.f });
+      CHECK(vec("xwzz"_swz) == fvec4{ 1.f, 4.f, 3.f, 3.f });
+      CHECK(vec("xwzw"_swz) == fvec4{ 1.f, 4.f, 3.f, 4.f });
+      CHECK(vec("xwwx"_swz) == fvec4{ 1.f, 4.f, 4.f, 1.f });
+      CHECK(vec("xwwy"_swz) == fvec4{ 1.f, 4.f, 4.f, 2.f });
+      CHECK(vec("xwwz"_swz) == fvec4{ 1.f, 4.f, 4.f, 3.f });
+      CHECK(vec("xwww"_swz) == fvec4{ 1.f, 4.f, 4.f, 4.f });
+      CHECK(vec("yxxx"_swz) == fvec4{ 2.f, 1.f, 1.f, 1.f });
+      CHECK(vec("yxxy"_swz) == fvec4{ 2.f, 1.f, 1.f, 2.f });
+      CHECK(vec("yxxz"_swz) == fvec4{ 2.f, 1.f, 1.f, 3.f });
+      CHECK(vec("yxxw"_swz) == fvec4{ 2.f, 1.f, 1.f, 4.f });
+      CHECK(vec("yxyx"_swz) == fvec4{ 2.f, 1.f, 2.f, 1.f });
+      CHECK(vec("yxyy"_swz) == fvec4{ 2.f, 1.f, 2.f, 2.f });
+      CHECK(vec("yxyz"_swz) == fvec4{ 2.f, 1.f, 2.f, 3.f });
+      CHECK(vec("yxyw"_swz) == fvec4{ 2.f, 1.f, 2.f, 4.f });
+      CHECK(vec("yxzx"_swz) == fvec4{ 2.f, 1.f, 3.f, 1.f });
+      CHECK(vec("yxzy"_swz) == fvec4{ 2.f, 1.f, 3.f, 2.f });
+      CHECK(vec("yxzz"_swz) == fvec4{ 2.f, 1.f, 3.f, 3.f });
+      CHECK(vec("yxzw"_swz) == fvec4{ 2.f, 1.f, 3.f, 4.f });
+      CHECK(vec("yxwx"_swz) == fvec4{ 2.f, 1.f, 4.f, 1.f });
+      CHECK(vec("yxwy"_swz) == fvec4{ 2.f, 1.f, 4.f, 2.f });
+      CHECK(vec("yxwz"_swz) == fvec4{ 2.f, 1.f, 4.f, 3.f });
+      CHECK(vec("yxww"_swz) == fvec4{ 2.f, 1.f, 4.f, 4.f });
+      CHECK(vec("yyxx"_swz) == fvec4{ 2.f, 2.f, 1.f, 1.f });
+      CHECK(vec("yyxy"_swz) == fvec4{ 2.f, 2.f, 1.f, 2.f });
+      CHECK(vec("yyxz"_swz) == fvec4{ 2.f, 2.f, 1.f, 3.f });
+      CHECK(vec("yyxw"_swz) == fvec4{ 2.f, 2.f, 1.f, 4.f });
+      CHECK(vec("yyyx"_swz) == fvec4{ 2.f, 2.f, 2.f, 1.f });
+      CHECK(vec("yyyy"_swz) == fvec4{ 2.f, 2.f, 2.f, 2.f });
+      CHECK(vec("yyyz"_swz) == fvec4{ 2.f, 2.f, 2.f, 3.f });
+      CHECK(vec("yyyw"_swz) == fvec4{ 2.f, 2.f, 2.f, 4.f });
+      CHECK(vec("yyzx"_swz) == fvec4{ 2.f, 2.f, 3.f, 1.f });
+      CHECK(vec("yyzy"_swz) == fvec4{ 2.f, 2.f, 3.f, 2.f });
+      CHECK(vec("yyzz"_swz) == fvec4{ 2.f, 2.f, 3.f, 3.f });
+      CHECK(vec("yyzw"_swz) == fvec4{ 2.f, 2.f, 3.f, 4.f });
+      CHECK(vec("yywx"_swz) == fvec4{ 2.f, 2.f, 4.f, 1.f });
+      CHECK(vec("yywy"_swz) == fvec4{ 2.f, 2.f, 4.f, 2.f });
+      CHECK(vec("yywz"_swz) == fvec4{ 2.f, 2.f, 4.f, 3.f });
+      CHECK(vec("yyww"_swz) == fvec4{ 2.f, 2.f, 4.f, 4.f });
+      CHECK(vec("yzxx"_swz) == fvec4{ 2.f, 3.f, 1.f, 1.f });
+      CHECK(vec("yzxy"_swz) == fvec4{ 2.f, 3.f, 1.f, 2.f });
+      CHECK(vec("yzxz"_swz) == fvec4{ 2.f, 3.f, 1.f, 3.f });
+      CHECK(vec("yzxw"_swz) == fvec4{ 2.f, 3.f, 1.f, 4.f });
+      CHECK(vec("yzyx"_swz) == fvec4{ 2.f, 3.f, 2.f, 1.f });
+      CHECK(vec("yzyy"_swz) == fvec4{ 2.f, 3.f, 2.f, 2.f });
+      CHECK(vec("yzyz"_swz) == fvec4{ 2.f, 3.f, 2.f, 3.f });
+      CHECK(vec("yzyw"_swz) == fvec4{ 2.f, 3.f, 2.f, 4.f });
+      CHECK(vec("yzzx"_swz) == fvec4{ 2.f, 3.f, 3.f, 1.f });
+      CHECK(vec("yzzy"_swz) == fvec4{ 2.f, 3.f, 3.f, 2.f });
+      CHECK(vec("yzzz"_swz) == fvec4{ 2.f, 3.f, 3.f, 3.f });
+      CHECK(vec("yzzw"_swz) == fvec4{ 2.f, 3.f, 3.f, 4.f });
+      CHECK(vec("yzwx"_swz) == fvec4{ 2.f, 3.f, 4.f, 1.f });
+      CHECK(vec("yzwy"_swz) == fvec4{ 2.f, 3.f, 4.f, 2.f });
+      CHECK(vec("yzwz"_swz) == fvec4{ 2.f, 3.f, 4.f, 3.f });
+      CHECK(vec("yzww"_swz) == fvec4{ 2.f, 3.f, 4.f, 4.f });
+      CHECK(vec("ywxx"_swz) == fvec4{ 2.f, 4.f, 1.f, 1.f });
+      CHECK(vec("ywxy"_swz) == fvec4{ 2.f, 4.f, 1.f, 2.f });
+      CHECK(vec("ywxz"_swz) == fvec4{ 2.f, 4.f, 1.f, 3.f });
+      CHECK(vec("ywxw"_swz) == fvec4{ 2.f, 4.f, 1.f, 4.f });
+      CHECK(vec("ywyx"_swz) == fvec4{ 2.f, 4.f, 2.f, 1.f });
+      CHECK(vec("ywyy"_swz) == fvec4{ 2.f, 4.f, 2.f, 2.f });
+      CHECK(vec("ywyz"_swz) == fvec4{ 2.f, 4.f, 2.f, 3.f });
+      CHECK(vec("ywyw"_swz) == fvec4{ 2.f, 4.f, 2.f, 4.f });
+      CHECK(vec("ywzx"_swz) == fvec4{ 2.f, 4.f, 3.f, 1.f });
+      CHECK(vec("ywzy"_swz) == fvec4{ 2.f, 4.f, 3.f, 2.f });
+      CHECK(vec("ywzz"_swz) == fvec4{ 2.f, 4.f, 3.f, 3.f });
+      CHECK(vec("ywzw"_swz) == fvec4{ 2.f, 4.f, 3.f, 4.f });
+      CHECK(vec("ywwx"_swz) == fvec4{ 2.f, 4.f, 4.f, 1.f });
+      CHECK(vec("ywwy"_swz) == fvec4{ 2.f, 4.f, 4.f, 2.f });
+      CHECK(vec("ywwz"_swz) == fvec4{ 2.f, 4.f, 4.f, 3.f });
+      CHECK(vec("ywww"_swz) == fvec4{ 2.f, 4.f, 4.f, 4.f });
+      CHECK(vec("zxxx"_swz) == fvec4{ 3.f, 1.f, 1.f, 1.f });
+      CHECK(vec("zxxy"_swz) == fvec4{ 3.f, 1.f, 1.f, 2.f });
+      CHECK(vec("zxxz"_swz) == fvec4{ 3.f, 1.f, 1.f, 3.f });
+      CHECK(vec("zxxw"_swz) == fvec4{ 3.f, 1.f, 1.f, 4.f });
+      CHECK(vec("zxyx"_swz) == fvec4{ 3.f, 1.f, 2.f, 1.f });
+      CHECK(vec("zxyy"_swz) == fvec4{ 3.f, 1.f, 2.f, 2.f });
+      CHECK(vec("zxyz"_swz) == fvec4{ 3.f, 1.f, 2.f, 3.f });
+      CHECK(vec("zxyw"_swz) == fvec4{ 3.f, 1.f, 2.f, 4.f });
+      CHECK(vec("zxzx"_swz) == fvec4{ 3.f, 1.f, 3.f, 1.f });
+      CHECK(vec("zxzy"_swz) == fvec4{ 3.f, 1.f, 3.f, 2.f });
+      CHECK(vec("zxzz"_swz) == fvec4{ 3.f, 1.f, 3.f, 3.f });
+      CHECK(vec("zxzw"_swz) == fvec4{ 3.f, 1.f, 3.f, 4.f });
+      CHECK(vec("zxwx"_swz) == fvec4{ 3.f, 1.f, 4.f, 1.f });
+      CHECK(vec("zxwy"_swz) == fvec4{ 3.f, 1.f, 4.f, 2.f });
+      CHECK(vec("zxwz"_swz) == fvec4{ 3.f, 1.f, 4.f, 3.f });
+      CHECK(vec("zxww"_swz) == fvec4{ 3.f, 1.f, 4.f, 4.f });
+      CHECK(vec("zyxx"_swz) == fvec4{ 3.f, 2.f, 1.f, 1.f });
+      CHECK(vec("zyxy"_swz) == fvec4{ 3.f, 2.f, 1.f, 2.f });
+      CHECK(vec("zyxz"_swz) == fvec4{ 3.f, 2.f, 1.f, 3.f });
+      CHECK(vec("zyxw"_swz) == fvec4{ 3.f, 2.f, 1.f, 4.f });
+      CHECK(vec("zyyx"_swz) == fvec4{ 3.f, 2.f, 2.f, 1.f });
+      CHECK(vec("zyyy"_swz) == fvec4{ 3.f, 2.f, 2.f, 2.f });
+      CHECK(vec("zyyz"_swz) == fvec4{ 3.f, 2.f, 2.f, 3.f });
+      CHECK(vec("zyyw"_swz) == fvec4{ 3.f, 2.f, 2.f, 4.f });
+      CHECK(vec("zyzx"_swz) == fvec4{ 3.f, 2.f, 3.f, 1.f });
+      CHECK(vec("zyzy"_swz) == fvec4{ 3.f, 2.f, 3.f, 2.f });
+      CHECK(vec("zyzz"_swz) == fvec4{ 3.f, 2.f, 3.f, 3.f });
+      CHECK(vec("zyzw"_swz) == fvec4{ 3.f, 2.f, 3.f, 4.f });
+      CHECK(vec("zywx"_swz) == fvec4{ 3.f, 2.f, 4.f, 1.f });
+      CHECK(vec("zywy"_swz) == fvec4{ 3.f, 2.f, 4.f, 2.f });
+      CHECK(vec("zywz"_swz) == fvec4{ 3.f, 2.f, 4.f, 3.f });
+      CHECK(vec("zyww"_swz) == fvec4{ 3.f, 2.f, 4.f, 4.f });
+      CHECK(vec("zzxx"_swz) == fvec4{ 3.f, 3.f, 1.f, 1.f });
+      CHECK(vec("zzxy"_swz) == fvec4{ 3.f, 3.f, 1.f, 2.f });
+      CHECK(vec("zzxz"_swz) == fvec4{ 3.f, 3.f, 1.f, 3.f });
+      CHECK(vec("zzxw"_swz) == fvec4{ 3.f, 3.f, 1.f, 4.f });
+      CHECK(vec("zzyx"_swz) == fvec4{ 3.f, 3.f, 2.f, 1.f });
+      CHECK(vec("zzyy"_swz) == fvec4{ 3.f, 3.f, 2.f, 2.f });
+      CHECK(vec("zzyz"_swz) == fvec4{ 3.f, 3.f, 2.f, 3.f });
+      CHECK(vec("zzyw"_swz) == fvec4{ 3.f, 3.f, 2.f, 4.f });
+      CHECK(vec("zzzx"_swz) == fvec4{ 3.f, 3.f, 3.f, 1.f });
+      CHECK(vec("zzzy"_swz) == fvec4{ 3.f, 3.f, 3.f, 2.f });
+      CHECK(vec("zzzz"_swz) == fvec4{ 3.f, 3.f, 3.f, 3.f });
+      CHECK(vec("zzzw"_swz) == fvec4{ 3.f, 3.f, 3.f, 4.f });
+      CHECK(vec("zzwx"_swz) == fvec4{ 3.f, 3.f, 4.f, 1.f });
+      CHECK(vec("zzwy"_swz) == fvec4{ 3.f, 3.f, 4.f, 2.f });
+      CHECK(vec("zzwz"_swz) == fvec4{ 3.f, 3.f, 4.f, 3.f });
+      CHECK(vec("zzww"_swz) == fvec4{ 3.f, 3.f, 4.f, 4.f });
+      CHECK(vec("zwxx"_swz) == fvec4{ 3.f, 4.f, 1.f, 1.f });
+      CHECK(vec("zwxy"_swz) == fvec4{ 3.f, 4.f, 1.f, 2.f });
+      CHECK(vec("zwxz"_swz) == fvec4{ 3.f, 4.f, 1.f, 3.f });
+      CHECK(vec("zwxw"_swz) == fvec4{ 3.f, 4.f, 1.f, 4.f });
+      CHECK(vec("zwyx"_swz) == fvec4{ 3.f, 4.f, 2.f, 1.f });
+      CHECK(vec("zwyy"_swz) == fvec4{ 3.f, 4.f, 2.f, 2.f });
+      CHECK(vec("zwyz"_swz) == fvec4{ 3.f, 4.f, 2.f, 3.f });
+      CHECK(vec("zwyw"_swz) == fvec4{ 3.f, 4.f, 2.f, 4.f });
+      CHECK(vec("zwzx"_swz) == fvec4{ 3.f, 4.f, 3.f, 1.f });
+      CHECK(vec("zwzy"_swz) == fvec4{ 3.f, 4.f, 3.f, 2.f });
+      CHECK(vec("zwzz"_swz) == fvec4{ 3.f, 4.f, 3.f, 3.f });
+      CHECK(vec("zwzw"_swz) == fvec4{ 3.f, 4.f, 3.f, 4.f });
+      CHECK(vec("zwwx"_swz) == fvec4{ 3.f, 4.f, 4.f, 1.f });
+      CHECK(vec("zwwy"_swz) == fvec4{ 3.f, 4.f, 4.f, 2.f });
+      CHECK(vec("zwwz"_swz) == fvec4{ 3.f, 4.f, 4.f, 3.f });
+      CHECK(vec("zwww"_swz) == fvec4{ 3.f, 4.f, 4.f, 4.f });
+      CHECK(vec("wxxx"_swz) == fvec4{ 4.f, 1.f, 1.f, 1.f });
+      CHECK(vec("wxxy"_swz) == fvec4{ 4.f, 1.f, 1.f, 2.f });
+      CHECK(vec("wxxz"_swz) == fvec4{ 4.f, 1.f, 1.f, 3.f });
+      CHECK(vec("wxxw"_swz) == fvec4{ 4.f, 1.f, 1.f, 4.f });
+      CHECK(vec("wxyx"_swz) == fvec4{ 4.f, 1.f, 2.f, 1.f });
+      CHECK(vec("wxyy"_swz) == fvec4{ 4.f, 1.f, 2.f, 2.f });
+      CHECK(vec("wxyz"_swz) == fvec4{ 4.f, 1.f, 2.f, 3.f });
+      CHECK(vec("wxyw"_swz) == fvec4{ 4.f, 1.f, 2.f, 4.f });
+      CHECK(vec("wxzx"_swz) == fvec4{ 4.f, 1.f, 3.f, 1.f });
+      CHECK(vec("wxzy"_swz) == fvec4{ 4.f, 1.f, 3.f, 2.f });
+      CHECK(vec("wxzz"_swz) == fvec4{ 4.f, 1.f, 3.f, 3.f });
+      CHECK(vec("wxzw"_swz) == fvec4{ 4.f, 1.f, 3.f, 4.f });
+      CHECK(vec("wxwx"_swz) == fvec4{ 4.f, 1.f, 4.f, 1.f });
+      CHECK(vec("wxwy"_swz) == fvec4{ 4.f, 1.f, 4.f, 2.f });
+      CHECK(vec("wxwz"_swz) == fvec4{ 4.f, 1.f, 4.f, 3.f });
+      CHECK(vec("wxww"_swz) == fvec4{ 4.f, 1.f, 4.f, 4.f });
+      CHECK(vec("wyxx"_swz) == fvec4{ 4.f, 2.f, 1.f, 1.f });
+      CHECK(vec("wyxy"_swz) == fvec4{ 4.f, 2.f, 1.f, 2.f });
+      CHECK(vec("wyxz"_swz) == fvec4{ 4.f, 2.f, 1.f, 3.f });
+      CHECK(vec("wyxw"_swz) == fvec4{ 4.f, 2.f, 1.f, 4.f });
+      CHECK(vec("wyyx"_swz) == fvec4{ 4.f, 2.f, 2.f, 1.f });
+      CHECK(vec("wyyy"_swz) == fvec4{ 4.f, 2.f, 2.f, 2.f });
+      CHECK(vec("wyyz"_swz) == fvec4{ 4.f, 2.f, 2.f, 3.f });
+      CHECK(vec("wyyw"_swz) == fvec4{ 4.f, 2.f, 2.f, 4.f });
+      CHECK(vec("wyzx"_swz) == fvec4{ 4.f, 2.f, 3.f, 1.f });
+      CHECK(vec("wyzy"_swz) == fvec4{ 4.f, 2.f, 3.f, 2.f });
+      CHECK(vec("wyzz"_swz) == fvec4{ 4.f, 2.f, 3.f, 3.f });
+      CHECK(vec("wyzw"_swz) == fvec4{ 4.f, 2.f, 3.f, 4.f });
+      CHECK(vec("wywx"_swz) == fvec4{ 4.f, 2.f, 4.f, 1.f });
+      CHECK(vec("wywy"_swz) == fvec4{ 4.f, 2.f, 4.f, 2.f });
+      CHECK(vec("wywz"_swz) == fvec4{ 4.f, 2.f, 4.f, 3.f });
+      CHECK(vec("wyww"_swz) == fvec4{ 4.f, 2.f, 4.f, 4.f });
+      CHECK(vec("wzxx"_swz) == fvec4{ 4.f, 3.f, 1.f, 1.f });
+      CHECK(vec("wzxy"_swz) == fvec4{ 4.f, 3.f, 1.f, 2.f });
+      CHECK(vec("wzxz"_swz) == fvec4{ 4.f, 3.f, 1.f, 3.f });
+      CHECK(vec("wzxw"_swz) == fvec4{ 4.f, 3.f, 1.f, 4.f });
+      CHECK(vec("wzyx"_swz) == fvec4{ 4.f, 3.f, 2.f, 1.f });
+      CHECK(vec("wzyy"_swz) == fvec4{ 4.f, 3.f, 2.f, 2.f });
+      CHECK(vec("wzyz"_swz) == fvec4{ 4.f, 3.f, 2.f, 3.f });
+      CHECK(vec("wzyw"_swz) == fvec4{ 4.f, 3.f, 2.f, 4.f });
+      CHECK(vec("wzzx"_swz) == fvec4{ 4.f, 3.f, 3.f, 1.f });
+      CHECK(vec("wzzy"_swz) == fvec4{ 4.f, 3.f, 3.f, 2.f });
+      CHECK(vec("wzzz"_swz) == fvec4{ 4.f, 3.f, 3.f, 3.f });
+      CHECK(vec("wzzw"_swz) == fvec4{ 4.f, 3.f, 3.f, 4.f });
+      CHECK(vec("wzwx"_swz) == fvec4{ 4.f, 3.f, 4.f, 1.f });
+      CHECK(vec("wzwy"_swz) == fvec4{ 4.f, 3.f, 4.f, 2.f });
+      CHECK(vec("wzwz"_swz) == fvec4{ 4.f, 3.f, 4.f, 3.f });
+      CHECK(vec("wzww"_swz) == fvec4{ 4.f, 3.f, 4.f, 4.f });
+      CHECK(vec("wwxx"_swz) == fvec4{ 4.f, 4.f, 1.f, 1.f });
+      CHECK(vec("wwxy"_swz) == fvec4{ 4.f, 4.f, 1.f, 2.f });
+      CHECK(vec("wwxz"_swz) == fvec4{ 4.f, 4.f, 1.f, 3.f });
+      CHECK(vec("wwxw"_swz) == fvec4{ 4.f, 4.f, 1.f, 4.f });
+      CHECK(vec("wwyx"_swz) == fvec4{ 4.f, 4.f, 2.f, 1.f });
+      CHECK(vec("wwyy"_swz) == fvec4{ 4.f, 4.f, 2.f, 2.f });
+      CHECK(vec("wwyz"_swz) == fvec4{ 4.f, 4.f, 2.f, 3.f });
+      CHECK(vec("wwyw"_swz) == fvec4{ 4.f, 4.f, 2.f, 4.f });
+      CHECK(vec("wwzx"_swz) == fvec4{ 4.f, 4.f, 3.f, 1.f });
+      CHECK(vec("wwzy"_swz) == fvec4{ 4.f, 4.f, 3.f, 2.f });
+      CHECK(vec("wwzz"_swz) == fvec4{ 4.f, 4.f, 3.f, 3.f });
+      CHECK(vec("wwzw"_swz) == fvec4{ 4.f, 4.f, 3.f, 4.f });
+      CHECK(vec("wwwx"_swz) == fvec4{ 4.f, 4.f, 4.f, 1.f });
+      CHECK(vec("wwwy"_swz) == fvec4{ 4.f, 4.f, 4.f, 2.f });
+      CHECK(vec("wwwz"_swz) == fvec4{ 4.f, 4.f, 4.f, 3.f });
+      CHECK(vec("wwww"_swz) == fvec4{ 4.f, 4.f, 4.f, 4.f });
+    }
+  }
+}

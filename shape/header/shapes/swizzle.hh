@@ -16,7 +16,16 @@ struct Swizzle {
 
   constexpr
   operator std::array<Type, sizeof...(Indices)>() const noexcept {
-    return { vec.at(Indices)... };
+    return { vec[Indices]... };
+  }
+
+  constexpr
+  Swizzle& operator=(const std::array<Type, sizeof...(Indices)>& array) {
+    [this]<size_t ...I>(const auto& array, std::integer_sequence<size_t, I...>) {
+      ((vec.values[Indices] = array[I]), ...);
+    } (array, std::make_integer_sequence<size_t, sizeof...(Indices)>());
+
+    return *this;
   }
 
   Vec& vec;
@@ -25,10 +34,33 @@ struct Swizzle {
 template<char...Cs>
 struct SwizTag {};
 
-template<char...Cs>
+template<typename Type, Type ...Chars>
 constexpr
-SwizTag<Cs...> operator""_swz() noexcept {
+SwizTag<Chars...> operator""_swz() noexcept {
   return {};
 }
+
+constexpr
+size_t get_swiz_index(const char c) {
+  switch (c) {
+    case 'x':
+    case 'r':
+      return 0;
+    case 'y':
+    case 'g':
+      return 1;
+    case 'z':
+    case 'b':
+      return 2;
+    case 'w':
+    case 'a':
+      return 3;
+    default:
+      throw std::runtime_error("Invalid character in swizzle expression");
+  }
+}
+
+template<char...Chars>
+using SwizIndexSequence = std::integer_sequence<size_t, get_swiz_index(Chars)...>;
 
 }

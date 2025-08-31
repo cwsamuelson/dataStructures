@@ -9,8 +9,6 @@
 #include <format>
 #include <utility>
 
-#include <print>
-
 namespace flp {
 
 template<typename Type, size_t Count>
@@ -21,10 +19,20 @@ struct vecn {
   {}
 
   template<std::same_as<Type> ...T>
-  explicit
   constexpr
   vecn(const T& ...Values) noexcept
     : values{ Values... }
+  {}
+
+  constexpr
+  vecn(const std::array<Type, Count>& input)
+    : values(input) 
+  {}
+
+  template<size_t ...Indices>
+  constexpr
+  vecn(const Swizzle<vecn, Type, Indices...>& swiz)
+    : vecn(static_cast<std::array<Type, Count>>(swiz))
   {}
 
   constexpr
@@ -58,9 +66,6 @@ struct vecn {
   constexpr
   vecn& operator*=(const vecn& other) noexcept {
     [this]<size_t ...Indices>(const vecn& vec, std::integer_sequence<size_t, Indices...>) noexcept {
-      ((std::print("{} ", Indices)), ...);
-      std::println("{}", values);
-      std::println("{}", vec.values);
       ((values[Indices] *= vec.values[Indices]), ...);
     }(other, std::make_integer_sequence<size_t, Count>());
 
@@ -155,16 +160,6 @@ struct vecn {
     return other /= rhs;
   }
 
-  friend auto operator<=>(const vecn&, const vecn&) noexcept = default;
-
-  Type* ptr() noexcept {
-    return values.data();
-  }
-
-  const Type* ptr() const noexcept {
-    return values.data();
-  }
-
   constexpr
   Type& operator[](const size_t index) noexcept {
     return values.at(index);
@@ -173,6 +168,32 @@ struct vecn {
   constexpr
   const Type& operator[](const size_t index) const noexcept {
     return values.at(index);
+  }
+
+  template<char...Chars>
+  constexpr
+  auto operator()(SwizTag<Chars...>) noexcept {
+    return [this]<size_t ...Indices>(std::integer_sequence<size_t, Indices...>) {
+      return Swizzle<vecn, Type, Indices...>{ *this };
+    }(SwizIndexSequence<Chars...>{});
+  }
+
+  template<char...Chars>
+  constexpr
+  auto operator()(SwizTag<Chars...>) const noexcept {
+    return [this]<size_t ...Indices>(std::integer_sequence<size_t, Indices...>) {
+      return Swizzle<vecn, Type, Indices...>{ *this };
+    }(SwizIndexSequence<Chars...>{});
+  }
+
+  friend auto operator<=>(const vecn&, const vecn&) noexcept = default;
+
+  Type* ptr() noexcept {
+    return values.data();
+  }
+
+  const Type* ptr() const noexcept {
+    return values.data();
   }
 
   std::array<Type, Count> values{};
