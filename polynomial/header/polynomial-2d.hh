@@ -119,11 +119,6 @@ struct Polynomial2D {
   auto evaluate(const Type& input) const noexcept {
     auto value = coefficients.back();
 
-    //for (const auto& coefficient : coefficients | std::views::reverse | std::views::drop(1)) {
-    //  value *= input;
-    //  value += coefficient;
-    //}
-
     for (signed long long i = coefficients.size() - 2; i >= 0; --i) {
       value *= input;
       value += coefficients.at(i);
@@ -355,132 +350,7 @@ struct std::formatter<flp::Polynomial2D<Type>>
   }
 };
 
-//template<typename Type>
-//struct std::formatter<flp::Polynomial2D<Type>>
-//  : std::formatter<std::string_view> {
-//  // constexpr
-//  // auto parse(std::format_parse_context& context) {
-//  //   auto iterator = context.begin();
-//  //   while (iterator != context.end() and *iterator != '}') {
-//  //     ++iterator;
-//  //   }
-//
-//  //   if (iterator == context.end() or *iterator != '}') {
-//  //     throw std::format_error("invalid format");
-//  //   }
-//
-//  //   return iterator;
-//  // }
-//
-//  constexpr
-//  auto format(const flp::Polynomial2D<Type>& polynomial, std::format_context& context) const {
-//    std::optional<Type> front;
-//
-//    if (not polynomial.empty()) {
-//      front = polynomial.front();
-//    }
-//
-//    const auto a =
-//        polynomial.coefficients
-//      | std::views::enumerate
-//      | std::views::drop(1)
-//      | std::views::transform([](const auto& pair) {
-//          auto&& [power, coefficient] = pair;
-//          return std::format("({}X^{})", coefficient, power);
-//        }
-//      )
-//      | std::views::reverse;
-//
-//    const auto b = std::views::concat(
-//      a,
-//      std::views::single(std::to_string(polynomial.coefficients.front()))
-//    );
-//
-//    const auto poly_str = b
-//      | std::views::join_with('+')
-//      | std::ranges::to<std::string>();
-//
-//    return std::formatter<std::string_view>::format(poly_str, context);
-//
-//    // ----
-//
-//    // const auto poly_str =
-//    //   polynomial.coefficients
-//    // | std::views::enumerate
-//    // | std::views::drop(1)
-//    // | std::views::transform([](const auto& pair) -> std::string {
-//    //     auto&& [power, coefficient] = pair;
-//    //     return std::format("({}X^{})", coefficient, power);
-//    //   }
-//    // )
-//    // | std::views::reverse
-//    // | std::views::concat(
-//    //   //std::views::single(std::format("{}", polynomial.coefficients.front()))
-//    //   std::format("{}", polynomial.coefficients.front())
-//    // )
-//    // | std::views::join_with('+');
-//
-//    // return std::formatter<std::string_view>::format(poly_str, context);
-//
-//    // ----
-//
-//    // auto iter = context.out();
-//
-//    // for (const auto& [power, coefficient]
-//    //   : std::views::enumerate(polynomial.coefficients)
-//    //   | std::views::drop(1)
-//    //   | std::views::reverse) {
-//    //   iter = std::format_to(iter, "({}^{})", coefficient, power);
-//    // }
-//
-//    // return std::format_to(iter, "{}", polynomial.coefficients.front());
-//
-//    // ----
-//
-//    // if (polynomial.order() == 0 and polynomial.coefficients.empty()) {
-//    //   return std::format_to(context.out(), "0");
-//    // }
-//
-//    // std::string poly_str;
-//
-//    // for (size_t power{}; const auto& coefficient : polynomial.coefficients) {
-//    //   std::string term;
-//    //   if (power == 0) {
-//    //     std::format_to(std::back_inserter(term), "{}", coefficient);
-//    //   } else {
-//    //     std::format_to(std::back_inserter(term), "({}^{})", coefficient, power);
-//    //   }
-//
-//    //   std::format_to(std::back_inserter(poly_str), "{} + {}", term, poly_str);
-//
-//    //   ++power;
-//    // }
-//
-//    // //return std::format_to(context.out(), poly_str.c_str());
-//    // return std::formatter<std::string_view>::format(poly_str, context);
-//  }
-//};
-
 template<typename OStream, typename Type>
 OStream& operator<<(OStream& ostream, const flp::Polynomial2D<Type>& polynomial) {
   return ostream << std::format("{}", polynomial);
 }
-// 
-// operand types are
-// std::ranges::reverse_view<
-//   std::ranges::transform_view<
-//     std::ranges::drop_view<
-//       std::ranges::enumerate_view<
-//         std::ranges::ref_view<
-//           std::vector<float, std::allocator<float>>
-//         >
-//       >
-//     >,
-//     std::formatter<flp::Polynomial2D<float>, char>
-//     ::format(const flp::Polynomial2D<float>&, std::format_context&) const
-//       ::<lambda(const auto:63&)>
-//   >
-// >
-// and
-// std::ranges::single_view<std::__cxx11::basic_string<char> >
-// 
