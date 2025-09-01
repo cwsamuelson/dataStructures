@@ -7,14 +7,15 @@ using namespace flp;
 TEST_CASE("`SDF`: 2D") {
   // float sdCircle(vec2 p, float r) noexcept 
   SECTION("`sdCircle(vec2 p, float r)`") {
-    CHECK(sdCircle({2.f, 0.f}, 1.0f) > 0.f);
-    CHECK(sdCircle({2.f, 2.f}, 1.0f) > 0.f);
-    CHECK(sdCircle({0.f, 2.f}, 1.0f) > 0.f);
+    CHECK(sdCircle({ 2.f, 0.f }, 1.0f) > 0.f);
+    CHECK(sdCircle({ 2.f, 2.f }, 1.0f) > 0.f);
+    CHECK(sdCircle({ 0.f, 2.f }, 1.0f) > 0.f);
+    CHECK(sdCircle({ 1.f, 1.f }, 1.0f) > 0.f);
 
-    CHECK(sdCircle({.9f, 0.f}, 1.0f) < 0.f);
-    CHECK(sdCircle({.9f, .9f}, 1.0f) < 0.f);
-    CHECK(sdCircle({0.f, .9f}, 1.0f) < 0.f);
-    CHECK(sdCircle({0.f, 0.f}, 1.0f) < 0.f);
+    CHECK(sdCircle({ .7f, .7f }, 1.0f) < 0.f);
+    CHECK(sdCircle({ .9f, 0.f }, 1.0f) < 0.f);
+    CHECK(sdCircle({ 0.f, .9f }, 1.0f) < 0.f);
+    CHECK(sdCircle({ 0.f, 0.f }, 1.0f) < 0.f);
   }
 
   // float sdRoundedBox(vec2 p, vec2 b, vec4 r) noexcept 
