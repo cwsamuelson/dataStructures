@@ -5,6 +5,9 @@
 
 namespace flp {
 
+template<typename Type, size_t Count>
+struct vecn;
+
 template<typename Vec, typename Type, size_t ...Indices>
 struct Swizzle {
   template<typename OVec, typename OType, size_t ...OIndices>
@@ -25,6 +28,12 @@ struct Swizzle {
       ((vec.values[Indices] = array[I]), ...);
     } (array, std::make_integer_sequence<size_t, sizeof...(Indices)>());
 
+    return *this;
+  }
+
+  constexpr
+  Swizzle& operator=(const vecn<Type, sizeof...(Indices)>& other) noexcept {
+    ((vec.values[Indices] = other.values[Indices]), ...);
     return *this;
   }
 

@@ -18,7 +18,14 @@ struct vecn {
     : values{}
   {}
 
+  constexpr
+  vecn(const Type& value)
+    : values{} {
+    values.fill(value);
+  }
+
   template<std::same_as<Type> ...T>
+    requires (sizeof...(T) == Count)
   constexpr
   vecn(const T& ...Values) noexcept
     : values{ Values... }
@@ -34,6 +41,25 @@ struct vecn {
   vecn(const Swizzle<vecn, Type, Indices...>& swiz)
     : vecn(static_cast<std::array<Type, Count>>(swiz))
   {}
+
+  constexpr
+  vecn(std::initializer_list<Type> il) {
+    for (size_t index{}; auto& value : il) {
+      values.at(index++) = value;
+    }
+  }
+
+  constexpr
+  vecn(const vecn&) noexcept = default;
+
+  constexpr
+  vecn(vecn&&) noexcept = default;
+
+  constexpr
+  vecn& operator=(const vecn&) noexcept = default;
+
+  constexpr
+  vecn& operator=(vecn&&) noexcept = default;
 
   constexpr
   friend
@@ -194,6 +220,30 @@ struct vecn {
 
   const Type* ptr() const noexcept {
     return values.data();
+  }
+
+  [[nodiscard]]
+  constexpr
+  float x(this auto&& self) {
+    return self.values.at(0);
+  }
+
+  [[nodiscard]]
+  constexpr
+  auto y(this auto&& self) {
+    return self.values.at(1);
+  }
+
+  [[nodiscard]]
+  constexpr
+  auto z(this auto&& self) requires (Count >= 3) {
+    return self.values.at(2);
+  }
+
+  [[nodiscard]]
+  constexpr
+  auto w(this auto&& self) requires (Count >= 4) {
+    return self.values.at(3);
   }
 
   std::array<Type, Count> values{};

@@ -5,80 +5,24 @@
 namespace flp {
 
 template<typename Type>
-struct vec2 : vecn<Type, 2> {
-  using vec = vecn<Type, 2>;
-
-  constexpr
-  vec2() noexcept
-    : vec2(0.f)
-  {}
-
-  constexpr
-  vec2(const Type& value) noexcept
-    : vec2(value, value)
-  {}
-
-  constexpr
-  vec2(const Type& a, const Type& b) noexcept
-    : vec(a, b)
-    , x(vec::values[0])
-    , y(vec::values[1])
-  {}
-
-  Type& x;
-  Type& y;
-  //Type& x = vec::values[0];
-  //Type& y = vec::values[1];
-};
-
+using vec2 = vecn<Type, 2>;
 template<typename Type>
-struct vec3 : vecn<Type, 3> {
-  using vec = vecn<Type, 3>;
-
-  constexpr
-  vec3()
-    : vec3(0.f, 0.f, 0.f)
-  {}
-
-  constexpr
-  vec3(const Type& value)
-    : vec3(value, value, value)
-  {}
-
-  constexpr
-  vec3(const Type a, const Type b, const Type c) noexcept
-    : vec(a, b, c)
-  {}
-
-  Type& x = vec::values[0];
-  Type& y = vec::values[1];
-  Type& z = vec::values[2];
-};
-
+using vec3 = vecn<Type, 3>;
 template<typename Type>
-struct vec4 : vecn<Type, 4> {
-  using vec = vecn<Type, 4>;
+using vec4 = vecn<Type, 4>;
 
-  constexpr
-  vec4()
-    : vec4(0.f, 0.f, 0.f, 0.f)
-  {}
-
-  constexpr
-  vec4(const Type& value)
-    : vec4(value, value, value, value)
-  {}
-
-  constexpr
-  vec4(const Type a, const Type b, const Type c, const Type d) noexcept
-    : vec(a, b, c, d)
-  {}
-
-  Type& x = vec::values[0];
-  Type& y = vec::values[1];
-  Type& z = vec::values[2];
-  Type& w = vec::values[3];
-};
+template<size_t Count>
+using fvec = vecn<float, Count>;
+template<size_t Count>
+using dvec = vecn<double, Count>;
+template<size_t Count>
+using fvec = vecn<float, Count>;
+template<size_t Count>
+using ivec = vecn<signed long long, Count>;
+template<size_t Count>
+using uvec = vecn<unsigned long long, Count>;
+template<size_t Count>
+using bvec = vecn<bool, Count>;
 
 using fvec2 = vec2<float>;
 using fvec3 = vec3<float>;
