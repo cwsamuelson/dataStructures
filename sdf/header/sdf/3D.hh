@@ -1,7 +1,7 @@
 #pragma once
 
 #include "shapes/functions.hh"
-#include "shapes/vec3.hh"
+#include "shapes/vec.hh"
 
 namespace flp {
 
@@ -42,7 +42,7 @@ float sdBoxFrame(vec3 p, const vec3 b, const float e) noexcept {
 // Torus - exact
 constexpr
 float sdTorus(const vec3 p, const vec2 t) noexcept {
-  const vec2 q = vec2(length(p.xz) - t.x, p.y);
+  const vec2 q = vec2(length(p("xz"_swz)) - t.x, p.y);
   return length(q) - t.y;
 }
 
@@ -50,7 +50,7 @@ float sdTorus(const vec3 p, const vec2 t) noexcept {
 constexpr
 float sdCappedTorus(vec3 p, const vec2 sc, const float ra, const float rb) noexcept {
   p.x = abs(p.x);
-  const float k = (sc.y * p.x > sc.x * p.y) ? dot(p.xy, sc) : length(p.xy);
+  const float k = (sc.y * p.x > sc.x * p.y) ? dot(p("xy"_swz), sc) : length(p.xy);
   return sqrt(dot(p, p) + ra * ra - 2.0 * ra * k) - rb;
 }
 
@@ -58,19 +58,19 @@ float sdCappedTorus(vec3 p, const vec2 sc, const float ra, const float rb) noexc
 constexpr
 float sdLink(const vec3 p, const float le, const float r1, const float r2) noexcept {
   const vec3 q = vec3(p.x, max(abs(p.y) - le, 0.0), p.z);
-  return length(vec2(length(q.xy) - r1, q.z)) - r2;
+  return length(vec2(length(q("xy"_swz)) - r1, q.z)) - r2;
 }
 
 // Infinite Cylinder - exact
 constexpr
 float sdCylinder(const vec3 p, const vec3 c) noexcept {
-  return length(p.xz - c.xy) - c.z;
+  return length(p("xz"_swz) - c.xy) - c.z;
 }
 
 // vertical
 constexpr
 float sdCylinder(const vec3 p, const vec2 h) noexcept {
-  vec2 d = abs(vec2(length(p.xz), p.y)) - h;
+  vec2 d = abs(vec2(length(p("xz"_swz)), p.y)) - h;
   return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
 }
 
@@ -98,7 +98,7 @@ float sdCone(const vec3 p, const vec2 c, const float h) noexcept {
   // which is the point at the base in 2D
   const vec2 q = h * vec2(c.x / c.y, -1.0);
 
-  const vec2 w = vec2(length(p.xz), p.y);
+  const vec2 w = vec2(length(p("xz"_swz)), p.y);
   const vec2 a = w - q * clamp(dot(w, q) / dot(q, q), 0.0, 1.0);
   const vec2 b = w - q * vec2(clamp(w.x / q.x, 0.0, 1.0), 1.0);
   const float k = sign(q.y);
@@ -110,15 +110,15 @@ float sdCone(const vec3 p, const vec2 c, const float h) noexcept {
 // Cone - bound
 constexpr
 float sdCone(const vec3 p, const vec2 c, const float h) noexcept {
-  const float q = length(p.xz);
-  return max(dot(c.xy, vec2(q, p.y)), -h - p.y);
+  const float q = length(p("xz"_swz));
+  return max(dot(c("xy"_swz), vec2(q, p.y)), -h - p.y);
 }
 
 // Infinite Cone - exact
 constexpr
 float sdCone(const vec3 p, const vec2 c) noexcept {
   // c is the sin/cos of the angle
-  const vec2 q = vec2(length(p.xz), -p.y);
+  const vec2 q = vec2(length(p("xz"_swz)), -p.y);
   const float d = length(q - c * max(dot(q, c), 0.0));
   return d * ((q.x * c.y - q.y * c.x < 0.0) ? - 1.0 : 1.0);
 }
@@ -135,9 +135,9 @@ constexpr
 float sdHexPrism(vec3 p, const vec2 h) noexcept {
   const vec3 k = vec3(-0.8660254, 0.5, 0.57735);
   p = abs(p);
-  p.xy -= 2.0 * min(dot(k.xy, p.xy), 0.0) * k.xy;
+  p("xy"_swz) -= 2.0 * min(dot(k.xy, p.xy), 0.0) * k.xy;
   const vec2 d = vec2(
-    length(p.xy - vec2(clamp(p.x, -k.z * h.x, k.z * h.x), h.x)) * sign(p.y - h.x),
+    length(p("xy"_swz) - vec2(clamp(p.x, -k.z * h.x, k.z * h.x), h.x)) * sign(p.y - h.x),
     p.z - h.y);
   return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
 }
@@ -167,7 +167,7 @@ float sdVerticalCapsule(vec3 p, const float h, const float r) noexcept {
 // Vertical Capped Cylinder - exact (https://www.shadertoy.com/view/wdXGDr)
 constexpr
 float sdCappedCylinder(const vec3 p, const float h, const float r) noexcept {
-  const vec2 d = abs(vec2(length(p.xz), p.y)) - vec2(r, h);
+  const vec2 d = abs(vec2(length(p("xz"_swz)), p.y)) - vec2(r, h);
   return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
 }
 
@@ -189,14 +189,14 @@ float sdCappedCylinder(const vec3 p, const vec3 a, const vec3 b, const float r) 
 // Rounded Cylinder - exact
 constexpr
 float sdRoundedCylinder(const vec3 p, const float ra, const float rb, const float h) noexcept {
-  const vec2 d = vec2(length(p.xz) - 2.0 * ra + rb, abs(p.y) - h);
+  const vec2 d = vec2(length(p("xz"_swz)) - 2.0 * ra + rb, abs(p.y) - h);
   return min(max(d.x, d.y), 0.0) + length(max(d, 0.0)) - rb;
 }
 
 // Capped Cone - exact
 constexpr
 float sdCappedCone(const vec3 p, const float h, const float r1, const float r2) noexcept {
-  const vec2 q = vec2(length(p.xz), p.y);
+  const vec2 q = vec2(length(p("xz"_swz)), p.y);
   const vec2 k1 = vec2(r2, h);
   const vec2 k2 = vec2(r2 - r1, 2.0 * h);
   const vec2 ca = vec2(q.x - min(q.x, (q.y < 0.0) ? r1 : r2), abs(q.y) - h);
@@ -228,7 +228,7 @@ float sdCappedCone(const vec3 p, const vec3 a, const vec3 b, const float ra, con
 constexpr
 float sdSolidAngle(const vec3 p, const vec2 c, const float ra) noexcept {
   // c is the sin/cos of the angle
-  const vec2 q = vec2(length(p.xz), p.y);
+  const vec2 q = vec2(length(p("xz"_swz)), p.y);
   const float l = length(q) - ra;
   const float m = length(q - c * clamp(dot(q, c), 0.0, ra));
   return max(l, m * sign(c.y * q.x - c.x * q.y));
@@ -241,7 +241,7 @@ float sdCutSphere(const vec3 p, const float r, const float h) noexcept {
   const float w = sqrt(r * r - h * h);
 
   // sampling dependant computations
-  const vec2 q = vec2(length(p.xz), p.y);
+  const vec2 q = vec2(length(p("xz"_swz)), p.y);
   const float s = max((h - r) * q.x * q.x + w * w * (h + r - 2.0 * q.y), h * q.x - w * q.y);
   return (s < 0.0) ? length(q) - r :
          (q.x < w) ? h - q.y     :
@@ -255,7 +255,7 @@ float sdCutHollowSphere(const vec3 p, const float r, const float h, const float 
   const float w = sqrt(r * r - h * h);
 
   // sampling dependant computations
-  const vec2 q = vec2(length(p.xz), p.y);
+  const vec2 q = vec2(length(p("xz"_swz)), p.y);
   return ((h * q.x < w * q.y) ? length(q - vec2(w, h)) :
                           abs(length(q) - r)) - t;
 }
@@ -268,7 +268,7 @@ float sdDeathStar(const vec3 p2, const float ra, const float rb, const float d) 
   const float b = sqrt(max(ra * ra - a * a, 0.0));
 
   // sampling dependant computations
-  const vec2 p = vec2(p2.x, length(p2.yz));
+  const vec2 p = vec2(p2.x, length(p2("yz"_swz)));
   if (p.x * b - p.y * a > d * max(b - p.y, 0.0)) {
     return length(p - vec2(a, b));
   } else {
@@ -285,7 +285,7 @@ float sdRoundCone(const vec3 p, const float r1, const float r2, const float h) n
   const float a = sqrt(1.0 - b * b);
 
   // sampling dependant computations
-  const vec2 q = vec2(length(p.xz), p.y);
+  const vec2 q = vec2(length(p("xz"_swz)), p.y);
   const float k = dot(q, vec2(-b, a));
   if (k < 0.0) {
     return length(q) - r1;
@@ -348,7 +348,7 @@ float sdVesicaSegment(const vec3 p, const vec3 a, const vec3 b, const float w) n
   const float d = 0.5 * (r * r - w * w) / w;
   const vec3  h = (r * q.x < d * (q.y - r)) ? vec3(0.0, r, 0.0) : vec3(-d, 0.0, d + w);
 
-  return length(q - h.xy) - h.z;
+  return length(q - h("xy"_swz)) - h.z;
 }
 
 // Rhombus - exact (https://www.shadertoy.com/view/tlVGDc)
@@ -356,8 +356,8 @@ constexpr
 float sdRhombus(vec3 p, const float la, const float lb, const float h, const float ra) noexcept {
   p = abs(p);
   const vec2 b = vec2(la, lb);
-  const float f = clamp((ndot(b, b - 2.0 * p.xz)) / dot(b, b), -1.0, 1.0);
-  const vec2 q = vec2(length(p.xz - 0.5 * b * vec2(1.0 - f, 1.0 + f)) * sign(p.x * b.y + p.z * b.x - b.x * b.y) - ra, p.y - h);
+  const float f = clamp((ndot(b, b - 2.0 * p("xz"_swz))) / dot(b, b), -1.0, 1.0);
+  const vec2 q = vec2(length(p("xz"_swz) - 0.5 * b * vec2(1.0 - f, 1.0 + f)) * sign(p.x * b.y + p.z * b.x - b.x * b.y) - ra, p.y - h);
   return min(max(q.x, q.y), 0.0) + length(max(q, 0.0));
 }
 
@@ -369,11 +369,11 @@ float sdOctahedron(vec3 p, const float s) noexcept {
   vec3 q;
 
   if (3.0 * p.x < m) {
-    q = p.xyz;
+    q = p("xyz"_swz);
   } else if (3.0 * p.y < m) {
-    q = p.yzx;
+    q = p("yzx"_swz);
   } else if (3.0 * p.z < m) {
-    q = p.zxy;
+    q = p("zxy"_swz);
   } else {
     return m * 0.57735027;
   }
@@ -394,9 +394,9 @@ constexpr
 float sdPyramid(vec3 p, const float h) noexcept {
   const float m2 = h * h + 0.25;
 
-  p.xz = abs(p.xz);
-  p.xz = (p.z > p.x) ? p.zx : p.xz;
-  p.xz -= 0.5;
+  p("xz"_swz) = abs(p.xz);
+  p("xz"_swz) = (p.z > p.x) ? p.zx : p.xz;
+  p("xz"_swz) -= 0.5;
 
   const vec3 q = vec3(p.z, h * p.y - 0.5 * p.x, h * p.x + 0.5 * p.y);
 
@@ -460,13 +460,13 @@ float udQuad(const vec3 p, const vec3 a, const vec3 b, const vec3 c, const vec3 
 
 constexpr
 float opRevolution(const vec3 p, const sdf2d primitive, const float o) noexcept {
-  const vec2 q = vec2(length(p.xz) - o, p.y);
+  const vec2 q = vec2(length(p("xz"_swz)) - o, p.y);
   return primitive(q);
 }
 
 constexpr
 float opExtrusion(const vec3 p, const sdf2d primitive, const float h) noexcept {
-  const float d = primitive(p.xy)
+  const float d = primitive(p("xy"_swz))
   const vec2 w = vec2(d, abs(p.z) - h);
   return min(max(w.x,w.y),0.0) + length(max(w,0.0));
 }
@@ -581,7 +581,7 @@ float opSymX(vec3 p, const sdf3d primitive) noexcept {
 
 constexpr
 float opSymXZ(vec3 p, const sdf3d primitive) noexcept {
-  p.xz = abs(p.xz);
+  p("xz"_swz) = abs(p.xz);
   return primitive(p);
 }
 
@@ -614,7 +614,7 @@ float opTwist(const sdf3d primitive, const vec3 p) noexcept {
   const float c = cos(k * p.y);
   const float s = sin(k * p.y);
   const mat2  m = mat2(c, -s, s, c);
-  const vec3  q = vec3(m * p.xz, p.y);
+  const vec3  q = vec3(m * p("xz"_swz), p.y);
   return primitive(q);
 }
 
@@ -625,7 +625,7 @@ float opCheapBend(const sdf3d primitive, const vec3 p) noexcept {
   const float c = cos(k * p.x);
   const float s = sin(k * p.x);
   const mat2  m = mat2(c, -s, s, c);
-  const vec3  q = vec3(m * p.xy, p.z);
+  const vec3  q = vec3(m * p("xy"_swz), p.z);
   return primitive(q);
 }
 

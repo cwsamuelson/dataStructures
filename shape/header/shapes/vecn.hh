@@ -224,25 +224,25 @@ struct vecn {
 
   [[nodiscard]]
   constexpr
-  float x(this auto&& self) {
+  decltype(auto) x(this auto&& self) {
     return self.values.at(0);
   }
 
   [[nodiscard]]
   constexpr
-  auto y(this auto&& self) {
+  decltype(auto) y(this auto&& self) {
     return self.values.at(1);
   }
 
   [[nodiscard]]
   constexpr
-  auto z(this auto&& self) requires (Count >= 3) {
+  decltype(auto) z(this auto&& self) requires (Count >= 3) {
     return self.values.at(2);
   }
 
   [[nodiscard]]
   constexpr
-  auto w(this auto&& self) requires (Count >= 4) {
+  decltype(auto) w(this auto&& self) requires (Count >= 4) {
     return self.values.at(3);
   }
 

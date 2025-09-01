@@ -60,7 +60,7 @@ add_subdirectory(ring_buffer)
 add_subdirectory(ring_view)
 #add_subdirectory(rope)
 #add_subdirectory(scheduler)
-#add_subdirectory(sdf)
+add_subdirectory(sdf)
 #add_subdirectory(segment-tree)
 add_subdirectory(shape)
 add_subdirectory(shared_ptr)
@@ -146,7 +146,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_ring_view
   #${PROJECT_NAME}_rope
   #${PROJECT_NAME}_scheduler
-  #${PROJECT_NAME}_sdf
+  ${PROJECT_NAME}_sdf
   #${PROJECT_NAME}_segment-tree
   ${PROJECT_NAME}_shape
   ${PROJECT_NAME}_shared_ptr

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "shapes/vec2.hh"
+#include "shapes/vec.hh"
 
 #include <array>
 
@@ -8,7 +8,7 @@ namespace flp {
 
 struct mat2 {
   constexpr
-  mat2(const float A, const float B, const float C, const float D)
+  mat2(const float A, const float B, const float C, const float D) noexcept
     : values{{ { A, B }, { C, D } }}
   {}
 
@@ -17,18 +17,22 @@ struct mat2 {
   {}
 
   constexpr
-  mat2(const std::array<vec2, 2>&) noexcept
+  mat2(const std::array<float, 4>&) noexcept
   {}
 
   constexpr
-  mat2(const vec2&, const vec2&) noexcept
+  mat2(const std::array<fvec2, 2>&) noexcept
+  {}
+
+  constexpr
+  mat2(const fvec2&, const fvec2&) noexcept
   {}
 
   std::array<std::array<float, 2>, 2> values;
 };
 
 constexpr
-vec2 operator*(const mat2& mat, const vec2& vec) noexcept {
+fvec2 operator*(const mat2& mat, const fvec2& vec) noexcept {
   // | A B |   | E |   | A * E + B * F |
   // | C D | x | F | = | C * E + D * F |
 
@@ -41,7 +45,8 @@ vec2 operator*(const mat2& mat, const vec2& vec) noexcept {
 
   // return { A * E + B * F, C * E + D * F };
 
-  return { mat.values[0][0] * vec.x + mat.values[0][1] * vec.y, mat.values[1][0] * vec.x + mat.values[1][1] * vec.y };
+  return { mat.values[0][0] * vec.x() + mat.values[0][1] * vec.y(),
+           mat.values[1][0] * vec.x() + mat.values[1][1] * vec.y() };
 }
 
 }
