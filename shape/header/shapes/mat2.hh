@@ -6,33 +6,33 @@
 
 namespace flp {
 
-struct mat2 {
+struct mat2x2 {
   constexpr
-  mat2(const float A, const float B, const float C, const float D) noexcept
+  mat2x2(const float A, const float B, const float C, const float D) noexcept
     : values{{ { A, B }, { C, D } }}
   {}
 
   constexpr
-  mat2(const std::array<std::array<float, 2>, 2>&) noexcept
+  mat2x2(const std::array<std::array<float, 2>, 2>&) noexcept
   {}
 
   constexpr
-  mat2(const std::array<float, 4>&) noexcept
+  mat2x2(const std::array<float, 4>&) noexcept
   {}
 
   constexpr
-  mat2(const std::array<fvec2, 2>&) noexcept
+  mat2x2(const std::array<fvec2, 2>&) noexcept
   {}
 
   constexpr
-  mat2(const fvec2&, const fvec2&) noexcept
+  mat2x2(const fvec2&, const fvec2&) noexcept
   {}
 
   std::array<std::array<float, 2>, 2> values;
 };
 
 constexpr
-fvec2 operator*(const mat2& mat, const fvec2& vec) noexcept {
+fvec2 operator*(const mat2x2& mat, const fvec2& vec) noexcept {
   // | A B |   | E |   | A * E + B * F |
   // | C D | x | F | = | C * E + D * F |
 

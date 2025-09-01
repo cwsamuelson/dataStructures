@@ -2,6 +2,7 @@
 
 #include "shapes/vec.hh"
 
+#include <algorithm>
 #include <cmath>
 
 namespace flp {
@@ -141,43 +142,93 @@ float length(const fvec4& vector) noexcept {
 }
 
 constexpr
-float min(float a, float b) noexcept {
+float min(const float a, const float b) noexcept {
   return a < b ? a : b;
 }
 
 constexpr
-float max(float a, float b) noexcept {
+float max(const float a, const float b) noexcept {
   return a > b ? a : b;
 }
 
 constexpr
-fvec2 min(fvec2 a, fvec2 b) noexcept {
+fvec2 min(const fvec2 a, const fvec2 b) noexcept {
   return { min(a.x(), b.x()), min(a.y(), b.y()) };
 }
 
 constexpr
-fvec3 min(fvec3 a, fvec3 b) noexcept {
+fvec3 min(const fvec3 a, const fvec3 b) noexcept {
   return { min(a.x(), b.x()), min(a.y(), b.y()), min(a.z(), b.z()) };
 }
 
 constexpr
-fvec4 min(fvec4 a, fvec4 b) noexcept {
+fvec4 min(const fvec4 a, const fvec4 b) noexcept {
   return { min(a.x(), b.x()), min(a.y(), b.y()), min(a.z(), b.z()), min(a.w(), b.w()) };
 }
 
 constexpr
-fvec2 max(fvec2 a, fvec2 b) noexcept {
+fvec2 max(const fvec2 a, const fvec2 b) noexcept {
   return { max(a.x(), b.x()), max(a.y(), b.y()) };
 }
 
 constexpr
-fvec3 max(fvec3 a, fvec3 b) noexcept {
+fvec3 max(const fvec3 a, const fvec3 b) noexcept {
   return { max(a.x(), b.x()), max(a.y(), b.y()), max(a.z(), b.z()) };
 }
 
 constexpr
-fvec4 max(fvec4 a, fvec4 b) noexcept {
+fvec4 max(const fvec4 a, const fvec4 b) noexcept {
   return { max(a.x(), b.x()), max(a.y(), b.y()), max(a.z(), b.z()), max(a.w(), b.w()) };
+}
+
+constexpr
+float pow(const float a, const float b) noexcept {
+  return std::powf(a, b);
+}
+
+constexpr
+fvec2 pow(const fvec2 a, const fvec2 b) noexcept {
+  return { pow(a.x(), b.x()), pow(a.y(), b.y()) };
+}
+
+constexpr
+fvec3 pow(const fvec3 a, const fvec3 b) noexcept {
+  return { pow(a.x(), b.x()), pow(a.y(), b.y()), pow(a.z(), b.z()) };
+}
+
+constexpr
+fvec4 pow(const fvec4 a, const fvec4 b) noexcept {
+  return { pow(a.x(), b.x()), pow(a.y(), b.y()), pow(a.z(), b.z()), pow(a.w(), b.w()) };
+}
+
+constexpr
+bool all(const bvec2& vec) noexcept {
+  return std::ranges::all_of(vec.values, std::identity{});
+}
+
+constexpr
+bool all(const bvec3& vec) noexcept {
+  return std::ranges::all_of(vec.values, std::identity{});
+}
+
+constexpr
+bool all(const bvec4& vec) noexcept {
+  return std::ranges::all_of(vec.values, std::identity{});
+}
+
+constexpr
+bvec2 negate(const bvec2& vec) noexcept {
+  return { not vec.values[0], not vec.values[1] };
+}
+
+constexpr
+bvec3 negate(const bvec3& vec) noexcept {
+  return { not vec.values[0], not vec.values[1], not vec.values[2] };
+}
+
+constexpr
+bvec4 negate(const bvec4& vec) noexcept {
+  return { not vec.values[0], not vec.values[1], not vec.values[2], not vec.values[3] };
 }
 
 }

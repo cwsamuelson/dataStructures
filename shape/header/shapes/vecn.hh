@@ -91,8 +91,8 @@ struct vecn {
 
   constexpr
   vecn& operator*=(const vecn& other) noexcept {
-    [this]<size_t ...Indices>(const vecn& vec, std::integer_sequence<size_t, Indices...>) noexcept {
-      ((values[Indices] *= vec.values[Indices]), ...);
+    [this]<size_t ...Indices>(const vecn& other, std::integer_sequence<size_t, Indices...>) noexcept {
+      ((values[Indices] *= other.values[Indices]), ...);
     }(other, std::make_integer_sequence<size_t, Count>());
 
     return *this;
@@ -100,8 +100,8 @@ struct vecn {
 
   constexpr
   vecn& operator/=(const vecn& other) noexcept {
-    [this]<size_t ...Indices>(const vecn& vec, std::integer_sequence<size_t, Indices...>) noexcept {
-      ((values[Indices] /= vec.values[Indices]), ...);
+    [this]<size_t ...Indices>(const vecn& other, std::integer_sequence<size_t, Indices...>) noexcept {
+      ((values[Indices] /= other.values[Indices]), ...);
     }(other, std::make_integer_sequence<size_t, Count>());
 
     return *this;
@@ -123,7 +123,7 @@ struct vecn {
     requires (std::is_arithmetic_v<Other>)
   constexpr
   friend
-  vecn& operator/=(const vecn& vec, const Other& value) noexcept {
+  vecn& operator/=(vecn& vec, const Other& value) noexcept {
     [&vec]<size_t ...Indices>(const auto& value, std::integer_sequence<size_t, Indices...>) noexcept {
       ((vec.values[Indices] /= value), ...);
     }(value, std::make_integer_sequence<size_t, Count>());
@@ -208,7 +208,7 @@ struct vecn {
   constexpr
   auto operator()(SwizTag<Chars...>) const noexcept {
     return [this]<size_t ...Indices>(std::integer_sequence<size_t, Indices...>) {
-      return Swizzle<vecn, Type, Indices...>{ *this };
+      return Swizzle<const vecn, Type, Indices...>{ *this };
     }(SwizIndexSequence<Chars...>{});
   }
 

@@ -4,6 +4,8 @@
 #include "shapes/vec.hh"
 #include "shapes/mat2.hh"
 
+#include <vector>
+
 namespace flp {
 
 // Circle - exact (https://www.shadertoy.com/view/3ltSW2)
@@ -50,11 +52,11 @@ float sdBox(const fvec2 p, fvec2 b) noexcept {
 
 // Oriented Box - exact (https://www.shadertoy.com/view/stcfzn)
 constexpr
-float sdOrientedBox(const fvec2 p, fvec2 a, fvec2 b, float th) noexcept {
+float sdOrientedBox(const fvec2 p, const fvec2 a, const fvec2 b, const float th) noexcept {
   const float l = length(b - a);
-  const fvec2  d = (b - a) / l;
+  const fvec2 d = (b - a) / l;
   fvec2 q = (p - (a + b) * 0.5f);
-  q = mat2(d.x(), -d.y(), d.y(), d.x()) * q;
+  q = mat2x2(d.x(), -d.y(), d.y(), d.x()) * q;
   q = abs(q) - fvec2(l, th) * 0.5f;
   return length(max(q, 0.0f)) + min(max(q.x(), q.y()), 0.0f);
 }
@@ -215,11 +217,11 @@ float sdHexagram(fvec2 p, float r) noexcept {
 // Pentagram - exact   (https://www.shadertoy.com/view/t3X3z4)
 constexpr
 float sdPentagram(fvec2 p, float r) noexcept {
-  const float k1x = 0.809016994f;// cos(π / 5) = ¼(√5 + 1)
-  const float k2x = 0.309016994f;// sin(π / 10) = ¼(√5 - 1)
-  const float k1y = 0.587785252f;// sin(π / 5) = ¼√(10 - 2√5)
-  const float k2y = 0.951056516f;// cos(π / 10) = ¼√(10 + 2√5)
-  const float k1z = 0.726542528f;// tan(π / 5) = √(5 - 2√5)
+  const float k1x = 0.809016994f;// cosf(π / 5) = ¼(√5 + 1)
+  const float k2x = 0.309016994f;// sinf(π / 10) = ¼(√5 - 1)
+  const float k1y = 0.587785252f;// sinf(π / 5) = ¼√(10 - 2√5)
+  const float k2y = 0.951056516f;// cosf(π / 10) = ¼√(10 + 2√5)
+  const float k1z = 0.726542528f;// tanf(π / 5) = √(5 - 2√5)
   const fvec2  v1  = fvec2(k1x, -k1y);
   const fvec2  v2  = fvec2(-k1x, -k1y);
   const fvec2  v3  = fvec2(k2x, -k2y);
@@ -236,14 +238,14 @@ float sdPentagram(fvec2 p, float r) noexcept {
 // Regular Star - exact   (https://www.shadertoy.com/view/3tSGDy)
 constexpr
 float sdStar(fvec2 p, float r, int n, float m) noexcept {
-// next 4 lines can be precomputed for a given shape
-  float an = 3.141593f / float(n);
-  float en = 3.141593f / m;// m is between 2 and n
-  fvec2  acs = fvec2(cos(an), sin(an));
-  fvec2  ecs = fvec2(cos(en), sin(en));// ecs=fvec2(0, 1) for regular polygon
+  // next 4 lines can be precomputed for a given shape
+  const float an = 3.141593f / float(n);
+  const float en = 3.141593f / m;// m is between 2 and n
+  const fvec2 acs = fvec2(cosf(an), sinf(an));
+  const fvec2 ecs = fvec2(cosf(en), sinf(en));// ecs=fvec2(0, 1) for regular polygon
 
-  float bn = mod(atan(p.x(), p.y()), 2.0f * an) - an;
-  p = length(p) * fvec2(cos(bn), abs(sin(bn)));
+  const float bn = fmod(atanf(p.x() / p.y()), 2.0f * an) - an;
+  p = length(p) * fvec2(cosf(bn), abs(sinf(bn)));
   p -= r * acs;
   p += ecs * clamp(-dot(p, ecs), 0.0f, r * acs.y() / ecs.y());
   return length(p) * sign(p.x());
@@ -254,7 +256,7 @@ constexpr
 float sdPie(fvec2 p, fvec2 c, float r) noexcept {
   p.x() = abs(p.x());
   const float l = length(p) - r;
-  const float m = length(p - c * clamp(dot(p, c), 0.0f, r));// c=sin / cos of aperture
+  const float m = length(p - c * clamp(dot(p, c), 0.0f, r));// c=sinf / cosf of aperture
   return max(l, m * sign(c.y() * p.x() - c.x() * p.y()));
 }
 
@@ -272,7 +274,7 @@ float sdCutDisk(fvec2 p, float r, float h) noexcept {
 // Arc - exact   (https://www.shadertoy.com/view/wl23RK)
 constexpr
 float sdArc(fvec2 p, fvec2 sc, float ra, float rb) noexcept {
-// sc is the sin/cos of the arc's aperture
+// sc is the sinf/cosf of the arc's aperture
   p.x() = abs(p.x());
   return ((sc.y() * p.x() > sc.x() * p.y()) ? length(p - sc * ra) :
                                 abs(length(p) - ra)) - rb;
@@ -292,7 +294,7 @@ constexpr
 float sdHorseshoe(fvec2 p, fvec2 c, float r, fvec2 w) noexcept {
   p.x() = abs(p.x());
   float l = length(p);
-  p = mat2(-c.x(), c.y(), c.y(), c.x()) * p;
+  p = mat2x2(-c.x(), c.y(), c.y(), c.x()) * p;
   p = fvec2((p.y() > 0.0f || p.x() > 0.0f) ? p.x() : l * sign(-c.x()),
            (p.x() > 0.0f) ? p.y() : l);
   p = fvec2(p.x(), abs(p.y() - r)) - w;
@@ -302,21 +304,23 @@ float sdHorseshoe(fvec2 p, fvec2 c, float r, fvec2 w) noexcept {
 // Vesica - exact   (https://www.shadertoy.com/view/XtVfRW)
 constexpr
 float sdVesica(fvec2 p, float w, float h) noexcept {
-  fvec3 d = 0.5f * (w * w - h * h)/h;
+  const float d = 0.5f * (w * w - h * h) / h;
   p = abs(p);
-  fvec3 c = (w * p.y()<d * (p.x() - w)) ? fvec3(0.0f, w, 0.0f) : fvec3(-d, 0.0f, d + h);
+  const fvec3 c = (w * p.y() < d * (p.x() - w))
+                    ? fvec3(0.0f, w, 0.0f)
+                    : fvec3(-d, 0.0f, d + h);
   return length(p - c("yx"_swz)) - c.z();
 }
 
-// Oriented Vesica - exact   (https://www.shadertoy.com/view/cs2yz()G)
+// Oriented Vesica - exact   (https://www.shadertoy.com/view/cs2yzG)
 constexpr
 float sdOrientedVesica(fvec2 p, fvec2 a, fvec2 b, float w) noexcept {
-  float r = 0.5f * length(b - a);
-  float d = 0.5f * (r * r - w * w) / w;
-  fvec2 v = (b - a) / r;
-  fvec2 c = (b + a) * 0.5f;
-  fvec2 q = 0.5f * abs(mat2(v.y(), v.x(), -v.x(), v.y()) * (p - c));
-  fvec3 h = (r * q.x()<d * (q.y() - r)) ? fvec3(0.0f, r, 0.0f) : fvec3(-d, 0.0f, d + w);
+  const float r = 0.5f * length(b - a);
+  const float d = 0.5f * (r * r - w * w) / w;
+  const fvec2 v = (b - a) / r;
+  const fvec2 c = (b + a) * 0.5f;
+  const fvec2 q = 0.5f * abs(mat2x2(v.y(), v.x(), -v.x(), v.y()) * (p - c));
+  const fvec3 h = (r * q.x() < d * (q.y() - r)) ? fvec3(0.0f, r, 0.0f) : fvec3(-d, 0.0f, d + w);
   return length(q - h("xy"_swz)) - h.z();
 }
 
@@ -331,7 +335,7 @@ float sdMoon(fvec2 p, float d, float ra, float rb) noexcept {
   }
 
   return max((length(p             ) - ra),
-            -(length(p - fvec2(d, 0)) - rb));
+            -(length(p - fvec2(d, 0.f)) - rb));
 }
 
 // Circle Cross - exact   (https://www.shadertoy.com/view/NslXDM)
@@ -340,20 +344,20 @@ float sdRoundedCross(fvec2 p, float h) noexcept {
   float k = 0.5f * (h + 1.0f / h);
   p = abs(p);
   return (p.x() < 1.0f && p.y() < p.x() * (k - h) + h) ?
-           k - sqrt(dot2(p - fvec2(1, k)))  :
-         sqrt(min(dot2(p - fvec2(0, h)),
-                  dot2(p - fvec2(1, 0))));
+           k - sqrt(dot2(p - fvec2(1.f, k)))  :
+         sqrt(min(dot2(p - fvec2(0.f, h)),
+                  dot2(p - fvec2(1.f, 0.f))));
 }
 
 // Simple Egg - exact   (https://www.shadertoy.com/view/XtVfRW)
 constexpr
 float sdEgg(fvec2 p, float ra, float rb) noexcept {
-  const float k = sqrt(3.0f);
+  const float k = sqrt(3.f);
   p.x() = abs(p.x());
   float r = ra - rb;
-  return ((p.y()<0.0f)           ? length(fvec2(p.x(),     p.y())) - r :
-          (k * (p.x() + r)<p.y()) ? length(fvec2(p.x(),     p.y() - k * r)) :
-                                length(fvec2(p.x() + r, p.y())) - 2.0f * r) - rb;
+  return ((p.y() < 0.f)            ? length(fvec2(p.x(),     p.y())) - r :
+          (k * (p.x() + r) < p.y()) ? length(fvec2(p.x(),     p.y() - k * r)) :
+                                      length(fvec2(p.x() + r, p.y())) - 2.0f * r) - rb;
 }
 
 // Heart - exact   (https://www.shadertoy.com/view/3tyBzV)
@@ -361,18 +365,19 @@ constexpr
 float sdHeart(fvec2 p) noexcept {
   p.x() = abs(p.x());
 
-  if (p.y() + p.x() > 1.0f) {
-    return sqrt(dot2(p - fvec2(0.25f, 0.75f))) - sqrt(2.0f) / 4.0f;
+  if (p.y() + p.x() > 1.f) {
+    return sqrt(dot2(p - fvec2(0.25f, 0.75f))) - sqrt(2.f) / 4.f;
   }
 
   return sqrt(min(dot2(p - fvec2(0.00f, 1.00f)),
-                  dot2(p - 0.5f * max(p.x() + p.y(), 0.0f)))) * sign(p.x() - p.y());
+                  dot2(p - .5f * max(p.x() + p.y(), 0.f)))) * sign(p.x() - p.y());
 }
 
 // Cross - exact exterior, bound interior   (https://www.shadertoy.com/view/XtGfzw())
 constexpr
 float sdCross(fvec2 p, fvec2 b, float r) noexcept  {
-  p = abs(p); p = (p.y() > p.x()) ? p("yx"_swz) : p("xy"_swz);
+  p = abs(p);
+  p = (p.y() > p.x()) ? fvec2(p("yx"_swz)) : fvec2(p("xy"_swz));
   fvec2  q = p - b;
   float k = max(q.y(), q.x());
   fvec2  w = (k > 0.0f) ? q : fvec2(b.y() - p.x(), -k);
@@ -388,7 +393,8 @@ float sdRoundedX(fvec2 p, float w, float r) noexcept {
 
 // Polygon - exact   (https://www.shadertoy.com/view/wdBXRW)
 constexpr
-float sdPolygon(fvec2[N] v, fvec2 p) noexcept {
+float sdPolygon(const std::vector<fvec2>& v, fvec2 p) noexcept {
+  const auto N = v.size();
   float d = dot(p - v[0], p - v[0]);
   float s = 1.0f;
   for(int i = 0, j = N - 1; i < N; j = i, i++) {
@@ -396,9 +402,9 @@ float sdPolygon(fvec2[N] v, fvec2 p) noexcept {
     fvec2 w =    p - v[i];
     fvec2 b = w - e * clamp(dot(w, e) / dot(e, e), 0.0f, 1.0f);
     d = min(d, dot(b, b));
-    bfvec3 c = bfvec3(p.y() >= v[i].y, p.y() < v[j].y, e.x() * w.y() > e.y() * w.x());
-    if (all(c) || all(not(c))) {
-      s * =-1.0f;
+    bvec3 c = bvec3(p.y() >= v[i].y(), p.y() < v[j].y(), e.x() * w.y() > e.y() * w.x());
+    if (all(c) || all(negate(c))) {
+      s *= -1.0f;
     }
   }
   return s * sqrt(d);
@@ -426,9 +432,9 @@ float sdEllipse(fvec2 p, fvec2 ab) noexcept {
   float co;
 
   if (d<0.0f) {
-    const float h = acos(q / c3) / 3.0f;
-    const float s = cos(h);
-    const float t = sin(h) * sqrt(3.0f);
+    const float h = acosf(q / c3) / 3.0f;
+    const float s = cosf(h);
+    const float t = sinf(h) * sqrt(3.0f);
     const float rx = sqrt(-c * (s + t + 2.0f) + m2);
     const float ry = sqrt(-c * (s - t + 2.0f) + m2);
     co = (ry + sign(l) * rx + abs(g) / (rx * ry)- m) / 2.0f;
@@ -441,7 +447,8 @@ float sdEllipse(fvec2 p, fvec2 ab) noexcept {
     const float rm = sqrt(rx * rx + ry * ry);
     co = (ry / sqrt(rm - rx) + 2.0f * g / rm - m) / 2.0f;
   }
-  const fvec2 r = ab * fvec2(co, sqrt(1.0f - co * co));
+
+  const fvec2 r = ab * fvec2(co, sqrtf(1.0f - co * co));
   return length(r - p) * sign(p.y() - r.y());
 }
 
@@ -456,7 +463,7 @@ float sdParabola(fvec2 pos, float k) noexcept {
   const float r = sqrt(abs(h));
   const float x = (h > 0.0f) ?
       pow(q + r, 1.0f / 3.0f) - pow(abs(q - r), 1.0f / 3.0f) * sign(r - q) :
-      2.0f * cos(atan(r, q) / 3.0f) * sqrt(p);
+      2.0f * cosf(atanf(r / q) / 3.0f) * sqrt(p);
   return length(pos - fvec2(x, k * x * x)) * sign(pos.x() - x);
 }
 
@@ -471,7 +478,7 @@ float sdParabola(fvec2 pos, float wi, float he) noexcept {
   float r = sqrt(abs(h));
   float x = (h > 0.0f) ?
       pow(q + r, 1.0f / 3.0f) - pow(abs(q - r), 1.0f / 3.0f) * sign(r - q) :
-      2.0f * cos(atan(r / q) / 3.0f) * sqrt(p);
+      2.0f * cosf(atanf(r / q) / 3.0f) * sqrt(p);
   x = min(x, wi);
   return length(pos - fvec2(x, he - x * x / ik)) * 
          sign(ik * (pos.y() - he) + pos.x() * pos.x());
@@ -495,7 +502,7 @@ float sdBezier(fvec2 pos, fvec2 A, fvec2 B, fvec2 C) noexcept {
   float res = 0.0f;
   float h = q * q + 4.0f * p3;
 
-  if (h > = 0.0f) {
+  if (h >= 0.0f) {
     h = sqrt(h);
     const fvec2 x = (fvec2(h, -h) - q) / 2.0f;
     const fvec2 uv = sign(x) * pow(abs(x), fvec2(1.0f / 3.0f));
@@ -504,10 +511,10 @@ float sdBezier(fvec2 pos, fvec2 A, fvec2 B, fvec2 C) noexcept {
     res = dot2(d + (c + b * t) * t);
   } else {
     const float z = sqrt(-p);
-    const float v = acos(q / (p * z * 2.0f)) / 3.0f;
-    const float m = cos(v);
-    const float n = sin(v) * 1.732050808f;
-    const fvec3  t = clamp(fvec3(m + m, -n-m, n - m) * z - kx, 0.0f, 1.0f);
+    const float v = acosf(q / (p * z * 2.0f)) / 3.0f;
+    const float m = cosf(v);
+    const float n = sinf(v) * 1.732050808f;
+    const fvec3 t = clamp(fvec3(m + m, -n - m, n - m) * z - kx, 0.0f, 1.0f);
 
     res = min(dot2(d + (c + b * t.x()) * t.x()),
                dot2(d + (c + b * t.y()) * t.y()));
@@ -534,7 +541,7 @@ float sdBlobbyCross(fvec2 pos, float he) noexcept {
     x = pow(q + r, 1.0f / 3.0f) - pow(abs(q - r), 1.0f / 3.0f) * sign(r - q);
   } else {
     const float r = sqrt(p);
-    x = 2.0f * r * cos(acos(q / (p * r)) / 3.0f);
+    x = 2.0f * r * cosf(acosf(q / (p * r)) / 3.0f);
   }
 
   x = min(x, sqrt(2.0f) / 2.0f);
@@ -547,7 +554,8 @@ float sdBlobbyCross(fvec2 pos, float he) noexcept {
 // Tunnel - exact   (https://www.shadertoy.com/view/flSSDy)
 constexpr
 float sdTunnel(fvec2 p, fvec2 wh) noexcept {
-  p.x() = abs(p.x()); p.y() = -p.y();
+  p.x() = abs(p.x());
+  p.y() = -p.y();
   fvec2 q = p - wh;
 
   const float d1 = dot2(fvec2(max(q.x(), 0.0f), q.y()));
@@ -567,10 +575,10 @@ float sdStairs(fvec2 p, fvec2 wh, float n) noexcept {
   float s = sign(max(-p.y(), p.x() - ba.x()));
 
   float dia = length(wh);
-  p = mat2(wh.x(), -wh.y(), wh.y(), wh.x()) * p / dia;
+  p = mat2x2(wh.x(), -wh.y(), wh.y(), wh.x()) * p / dia;
   float id = clamp(round(p.x() / dia), 0.0f, n - 1.0f);
   p.x() = p.x() - id * dia;
-  p = mat2(wh.x(), wh.y(), -wh.y(), wh.x()) * p / dia;
+  p = mat2x2(wh.x(), wh.y(), -wh.y(), wh.x()) * p / dia;
 
   float hh = wh.y() / 2.0f;
   p.y() -= hh;
@@ -597,15 +605,15 @@ float sdQuadraticCircle(fvec2 p) noexcept {
   float c = (2.0f * b - 1.0f) / 3.0f;
   float h = a * a + c * c * c;
   float t;
-  if (h > =0.0f) {
+  if (h >=0.f) {
     h = sqrt(h);
     t = sign(h - a) * pow(abs(h - a), 1.0f / 3.0f) - pow(h + a, 1.0f / 3.0f);
   } else {
     float z = sqrt(-c);
-    float v = acos(a / (c * z)) / 3.0f;
-    t = -z * (cos(v) + sin(v) * 1.732050808f);
+    float v = acosf(a / (c * z)) / 3.0f;
+    t = -z * (cosf(v) + sinf(v) * 1.732050808f);
   }
-  t * = 0.5f;
+  t *= 0.5f;
   fvec2 w = fvec2(-t, t) + 0.75f - t * t - p;
   return length(w) * sign(a * a * 0.5f + b - 1.5f);
 }
@@ -625,7 +633,7 @@ float sdHyperbola(fvec2 p, float k, float he) noexcept {
   float u;
   if (h<0.0f) {
     float m = sqrt(-r);
-    u = m * cos(acos(q / (r * m)) / 3.0f);
+    u = m * cosf(acosf(q / (r * m)) / 3.0f);
   } else {
     float m = pow(sqrt(h) - q, 1.0f / 3.0f);
     u = (m - r / m) / 2.0f;
@@ -659,8 +667,8 @@ float sdfCoolS(fvec2 p) noexcept {
 constexpr
 float sdCircleWave(fvec2 p, float tb, float ra) noexcept {
   tb = 3.1415927f * 5.0f / 6.0f * max(tb, 0.0001f);
-  fvec2 co = ra * fvec2(sin(tb), cos(tb));
-  p.x() = abs(mod(p.x(), co.x() * 4.0f) - co.x() * 2.0f);
+  fvec2 co = ra * fvec2(sinf(tb), cosf(tb));
+  p.x() = abs(fmod(p.x(), co.x() * 4.0f) - co.x() * 2.0f);
   fvec2  p1 = p;
   fvec2  p2 = fvec2(abs(p.x() - 2.0f * co.x()), -p.y() + 2.0f * co.y());
   float d1 = ((co.y() * p1.x() > co.x() * p1.y()) ? length(p1 - co) : abs(length(p1) - ra));
@@ -668,14 +676,14 @@ float sdCircleWave(fvec2 p, float tb, float ra) noexcept {
   return min(d1, d2);
 }
 
-constexpr
-float opRound(const fvec2 p, const float r) noexcept {
-  return sdShape(p) - r;
-}
-
-constexpr
-float opOnion(const fvec2 p, const float r) noexcept {
-  return abs(sdShape(p)) - r;
-}
+//constexpr
+//float opRound(const fvec2 p, const float r) noexcept {
+//  return sdShape(p) - r;
+//}
+//
+//constexpr
+//float opOnion(const fvec2 p, const float r) noexcept {
+//  return abs(sdShape(p)) - r;
+//}
 
 }

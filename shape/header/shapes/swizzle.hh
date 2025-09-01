@@ -18,11 +18,6 @@ struct Swizzle {
   }
 
   constexpr
-  operator std::array<Type, sizeof...(Indices)>() const noexcept {
-    return { vec[Indices]... };
-  }
-
-  constexpr
   Swizzle& operator=(const std::array<Type, sizeof...(Indices)>& array) {
     [this]<size_t ...I>(const auto& array, std::integer_sequence<size_t, I...>) {
       ((vec.values[Indices] = array[I]), ...);
@@ -35,6 +30,29 @@ struct Swizzle {
   Swizzle& operator=(const vecn<Type, sizeof...(Indices)>& other) noexcept {
     ((vec.values[Indices] = other.values[Indices]), ...);
     return *this;
+  }
+
+  //template<size_t ...OIndices>
+  //constexpr
+  //operator Swizzle<OVec, OType, OIndices...>() {
+  //  return Swizzle<Vec, Type, OIndices...>(vec[Indices]...);
+  //}
+
+  constexpr
+  operator std::array<Type, sizeof...(Indices)>() const noexcept {
+    return { vec[Indices]... };
+  }
+
+  constexpr
+  operator vecn<Type, sizeof...(Indices)>() const noexcept {
+    return vecn<Type, sizeof...(Indices)>(vec.values[Indices]...);
+  }
+
+  friend
+  constexpr
+  vecn<Type, sizeof...(Indices)> operator*(const float scalar, const Swizzle& swizzle) noexcept {
+    const vecn<Type, sizeof...(Indices)> vec(swizzle);
+    return scalar * vec;
   }
 
   Vec& vec;
