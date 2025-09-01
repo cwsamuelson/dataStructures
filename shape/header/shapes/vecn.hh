@@ -36,9 +36,9 @@ struct vecn {
     : values(input) 
   {}
 
-  template<size_t ...Indices>
+  template<typename OType, size_t OCount, size_t ...Indices>
   constexpr
-  vecn(const Swizzle<vecn, Type, Indices...>& swiz)
+  vecn(const Swizzle<vecn<OType, OCount>, Type, Indices...>& swiz)
     : vecn(static_cast<std::array<Type, Count>>(swiz))
   {}
 
