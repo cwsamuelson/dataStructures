@@ -18,7 +18,7 @@ namespace flp {
 // - Motor control updates
 // A scheduler runs 'autonomously' and within the time domain, ensuring tasks
 // are run with regularity at their expected frequency.
-// The scheduler provides a task with the real-time delta-t between tasks,
+// The scheduler provides a task with the real-time delta-t between invocations,
 // using the requested resolution (std::milli, etc provided as template param).
 // The resolution of delta-t is limited by the time-keeping mechanisms available
 //
@@ -56,6 +56,13 @@ struct Scheduler {
 
   struct Task {
     virtual void tick() = 0;
+  };
+
+  struct Handle {
+    std::shared_ptr<Task> task;
+    TaskConfig config;
+
+    size_t last_run{};
   };
 
   std::vector<Task> tasks;
