@@ -26,13 +26,13 @@ struct BasicStringView {
   {}
 
   constexpr
-  BasicStringView(const String& string) noexcept
+  BasicStringView(const BasicString<CharT>& string) noexcept
     : first(string.begin())
     , last(string.end())
   {}
 
   constexpr
-  BasicStringView& operator=(const String& string) noexcept {
+  BasicStringView& operator=(const BasicString<CharT>& string) noexcept {
     first = string.begin();
     last = string.end();
 
@@ -73,6 +73,12 @@ struct BasicStringView {
   }
 
   [[nodiscard]]
+  explicit
+  operator BasicString<CharT>() const {
+    return { begin(), end() };
+  }
+
+  [[nodiscard]]
   friend
   auto operator<=>(const BasicStringView& lhs, const BasicStringView& rhs) noexcept {
     const auto length = min(lhs.size(), rhs.size());
@@ -90,6 +96,22 @@ struct BasicStringView {
     return lhs.size() < rhs.size()
       ? std::strong_ordering::less
       : std::strong_ordering::greater;
+  }
+
+  [[nodiscard]]
+  friend
+  bool operator==(const BasicStringView& lhs, const BasicStringView& rhs) noexcept {
+    const auto length = lhs.size();
+    if (length != rhs.size()) {
+      return false;
+    }
+
+    size_t i{};
+
+    while (i < length and lhs[i] == rhs[i]) {
+    }
+
+    return i == length;
   }
 
   CharT* first = nullptr;

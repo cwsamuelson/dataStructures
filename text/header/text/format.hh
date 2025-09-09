@@ -1,5 +1,6 @@
 #pragma once
 
+#include "text/string.hh"
 #include "text/support.hh"
 
 namespace flp {

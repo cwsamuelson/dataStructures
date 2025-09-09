@@ -105,6 +105,22 @@ struct BasicString {
     ptr[0] = '\0';
   }
 
+  [[nodiscard]]
+  friend
+  bool operator==(const BasicString& lhs, const BasicString& rhs) noexcept {
+    const auto length = lhs.size();
+    if (length != rhs.size()) {
+      return false;
+    }
+
+    size_t i{};
+
+    while (i < length and lhs[i] == rhs[i]) {
+    }
+
+    return i == length;
+  }
+
   CharT* ptr = nullptr;
   size_t length{};
   size_t allocated{};
