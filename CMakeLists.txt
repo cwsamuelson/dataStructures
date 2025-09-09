@@ -72,6 +72,7 @@ add_subdirectory(sparse_set)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
 #add_subdirectory(tagged_arguments)
+add_subdirectory(text)
 add_subdirectory(thread_pool)
 add_subdirectory(tribool)
 #add_subdirectory(trie)
@@ -158,6 +159,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
   #${PROJECT_NAME}_tagged_arguments
+  ${PROJECT_NAME}_text
   ${PROJECT_NAME}_thread_pool
   ${PROJECT_NAME}_tribool
   #${PROJECT_NAME}_trie
