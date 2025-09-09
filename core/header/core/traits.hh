@@ -350,4 +350,11 @@ struct If {
 
 // --- Map
 
+// --- Constexpr
+
+template <typename Functor, auto Test = BoolConstant<(Functor{}, true)>::value>
+consteval auto is_constexpr (Functor) {
+  return Test;
+}
+
 } // namespace flp

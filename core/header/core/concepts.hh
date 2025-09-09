@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/traits.hh"
+
 #include <cstdint>
 #include <iterator>
 #include <utility>
@@ -18,21 +20,21 @@ concept Invokable = requires(Type&& value, Args&&... args) {
   // member dereferencing?
 };
 
-// basis
+// --- basis
 template<typename Type, typename... Args>
 concept Constructible = requires(Args... args) { new Type(args...); };
 
 template<typename Type1, typename Type2>
 concept Assignable = requires(Type1 value1, Type2 value2) { value1 = value2; };
 
-// no throw
+// --- no throw
 template<typename Type, typename... Args>
 concept NothrowConstructible = requires(Args... args) { noexcept(T(args...)); };
 
 template<typename Type1, typename Type2>
 concept NothrowAssignable = requires(Type1 value1, Type2 value2) { noexcept(value1 = value2); };
 
-// copyable
+// --- copyable
 template<typename Type>
 concept CopyConstructible = Constructible<Type, Type>;
 
@@ -42,7 +44,7 @@ concept CopyAssignable = Assignable<Type, Type>;
 template<typename Type>
 concept Copyable = CopyConstructible<Type> and CopyAssignable<Type>;
 
-// movable
+// --- movable
 template<typename Type>
 concept MoveConstructible = Constructible<Type, Type&&>;
 
@@ -52,7 +54,7 @@ concept MoveAssignable = requires(Type value1, Type value2) { value1 = std::move
 template<typename Type>
 concept Movable = MoveConstructible<Type> and MoveAssignable<Type>;
 
-// no throw copy
+// --- no throw copy
 template<typename Type>
 concept NothrowCopyConstructible = NothrowConstructible<Type, Type>;
 
@@ -62,7 +64,7 @@ concept NothrowCopyAssignable = NothrowAssignable<Type, Type>;
 template<typename Type>
 concept NothrowCopyable = NothrowCopyConstructible<Type> and NothrowCopyAssignable<Type>;
 
-// no throw move
+// --- no throw move
 template<typename Type>
 concept NothrowMoveConstructible = NothrowConstructible<Type, Type&&>;
 
@@ -161,7 +163,7 @@ concept RandomAccessIterator = BidirectionalIterator<Type, Referred> /*and Total
 concept ContiguousIterator = RandomAccessIterator<Type, Referred> and requires(Type iterator) {
 };*/
 
-// simplest iterator
+// --- simplest iterator
 template<typename Type, typename Referred>
 concept SimpleIterator = ForwardIterator<Type, Referred>;
 
@@ -177,11 +179,19 @@ concept BareRange = requires(Type value) {
   {std::end(value)};
 };
 
-// orderings
-// partial
-// total
-// strong?
-// weak?
+// --- orderings
+//   --- partial
+//   --- total
+//   --- strong?
+//   --- weak?
+
+// --- Constexpr
+
+// template<typename Type>
+// concept Constexpr = requires(Type value) {
+//   { value.foo() } -> SameAs<...>;
+//   { BoolConstant<()> } -> SameAs<TrueType>;
+// };
 
 } // namespace flp
 
