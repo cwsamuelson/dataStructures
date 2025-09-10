@@ -52,23 +52,47 @@ TEST_CASE("`String`") {
   }
 
   SECTION("Basic properties") {
-    String string;
+    SECTION("Empty constructed") {
+      String string;
 
-    CHECK(string.empty());
-    CHECK(string.size() == 0);
-    CHECK(string.capacity() == 0);
-    CHECK(string.data() == nullptr);
-    CHECK(string.begin() == nullptr);
-    CHECK(string.end() == nullptr);
+      CHECK(string.empty());
+      CHECK(string.size() == 0);
+      CHECK(string.capacity() == 0);
+      CHECK(string.data() == nullptr);
+      CHECK(string.begin() == nullptr);
+      CHECK(string.end() == nullptr);
 
-    CHECK_NOTHROW(string.clear());
+      CHECK_NOTHROW(string.clear());
 
-    CHECK(string.empty());
-    CHECK(string.size() == 0);
-    CHECK(string.capacity() == 0);
-    CHECK(string.data() == nullptr);
-    CHECK(string.begin() == nullptr);
-    CHECK(string.end() == nullptr);
+      CHECK(string.empty());
+      CHECK(string.size() == 0);
+      CHECK(string.capacity() == 0);
+      CHECK(string.data() == nullptr);
+      CHECK(string.begin() == nullptr);
+      CHECK(string.end() == nullptr);
+    }
+
+    SECTION("Simple constructed") {
+      const char* value = GENERATE("a", "b", "abc", "ABC");
+      String string = value;
+      const auto length = flp::strlen(value);
+
+      CHECK(not string.empty());
+      CHECK(string.size() == length);
+      CHECK(string.capacity() >= length);
+      CHECK(string.data() != nullptr);
+      CHECK(string.begin() != nullptr);
+      CHECK(string.data() == string.begin());
+      CHECK(string.end() != nullptr);
+      CHECK(string.end() == string.begin() + length);
+
+      CHECK_NOTHROW(string.clear());
+
+      CHECK(string.empty());
+      CHECK(string.size() == 0);
+      CHECK(string.data() == string.begin());
+      CHECK(string.data() == string.end());
+    }
   }
 }
 
@@ -112,6 +136,47 @@ TEST_CASE("`StringView`") {
       CHECK(string_view != "---");
       CHECK(string_view != String("---"));
       CHECK(string_view != StringView("---"));
+    }
+  }
+
+  SECTION("Basic properties") {
+    SECTION("Empty constructed") {
+      StringView string_view;
+
+      CHECK(string_view.empty());
+      CHECK(string_view.size() == 0);
+      CHECK(string_view.data() == nullptr);
+      CHECK(string_view.begin() == nullptr);
+      CHECK(string_view.end() == nullptr);
+
+      CHECK_NOTHROW(string_view.clear());
+
+      CHECK(string_view.empty());
+      CHECK(string_view.size() == 0);
+      CHECK(string_view.data() == nullptr);
+      CHECK(string_view.begin() == nullptr);
+      CHECK(string_view.end() == nullptr);
+    }
+
+    SECTION("Simple constructed") {
+      const char* value = GENERATE("a", "b", "abc", "ABC");
+      StringView string_view = value;
+      const auto length = flp::strlen(value);
+
+      CHECK(not string_view.empty());
+      CHECK(string_view.size() == length);
+      CHECK(string_view.data() != nullptr);
+      CHECK(string_view.begin() != nullptr);
+      CHECK(string_view.data() == string_view.begin());
+      CHECK(string_view.end() != nullptr);
+      CHECK(string_view.end() == string_view.begin() + length);
+
+      CHECK_NOTHROW(string_view.clear());
+
+      CHECK(string_view.empty());
+      CHECK(string_view.size() == 0);
+      CHECK(string_view.data() == string_view.begin());
+      CHECK(string_view.begin() == string_view.end());
     }
   }
 }

@@ -75,6 +75,11 @@ struct BasicStringView {
     return self.last;
   }
 
+  void clear() noexcept {
+    first = nullptr;
+    last = nullptr;
+  }
+
   [[nodiscard]]
   explicit
   operator BasicString<CharT>() const {
