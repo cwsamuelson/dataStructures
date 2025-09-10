@@ -1,6 +1,11 @@
 #pragma once
 
+#include <cstddef>
+
 namespace flp {
+
+[[nodiscard]]
+size_t strlen(const char* cstring) noexcept;
 
 template<typename CharT>
 struct FormatParseContext {
@@ -25,6 +30,7 @@ struct FormatParseContext {
   }
 };
 
+template<typename CharT>
 struct FormatContext {
 };
 

@@ -32,13 +32,15 @@ struct Formatter {
   }
 
   constexpr
-  auto format(const Type& object, FormatContext& context) const {
+  auto format(const Type& object, FormatContext<CharT>& context) const {
   }
 };
 
 template<typename ...Args>
 String format(const char* fmt, Args&& ...args) {
-  return {};
+  String result;
+  (format_to(result, "{}", args), ...);
+  return result;
 }
 
 } // namespace flp

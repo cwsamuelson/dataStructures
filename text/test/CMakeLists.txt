@@ -4,7 +4,9 @@ project(${PROJECT_NAME}_test)
 find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
-  tests.cc
+  format.cc
+  string.cc
+  string_view.cc
 )
 
 target_link_libraries(${PROJECT_NAME}

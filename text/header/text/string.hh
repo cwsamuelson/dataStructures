@@ -1,26 +1,12 @@
 #pragma once
 
+#include "text/support.hh"
+
 #include <cstddef>
 #include <string>
 #include <utility>
 
 namespace flp {
-
-[[nodiscard]]
-size_t strlen(const char* cstring) noexcept {
-  if (cstring == nullptr) {
-    return 0;
-  }
-
-  size_t length{};
-
-  while (*cstring != '\0') {
-    ++cstring;
-    ++length;
-  }
-
-  return length;
-}
 
 template<typename CharT>
 struct BasicString {

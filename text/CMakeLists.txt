@@ -12,6 +12,7 @@ set(HEADERS
   header/text/support.hh
 )
 set(SOURCES
+  source/support.cc
 )
 
 common_library(${PROJECT_NAME}

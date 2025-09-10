@@ -5,9 +5,13 @@
 
 namespace flp {
 
-template<typename Formatter, typename Type>
-concept ConstexprFormatter =
-  requires(const Formatter cformatter, Formatter formatter, const Type value, FormatParseContext pcontext, FormatContext fcontext) {
+template<typename Type, typename CharT, typename Formatted>
+concept Formatter =
+  requires(const Type cformatter,
+                 Type  formatter,
+           const Formatted value,
+           FormatParseContext<CharT> pcontext,
+           FormatContext<CharT> fcontext) {
   { BoolConstant< formatter.parse(pcontext)>{} } -> SameAs<TrueType>;
   { BoolConstant<cformatter.format(value, fcontext)>{} } -> SameAs<TrueType>;
 };
