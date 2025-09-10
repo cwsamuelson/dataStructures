@@ -8,6 +8,7 @@ set(HEADERS
 set(SOURCE
   interface.cc
   regression.cc
+  sandbox.cc
 )
 
 common_test(${PROJECT_NAME}
