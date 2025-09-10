@@ -6,14 +6,48 @@
 
 namespace flp {
 
+[[nodiscard]]
+size_t strlen(const char* cstring) noexcept {
+  if (cstring == nullptr) {
+    return 0;
+  }
+
+  size_t length{};
+
+  while (*cstring != '\0') {
+    ++cstring;
+    ++length;
+  }
+
+  return length;
+}
+
 template<typename CharT>
 struct BasicString {
   BasicString() noexcept = default;
 
-  BasicString(const char* cstring){}
+  BasicString(const char* cstring)
+    : ptr(nullptr)
+    , length(strlen(cstring))
+    , allocated(length) {
+    ptr = new CharT[allocated];
+
+    for (size_t i{}; i < allocated; ++i) {
+      ptr[i] = cstring[i];
+    }
+  }
 
   template<typename Iterator>
-  BasicString(Iterator start, Iterator finish){}
+  BasicString(Iterator start, Iterator finish)
+    : ptr(nullptr)
+    , length(finish - start)
+    , allocated(length) {
+    ptr = new CharT[allocated];
+
+    while (start != finish) {
+      ptr[start++];
+    }
+  }
 
   BasicString(const BasicString& other)
     : ptr(new CharT[other.length])
@@ -66,7 +100,7 @@ struct BasicString {
 
   [[nodiscard]]
   decltype(auto) operator[](this auto&& self, const size_t index) noexcept {
-    // VERIFY(index < size, "");
+    // VERIFY(index < length, "");
 
     return self.ptr[index];
   }
@@ -96,6 +130,11 @@ struct BasicString {
     return self.ptr + self.length;
   }
 
+  [[nodiscard]]
+  decltype(auto) data(this auto&& self) noexcept {
+    return self.ptr;
+  }
+
   void clear() {
     if (ptr == nullptr) {
       return;
@@ -116,6 +155,7 @@ struct BasicString {
     size_t i{};
 
     while (i < length and lhs[i] == rhs[i]) {
+      ++i;
     }
 
     return i == length;
@@ -127,5 +167,14 @@ struct BasicString {
 };
 
 using String = BasicString<char>;
+
+template<typename OStream, typename CharT>
+OStream& operator<<(OStream& ostream, BasicString<CharT>& string) {
+  for (const auto chr : string) {
+    ostream << chr;
+  }
+
+  return ostream;
+}
 
 }

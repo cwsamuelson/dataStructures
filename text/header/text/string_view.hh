@@ -16,7 +16,10 @@ struct BasicStringView {
   BasicStringView& operator=(BasicStringView&&) noexcept = default;
 
   constexpr
-  BasicStringView(const char*) noexcept {}
+  BasicStringView(const CharT* cstring) noexcept
+    : first(cstring)
+    , last(cstring + strlen(cstring))
+  {}
 
   template<typename Iterator>
   constexpr
@@ -102,6 +105,7 @@ struct BasicStringView {
   friend
   bool operator==(const BasicStringView& lhs, const BasicStringView& rhs) noexcept {
     const auto length = lhs.size();
+
     if (length != rhs.size()) {
       return false;
     }
@@ -109,15 +113,25 @@ struct BasicStringView {
     size_t i{};
 
     while (i < length and lhs[i] == rhs[i]) {
+      ++i;
     }
 
     return i == length;
   }
 
-  CharT* first = nullptr;
-  CharT* last = nullptr;
+  const CharT* first = nullptr;
+  const CharT* last = nullptr;
 };
 
 using StringView = BasicStringView<char>;
+
+template<typename OStream, typename CharT>
+OStream& operator<<(OStream& ostream, BasicStringView<CharT>& string) {
+  for (const auto chr : string) {
+    ostream << chr;
+  }
+
+  return ostream;
+}
 
 }
