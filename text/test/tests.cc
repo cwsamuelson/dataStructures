@@ -14,6 +14,8 @@ TEST_CASE("`String`") {
       const String string;
 
       CHECK(string == "");
+      CHECK(string == String(""));
+      CHECK(string == StringView(""));
       CHECK(string == String());
       CHECK(string == StringView());
     }
@@ -70,6 +72,12 @@ TEST_CASE("`String`") {
       CHECK(string.data() == nullptr);
       CHECK(string.begin() == nullptr);
       CHECK(string.end() == nullptr);
+
+      CHECK(string == "");
+      CHECK(string == String());
+      CHECK(string == StringView());
+      CHECK(string == String(""));
+      CHECK(string == StringView(""));
     }
 
     SECTION("Simple constructed") {
@@ -92,6 +100,12 @@ TEST_CASE("`String`") {
       CHECK(string.size() == 0);
       CHECK(string.data() == string.begin());
       CHECK(string.data() == string.end());
+
+      CHECK(string == "");
+      CHECK(string == String());
+      CHECK(string == StringView());
+      CHECK(string == String(""));
+      CHECK(string == StringView(""));
     }
   }
 }
@@ -102,6 +116,8 @@ TEST_CASE("`StringView`") {
       StringView string_view;
 
       CHECK(string_view == "");
+      CHECK(string_view == String(""));
+      CHECK(string_view == StringView(""));
       CHECK(string_view == String());
       CHECK(string_view == StringView());
     }
@@ -156,6 +172,12 @@ TEST_CASE("`StringView`") {
       CHECK(string_view.data() == nullptr);
       CHECK(string_view.begin() == nullptr);
       CHECK(string_view.end() == nullptr);
+
+      CHECK(string_view == "");
+      CHECK(string_view == String());
+      CHECK(string_view == StringView());
+      CHECK(string_view == String(""));
+      CHECK(string_view == StringView(""));
     }
 
     SECTION("Simple constructed") {
@@ -177,6 +199,12 @@ TEST_CASE("`StringView`") {
       CHECK(string_view.size() == 0);
       CHECK(string_view.data() == string_view.begin());
       CHECK(string_view.begin() == string_view.end());
+
+      CHECK(string_view == "");
+      CHECK(string_view == String());
+      CHECK(string_view == StringView());
+      CHECK(string_view == String(""));
+      CHECK(string_view == StringView(""));
     }
   }
 }
