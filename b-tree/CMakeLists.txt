@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_template LANGUAGES CXX)
+project(${BASE_PROJECT}_BTree LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
@@ -33,4 +33,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

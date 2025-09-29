@@ -48,7 +48,7 @@ add_subdirectory(process_manager)
 add_subdirectory(producer_consumer)
 add_subdirectory(profiler)
 add_subdirectory(property)
-#add_subdirectory(quad-tree)
+add_subdirectory(quad-tree)
 add_subdirectory(ranged_int)
 #add_subdirectory(ranges)
 add_subdirectory(ratio)
@@ -135,7 +135,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_producer_consumer
   ${PROJECT_NAME}_profiler
   ${PROJECT_NAME}_property
-  #${PROJECT_NAME}_quad-tree
+  ${PROJECT_NAME}_quad-tree
   ${PROJECT_NAME}_ranged_int
   #${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
