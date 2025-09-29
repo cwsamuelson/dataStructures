@@ -19,7 +19,7 @@ struct ResourcePack {
   using Blob = std::vector<std::byte>;
 
   [[nodiscard]]
-  bool contains(const std::string_view key) {
+  bool contains(const std::string_view key) const {
     return data.contains(key);
   }
 
@@ -27,8 +27,16 @@ struct ResourcePack {
     data.clear();
   }
 
-  decltype(auto) operator[](this auto&& self, std::string_view key) {
-    return self.data.at[key];
+  // decltype(auto) operator[](this auto&& self, std::string_view key) {
+  //   return self.data[key];
+  // }
+
+  Blob& operator[](const std::string_view key) {
+    return data[std::string{key}];
+  }
+
+  const Blob& operator[](const std::string_view key) const {
+    return data.at(std::string{key});
   }
 
   static
@@ -202,5 +210,67 @@ SCENARIO("`ResourcePack`: sandbox") {
     CHECK(pack.data.at("shrt").size() == 2);
     CHECK(pack.data.at("shrt").at(0) == static_cast<std::byte>(0xFF));
     CHECK(pack.data.at("shrt").at(1) == static_cast<std::byte>(0x40));
+  }
+
+  SECTION("File reading/writing") {
+    const std::filesystem::path file_path = "data.rpk";
+
+    {
+      std::filesystem::remove(file_path);
+      REQUIRE(not std::filesystem::exists(file_path));
+
+      ResourcePack res_pack;
+
+      res_pack["A"] = { static_cast<std::byte>(0x40) };
+      res_pack["B"] = { static_cast<std::byte>(0xFF) };
+      res_pack["C"] = { static_cast<std::byte>(0xFF), static_cast<std::byte>(0x40) };
+      res_pack["D"] = {
+        static_cast<std::byte>(0x12),
+        static_cast<std::byte>(0x21),
+        static_cast<std::byte>(0x12),
+        static_cast<std::byte>(0x21),
+        static_cast<std::byte>(0x11),
+        static_cast<std::byte>(0x38),
+        static_cast<std::byte>(0x38),
+        static_cast<std::byte>(0x11),
+      };
+      res_pack["E"] = { static_cast<std::byte>(0x42), static_cast<std::byte>(0x24) };
+
+      ResourcePack::save(res_pack, file_path);
+
+      REQUIRE(std::filesystem::exists(file_path));
+    }
+
+    {
+      REQUIRE(std::filesystem::exists(file_path));
+      const auto res_pack = ResourcePack::load(file_path);
+
+      CHECK(res_pack.contains("A"));
+      CHECK(res_pack.contains("B"));
+      CHECK(res_pack.contains("C"));
+      CHECK(res_pack.contains("D"));
+      CHECK(res_pack.contains("E"));
+
+      CHECK(res_pack["A"].size() == 1);
+      CHECK(res_pack["B"].size() == 1);
+      CHECK(res_pack["C"].size() == 2);
+      CHECK(res_pack["D"].size() == 8);
+      CHECK(res_pack["E"].size() == 2);
+
+      CHECK(res_pack["A"][0] == static_cast<std::byte>(0x40));
+      CHECK(res_pack["B"][0] == static_cast<std::byte>(0xFF));
+      CHECK(res_pack["C"][0] == static_cast<std::byte>(0xFF));
+      CHECK(res_pack["C"][1] == static_cast<std::byte>(0x40));
+      CHECK(res_pack["D"][0] == static_cast<std::byte>(0x12));
+      CHECK(res_pack["D"][1] == static_cast<std::byte>(0x21));
+      CHECK(res_pack["D"][2] == static_cast<std::byte>(0x12));
+      CHECK(res_pack["D"][3] == static_cast<std::byte>(0x21));
+      CHECK(res_pack["D"][4] == static_cast<std::byte>(0x11));
+      CHECK(res_pack["D"][5] == static_cast<std::byte>(0x38));
+      CHECK(res_pack["D"][6] == static_cast<std::byte>(0x38));
+      CHECK(res_pack["D"][7] == static_cast<std::byte>(0x11));
+      CHECK(res_pack["E"][0] == static_cast<std::byte>(0x42));
+      CHECK(res_pack["E"][1] == static_cast<std::byte>(0x24));
+    }
   }
 }
