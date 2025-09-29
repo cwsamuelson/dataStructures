@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_template LANGUAGES CXX)
+project(${BASE_PROJECT}_quad_tree LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/template.hh
+  header/quad-tree.hh
 )
 set(SOURCES
 )
