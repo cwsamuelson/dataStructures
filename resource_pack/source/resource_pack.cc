@@ -8,103 +8,68 @@
 #include <string>
 #include <vector>
 
-#include <print>
-
-namespace {
-
-template<typename IStream>
-IStream& operator>>(IStream& istream, Pack::PackFile::IndexEntry::Key& key) {
-  VERIFY(istream.read(reinterpret_cast<char*>(&key.length), sizeof(key.length)), "Couldn't read key length from file.");
-
-  key.text.resize(key.length);
-  VERIFY(istream.read(reinterpret_cast<char*>(key.text.data()), key.length), "Couldn't read all bytes from file.  Expected {} bytes.", key.length);
-
-  return istream;
-}
-
-template<typename IStream>
-IStream& operator>>(IStream& istream, Pack::PackFile::IndexEntry& entry) {
-  VERIFY(istream >> entry.key, "Could not read index entry keysize");
-  VERIFY(istream.read(reinterpret_cast<char*>(&entry.offset), sizeof(entry.offset)), "Could not read index entry offset");
-  VERIFY(istream.read(reinterpret_cast<char*>(&entry.size), sizeof(entry.size)), "Could not read index entry size");
-
-  return istream;
-}
-
-}
-
 namespace Pack {
 
-PackFile::PackFile() = default;
-
-PackFile::PackFile(const std::filesystem::path& path)
-  : file_path(path) {
-  try {
-    std::ifstream file(file_path, std::ios::binary);
-    VERIFY(file, "Could not open file", file_path.string());
-
-    VERIFY(file.read(reinterpret_cast<char*>(&entry_count), sizeof(entry_count)), "Could not read index size from file");
-
-    for (size_t i{}; i < entry_count and file; ++i) {
-      auto& entry = index.emplace_back();
-      VERIFY(file >> entry, "Could not read {}th index entry", index.size());
-    }
-
-    check_index_integrity();
-  } CATCH_AND_NEST("Error parsing file ({})", path.string())
-}
-
-void PackFile::check_index_integrity() const {
-  VERIFY(entry_count == index.size(), "Expected {} index entries, found {}", entry_count, index.size());
-}
-
-void PackFile::clear() {
-  *this = PackFile();
-}
-
-ResourcePack::ResourcePack() = default;
-
-ResourcePack::ResourcePack(const std::filesystem::path& path)
-  : pack_file(path)
-{}
-
-void ResourcePack::load(const std::filesystem::path& path) {
-  *this = ResourcePack(path);
-}
-
-void ResourcePack::save(const std::filesystem::path& path) const {
-  try {
-    std::ofstream file(path, std::ios::binary);
-    VERIFY(file, "Could not open file ({})", path.string());
-
-    auto s = index.size();
-
-    file.write(reinterpret_cast<const char*>(&s), sizeof(s));
-
-    for (size_t cursor{}; const auto& [key, value] : index) {
-      s = key.size();
-      file.write(reinterpret_cast<const char*>(&s), sizeof(s));
-      file << key;
-      s = cursor;
-      file.write(reinterpret_cast<const char*>(&s), sizeof(s));
-      s = value.size();
-      file.write(reinterpret_cast<const char*>(&s), sizeof(s));
-    }
-
-    for (const auto& [key, value] : index) {
-      file.write(reinterpret_cast<const char*>(value.data()), value.size());
-    }
-  } CATCH_AND_NEST("Error writing file ({})", path.string())
+[[nodiscard]]
+bool ResourcePack::contains(const std::string_view key) const {
+  return data.contains(key);
 }
 
 void ResourcePack::clear() {
-  pack_file.clear();
-  index.clear();
+  data.clear();
 }
 
-bool ResourcePack::contains(const std::string& key) const {
-  return index.contains(key);
+ResourcePack::Blob& ResourcePack::operator[](const std::string_view key) {
+  return data[std::string{key}];
+}
+
+const ResourcePack::Blob& ResourcePack::operator[](const std::string_view key) const {
+  return data.at(std::string{key});
+}
+
+void ResourcePack::save(const ResourcePack& pack, const std::filesystem::path destination) {
+  std::ofstream file_stream(destination);
+  VERIFY(file_stream, "Couldn't open file({})", destination.string());
+
+  write(pack, file_stream);
+}
+
+ResourcePack ResourcePack::load(const std::filesystem::path source) {
+  std::ifstream file_stream(source);
+  VERIFY(file_stream, "Couldn't open file({})", source.string());
+
+  return read(file_stream);
+}
+
+ResourcePack::Blob ResourcePack::write(const ResourcePack& pack) {
+  // 8 bytes initially for the entry count
+  size_t blob_size{8};
+
+  for (const auto& [key, blob] : pack.data) {
+    // <key length>"key string"<data offset><data length>
+    // Key length, data offset, and data length each use 8 bytes for storage.
+    // Plus whatever the length of the key string is, plus the amount of blob
+    // storage itself.
+    blob_size += 8 + key.size() + 8 + 8 + blob.size();
+  }
+
+  Blob blob;
+  blob.resize(blob_size);
+
+  write(pack, std::span{ blob.data(), blob.size() });
+  return blob;
+}
+
+void ResourcePack::write(const ResourcePack& pack, const std::span<std::byte> span) {
+  std::basic_spanstream blob_stream(span);
+
+  write(pack, blob_stream);
+}
+
+ResourcePack ResourcePack::read(const std::span<std::byte> span) {
+  std::basic_ispanstream blob_stream(span);
+
+  return read(blob_stream);
 }
 
 }
-
