@@ -23,14 +23,25 @@ struct QuadTree {
     [[nodiscard]]
     bool contains(const Point& point) const noexcept {
       return point.x >= corner.x
-        and point.x <= corner.x + dimensions.x
-        and point.y >= corner.y
-        and point.y <= corner.y + dimensions.y;
+         and point.x <= corner.x + dimensions.x
+         and point.y >= corner.y
+         and point.y <= corner.y + dimensions.y;
     }
 
+    // https://mkirchner.github.io/libfbi/doc/html/index.html
+    // https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
+    // https://www.realtimerendering.com/intersections.html
+    // https://www.geometrictools.com/Samples/Intersection.html
+    // https://tavianator.com/2011/ray_box.html
+    // https://github.com/gszauer/GamePhysicsCookbook
+    // https://github.com/teikitu-rti/teikitu_release
     [[nodiscard]]
     bool intersects(const AABB& other) const noexcept {
-      return false;
+      // https://github.com/gszauer/GamePhysicsCookbook/blob/master/Code/Geometry2D.cpp
+      return ((other.corner.x <= (corner.x + dimensions.x))
+         and  (corner.x <= (other.corner.x + other.dimensions.x)))
+         and ((other.corner.x <= (corner.x + dimensions.x))
+         and  (corner.x <= (other.corner.x + other.dimensions.x)));
     }
   };
 
@@ -49,8 +60,9 @@ struct QuadTree {
         return;
       }
 
-      std::visit(Overloads{
-        [this](const Entities& entities) {
+      std::visit(Overloads {
+        [this, &value](Entities& entities) {
+          entities.push_back(value);
           if (entities.size() > entity_limit) {
             subdivide();
           }
@@ -69,7 +81,7 @@ struct QuadTree {
         return;
       }
 
-      std::visit(Overloads{
+      std::visit(Overloads {
         [&visitor](const Entities& entities){
           for (const auto& entity : entities) {
             visitor(entity);
@@ -88,7 +100,7 @@ struct QuadTree {
         return {};
       }
 
-      return std::visit(Overloads{
+      return std::visit(Overloads {
         [](const Entities& entities){
           return entities;
         },
