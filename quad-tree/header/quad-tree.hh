@@ -48,7 +48,8 @@ struct QuadTree {
   struct Node;
 
   using Children = std::unique_ptr<std::array<Node, 4>>;
-  using Entities = std::vector<Type>;
+  using Entities = std::vector<std::tuple<Point, Type>>;
+  using Objects = std::vector<Type>;
 
   struct Node {
     size_t& entity_limit;
@@ -61,8 +62,8 @@ struct QuadTree {
       }
 
       std::visit(Overloads {
-        [this, &value](Entities& entities) {
-          entities.push_back(value);
+        [this, &point, &value](Entities& entities) {
+          entities.emplace_back(point, value);
           if (entities.size() > entity_limit) {
             subdivide();
           }
@@ -76,6 +77,10 @@ struct QuadTree {
     }
 
     template<typename Functor>
+      requires ((std::invocable<Functor, std::tuple<Point, Type>>)
+        or (std::invocable<Functor, Type, Point>)
+        or (std::invocable<Functor, Type>)
+      )
     void query(const AABB& box, Functor&& visitor) const {
       if (not boundaries.intersects(box)) {
         return;
@@ -84,7 +89,13 @@ struct QuadTree {
       std::visit(Overloads {
         [&visitor](const Entities& entities){
           for (const auto& entity : entities) {
-            visitor(entity);
+            if constexpr (std::invocable<Functor, std::tuple<Point, Type>>) {
+              visitor(entity);
+            } else if constexpr (std::invocable<Functor, Type, Point>) {
+              visitor(std::get<1>(entity), std::get<0>(entity));
+            } else if constexpr (std::invocable<Functor, Type>) {
+              visitor(std::get<1>(entity));
+            }
           }
         },
         [&box, &visitor](const Children& children){
@@ -101,15 +112,23 @@ struct QuadTree {
       }
 
       return std::visit(Overloads {
-        [](const Entities& entities){
-          return entities;
+        [&box](const Entities& entities){
+          Objects results;
+
+          for (const auto& [point, object] : entities) {
+            if (box.contains(point)) {
+              results.push_back(object);
+            }
+          }
+
+          return results;
         },
         [&box](const Children& children){
-          Entities entities;
+          Objects objects;
           for (const auto& child : *children) {
-            entities.append_range(child.query(box));
+            objects.append_range(child.query(box));
           }
-          return entities;
+          return objects;
         }
       }, data);
     }
