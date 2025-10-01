@@ -5,7 +5,10 @@ project(${BASE_PROJECT}_geometry LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/template.hh
+  header/box.hh
+  header/intersection.hh
+  header/line.hh
+  header/point.hh
 )
 set(SOURCES
 )

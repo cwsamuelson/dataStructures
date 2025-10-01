@@ -29,7 +29,7 @@ add_subdirectory(expected)
 add_subdirectory(function)
 add_subdirectory(future)
 add_subdirectory(gap-buffer)
-#add_subdirectory(geometry)
+add_subdirectory(geometry)
 #add_subdirectory(hash-map)
 #add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
@@ -116,7 +116,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
   ${PROJECT_NAME}_gap-buffer
-  #${PROJECT_NAME}_geometry
+  ${PROJECT_NAME}_geometry
   #${PROJECT_NAME}_hash-map
   #${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive

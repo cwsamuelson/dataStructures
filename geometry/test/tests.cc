@@ -1,11 +1,19 @@
-#include <template.hh>
+#include <intersection.hh>
+#include <point.hh>
 
 #include <catch2/catch_all.hpp>
 
 using namespace flp;
 
-// the gif here I think demonstrates what I'm thinking about
-//https://github.com/skramm/homog2d
-TEST_CASE("template") {
-}
+TEST_CASE("`Geometry`::`Point`") {
+  Point<float> point;
 
+  CHECK(point.x == .0f);
+  CHECK(point.y == .0f);
+
+  Point<float> point1;
+  Point<float> point2;
+
+  CHECK(point1 == point2);
+  CHECK(intersections(point1, point2).at(0) == point1);
+}
