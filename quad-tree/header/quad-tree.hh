@@ -12,8 +12,13 @@ namespace flp {
 template<typename Type>
 struct QuadTree {
   struct Point {
-    float x;
-    float y;
+    float x{};
+    float y{};
+  };
+
+  struct Line {
+    Point start;
+    Point end;
   };
 
   struct AABB {
@@ -23,9 +28,9 @@ struct QuadTree {
     [[nodiscard]]
     bool contains(const Point& point) const noexcept {
       return point.x >= corner.x
-         and point.x <= corner.x + dimensions.x
+         and point.x < corner.x + dimensions.x
          and point.y >= corner.y
-         and point.y <= corner.y + dimensions.y;
+         and point.y < corner.y + dimensions.y;
     }
 
     // https://mkirchner.github.io/libfbi/doc/html/index.html
@@ -43,51 +48,65 @@ struct QuadTree {
          and ((other.corner.x <= (corner.x + dimensions.x))
          and  (corner.x <= (other.corner.x + other.dimensions.x)));
     }
+
+    [[nodiscard]]
+    bool intersects(const Point& point) const noexcept {
+      return contains(point);
+    }
+
+    // [[nodiscard]]
+    // bool intersects(const Line& point) const noexcept {
+    //   return contains(point);
+    // }
   };
 
   struct Node;
 
-  using Children = std::unique_ptr<std::array<Node, 4>>;
+  using Children = std::array<Node, 4>;
+  using ChildrenPtr = std::unique_ptr<Children>;
   using Entities = std::vector<std::tuple<Point, Type>>;
   using Objects = std::vector<Type>;
 
   struct Node {
     size_t& entity_limit;
     AABB boundaries;
-    std::variant<Entities, Children> data;
+    std::variant<Entities, ChildrenPtr> data = Entities{};
 
-    void insert(const Point& point, const Type& value) {
+    bool insert(const Point& point, const Type& value) {
       if (not boundaries.contains(point)) {
-        return;
+        return false;
       }
 
       std::visit(Overloads {
         [this, &point, &value](Entities& entities) {
           entities.emplace_back(point, value);
+
           if (entities.size() > entity_limit) {
             subdivide();
           }
         },
-        [&point, &value](const Children& children) {
+        [&point, &value](const ChildrenPtr& children) {
           for (auto& child : *children) {
             child.insert(point, value);
           }
         }
       }, data);
+
+      return true;
     }
 
-    template<typename Functor>
+    template<typename Primitive, typename Functor>
       requires ((std::invocable<Functor, std::tuple<Point, Type>>)
         or (std::invocable<Functor, Type, Point>)
         or (std::invocable<Functor, Type>)
       )
-    void query(const AABB& box, Functor&& visitor) const {
-      if (not boundaries.intersects(box)) {
+    void query(const Primitive& shape, Functor&& visitor) const {
+      if (not boundaries.intersects(shape)) {
         return;
       }
 
       std::visit(Overloads {
-        [&visitor](const Entities& entities){
+        [&visitor](const Entities& entities) {
           for (const auto& entity : entities) {
             if constexpr (std::invocable<Functor, std::tuple<Point, Type>>) {
               visitor(entity);
@@ -98,60 +117,167 @@ struct QuadTree {
             }
           }
         },
-        [&box, &visitor](const Children& children){
+        [&shape, &visitor](const ChildrenPtr& children) {
           for (const auto& child : *children) {
-            child.query(box, visitor);
+            child.query(shape, visitor);
           }
         }
       }, data);
     }
 
-    std::vector<Type> query(const AABB& box) const noexcept {
-      if (not boundaries.intersects(box)) {
+    template<typename Primitive>
+    std::vector<Type> query(const Primitive& shape) const noexcept {
+      if (not boundaries.intersects(shape)) {
         return {};
       }
 
       return std::visit(Overloads {
-        [&box](const Entities& entities){
+        [&shape](const Entities& entities) {
           Objects results;
 
           for (const auto& [point, object] : entities) {
-            if (box.contains(point)) {
+            if (shape.contains(point)) {
               results.push_back(object);
             }
           }
 
           return results;
         },
-        [&box](const Children& children){
+        [&shape](const ChildrenPtr& children) {
           Objects objects;
+
           for (const auto& child : *children) {
-            objects.append_range(child.query(box));
+            objects.append_range(child.query(shape));
           }
+
           return objects;
         }
       }, data);
     }
 
     void subdivide() {
+      Entities entities = std::move(std::get<Entities>(data));
+
+      const Point sector_dims {
+        boundaries.dimensions.x / 2,
+        boundaries.dimensions.y / 2,
+      };
+
+      auto ptr = std::make_unique<Children>(Children {
+        Node {
+          entity_limit,
+          {
+            boundaries.corner,
+            sector_dims
+          },
+        },
+        Node {
+          entity_limit,
+          {
+            {
+              boundaries.corner.x + sector_dims.x,
+              boundaries.corner.y + sector_dims.y
+            },
+            sector_dims
+          },
+        },
+        Node {
+          entity_limit,
+          {
+            {
+              boundaries.corner.x,
+              boundaries.corner.y + sector_dims.y
+            },
+            sector_dims
+          },
+        },
+        Node {
+          entity_limit,
+          {
+            {
+              boundaries.corner.x + sector_dims.x,
+              boundaries.corner.y
+            },
+            sector_dims
+          },
+        },
+      });
+
+      auto& children = *ptr;
+      data = std::move(ptr);
+
+      for (auto& child : children) {
+        for (auto& [point, entity] : entities) {
+          child.insert(point, std::move(entity));
+        }
+      }
+    }
+
+    std::vector<Objects> aggregate() const {
+      return std::visit(Overloads {
+        [](const Entities& entities) {
+          Objects objects;
+
+          for (const auto& [point, entity] : entities) {
+            objects.push_back(entity);
+          }
+
+          return std::vector<Objects>{objects};
+        },
+        [](const ChildrenPtr& children) {
+          std::vector<Objects> objects;
+
+          for (const auto& child : *children) {
+            objects.append_range(child.aggregate());
+          }
+
+          return objects;
+        }
+      },
+      data);
+    }
+
+    template<typename Functor>
+    void traverse(Functor&& functor) {
+      std::visit(Overloads {
+        [this, &functor](const Entities& entities) {
+          functor(boundaries, entities);
+        },
+        [&functor](const ChildrenPtr& children) {
+          for (const auto& child : *children) {
+            child.traverse(functor);
+          }
+        },
+      },
+      data);
     }
   };
 
   QuadTree(AABB bounding_box)
-    : root{
+    : root {
       entity_limit,
       std::move(bounding_box),
       Entities{}
     }
   {}
 
-  template<typename Functor>
-  void query(const AABB& box, Functor&& visitor) const {
-    root.query(box, visitor);
+  template<typename Primitive, typename Functor>
+  void query(const Primitive& shape, Functor&& visitor) const {
+    root.query(shape, std::forward<Functor>(visitor));
   }
 
-  std::vector<Type> query(const AABB& box) const noexcept {
-    return root.query(box);
+  template<typename Primitive>
+  std::vector<Type> query(const Primitive& shape) const noexcept {
+    return root.query(shape);
+  }
+
+  template<typename Functor>
+  void query(const Point& point, Functor&& visitor) const {
+    root.query(point, std::forward<Functor>(visitor));
+  }
+
+  std::vector<Type> query(const Point& point) const noexcept {
+    return root.query(point);
   }
 
   bool insert(const Point& point, const Type& value) {
@@ -162,7 +288,17 @@ struct QuadTree {
     root.insert(point, value);
 
     ++entity_count;
+
     return true;
+  }
+
+  std::vector<Objects> aggregate() const {
+    return root.aggregate();
+  }
+
+  template<typename Functor>
+  void traverse(Functor&& functor) {
+    root.traverse(functor);
   }
 
   void clear() {
