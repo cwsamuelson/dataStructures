@@ -4,9 +4,9 @@
 #include <iterator>
 #include <utility>
 
-#include <vector>
-
 namespace flp {
+
+using ssize_t = std::ptrdiff_t;
 
 template<typename Type>
 struct ReferenceableHelper {
@@ -33,11 +33,5 @@ concept Range = requires(Type range) {
   { std::begin(range) } -> Iterator;
   { std::end(range) } -> Iterator;
 };
-
-static_assert(Range<std::vector<int>>);
-// static_assert(Range<int[5]>);
-
-// static_assert(Range<AllView<int[5]>>);
-// static_assert(Range<AllView<std::vector<int>>>);
 
 }

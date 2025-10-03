@@ -4,7 +4,10 @@ project(${PROJECT_NAME}_test)
 find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
-  tests.cc
+  all_tests.cc
+  filter_tests.cc
+  generate_tests.cc
+  transform_tests.cc
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -16,4 +19,3 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
-

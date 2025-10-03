@@ -2,16 +2,12 @@
 
 #include "ranges/traits.hh"
 
-#include <cstddef>
-#include <utility>
-#include <vector>
-
 namespace flp::ranges {
 
 template<typename Container>
-struct AllView {
+struct GenerateView {
   constexpr
-  AllView(Container& cntnr)
+  GenerateView(Container& cntnr)
     : container(cntnr)
   {}
 
@@ -31,12 +27,13 @@ struct AllView {
 
     constexpr
     Iterator& operator++(this auto&& self) {
-      ++self.iterator;
+      while (predicate(*++self.iterator)) {}
       return self;
     }
 
     constexpr
     Iterator operator++(this auto&& self, int) {
+      while (predicate(++self.iterator)) {}
       return {self.iterator++};
     }
 
@@ -51,17 +48,17 @@ struct AllView {
       return {self.iterator--};
     }
 
-    friend
-    constexpr
-    Iterator operator+(const Iterator& iterator, const ssize_t offset) {
-      return {iterator.iterator + offset};
-    }
+    // friend
+    // constexpr
+    // Iterator operator+(const Iterator& iterator, const ssize_t offset) {
+    //   return {iterator.iterator + offset};
+    // }
 
-    friend
-    constexpr
-    Iterator operator-(const Iterator& iterator, const ssize_t offset) {
-      return {iterator.iterator - offset};
-    }
+    // friend
+    // constexpr
+    // Iterator operator-(const Iterator& iterator, const ssize_t offset) {
+    //   return {iterator.iterator - offset};
+    // }
 
     friend
     constexpr
@@ -85,14 +82,11 @@ struct AllView {
   Container& container;
 };
 
-struct All_t {};
+struct Generate_t {};
 
 template<Range Container>
-static
-AllView<Container> operator|(Container&& range, const All_t&) {
-  return {std::forward<Container>(range)};
+GenerateView<Container> operator|(Container&& container, const Generate_t&) {
+  return {std::forward<Container>(container)};
 }
 
-static constexpr All_t all;
-
-} // namespace flp
+}
