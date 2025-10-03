@@ -1,45 +1,100 @@
 #pragma once
 
-//#include <>
+#include "ranges/traits.hh"
+
+#include <cstddef>
+#include <utility>
+#include <vector>
 
 namespace flp::ranges {
 
+using ssize_t = std::ptrdiff_t;
+
+template<typename Container>
 struct AllView {
-};
-
-template<typename Type, Range<Type>, Range>
-struct All_t {
-  struct Iterator {
-  };
-
-  All_t(Range&& range)
+  constexpr
+  AllView(Container& cntnr)
+    : container(cntnr)
   {}
 
-  //AllView operator|const auto 
+  struct Iterator {
+    using Iter = decltype(std::begin(std::declval<Container>()));
+    Iter iterator;
 
+    constexpr
+    decltype(auto) operator*(this auto&& self) {
+      return *self.iterator;
+    }
+
+    constexpr
+    decltype(auto) operator->(this auto&& self) {
+      return &*self.iterator;
+    }
+
+    constexpr
+    Iterator& operator++(this auto&& self) {
+      ++self.iterator;
+      return self;
+    }
+
+    constexpr
+    Iterator operator++(this auto&& self, int) {
+      return {self.iterator++};
+    }
+
+    constexpr
+    Iterator& operator--(this auto&& self) {
+      --self.iterator;
+      return self;
+    }
+
+    constexpr
+    Iterator operator--(this auto&& self, int) {
+      return {self.iterator--};
+    }
+
+    friend
+    constexpr
+    Iterator operator+(const Iterator& iterator, const ssize_t offset) {
+      return {iterator.iterator + offset};
+    }
+
+    friend
+    constexpr
+    Iterator operator-(const Iterator& iterator, const ssize_t offset) {
+      return {iterator.iterator - offset};
+    }
+
+    friend
+    constexpr
+    auto operator<=>(const Iterator&, const Iterator&) noexcept = default;
+
+    friend
+    constexpr
+    bool operator==(const Iterator&, const Iterator&) noexcept = default;
+  };
+
+  constexpr
   Iterator begin(this auto&& self) {
-    return {};
+    return {std::begin(self.container)};
   }
 
+  constexpr
   Iterator end(this auto&& self) {
-    return {};
+    return {std::end(self.container)};
   }
+
+  Container& container;
 };
 
-static constexpr All = All_t{};
+struct All_t {};
 
-template<typename Type, Range<Type> Range>
-struct All;
+template<Range Container>
+static
+AllView<Container> operator|(Container&& range, const All_t&) {
+  return {std::forward<Container>(range)};
+}
 
-template<BareRange Range>
-struct RangeTraits {
-  using type = decltype(*std::begin(std::declval<Range>()));
-};
-
-template<typename Range>
-All(Range) -> All<typename RangeTraits<Range>::type, Range>;
-
-static_assert(Range<All<int, int[5]>, int>);
+static constexpr All_t all;
 
 } // namespace flp
-

@@ -38,6 +38,9 @@
       "reset": [
         "devbox run purge",
         "rm -rf .venv .devbox"
+      ],
+      "list": [
+        "jq -r '.shell.scripts|keys[]' devbox.json"
       ]
     }
   }

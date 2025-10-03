@@ -15,6 +15,11 @@ common_library(${PROJECT_NAME} INTERFACE
   ${SOURCES}
 )
 
+target_compile_options(${PROJECT_NAME}
+  INTERFACE
+  -fconcepts-diagnostics-depth=8
+)
+
 target_sources(${PROJECT_NAME}
   PUBLIC
   FILE_SET public_headers

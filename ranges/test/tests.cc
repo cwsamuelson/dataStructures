@@ -8,9 +8,19 @@
 
 using namespace flp;
 
-TEMPLATE_TEST_CASE("all", "", std::vector, std::array, std::list) {
-  TestType<int> container{0, 1, 2, 3};
+TEMPLATE_TEST_CASE("all", "", std::vector<int>, std::list<int>) {
+  TestType container{0, 1, 2, 3};
 
-  ranges::All(container);
+  for (const auto& element : container | ranges::all) {}
 }
 
+TEST_CASE("`Ranges`::Sandbox") {
+  std::array<int, 4> array{0, 1, 2, 3};
+
+  for(const auto& element : array | ranges::all) {
+  }
+
+  int x[42];
+  for (const auto& element : x | ranges::all) {
+  }
+}
