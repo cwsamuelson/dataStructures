@@ -5,9 +5,9 @@
 namespace flp::views {
 
 template<typename Container>
-struct TakeView {
+struct DropView {
   constexpr
-  TakeView(Container& cntnr, const size_t count) noexcept
+  DropView(Container& cntnr, const size_t count) noexcept
     : container(cntnr)
     , counter(count)
   {}
@@ -16,8 +16,13 @@ struct TakeView {
     using Iter = decltype(std::begin(std::declval<Container>()));
 
     Iter iterator;
-    TakeView* view;
+    DropView* view;
     size_t counter{};
+
+    constexpr
+    Iterator(DropView* vw) noexcept
+      : view(vw)
+    {}
 
     constexpr
     decltype(auto) operator*(this auto&& self) noexcept {
@@ -31,27 +36,22 @@ struct TakeView {
 
     constexpr
     Iterator& operator++(this auto&& self) noexcept {
-      --self.counter;
-      ++self.iterator;
       return self;
     }
 
     constexpr
     Iterator operator++(this auto&& self, int) noexcept {
-      --self.counter;
       return {self.iterator++};
     }
 
     constexpr
     Iterator& operator--(this auto&& self) noexcept {
-      ++self.counter;
       --self.iterator;
       return self;
     }
 
     constexpr
     Iterator operator--(this auto&& self, int) noexcept {
-      ++self.counter;
       return {self.iterator--};
     }
 
@@ -73,38 +73,35 @@ struct TakeView {
 
     friend
     constexpr
-    bool operator==(const Iterator& lhs, const Iterator& rhs) noexcept {
-      return lhs.view     == rhs.view
-         and lhs.counter  == rhs.counter;
-    }
+    bool operator==(const Iterator&, const Iterator&) noexcept = default;
   };
 
   constexpr
   Iterator begin(this auto&& self) noexcept {
-    return {std::begin(self.container), &self, self.counter};
+    return {std::begin(self.container), &self, counter};
   }
 
   constexpr
   Iterator end(this auto&& self) noexcept {
-    return {std::end(self.container), &self, 0uz};
+    return {std::end(self.container), &self};
   }
 
   Container& container;
   size_t counter{};
 };
 
-struct TakeAdaptor {
+struct DropAdaptor {
   size_t counter{};
 };
 
 template<Range Container>
 constexpr
-TakeView<Container> operator|(Container&& container, TakeAdaptor&& adaptor) noexcept {
+DropView<Container> operator|(Container&& container, DropAdaptor&& adaptor) noexcept {
   return {std::forward<Container>(container), adaptor.counter};
 }
 
 constexpr
-TakeAdaptor take(const size_t counter) noexcept {
+DropAdaptor take(const size_t counter) noexcept {
   return {counter};
 }
 

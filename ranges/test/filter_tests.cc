@@ -2,7 +2,6 @@
 
 #include <catch2/catch_all.hpp>
 
-#include <print>
 #include <vector>
 
 using namespace flp;
@@ -19,7 +18,6 @@ TEST_CASE("`Ranges`::`FilterView`") {
   for (const auto& element : vector | views::filter([](const auto& element) {
     return element != 0;
   })) {
-    std::println("{}", element);
     CHECK(element != 0);
   }
 }
