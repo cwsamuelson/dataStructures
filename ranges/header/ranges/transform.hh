@@ -2,38 +2,39 @@
 
 #include "ranges/traits.hh"
 
-namespace flp::ranges {
+namespace flp::views {
 
-template<typename Container>
+template<typename Container, typename Functor>
 struct TransformView {
   constexpr
-  TransformView(Container& cntnr)
+  TransformView(Container& cntnr, Functor&& functor)
     : container(cntnr)
+    , predicate(std::forward<Functor>(functor))
   {}
 
   struct Iterator {
     using Iter = decltype(std::begin(std::declval<Container>()));
     Iter iterator;
+    TransformView* view;
 
     constexpr
     decltype(auto) operator*(this auto&& self) {
-      return *self.iterator;
+      return self.view->predicate(*self.iterator);
     }
 
     constexpr
     decltype(auto) operator->(this auto&& self) {
-      return &*self.iterator;
+      return &self.view->predicate(*self.iterator);
     }
 
     constexpr
     Iterator& operator++(this auto&& self) {
-      while (predicate(*++self.iterator)) {}
+      ++self.iterator;
       return self;
     }
 
     constexpr
     Iterator operator++(this auto&& self, int) {
-      while (predicate(++self.iterator)) {}
       return {self.iterator++};
     }
 
@@ -71,22 +72,32 @@ struct TransformView {
 
   constexpr
   Iterator begin(this auto&& self) {
-    return {std::begin(self.container)};
+    return {std::begin(self.container), &self};
   }
 
   constexpr
   Iterator end(this auto&& self) {
-    return {std::end(self.container)};
+    return {std::end(self.container), &self};
   }
 
   Container& container;
+  Functor predicate;
 };
 
-struct Transform_t {};
+template<typename Functor>
+struct TransformAdaptor {
+  Functor functor;
+};
 
-template<Range Container>
-TransformView<Container> operator|(Container&& container, const Transform_t&) {
-  return {std::forward<Container>(container)};
+template<Range Container, typename Functor>
+constexpr
+TransformView<Container, Functor> operator|(Container&& container, TransformAdaptor<Functor>&& adaptor) {
+  return {std::forward<Container>(container), std::forward<Functor>(adaptor.functor)};
+}
+
+template<typename Functor>
+TransformAdaptor<Functor> transform(Functor&& functor) {
+  return {std::forward<Functor>(functor)};
 }
 
 }
