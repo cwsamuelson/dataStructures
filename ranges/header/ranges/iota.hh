@@ -4,48 +4,54 @@
 
 namespace flp::ranges {
 
-template<typename Container, typename Functor>
+template<Incrementable Counting>
 struct IotaView {
   constexpr
-  IotaView(Container& cntnr, Functor&& functor)
-    : container(cntnr)
+  IotaView(Counting&& start, Counting&& ending) noexcept
+    : first(std::forward<Counting>(start))
+    , last(std::forward<Counting>(ending))
   {}
 
   struct Iterator {
-    using Iter = decltype(std::begin(std::declval<Container>()));
-    Iter iterator;
+    IotaView* view;
+    Counting counter{};
 
     constexpr
-    decltype(auto) operator*(this auto&& self) {
-      return *self.iterator;
+    Iterator(IotaView* vw, Counting count) noexcept
+      : view(vw)
+      , counter(count)
+    {}
+
+    constexpr
+    decltype(auto) operator*(this auto&& self) noexcept {
+      return self.counter;
     }
 
     constexpr
-    decltype(auto) operator->(this auto&& self) {
-      return &*self.iterator;
+    decltype(auto) operator->(this auto&& self) noexcept {
+      return &self.counter;
     }
 
     constexpr
-    Iterator& operator++(this auto&& self) {
-      while (predicate(*++self.iterator)) {}
+    Iterator& operator++(this auto&& self) noexcept {
+      ++self.counter;
       return self;
     }
 
     constexpr
-    Iterator operator++(this auto&& self, int) {
-      while (predicate(++self.iterator)) {}
-      return {self.iterator++};
+    Iterator operator++(this auto&& self, int) noexcept {
+      return {self.counter++};
     }
 
     constexpr
-    Iterator& operator--(this auto&& self) {
-      --self.iterator;
+    Iterator& operator--(this auto&& self) noexcept {
+      --self.counter;
       return self;
     }
 
     constexpr
-    Iterator operator--(this auto&& self, int) {
-      return {self.iterator--};
+    Iterator operator--(this auto&& self, int) noexcept {
+      return {self.counter--};
     }
 
     // friend
@@ -70,25 +76,23 @@ struct IotaView {
   };
 
   constexpr
-  Iterator begin(this auto&& self) {
-    return {std::begin(self.container)};
+  Iterator begin(this auto&& self) noexcept {
+    return {&self, self.first};
   }
 
   constexpr
-  Iterator end(this auto&& self) {
-    return {std::end(self.container)};
+  Iterator end(this auto&& self) noexcept {
+    return {&self, self.last};
   }
 
-  Container& container;
+  Counting first{};
+  Counting last{};
 };
 
-struct Iota_t {};
-
-
-
-template<Range Container>
-IotaView<Container> operator|(Container&& container, const Iota_t&) {
-  return {std::forward<Container>(container)};
+template<Incrementable Counting>
+constexpr
+IotaView<Counting> iota(Counting&& start, Counting&& finish = 1000) noexcept {
+  return {std::forward<Counting>(start), std::forward<Counting>(finish)};
 }
 
 }

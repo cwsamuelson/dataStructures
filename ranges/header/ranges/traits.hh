@@ -34,4 +34,10 @@ concept Range = requires(Type range) {
   { std::end(range) } -> Iterator;
 };
 
+template<typename Type>
+concept Incrementable = requires(Type value) {
+  { ++value } -> std::convertible_to<Type>;
+  { value++ } -> std::convertible_to<Type>;
+};
+
 }

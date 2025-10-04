@@ -11,7 +11,7 @@ namespace flp::ranges {
 template<typename Container>
 struct AllView {
   constexpr
-  AllView(Container& cntnr)
+  AllView(Container& cntnr) noexcept
     : container(cntnr)
   {}
 
@@ -20,46 +20,46 @@ struct AllView {
     Iter iterator;
 
     constexpr
-    decltype(auto) operator*(this auto&& self) {
+    decltype(auto) operator*(this auto&& self) noexcept {
       return *self.iterator;
     }
 
     constexpr
-    decltype(auto) operator->(this auto&& self) {
+    decltype(auto) operator->(this auto&& self) noexcept {
       return &*self.iterator;
     }
 
     constexpr
-    Iterator& operator++(this auto&& self) {
+    Iterator& operator++(this auto&& self) noexcept {
       ++self.iterator;
       return self;
     }
 
     constexpr
-    Iterator operator++(this auto&& self, int) {
+    Iterator operator++(this auto&& self, int) noexcept {
       return {self.iterator++};
     }
 
     constexpr
-    Iterator& operator--(this auto&& self) {
+    Iterator& operator--(this auto&& self) noexcept {
       --self.iterator;
       return self;
     }
 
     constexpr
-    Iterator operator--(this auto&& self, int) {
+    Iterator operator--(this auto&& self, int) noexcept {
       return {self.iterator--};
     }
 
     friend
     constexpr
-    Iterator operator+(const Iterator& iterator, const ssize_t offset) {
+    Iterator operator+(const Iterator& iterator, const ssize_t offset) noexcept {
       return {iterator.iterator + offset};
     }
 
     friend
     constexpr
-    Iterator operator-(const Iterator& iterator, const ssize_t offset) {
+    Iterator operator-(const Iterator& iterator, const ssize_t offset) noexcept {
       return {iterator.iterator - offset};
     }
 
@@ -73,12 +73,12 @@ struct AllView {
   };
 
   constexpr
-  Iterator begin(this auto&& self) {
+  Iterator begin(this auto&& self) noexcept {
     return {std::begin(self.container)};
   }
 
   constexpr
-  Iterator end(this auto&& self) {
+  Iterator end(this auto&& self) noexcept {
     return {std::end(self.container)};
   }
 
@@ -89,7 +89,8 @@ struct All_t {};
 
 template<Range Container>
 static
-AllView<Container> operator|(Container&& range, const All_t&) {
+constexpr
+AllView<Container> operator|(Container&& range, const All_t&) noexcept {
   return {std::forward<Container>(range)};
 }
 

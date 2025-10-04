@@ -4,32 +4,35 @@
 
 namespace flp::views {
 
-template<typename Container, typename Functor>
-struct TransformView {
+template<typename Container>
+struct TakeView {
   constexpr
-  TransformView(Container& cntnr, Functor&& functor) noexcept
+  TakeView(Container& cntnr, const size_t count) noexcept
     : container(cntnr)
-    , predicate(std::forward<Functor>(functor))
+    , counter(count)
   {}
 
   struct Iterator {
-    using Iter = decltype(std::begin(std::declval<Container>()));
-    Iter iterator;
-    TransformView* view;
+    TakeView* view;
+    size_t counter{};
+
+    constexpr
+    Iterator(TakeView* vw) noexcept
+      : view(vw)
+    {}
 
     constexpr
     decltype(auto) operator*(this auto&& self) noexcept {
-      return self.view->predicate(*self.iterator);
+      return *self.iterator;
     }
 
     constexpr
     decltype(auto) operator->(this auto&& self) noexcept {
-      return &self.view->predicate(*self.iterator);
+      return &*self.iterator;
     }
 
     constexpr
     Iterator& operator++(this auto&& self) noexcept {
-      ++self.iterator;
       return self;
     }
 
@@ -81,24 +84,22 @@ struct TransformView {
   }
 
   Container& container;
-  Functor predicate;
+  size_t counter{};
 };
 
-template<typename Functor>
-struct TransformAdaptor {
-  Functor functor;
+struct TakeAdaptor {
+  size_t counter{};
 };
 
-template<Range Container, typename Functor>
+template<Range Container>
 constexpr
-TransformView<Container, Functor> operator|(Container&& container, TransformAdaptor<Functor>&& adaptor) noexcept {
-  return {std::forward<Container>(container), std::forward<Functor>(adaptor.functor)};
+TakeView<Container> operator|(Container&& container, TakeAdaptor&& adaptor) noexcept {
+  return {std::forward<Container>(container), adaptor.counter};
 }
 
-template<typename Functor>
 constexpr
-TransformAdaptor<Functor> transform(Functor&& functor) noexcept {
-  return {std::forward<Functor>(functor)};
+TakeAdaptor take(const size_t counter) noexcept {
+  return {counter};
 }
 
 }

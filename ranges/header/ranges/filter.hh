@@ -7,7 +7,7 @@ namespace flp::views {
 template<typename Container, typename Functor>
 struct FilterView {
   constexpr
-  FilterView(Container& cntnr, Functor&& functor)
+  FilterView(Container& cntnr, Functor&& functor) noexcept
     : container(cntnr)
     , predicate(std::forward<Functor>(functor))
   {}
@@ -18,42 +18,42 @@ struct FilterView {
     FilterView* view;
 
     constexpr
-    Iterator(Iter iter, FilterView* vw)
+    Iterator(Iter iter, FilterView* vw) noexcept
       : iterator(iter)
       , view(vw) {
       while (iterator != std::end(view->container) and not view->predicate(*++iterator)) {}
     }
 
     constexpr
-    decltype(auto) operator*(this auto&& self) {
+    decltype(auto) operator*(this auto&& self) noexcept {
       return *self.iterator;
     }
 
     constexpr
-    decltype(auto) operator->(this auto&& self) {
+    decltype(auto) operator->(this auto&& self) noexcept {
       return &*self.iterator;
     }
 
     constexpr
-    Iterator& operator++(this auto&& self) {
+    Iterator& operator++(this auto&& self) noexcept {
       while (self.iterator != std::end(self.view->container) and not self.view->predicate(*++self.iterator)) {}
       return self;
     }
 
     constexpr
-    Iterator operator++(this auto&& self, int) {
+    Iterator operator++(this auto&& self, int) noexcept {
       while (self.iterator != std::end(self.view->container) and not self.view->predicate(++self.iterator)) {}
       return {self.iterator++};
     }
 
     constexpr
-    Iterator& operator--(this auto&& self) {
+    Iterator& operator--(this auto&& self) noexcept {
       --self.iterator;
       return self;
     }
 
     constexpr
-    Iterator operator--(this auto&& self, int) {
+    Iterator operator--(this auto&& self, int) noexcept {
       return {self.iterator--};
     }
 
@@ -79,12 +79,12 @@ struct FilterView {
   };
 
   constexpr
-  Iterator begin(this auto&& self) {
+  Iterator begin(this auto&& self) noexcept {
     return {std::begin(self.container), &self};
   }
 
   constexpr
-  Iterator end(this auto&& self) {
+  Iterator end(this auto&& self) noexcept {
     return {std::end(self.container), &self};
   }
 
@@ -99,12 +99,13 @@ struct FilterAdaptor {
 
 template<Range Container, typename Functor>
 constexpr
-FilterView<Container, Functor> operator|(Container&& container, FilterAdaptor<Functor>&& adaptor) {
+FilterView<Container, Functor> operator|(Container&& container, FilterAdaptor<Functor>&& adaptor) noexcept {
   return {std::forward<Container>(container), std::forward<Functor>(adaptor.functor)};
 }
 
 template<typename Functor>
-FilterAdaptor<Functor> filter(Functor&& functor) {
+constexpr
+FilterAdaptor<Functor> filter(Functor&& functor) noexcept {
   return {std::forward<Functor>(functor)};
 }
 

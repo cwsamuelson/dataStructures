@@ -8,7 +8,7 @@
 
 using namespace flp;
 
-TEMPLATE_TEST_CASE("`Ranges`::AllView", "", std::vector<int>, std::list<int>/*, std::vector<const int>, std::list<const int>*/) {
+TEMPLATE_TEST_CASE("`Ranges`::`AllView`", "", std::vector<int>, std::list<int>/*, std::vector<const int>, std::list<const int>*/) {
   TestType container{0, 1, 2, 3};
 
   for (size_t i{}; const auto& element : container | ranges::all) {
@@ -16,7 +16,7 @@ TEMPLATE_TEST_CASE("`Ranges`::AllView", "", std::vector<int>, std::list<int>/*, 
   }
 }
 
-TEST_CASE("`Ranges`::AllView") {
+TEST_CASE("`Ranges`::`AllView`") {
   std::array<int, 4> array{0, 1, 2, 3};
   for (size_t i{}; const auto& element : array | ranges::all) {
     CHECK(element == i++);

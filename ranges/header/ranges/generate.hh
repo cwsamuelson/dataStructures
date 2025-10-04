@@ -4,48 +4,44 @@
 
 namespace flp::ranges {
 
-template<typename Container>
+template<typename Functor>
 struct GenerateView {
   constexpr
-  GenerateView(Container& cntnr)
-    : container(cntnr)
+  GenerateView(Functor&& functor) noexcept
+    : predicate(std::forward<Functor>(functor))
   {}
 
   struct Iterator {
-    using Iter = decltype(std::begin(std::declval<Container>()));
-    Iter iterator;
+    GenerateView* view;
 
     constexpr
-    decltype(auto) operator*(this auto&& self) {
-      return *self.iterator;
+    decltype(auto) operator*(this auto&& self) noexcept {
+      return self.view->predicate();
     }
 
     constexpr
-    decltype(auto) operator->(this auto&& self) {
-      return &*self.iterator;
+    decltype(auto) operator->(this auto&& self) noexcept {
+      return &self.view->predicate();
     }
 
     constexpr
-    Iterator& operator++(this auto&& self) {
-      while (predicate(*++self.iterator)) {}
+    Iterator& operator++(this auto&& self) noexcept {
       return self;
     }
 
     constexpr
-    Iterator operator++(this auto&& self, int) {
-      while (predicate(++self.iterator)) {}
-      return {self.iterator++};
+    Iterator operator++(this auto&& self, int) noexcept {
+      return {};
     }
 
     constexpr
-    Iterator& operator--(this auto&& self) {
-      --self.iterator;
+    Iterator& operator--(this auto&& self) noexcept {
       return self;
     }
 
     constexpr
-    Iterator operator--(this auto&& self, int) {
-      return {self.iterator--};
+    Iterator operator--(this auto&& self, int) noexcept {
+      return {};
     }
 
     // friend
@@ -70,23 +66,22 @@ struct GenerateView {
   };
 
   constexpr
-  Iterator begin(this auto&& self) {
-    return {std::begin(self.container)};
+  Iterator begin(this auto&& self) noexcept {
+    return {&self};
   }
 
   constexpr
-  Iterator end(this auto&& self) {
-    return {std::end(self.container)};
+  Iterator end(this auto&& self) noexcept {
+    return {&self};
   }
 
-  Container& container;
+  Functor predicate;
 };
 
-struct Generate_t {};
-
-template<Range Container>
-GenerateView<Container> operator|(Container&& container, const Generate_t&) {
-  return {std::forward<Container>(container)};
+template<typename Functor>
+constexpr
+GenerateView<Functor> generate(Functor&& functor) noexcept {
+  return {std::forward<Functor>(functor)};
 }
 
 }
