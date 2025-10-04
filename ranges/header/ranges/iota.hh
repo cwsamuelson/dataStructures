@@ -2,6 +2,8 @@
 
 #include "ranges/traits.hh"
 
+#include <limits>
+
 namespace flp::ranges {
 
 template<Incrementable Counting>
@@ -40,7 +42,7 @@ struct IotaView {
 
     constexpr
     Iterator operator++(this auto&& self, int) noexcept {
-      return {self.counter++};
+      return {self.view, self.counter++};
     }
 
     constexpr
@@ -51,7 +53,7 @@ struct IotaView {
 
     constexpr
     Iterator operator--(this auto&& self, int) noexcept {
-      return {self.counter--};
+      return {self.view, self.counter--};
     }
 
     // friend
@@ -91,7 +93,7 @@ struct IotaView {
 
 template<Incrementable Counting>
 constexpr
-IotaView<Counting> iota(Counting&& start, Counting&& finish = 1000) noexcept {
+IotaView<Counting> iota(Counting&& start, Counting&& finish = std::numeric_limits<Counting>::max()) noexcept {
   return {std::forward<Counting>(start), std::forward<Counting>(finish)};
 }
 

@@ -5,11 +5,15 @@
 using namespace flp;
 
 TEST_CASE("`Ranges`::`IotaView`") {
-  for (size_t counter{}; const auto& element : ranges::iota(0)) {
-    CHECK(element == counter++);
+  auto iota_range = ranges::iota(0);
+  auto iota_iter = iota_range.begin();
+  
+  for (auto i = 0uz; i < 100; ++i) {
+    CHECK(*(iota_iter++) == i);
   }
 
-  for (size_t counter{10}; const auto& element : ranges::iota(10)) {
+  for (size_t counter{}; const auto& element : ranges::iota(0, 1000)) {
     CHECK(element == counter++);
+    CHECK(element < 1000);
   }
 }

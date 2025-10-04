@@ -8,6 +8,7 @@ common_test(${PROJECT_NAME}
   filter_tests.cc
   generate_tests.cc
   iota_tests.cc
+  take_tests.cc
   transform_tests.cc
 )
 
