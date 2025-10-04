@@ -6,6 +6,25 @@ find_package(error_support REQUIRED)
 
 set(HEADERS
   header/ranges/all.hh
+  header/ranges/chunk-by.hh
+  header/ranges/chunk.hh
+  header/ranges/drop-while.hh
+  header/ranges/drop.hh
+  header/ranges/enumerate.hh
+  header/ranges/filter.hh
+  header/ranges/generate.hh
+  header/ranges/iota.hh
+  header/ranges/join.hh
+  header/ranges/repeating.hh
+  header/ranges/reverse.hh
+  header/ranges/slide.hh
+  header/ranges/split.hh
+  header/ranges/take-while.hh
+  header/ranges/take.hh
+  header/ranges/traits.hh
+  header/ranges/transform.hh
+  header/ranges/value.hh
+  header/ranges/zip.hh
 )
 set(SOURCES
 )
