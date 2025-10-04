@@ -8,19 +8,34 @@
 
 namespace flp::Abstract {
 
-struct Expression;
 struct Assignment;
 struct BinaryExpression;
 struct UnaryExpression;
-struct VariableExpression;
-struct ConstantExpression;
 struct FunctionExpression;
+struct CallExpression;
 
-using ValueExpression = std::variant<VariableExpression, ConstantExpression>;
-
-struct TopLevel {
-  std::variant<std::monostate, Box<Expression>, Box<Assignment>> value;
-};
+using VariableExpression = std::string;
+using ConstantExpression = double;
+using ValueExpression =
+  std::variant<
+    VariableExpression,
+    ConstantExpression
+  >;
+using Expression =
+  std::variant<
+    Box<BinaryExpression>,
+    Box<UnaryExpression>,
+    Box<ValueExpression>,
+    Box<ConstantExpression>,
+    Box<FunctionExpression>,
+    Box<CallExpression>
+  >;
+using TopLevel =
+  std::variant<
+    std::monostate,
+    Box<Expression>,
+    Box<Assignment>
+  >;
 
 struct BinaryExpression {
   enum class Operator {
@@ -46,32 +61,15 @@ struct UnaryExpression {
   Box<Expression> operand;
 };
 
-struct VariableExpression {
-  std::string name;
-};
-
-struct NamedConstantExpression {
-  std::string name;
-};
-
-struct ConstantExpression {
-  double value;
-};
-
 struct FunctionExpression {
   std::string name;
-  std::vector<Expression> arguments;
+  std::vector<Expression> parameters;
+  std::vector<Expression> body;
 };
 
-struct Expression {
-  std::variant<
-    std::monostate,
-    Box<BinaryExpression>,
-    Box<UnaryExpression>,
-    Box<ValueExpression>,
-    Box<NamedConstantExpression>,
-    Box<FunctionExpression>
-  > expression;
+struct CallExpression {
+  std::string name;
+  std::vector<Expression> arguments;
 };
 
 struct Assignment {
