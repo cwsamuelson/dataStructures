@@ -5,6 +5,7 @@ set(CONAN_CMAKE_SILENT_OUTPUT TRUE CACHE BOOL "")
 
 find_package(cmake_scripts REQUIRED)
 
+add_subdirectory(abstract)
 add_subdirectory(affine)
 add_subdirectory(algorithms)
 add_subdirectory(aligned_buffer)
@@ -92,6 +93,7 @@ common_library(${PROJECT_NAME} INTERFACE)
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
+  ${PROJECT_NAME}_abstract
   ${PROJECT_NAME}_affine
   ${PROJECT_NAME}_algorithms
   ${PROJECT_NAME}_aligned_buffer
