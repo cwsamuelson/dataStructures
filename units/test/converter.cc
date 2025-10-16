@@ -6,5 +6,4 @@
 
 using namespace flp;
 
-TEST_CASE("Converter") {}
-
+TEST_CASE("`Units`::Converter") {}

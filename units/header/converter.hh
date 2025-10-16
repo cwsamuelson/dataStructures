@@ -16,4 +16,3 @@ struct Converter<dimension, system, system> {
 };
 
 }
-

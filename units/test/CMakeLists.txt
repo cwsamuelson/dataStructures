@@ -5,10 +5,11 @@ find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
   dimension.cc
-  #units.cc
-  system.cc
   converter.cc
+  sandbox.cc
+  system.cc
   #test.cc
+  #units.cc
 )
 
 target_link_libraries(${PROJECT_NAME}

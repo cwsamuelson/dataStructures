@@ -36,7 +36,7 @@ struct Quantity {};
 template<System system>
 using Length = Quantity<LengthUnit<system>>;
 
-TEST_CASE("Units experimentation") {
+TEST_CASE("`Units`::Experimentation") {
   Length length1;
   Length length2;
 

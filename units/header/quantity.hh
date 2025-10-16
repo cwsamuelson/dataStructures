@@ -14,4 +14,3 @@ Quantity operator*(const Type& value, const Unit&) {
 }
 
 }
-

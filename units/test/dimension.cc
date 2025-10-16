@@ -11,7 +11,7 @@ using namespace flp;
 struct TestDimension1 : DimensionBase {};
 struct TestDimension2 : DimensionBase {};
 
-TEST_CASE("DimensionPack Has") {
+TEST_CASE("`Units`::DimensionPack Has") {
   STATIC_CHECK(not DimensionPack<>::Has<int>);
   STATIC_CHECK(not DimensionPack<>::Has<float>);
   STATIC_CHECK(DimensionPack<1138>::Has<int>);
@@ -20,14 +20,14 @@ TEST_CASE("DimensionPack Has") {
   STATIC_CHECK(DimensionPack<1138, 4.2F>::Has<float>);
 }
 
-TEST_CASE("DimensionPack Select") {
+TEST_CASE("`Units`::DimensionPack Select") {
   STATIC_CHECK(DimensionPack<1138>::Select<int> == 1138);
   STATIC_CHECK(DimensionPack<4.2F>::Select<float> == 4.2F);
   STATIC_CHECK(DimensionPack<1138, 4.2F>::Select<int> == 1138);
   STATIC_CHECK(DimensionPack<1138, 4.2F>::Select<float> == 4.2F);
 }
 
-TEST_CASE("DimensionPack UniqueTypes") {
+TEST_CASE("`Units`::DimensionPack UniqueTypes") {
   STATIC_CHECK(DimensionPack<>::UniqueTypes{} == DimensionPack<>{});
   STATIC_CHECK(DimensionPack<1138>::UniqueTypes{} == DimensionPack<1138>{});
   STATIC_CHECK(DimensionPack<4.2F>::UniqueTypes{} == DimensionPack<4.2F>{});
@@ -40,7 +40,7 @@ struct EmptyFilter {
   static constexpr auto value = Value.order != 0;
 };
 
-TEST_CASE("Dimensions") {
+TEST_CASE("`Units`::Dimensions") {
   SECTION("Empty Dimension") {
     Dimension<> dimension1;
     Dimension<> dimension2;
@@ -78,4 +78,3 @@ TEST_CASE("Dimensions") {
     STATIC_CHECK(dimension4 * dimension4 == Dimension<TestDimension1{2}, TestDimension2{-2}>{});
   }
 }
-

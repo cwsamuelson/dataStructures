@@ -10,16 +10,16 @@ struct TestBase : DimensionBase {};
 
 //struct TestDimension : Dimension<TestBase>{};
 
-TEST_CASE("Units") {
+TEST_CASE("`Units`::Units") {
   Unit<double, Dimension<>, TestSystem> unit;
   Unit<double, Dimension<TestDimension{0}>, TestSystem> unit;
 }
 
-TEST_CASE("Test Units") {
+TEST_CASE("`Units`::Test Units") {
   Unit<double, Dimension<TestDimension{1}>, TestSystem> unit;
 }
 
-TEST_CASE("From Boost") {
+TEST_CASE("`Units`::From Boost") {
   /*const double s1 = 2;
   const long x1 = 3;
   const static_rational<4, 3> x2;
@@ -30,4 +30,3 @@ TEST_CASE("From Boost") {
   quantity<force> q1(1.0 * u1);
   quantity<energy> q2(2.0 * u2);*/
 }
-
