@@ -4,24 +4,25 @@
 
 namespace flp::Colors {
 
+template<typename Type = uint8_t>
 struct RGBA {
   union {
     struct {
-      uint8_t red;
-      uint8_t green;
-      uint8_t blue;
-      uint8_t alpha;
+      Type red;
+      Type green;
+      Type blue;
+      Type alpha;
     };
 
     struct {
-      uint8_t r;
-      uint8_t g;
-      uint8_t b;
-      uint8_t a;
+      Type r;
+      Type g;
+      Type b;
+      Type a;
     };
 
     uint32_t value;
-    uint8_t bytes[4];
+    Type bytes[4];
   };
 };
 

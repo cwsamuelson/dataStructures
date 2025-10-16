@@ -9,7 +9,7 @@ set(HEADERS
   header/colors/rgba.hh
   header/colors/hsl.hh
   header/colors/hsv.hh
-  header/colors/cross-support.hh
+  header/colors/monochrome.hh
 )
 set(SOURCES
 )
@@ -36,4 +36,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

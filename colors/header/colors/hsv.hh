@@ -2,22 +2,23 @@
 
 namespace flp::Colors {
 
+template<typename Type = uint8_t>
 struct HSV {
   union {
     struct {
-      uint8_t hue;
-      uint8_t saturation;
-      uint8_t value;
+      Type hue;
+      Type saturation;
+      Type value;
     };
 
     struct {
-      uint8_t h;
-      uint8_t s;
-      uint8_t l;
+      Type h;
+      Type s;
+      Type v;
     };
 
     //uint32_t value;
-    uint8_t bytes[3];
+    Type bytes[3];
   };
 };
 
