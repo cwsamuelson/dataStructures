@@ -13,6 +13,7 @@ add_subdirectory(aligned_buffer)
 #add_subdirectory(b+-tree)
 #add_subdirectory(b-tree)
 add_subdirectory(box)
+add_subdirectory(canvas)
 add_subdirectory(chunked_array)
 add_subdirectory(colors)
 add_subdirectory(configuration)
@@ -67,12 +68,13 @@ add_subdirectory(shape)
 add_subdirectory(shared_ptr)
 add_subdirectory(singly_linked_list)
 add_subdirectory(smart_enum)
+add_subdirectory(span)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 #add_subdirectory(spline)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
-#add_subdirectory(tagged_arguments)
+add_subdirectory(tagged_arguments)
 add_subdirectory(text)
 add_subdirectory(thread_pool)
 add_subdirectory(tribool)
@@ -81,7 +83,7 @@ add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
 add_subdirectory(unique_ptr)
-#add_subdirectory(units)
+add_subdirectory(units)
 add_subdirectory(utilities)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
@@ -101,6 +103,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_b+-tree
   #${PROJECT_NAME}_b-tree
   ${PROJECT_NAME}_box
+  ${PROJECT_NAME}_canvas
   ${PROJECT_NAME}_chunked_array
   ${PROJECT_NAME}_colors
   ${PROJECT_NAME}_configuration
@@ -155,12 +158,13 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_shared_ptr
   ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_smart_enum
+  ${PROJECT_NAME}_span
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   #${PROJECT_NAME}_spline
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
-  #${PROJECT_NAME}_tagged_arguments
+  ${PROJECT_NAME}_tagged_arguments
   ${PROJECT_NAME}_text
   ${PROJECT_NAME}_thread_pool
   ${PROJECT_NAME}_tribool
@@ -169,7 +173,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
   ${PROJECT_NAME}_unique_ptr
-  #${PROJECT_NAME}_units
+  ${PROJECT_NAME}_units
   ${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
