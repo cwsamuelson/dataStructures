@@ -37,33 +37,33 @@ struct Span<Type, SpanUnboundedSentinel> {
   template<typename FIter, typename LIter>
   constexpr
   Span(FIter first, LIter last) noexcept
-    : start(first)
+    : data(first)
     , length(last - first) // enforces contiguous container?
   {}
 
   template<typename Range>
   constexpr
   Span& operator=(Range&& range) noexcept {
-    start = range.begin();
+    data = range.begin();
     length = range.end() - range.begin();
   }
 
   [[nodiscard]]
   constexpr
   operator Span<const Type, SpanUnboundedSentinel>() const noexcept {
-    return { start, length };
+    return { data, length };
   }
 
   [[nodiscard]]
   constexpr
   Span<Type, SpanUnboundedSentinel> subspan(const size_t offset) const noexcept {
-    return { start + offset, length - offset };
+    return { data + offset, length - offset };
   }
 
   [[nodiscard]]
   constexpr
   Span<std::byte, SpanUnboundedSentinel> bytes() {
-    return { reinterpret_cast<std::byte*>(start), length * sizeof(Type) };
+    return { reinterpret_cast<std::byte*>(data), length * sizeof(Type) };
   }
 
   [[nodiscard]]

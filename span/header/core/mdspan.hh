@@ -10,7 +10,7 @@ template<typename Type, Type ...Values>
 struct Extents {
   static constexpr auto rank = sizeof...(Values);
 
-  std::array extent_arr{ Values... };
+  std::array<Type, sizeof...(Values)> extent_arr{ Values... };
 };
 
 template<typename Type, typename Extents>

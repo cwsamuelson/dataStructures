@@ -1,11 +1,15 @@
 #pragma once
 
-#include <string>
 #include <text/string.hh>
+
+#include <string>
+#include <vector>
 
 namespace flp::filesystem {
 
 struct Path {
+  struct Iterator{};
+
   [[nodiscard]]
   constexpr
   bool absolute() const noexcept {
@@ -27,7 +31,7 @@ struct Path {
   [[nodiscard]]
   constexpr
   bool empty() const noexcept {
-    return extension.empty() and components.empty();
+    return ext.empty() and components.empty();
   }
 
   [[nodiscard]]
@@ -39,13 +43,13 @@ struct Path {
   [[nodiscard]]
   constexpr
   decltype(auto) extension(this auto&& self) noexcept {
-    return extension;
+    return self.ext;
   }
 
   constexpr
   void clear() {
     components.clear();
-    extension.clear();
+    ext.clear();
   }
 
   [[nodiscard]]
@@ -83,12 +87,12 @@ struct Path {
   constexpr
   auto operator<=>(const Path&, const Path&) noexcept = default;
 
-  String extension;
+  String ext;
   std::vector<String> components;
 };
 
 } // namespace flp
 
 namespace flp {
-using namespace fs = filesystem;
+namespace fs = filesystem;
 }

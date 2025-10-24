@@ -6,7 +6,6 @@ namespace flp {
 
 template<typename Type>
 struct Property {
-
   Property(Property& other)
     : value(other.value) {
     other.signal.connect([this](const Type& new_value) {
@@ -39,7 +38,7 @@ struct Property {
     return *this;
   }
 
-  operator const Type&() noexcept {
+  operator const Type&() const noexcept {
     return value;
   }
 
@@ -55,4 +54,3 @@ private:
 };
 
 } // namespace flp
-
