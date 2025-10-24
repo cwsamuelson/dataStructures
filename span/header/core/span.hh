@@ -36,7 +36,7 @@ struct Span<Type, SpanUnboundedSentinel> {
 
   template<typename FIter, typename LIter>
   constexpr
-  Span(FIter first, Liter last) noexcept
+  Span(FIter first, LIter last) noexcept
     : start(first)
     , length(last - first) // enforces contiguous container?
   {}
