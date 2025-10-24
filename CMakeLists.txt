@@ -27,6 +27,7 @@ add_subdirectory(doubly_linked_list)
 add_subdirectory(equation)
 add_subdirectory(expected)
 #add_subdirectory(expr_template)
+add_subdirectory(filesystem)
 #add_subdirectory(flat-map)
 add_subdirectory(function)
 add_subdirectory(future)
@@ -117,6 +118,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_equation
   ${PROJECT_NAME}_expected
   #${PROJECT_NAME}_expr_template
+  ${PROJECT_NAME}_filesystem
   #${PROJECT_NAME}_flat-map
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
