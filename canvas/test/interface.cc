@@ -10,17 +10,17 @@ SCENARIO("Test canvas interface") {
   constexpr flp::ColorRGBA32 black{0, 0, 0, 0};
   constexpr flp::ColorRGBA32 white{1, 1, 1, 0};
 
-  canvas.Clear(black);
+  canvas.clear(black);
 
   CHECK(canvas.canvas.at(0).at(0) == black);
   CHECK(canvas.canvas.at(5).at(5) == black);
   CHECK(canvas.canvas.at(6).at(9) == black);
   CHECK(canvas.canvas.at(9).at(6) == black);
 
-  canvas.Draw({0, 0}, white);
-  canvas.Draw({5, 5}, white);
-  canvas.Draw({6, 9}, white);
-  canvas.Draw({9, 6}, white);
+  canvas.draw({0, 0}, white);
+  canvas.draw({5, 5}, white);
+  canvas.draw({6, 9}, white);
+  canvas.draw({9, 6}, white);
 
   CHECK(canvas.canvas.at(0).at(0) == white);
   CHECK(canvas.canvas.at(5).at(5) == white);
@@ -29,4 +29,3 @@ SCENARIO("Test canvas interface") {
 
   CHECK(canvas.canvas.at(9).at(9) == black);
 }
-
