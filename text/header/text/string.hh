@@ -10,8 +10,10 @@ namespace flp {
 
 template<typename CharT>
 struct BasicString {
+  constexpr
   BasicString() noexcept = default;
 
+  constexpr
   BasicString(const char* cstring)
     : ptr(nullptr)
     , length(strlen(cstring))
@@ -24,6 +26,7 @@ struct BasicString {
   }
 
   template<typename Iterator>
+  constexpr
   BasicString(Iterator start, Iterator finish)
     : ptr(nullptr)
     , length(finish - start)
@@ -35,6 +38,7 @@ struct BasicString {
     }
   }
 
+  constexpr
   BasicString(const BasicString& other)
     : ptr(new CharT[other.length])
     , length(other.length)
@@ -45,12 +49,14 @@ struct BasicString {
     }
   }
 
+  constexpr
   BasicString(BasicString&& other) noexcept
     : ptr(std::exchange(other.ptr, nullptr))
     , length(std::exchange(other.length, 0))
     , allocated(std::exchange(other.allocated, 0))
   {}
 
+  constexpr
   BasicString& operator=(BasicString&& other) noexcept {
     if (ptr != nullptr) {
       delete[] ptr;
@@ -63,6 +69,7 @@ struct BasicString {
     return *this;
   }
 
+  constexpr
   BasicString& operator=(const BasicString& other) noexcept {
     if (other.length > allocated) {
       delete[] ptr;
@@ -78,6 +85,7 @@ struct BasicString {
     return *this;
   }
 
+  constexpr
   ~BasicString() {
     if (ptr != nullptr) {
       delete[] ptr;
@@ -132,6 +140,7 @@ struct BasicString {
 
   [[nodiscard]]
   friend
+  constexpr
   bool operator==(const BasicString& lhs, const BasicString& rhs) noexcept {
     const auto length = lhs.size();
     if (length != rhs.size()) {

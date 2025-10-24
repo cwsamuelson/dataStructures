@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/concepts.hh>
-#include "text/support.hh"
+#include <text/support.hh>
 
 namespace flp {
 
