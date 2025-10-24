@@ -15,7 +15,6 @@ TEST_CASE("RGB") {
   rgb.r;
   rgb.g;
   rgb.b;
-  rgb.v;
   rgb.value;
   rgb.bytes[0];
 }
@@ -42,7 +41,7 @@ TEST_CASE("HSL") {
   hsl.h;
   hsl.s;
   hsl.l;
-  hsv.value;
+  hsl.value;
   hsl.bytes[0];
 }
 
@@ -53,7 +52,7 @@ TEST_CASE("HSV") {
   hsv.value;
   hsv.h;
   hsv.s;
-  hsv.v
+  hsv.v;
   hsv.value; // redundant
   hsv.bytes[0];
 }
