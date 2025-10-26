@@ -4,6 +4,5 @@
 
 using namespace flp;
 
-SCENARIO("") {
+SCENARIO("core::Operators") {
 }
-

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-TEST_CASE("Ranges") {
+TEST_CASE("core::Ranges") {
   SECTION("C-Array") {
     const int c_array[] = { 0, 1, 2, 3, 4 };
 
@@ -17,4 +17,3 @@ TEST_CASE("Ranges") {
     auto view = flp::views::All(vector);
   }
 }
-

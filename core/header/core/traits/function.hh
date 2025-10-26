@@ -1,5 +1,9 @@
 #pragma once
 
+#include "core/traits/value_types.hh"
+
+#include <cstddef>
+
 namespace flp {
 
 // These predicates are operating on values
@@ -83,6 +87,43 @@ struct GreaterThan {
   constexpr operator decltype(value)() const noexcept {
     return value;
   }
+};
+
+// ---
+
+template<size_t Index, typename ...Args>
+struct ArgGetImpl;
+
+template<>
+struct ArgGetImpl<0, void> {
+  using type = void;
+};
+
+template<typename Type, typename ...Args, size_t Index>
+struct ArgGetImpl<Index, Type, Args...> {
+  using type = ArgGetImpl<Index - 1, Args...>::type;
+};
+
+template<typename Type, typename ...Args>
+struct ArgGetImpl<0, Type, Args...> {
+  using type = Type;
+};
+
+template<typename ...Args>
+struct FunctionArguments {
+  template<size_t Index>
+  using get = ArgGetImpl<Index, Args...>::type;
+  static constexpr size_t count = sizeof...(Args);
+};
+
+template<typename Functor>
+struct FunctionTraits;
+
+template<typename Return, typename ...Arguments>
+struct FunctionTraits<Return(Arguments...)> {
+  using result_type = Return;
+  using arguments = FunctionArguments<Arguments...>;
+  static constexpr auto argument_count = arguments::count;
 };
 
 }

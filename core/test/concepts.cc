@@ -110,7 +110,7 @@ struct CTADConstructor {
   ~CTADConstructor() = delete;
 };
 
-TEST_CASE("Basis") {
+TEST_CASE("core::concepts::Basis") {
   SECTION("Constructible") {
     SECTION("Can't construct an unusable type") {
       STATIC_CHECK(not flp::Constructible<Unusable>);
@@ -170,7 +170,7 @@ TEST_CASE("Nothrow") {
 template<typename>
 struct Template {};
 
-TEST_CASE("Is Specialization") {
+TEST_CASE("core::Is Specialization") {
   STATIC_CHECK(flp::IsSpecializationOf<Template<int>, Template>);
   STATIC_CHECK(not flp::IsSpecializationOf<int, Template>);
 }
@@ -179,7 +179,7 @@ struct Boolean {
   operator bool(){ return true; }
 };
 
-TEST_CASE("BooleanTestable") {
+TEST_CASE("core::BooleanTestable") {
   SECTION("BoolConstant") {
     STATIC_CHECK(flp::BooleanTestable<flp::BoolConstant<true>>);
     STATIC_CHECK(flp::BooleanTestable<flp::BoolConstant<false>>);
@@ -202,7 +202,7 @@ struct AsymmetricallyComparable {
   }
 };
 
-TEST_CASE("EqualityComparableWith") {
+TEST_CASE("core::EqualityComparableWith") {
   SECTION("Same Type") {
     STATIC_CHECK(flp::EqualityComparableWith<unsigned int, unsigned int>);
     STATIC_CHECK(flp::EqualityComparableWith<signed int, signed int>);
@@ -224,7 +224,7 @@ struct EqualityComparable {
   bool operator==(const EqualityComparable&) const { return true; }
 };
 
-TEST_CASE("EqualityComparable") {
+TEST_CASE("core::EqualityComparable") {
   SECTION("By Value") {
     STATIC_CHECK(flp::EqualityComparable<int>);
     STATIC_CHECK(flp::EqualityComparable<float>);
@@ -273,7 +273,7 @@ struct FancyPointer {
   }
 };
 
-TEST_CASE("Dereferencable") {
+TEST_CASE("core::Dereferencable") {
   SECTION("pointers") {
     STATIC_CHECK(flp::Dereferencable<int*, int>);
     STATIC_CHECK(flp::Dereferencable<float*, float>);
@@ -335,7 +335,7 @@ struct Range {
 // forward iterator
 // bidirectional iterator
 
-TEST_CASE("Range") {
+TEST_CASE("core::Range") {
   SECTION("std containers") {
     STATIC_CHECK(flp::Range<std::map<int, int>, std::tuple<int, int>>);
     STATIC_CHECK(flp::Range<std::set<int>, int>);
@@ -415,9 +415,8 @@ struct RandomAccessIterator {
   }
 };
 
-TEST_CASE("RandomAccessIterator") {
+TEST_CASE("core::RandomAccessIterator") {
   STATIC_CHECK(flp::RandomAccessIterator<int*, int>);
   STATIC_CHECK(flp::RandomAccessIterator<std::vector<int>::iterator, int>);
   STATIC_CHECK(flp::RandomAccessIterator<RandomAccessIterator<int>, int>);
 }
-

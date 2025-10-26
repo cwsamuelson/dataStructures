@@ -4,6 +4,5 @@
 
 using namespace flp;
 
-SCENARIO("Multiplicative") {
+SCENARIO("core::Multiplicative") {
 }
-

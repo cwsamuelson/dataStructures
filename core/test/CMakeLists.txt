@@ -7,6 +7,7 @@ common_test(${PROJECT_NAME}
   additive.cc
   comparative.cc
   concepts.cc
+  function-traits.cc
   multiplicative.cc
   normal_iterator.cc
   operators.cc
@@ -14,7 +15,6 @@ common_test(${PROJECT_NAME}
   #ranges.cc
   tagged_type.cc
   traits.cc
-  #tests.cc# this is more a template..
 )
 
 target_link_libraries(${PROJECT_NAME}

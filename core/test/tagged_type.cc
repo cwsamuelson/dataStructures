@@ -2,5 +2,5 @@
 
 #include <core/tagged_type.hh>
 
-TEST_CASE("using tagged types") {
+TEST_CASE("core::using tagged types") {
 }

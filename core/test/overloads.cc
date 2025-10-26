@@ -2,7 +2,7 @@
 
 #include <catch2/catch_all.hpp>
 
-TEST_CASE("Lambda Overloads") {
+TEST_CASE("core::Lambda Overloads") {
   flp::Overloads overloads{
     [](){},
     [](int){},
@@ -13,4 +13,3 @@ TEST_CASE("Lambda Overloads") {
   CHECK_NOTHROW(overloads(1138));
   CHECK_NOTHROW(overloads(4.2F));
 }
-

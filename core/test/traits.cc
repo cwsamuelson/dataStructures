@@ -3,7 +3,7 @@
 #include <catch2/catch_all.hpp>
 
 // trying to be pretty comprehensive..
-TEST_CASE("Add/remove const") {
+TEST_CASE("core::traits::Add/remove const") {
   STATIC_CHECK(std::same_as<flp::AddConst<int>, const int>);
   STATIC_CHECK(std::same_as<flp::AddConst<const int>, const int>);
 
@@ -35,7 +35,7 @@ TEST_CASE("Add/remove const") {
   STATIC_CHECK(std::same_as<flp::RemoveConst<volatile const int* const>, volatile const int*>);
 }
 
-TEST_CASE("Add/remove volatile") {
+TEST_CASE("core::traits::Add/remove volatile") {
   STATIC_CHECK(std::same_as<flp::AddVolatile<int>, volatile int>);
   STATIC_CHECK(std::same_as<flp::AddVolatile<volatile int>, volatile int>);
 
@@ -49,7 +49,7 @@ TEST_CASE("Add/remove volatile") {
   STATIC_CHECK(std::same_as<flp::RemoveVolatile<const volatile int>, const int>);
 }
 
-TEST_CASE("Add/remove CV") {
+TEST_CASE("core::traits::Add/remove CV") {
   STATIC_CHECK(std::same_as<flp::AddCV<int>, const volatile int>);
   STATIC_CHECK(std::same_as<flp::AddCV<volatile int>, const volatile int>);
 
@@ -63,7 +63,7 @@ TEST_CASE("Add/remove CV") {
   STATIC_CHECK(std::same_as<flp::RemoveCV<const volatile int>, int>);
 }
 
-TEST_CASE("Add/remove reference") {
+TEST_CASE("core::traits::Add/remove reference") {
   STATIC_CHECK(std::same_as<flp::RemoveReference<int>, int>);
   STATIC_CHECK(std::same_as<flp::RemoveReference<int&>, int>);
   STATIC_CHECK(std::same_as<flp::RemoveReference<int&&>, int>);
@@ -85,7 +85,7 @@ TEST_CASE("Add/remove reference") {
   STATIC_CHECK(std::same_as<flp::AddRValueReference<const volatile int>, const volatile int&&>);
 }
 
-TEST_CASE("Add/remove pointer") {
+TEST_CASE("core::traits::Add/remove pointer") {
   STATIC_CHECK(std::same_as<flp::RemovePointer<int>, int>);
   STATIC_CHECK(std::same_as<flp::RemovePointer<int*>, int>);
   STATIC_CHECK(std::same_as<flp::RemovePointer<int**>, int*>);
@@ -110,7 +110,7 @@ TEST_CASE("Add/remove pointer") {
   STATIC_CHECK(std::same_as<flp::RemovePointer<const int* const volatile>, const int>);
 }
 
-TEST_CASE("Integral Constants") {
+TEST_CASE("core::traits::Integral Constants") {
   STATIC_CHECK(flp::IntegralConstant<42> {} == 42);
   STATIC_CHECK(flp::IntegralConstant<1138> {} == 1138);
   STATIC_CHECK(flp::IntegralConstant<42>::value == 42);
@@ -129,7 +129,7 @@ TEST_CASE("Integral Constants") {
   STATIC_CHECK(not flp::FalseType::value);
 }
 
-TEST_CASE("Predicates") {
+TEST_CASE("core::traits::Predicates") {
   SECTION("Identity") {
     STATIC_CHECK(flp::Identity<true> {});
     STATIC_CHECK(flp::Identity<true>::value);
@@ -161,7 +161,7 @@ TEST_CASE("Predicates") {
   }
 }
 
-TEST_CASE("Trait testing") {
+TEST_CASE("core::traits::Trait testing") {
   SECTION("Is const") {
     STATIC_CHECK(flp::IsConst<const int>);
     STATIC_CHECK(not flp::IsConst<int>);
@@ -219,4 +219,3 @@ TEST_CASE("Trait testing") {
     STATIC_CHECK(flp::IsCV<flp::AddCV<int>>);
   }
 }
-

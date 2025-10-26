@@ -4,6 +4,5 @@
 
 using namespace flp;
 
-SCENARIO("Normal Iterator") {
+SCENARIO("core::Normal Iterator") {
 }
-

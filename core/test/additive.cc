@@ -4,6 +4,5 @@
 
 using namespace flp;
 
-TEST_CASE("Additive") {
+TEST_CASE("core::`Additive`") {
 }
-
