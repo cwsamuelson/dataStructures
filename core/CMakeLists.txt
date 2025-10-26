@@ -10,9 +10,21 @@ set(HEADERS
         header/core/multiplicative.hh
         header/core/normal_iterator.hh
         header/core/operators.hh
+        header/core/overloads.hh
         header/core/range.hh
         header/core/tagged_type.hh
         header/core/traits.hh
+        header/core/traits/const.hh
+        header/core/traits/function.hh
+        header/core/traits/impl/const.hh
+        header/core/traits/impl/pointer.hh
+        header/core/traits/impl/reference.hh
+        header/core/traits/impl/volatile.hh
+        header/core/traits/integral.hh
+        header/core/traits/pointer.hh
+        header/core/traits/reference.hh
+        header/core/traits/value_types.hh
+        header/core/traits/volatile.hh
 )
 set(SOURCES
 )
