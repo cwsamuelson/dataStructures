@@ -4,6 +4,5 @@
 
 using namespace flp;
 
-TEST_CASE("template") {
+TEST_CASE("`Template`") {
 }
-
