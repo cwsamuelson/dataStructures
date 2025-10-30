@@ -4,6 +4,10 @@
 
 using namespace flp;
 
-TEST_CASE("function") {
-}
+void foo(){}
 
+TEST_CASE("function") {
+  // Function<void()> function(foo);
+
+  // function();
+}
