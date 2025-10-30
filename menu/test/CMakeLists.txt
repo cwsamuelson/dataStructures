@@ -3,16 +3,8 @@ project(${PROJECT_NAME}_test)
 
 find_package(Catch2 REQUIRED)
 
-set(HEADERS
-)
-set(SOURCE
-  interface.cc
-  regression.cc
-)
-
 common_test(${PROJECT_NAME}
-  ${HEADERS}
-  ${SOURCE}
+  tests.cc
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -21,7 +13,6 @@ target_link_libraries(${PROJECT_NAME}
   ${BASE_PROJECT}
 )
 
+enable_testing()
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
-
-configure_file(file.pack file.pack COPYONLY)

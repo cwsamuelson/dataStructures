@@ -1,14 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_affine LANGUAGES CXX)
+project(${BASE_PROJECT}_menu LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  #header/affine.hh
-  header/point.hh
-  header/vec.hh
-  header/vector.hh
+  header/menu.hh
 )
 set(SOURCES
 )

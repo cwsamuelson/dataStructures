@@ -41,6 +41,7 @@ add_subdirectory(inplace_vector)
 #add_subdirectory(lifetime)
 add_subdirectory(matrix)
 #add_subdirectory(memory_pool)
+add_subdirectory(menu)
 #add_subdirectory(normal_iterator)
 #add_subdirectory(oct-tree)
 #add_subdirectory(operators)
@@ -133,6 +134,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_lifetime
   ${PROJECT_NAME}_matrix
   #${PROJECT_NAME}_memory_pool
+  ${PROJECT_NAME}_menu
   #${PROJECT_NAME}_normal_iterator
   #${PROJECT_NAME}_oct-tree
   #${PROJECT_NAME}_operators
