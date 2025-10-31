@@ -1,4 +1,4 @@
-#include <core/random.hh>
+#include <core/random/random.hh>
 
 #include <catch2/catch_all.hpp>
 

@@ -1,11 +1,11 @@
 #pragma once
 
-#include <cstddef>
 #include <limits>
 
 namespace flp::Random {
 
-struct Seed {
+// BAD name
+struct Random {
   using Result = size_t;
 
   static
@@ -20,13 +20,8 @@ struct Seed {
     return std::numeric_limits<Result>::max();
   }
 
-  Seed();
-  Seed(Result seed);
-
-  Result operator()();
-
   [[nodiscard]]
-  double entropy() const noexcept;
+  Result operator()();
 };
 
-} // namespace flp
+}
