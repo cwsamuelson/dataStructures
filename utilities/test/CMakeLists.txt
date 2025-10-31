@@ -1,6 +1,8 @@
 set(BASE_PROJECT ${PROJECT_NAME})
 project(${PROJECT_NAME}_test)
 
+configure_file(input_file.txt input_file.txt COPYONLY)
+
 find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
