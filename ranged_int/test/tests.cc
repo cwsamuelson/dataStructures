@@ -67,7 +67,19 @@ TEST_CASE("Range bounds testing") {
   }
 }
 
-TEST_CASE("Ranges math") {}
+TEST_CASE("Ranges math") {
+  STATIC_CHECK(Range{0, 0} == Range{0, 0});
+  STATIC_CHECK(Range{0, 1} != Range{0, 0});
+  STATIC_CHECK(Range{0, 0} != Range{0, 1});
+  STATIC_CHECK(Range{1, 0} != Range{0, 0});
+  STATIC_CHECK(Range{0, 0} != Range{1, 0});
+
+  STATIC_CHECK(Range{0, 0} + 1 == Range{1, 1});
+  STATIC_CHECK(Range{0, 0} - 1 == Range{-1, -1});
+
+  STATIC_CHECK(Range{0, 0} + Range{1, 2} == Range{1, 2});
+  STATIC_CHECK(Range{0, 0} - Range{1, 2} == Range{-1, -2});
+}
 
 TEST_CASE("Using ranged integers") {
   SECTION("Expected underlying types") {
@@ -117,6 +129,30 @@ TEST_CASE("Using ranged integers") {
     STATIC_CHECK(WorstCaseRange<{ 0, 255 }, { -128, 127 }, std::multiplies<>>::range == Range { -32640, 32385 });
     STATIC_CHECK(WorstCaseRange<{ -128, 127 }, { 0, 255 }, std::multiplies<>>::range == Range { -32640, 32385 });
     STATIC_CHECK(WorstCaseRange<{ -128, 127 }, { -128, 127 }, std::multiplies<>>::range == Range { -16256, 16384 });
+  }
+
+  SECTION("STD types") {
+    STATIC_CHECK(std::same_as<u8::Type,  uint8_t>);
+    STATIC_CHECK(std::same_as<u16::Type, uint16_t>);
+    STATIC_CHECK(std::same_as<u32::Type, uint32_t>);
+    STATIC_CHECK(std::same_as<u64::Type, uint64_t>);
+
+    STATIC_CHECK(std::same_as<s8::Type,  int8_t>);
+    STATIC_CHECK(std::same_as<s16::Type, int16_t>);
+    STATIC_CHECK(std::same_as<s32::Type, int32_t>);
+    STATIC_CHECK(std::same_as<s64::Type, int64_t>);
+  }
+
+  SECTION("Testing") {
+    WorstCaseRange<{0u, std::numeric_limits<uint32_t>::max()}, {0, 0}, std::plus<>>{};
+    WorstCaseRange<{0u, std::numeric_limits<uint32_t>::max()}, {0, 1}, std::plus<>>{};
+
+    STATIC_CHECK(WorstCaseRange<{0u, std::numeric_limits<uint32_t>::max()}, {0, 0}, std::plus<>>::range == u32::range);
+    STATIC_CHECK(WorstCaseRange<{0u, std::numeric_limits<uint32_t>::max()}, {0, 1}, std::plus<>>::range == u32::range);
+
+    STATIC_CHECK(Range{0u, std::numeric_limits<uint32_t>::max()} + Range{0, 1} == Range{0, 0});
+
+    // STATIC_CHECK(std::same_as<WorstCaseRange<{0u, std::numeric_limits<uint32_t>::max()}, {0, 1}, std::plus<>>::Type, u64::Type>);
   }
 
   SECTION("Math with no risk of overflow") {

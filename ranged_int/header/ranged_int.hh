@@ -17,7 +17,7 @@ namespace flp {
 struct Unconstrained_t {};
 constexpr static Unconstrained_t unconstrained{};
 
-template<Range ValueRange, typename Policy = ErrorPolicy>
+template<BoundRange ValueRange, typename Policy = ErrorPolicy>
 struct RangedInt {
   using Type                  = DeducedType<ValueRange>;
   static constexpr auto range = ValueRange;
@@ -35,7 +35,7 @@ struct RangedInt {
     VERIFY(input >= ValueRange.start and input <= ValueRange.finish, "Value({}) doesn't fit in range.", input);
   }
 
-  template<Range OtherRange, typename OtherPolicy>
+  template<BoundRange OtherRange, typename OtherPolicy>
     requires (OtherRange.start >= ValueRange.start and OtherRange.finish <= ValueRange.finish)
   constexpr
   RangedInt operator=(const RangedInt<OtherRange, OtherPolicy>& other) noexcept {
@@ -46,7 +46,7 @@ struct RangedInt {
     return *this;
   }
 
-  template<Range range, typename OtherPolicy>
+  template<BoundRange range, typename OtherPolicy>
   constexpr friend
   auto operator<=>(const RangedInt& lhs, const RangedInt<range, OtherPolicy>& rhs) noexcept {
     return lhs.value <=> rhs.value;
@@ -58,7 +58,7 @@ struct RangedInt {
     return lhs.value <=> rhs;
   }
 
-  template<Range range, typename OtherPolicy>
+  template<BoundRange range, typename OtherPolicy>
   constexpr friend
   bool operator==(const RangedInt& lhs, const RangedInt<range, OtherPolicy>& rhs) noexcept {
     return lhs.value == rhs.value;
@@ -70,22 +70,20 @@ struct RangedInt {
     return lhs.value == rhs;
   }
 
-  template<Range OtherRange, typename OtherPolicy>
+  template<BoundRange OtherRange, typename OtherPolicy>
   constexpr
   auto operator+(const RangedInt<OtherRange, OtherPolicy>& other) const noexcept {
-    using WorstCase = WorstCaseRange<ValueRange, OtherRange, std::plus<>>;
-    using MathType = typename WorstCase::Type;
-    return RangedInt<WorstCase::range, Policy>(std::plus<MathType> {}(value, other.value), unconstrained);
+    return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::plus<>>::range, Policy>(std::plus {}(value, other.value), unconstrained);
   }
 
-  template<Range OtherRange, typename OtherPolicy>
+  template<BoundRange OtherRange, typename OtherPolicy>
   constexpr
   auto operator-(const RangedInt<OtherRange, OtherPolicy>& other) const noexcept {
     return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::minus<>>::range, Policy>(std::minus {}(value, other.value),
                                                                                   unconstrained);
   }
 
-  template<Range OtherRange, typename OtherPolicy>
+  template<BoundRange OtherRange, typename OtherPolicy>
   constexpr
   auto operator*(const RangedInt<OtherRange, OtherPolicy>& other) const noexcept {
     return RangedInt<WorstCaseRange<ValueRange, OtherRange, std::multiplies<>>::range, Policy>(
@@ -93,14 +91,14 @@ struct RangedInt {
   }
 
   // the problem with integer division, is that the result is not even remotely likely to be integral
-  /*template<Range OtherRange, typename OtherPolicy>
+  /*template<BoundRange OtherRange, typename OtherPolicy>
   constexpr
   auto operator/(const RangedInt<OtherRange, OtherPolicy>& other) const noexcept {
     return RangedInt<ValueRange / OtherRange>(value / other, unconstrained);
   }*/
 
 private:
-  template<Range OtherRange, typename OtherPolicy>
+  template<BoundRange OtherRange, typename OtherPolicy>
   friend struct RangedInt;
 
   constexpr RangedInt(const Type input, Unconstrained_t)
@@ -108,14 +106,14 @@ private:
   {}
 };
 
-template<typename Type, typename Policy>
-RangedInt(const Type&) -> RangedInt<Range { std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max() }, Policy>;
+// template<typename Type>
+// RangedInt(const Type&) -> RangedInt<BoundRange { std::numeric_limits<Type>::min(), std::numeric_limits<Type>::max() }>;
 
 } // namespace flp
 
 namespace std {
 
-template<flp::Range range1, flp::Range range2, typename policy1, typename policy2>
+template<flp::BoundRange range1, flp::BoundRange range2, typename policy1, typename policy2>
 struct common_type<flp::RangedInt<range1, policy1>, flp::RangedInt<range2, policy2>> {
   using type = flp::RangedInt<flp::CommonRange<range1, range2>::Value, policy1>;
 };

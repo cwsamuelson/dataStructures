@@ -22,7 +22,8 @@ struct Range {
 
   constexpr Range(const Type range_start, const Type range_finish)
     : start(range_start)
-    , finish(range_finish) {}
+    , finish(range_finish)
+  {}
 
   constexpr friend auto operator<=>(const Range&, const Range&) noexcept = default;
   constexpr friend bool operator==(const Range&, const Range&) noexcept  = default;
