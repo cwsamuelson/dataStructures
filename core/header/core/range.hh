@@ -1,6 +1,8 @@
 #pragma once
 
+#include <algorithm>
 #include <compare>
+#include <format>
 #include <utility>
 
 namespace flp {

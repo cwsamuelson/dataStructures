@@ -1,4 +1,5 @@
 #include <ranged_int.hh>
+#include <std_ints.hh>
 
 #include <catch2/catch_all.hpp>
 
