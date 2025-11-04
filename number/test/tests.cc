@@ -31,21 +31,22 @@ TEST_CASE("`Number`::Comparison") {
 
   SECTION("Type and sign changes") {
     rc::prop("int64_t", [](const int64_t integer) {
+      RC_PRE(integer != 0);
       return Number{integer} != -integer;
     });
 
     rc::prop("int32_t", [](const int32_t integer) {
-      // skip 0?
+      RC_PRE(integer != 0);
       return Number{integer} != -integer;
     });
 
-    rc::prop("int32_t", [](const uint64_t start, const uint8_t finish) {
+    rc::prop("uint64_t -> uint8_t", [](const uint64_t start, const uint8_t finish) {
       Number number{start};
       number = finish;
       return number == finish;
     });
 
-    rc::prop("int32_t", [](const uint8_t start, const uint64_t finish) {
+    rc::prop("uint8_t -> uint64_t", [](const uint8_t start, const uint64_t finish) {
       Number number{start};
       number = finish;
       return number == finish;

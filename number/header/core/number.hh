@@ -160,6 +160,10 @@ struct Number {
   friend
   constexpr
   bool operator==(const Number& number, const UInt& uint) noexcept {
+    if (uint == 0) {
+      return number.value == 0;
+    }
+
     if (number.negative) {
       return false;
     }
@@ -171,7 +175,15 @@ struct Number {
   friend
   constexpr
   bool operator==(const Number& number, const SInt& sint) noexcept {
-    return number.value == sint;
+    if (sint == 0) {
+      return number.value == 0;
+    }
+
+    if (sint < 0) {
+      return number.negative and number.value == -sint;
+    }
+
+    return not number.negative and number.value == sint;
   }
 
   bool negative = false;
