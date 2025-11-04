@@ -1,5 +1,6 @@
 #pragma once
 
+#include <future.hh>
 #include "queue.hh"
 
 #include <thread>
@@ -14,6 +15,16 @@ struct ThreadPool {
   template<typename Function>
   void post(Function&& function) {
     queue.push(std::forward<Function>(function));
+  }
+
+  template<typename Function>
+  auto submit(Function&& function) {
+    Promise<decltype(function())> promise;
+    queue.push([&promise, function = std::forward<Function>(function)] {
+      promise.set_value(function());
+    });
+
+    return promise.get_future();
   }
 
   void stop();

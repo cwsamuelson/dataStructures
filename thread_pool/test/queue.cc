@@ -16,7 +16,7 @@ using namespace flp;
 TEST_CASE("`ThreadPool::Queue` thread safety") {
   Queue<int>       queue;
   constexpr size_t thread_count { 20 };
-  constexpr size_t window_size{50000};
+  constexpr size_t window_size{5000000};
   std::latch latch(thread_count);
 
   CAPTURE(thread_count, window_size);

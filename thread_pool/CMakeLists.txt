@@ -30,6 +30,8 @@ target_link_libraries(${PROJECT_NAME}
   PUBLIC
 
   ${BASE_PROJECT}_core
+  ${BASE_PROJECT}_future
+
   error_support::error_support
 )
 
