@@ -6,6 +6,7 @@
 namespace flp::Random {
 
 struct Seed {
+  using Seed_t = size_t;
   using Result = size_t;
 
   static
@@ -21,7 +22,7 @@ struct Seed {
   }
 
   Seed();
-  Seed(Result seed);
+  Seed(Seed_t seed);
 
   Result operator()();
 
