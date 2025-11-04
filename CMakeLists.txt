@@ -5,6 +5,8 @@ set(CONAN_CMAKE_SILENT_OUTPUT TRUE CACHE BOOL "")
 
 find_package(cmake_scripts REQUIRED)
 
+include_directories(header)
+
 add_subdirectory(abstract)
 add_subdirectory(affine)
 add_subdirectory(algorithms)

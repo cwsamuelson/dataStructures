@@ -3,10 +3,55 @@
 #include <core/range.hh>
 
 #include <catch2/catch_all.hpp>
+#include <rapidcheck.h>
+#include <rapidcheck/catch.h>
 
 using namespace flp;
 
 TEST_CASE("`Number`::Comparison") {
+  SECTION("Equality comparison with intrinsics") {
+    rc::prop("uint64_t", [](const uint64_t integer) {
+      return Number{integer} == integer;
+    });
+
+    rc::prop("int64_t", [](const int64_t integer) {
+      return Number{integer} == integer;
+    });
+  }
+
+  SECTION("Inequality comparison with intrinsics") {
+    rc::prop("uint64_t", [](const uint64_t integer) {
+      return Number{integer} == integer;
+    });
+
+    rc::prop("int64_t", [](const int64_t integer) {
+      return Number{integer} == integer;
+    });
+  }
+
+  SECTION("Type and sign changes") {
+    rc::prop("int64_t", [](const int64_t integer) {
+      return Number{integer} != -integer;
+    });
+
+    rc::prop("int32_t", [](const int32_t integer) {
+      // skip 0?
+      return Number{integer} != -integer;
+    });
+
+    rc::prop("int32_t", [](const uint64_t start, const uint8_t finish) {
+      Number number{start};
+      number = finish;
+      return number == finish;
+    });
+
+    rc::prop("int32_t", [](const uint8_t start, const uint64_t finish) {
+      Number number{start};
+      number = finish;
+      return number == finish;
+    });
+  }
+
   SECTION("Zero equality") {
     STATIC_CHECK(Number{} == static_cast< uint8_t>(0));
     STATIC_CHECK(Number{} == static_cast<  int8_t>(0));

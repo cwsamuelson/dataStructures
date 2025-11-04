@@ -37,13 +37,11 @@ class galactic_structures(ConanFile):
 
     settings = 'os', 'compiler', 'build_type', 'arch'
 
-    requires = [
-    ]
-
     # it appears that the test_package is picking up this dependency
     # is this always happening? how to stop that..
     test_requires = [
         'boost/[^1.86.0]',
+        'rapidcheck/cci.20231215',
     ]
 
     tool_requires = [
