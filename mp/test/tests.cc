@@ -4,5 +4,5 @@
 
 using namespace flp;
 
-TEST_CASE("`MultiPrecision`") {
+TEST_CASE("`MultiPrecision`::Integer") {
 }
