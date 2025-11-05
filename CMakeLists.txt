@@ -94,6 +94,7 @@ add_subdirectory(unique_ptr)
 add_subdirectory(unit-testing)
 add_subdirectory(units)
 add_subdirectory(utilities)
+add_subdirectory(uuid)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
 add_subdirectory(variant)
@@ -191,6 +192,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_unit-testing
   ${PROJECT_NAME}_units
   ${PROJECT_NAME}_utilities
+  ${PROJECT_NAME}_uuid
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
   ${PROJECT_NAME}_variant
