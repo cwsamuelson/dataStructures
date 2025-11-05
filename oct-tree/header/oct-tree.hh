@@ -340,11 +340,12 @@ struct OctTree {
       return false;
     }
 
-    root.insert(point, value);
+    if (root.insert(point, value)) {
+      ++entity_count;
+      return true;
+    }
 
-    ++entity_count;
-
-    return true;
+    return false;
   }
 
   std::vector<Objects> aggregate() const {
