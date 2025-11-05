@@ -46,7 +46,7 @@ struct RAIITest {
   }
 };
 
-TEST_CASE("Hive") {
+TEST_CASE("`Hive`") {
   SECTION("Lifetimes and observable state") {
     Hive<RAIITest> hive;
 
@@ -233,15 +233,15 @@ TEST_CASE("Hive") {
   }
 }
 
-TEST_CASE("Contained object lifetimes") {}
+TEST_CASE("`Hive`::Contained object lifetimes") {}
 
-TEST_CASE("Iterator and reference validity") {}
+TEST_CASE("`Hive`::Iterator and reference validity") {}
 
-TEST_CASE("Random erasure") {}
+TEST_CASE("`Hive`::Random erasure") {}
 
-TEST_CASE("Only one object alive per chunk") {}
+TEST_CASE("`Hive`::Only one object alive per chunk") {}
 
-TEST_CASE("Evaluate each member function") {
+TEST_CASE("`Hive`::Evaluate each member function") {
   SECTION("emplace") {}
   SECTION("insert") {
     SECTION("value copy") {}
@@ -260,7 +260,7 @@ TEST_CASE("Evaluate each member function") {
   SECTION("end") {}
 }
 
-TEST_CASE("Hive formatter") {
+TEST_CASE("`Hive`::formatter") {
   //Hive<int> hive;
   //CHECK(std::format("{}", hive) == "[ ]");
 }

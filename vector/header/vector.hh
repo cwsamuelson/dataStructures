@@ -44,6 +44,7 @@ private:
         reserve(static_cast<float>(current_size) * std::numbers::phi_v<float>);
       }
     }
+
     VERIFY(current_capacity >= current_size + 1,
            "Insufficient capacity available ({}).  Required: {}",
            current_capacity,

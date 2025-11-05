@@ -302,20 +302,6 @@ OStream& operator<<(OStream& ostream, const Number& number) {
 
 template<>
 struct std::formatter<flp::Number> : std::formatter<uint64_t> {
-  /*constexpr auto parse(std::format_parse_context& context) {
-    auto iterator = context.begin();
-
-    while (iterator != context.end() and *iterator != '}') {
-      ++iterator;
-    }
-
-    if (iterator == context.end() or *iterator != '}') {
-      throw std::format_error("invalid `Number` format specification");
-    }
-
-    return iterator;
-  }*/
-
   constexpr auto format(const flp::Number& number, std::format_context& context) const {
     if (number.negative) {
       std::format_to(context.out(), "{} ", number.negative);

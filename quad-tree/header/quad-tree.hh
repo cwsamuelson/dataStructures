@@ -45,8 +45,8 @@ struct QuadTree {
       // https://github.com/gszauer/GamePhysicsCookbook/blob/master/Code/Geometry2D.cpp
       return ((other.corner.x <= (corner.x + dimensions.x))
          and  (corner.x <= (other.corner.x + other.dimensions.x)))
-         and ((other.corner.x <= (corner.x + dimensions.x))
-         and  (corner.x <= (other.corner.x + other.dimensions.x)));
+         and ((other.corner.y <= (corner.y + dimensions.y))
+         and  (corner.y <= (other.corner.y + other.dimensions.y)));
     }
 
     [[nodiscard]]
@@ -322,3 +322,124 @@ struct QuadTree {
 };
 
 } // namespace flp
+
+// template<>
+// struct std::formatter<flp::QuadTree<int>::Point> : std::formatter<std::string_view> {
+//   constexpr auto parse(std::format_parse_context& context) {
+//     auto iterator = context.begin();
+//     while (iterator != context.end() and *iterator != '}') {
+//       switch (*iterator) {
+//       default:
+//         throw std::format_error("invalid format specifier for `flp::QuadTree`");
+//         break;
+//       }
+// 
+//       ++iterator;
+//     }
+// 
+//     if (iterator == context.end() or *iterator != '}') {
+//       throw std::format_error("invalid format");
+//     }
+// 
+//     return iterator;
+//   }
+// 
+//   constexpr auto format(const flp::QuadTree<int>::Point& point, std::format_context& context) const {
+//     return std::format_to(context.out(), "{{{}, {}}}", point.x, point.y);
+//   }
+// };
+// 
+// template<>
+// struct std::formatter<flp::QuadTree<int>::AABB> : std::formatter<std::string_view> {
+//   constexpr auto parse(std::format_parse_context& context) {
+//     auto iterator = context.begin();
+//     while (iterator != context.end() and *iterator != '}') {
+//       switch (*iterator) {
+//       default:
+//         throw std::format_error("invalid format specifier for `flp::QuadTree::AABB`");
+//         break;
+//       }
+// 
+//       ++iterator;
+//     }
+// 
+//     if (iterator == context.end() or *iterator != '}') {
+//       throw std::format_error("invalid format");
+//     }
+// 
+//     return iterator;
+//   }
+// 
+//   constexpr auto format(const flp::QuadTree<int>::AABB& box, std::format_context& context) const {
+//     return std::format_to(context.out(), "{{{{{}, {}}}, {{{}, {}}}}}",
+//         box.corner.x,     box.corner.y,
+//         box.dimensions.x, box.dimensions.y
+//       );
+//   }
+// };
+// 
+// template<>
+// struct std::formatter<flp::QuadTree<int>::Node> : std::formatter<std::string_view> {
+//   constexpr auto parse(std::format_parse_context& context) {
+//     auto iterator = context.begin();
+//     while (iterator != context.end() and *iterator != '}') {
+//       switch (*iterator) {
+//       default:
+//         throw std::format_error("invalid format specifier for `flp::QuadTree::Node`");
+//         break;
+//       }
+// 
+//       ++iterator;
+//     }
+// 
+//     if (iterator == context.end() or *iterator != '}') {
+//       throw std::format_error("invalid format");
+//     }
+// 
+//     return iterator;
+//   }
+// 
+//   constexpr auto format(const flp::QuadTree<int>::Node& node, std::format_context& context) const {
+//     std::format_to(context.out(), "{}", node.boundaries);
+//     if (std::holds_alternative<flp::QuadTree<int>::Entities>(node.data)) {
+//       return std::format_to(context.out(), "{}", std::get<flp::QuadTree<int>::Entities>(node.data));
+//     } else if (std::holds_alternative<flp::QuadTree<int>::ChildrenPtr>(node.data)) {
+//       return std::format_to(context.out(), "{}", *std::get<flp::QuadTree<int>::ChildrenPtr>(node.data));
+//     }
+//     return std::format_to(context.out(), "T_T");
+//     // return std::visit(flp::Overloads {
+//     //   [&context](const flp::QuadTree<int>::Entities& entities) {
+//     //     return std::format_to(context.out(), "{}", entities);
+//     //   },
+//     //   [&context](const flp::QuadTree<int>::ChildrenPtr& children) {
+//     //     return std::format_to(context.out(), "{}", *children);
+//     //   },
+//     // }, node.data);
+//   }
+// };
+// 
+// template<typename Type>
+// struct std::formatter<flp::QuadTree<Type>> : std::formatter<std::string_view> {
+//   constexpr auto parse(std::format_parse_context& context) {
+//     auto iterator = context.begin();
+//     while (iterator != context.end() and *iterator != '}') {
+//       switch (*iterator) {
+//       default:
+//         throw std::format_error("invalid format specifier for `flp::QuadTree`");
+//         break;
+//       }
+// 
+//       ++iterator;
+//     }
+// 
+//     if (iterator == context.end() or *iterator != '}') {
+//       throw std::format_error("invalid format");
+//     }
+// 
+//     return iterator;
+//   }
+// 
+//   constexpr auto format(const flp::QuadTree<Type>& quad_tree, std::format_context& context) const {
+//     return std::format_to(context.out(), "limit: {}, entity_count: {}, {}", quad_tree.entity_limit, quad_tree.entity_count, quad_tree.root);
+//   }
+// };
