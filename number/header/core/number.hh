@@ -3,6 +3,8 @@
 #include <compare>
 #include <concepts>
 #include <cstdint>
+#include <format>
+#include <limits>
 #include <variant>
 
 namespace flp {
@@ -47,31 +49,105 @@ struct Number {
   // operator Integer() const noexcept {
   // }
 
+  friend
+  constexpr
+  Number operator+(const Number& number) noexcept {
+    return number;
+  }
+
+  friend
+  constexpr
+  Number operator-(Number number) noexcept {
+    number.negative = not number.negative;
+    return number;
+  }
+
+  friend
+  constexpr
+  Number operator+(const Number& lhs, const Number& rhs) noexcept {
+    Number result;
+
+    if (lhs.value >= rhs.value) {
+      if (lhs.negative != rhs.negative) {
+        result.value = lhs.value - rhs.value;
+      } else {
+        result.value = lhs.value + rhs.value;
+      }
+
+      result.negative = lhs.negative;
+    } else {
+      result = rhs + lhs;
+    }
+
+    return result;
+  }
+
+  friend
+  constexpr
+  Number operator-(const Number& lhs, const Number& rhs) noexcept {
+    return lhs + (-rhs);
+  }
+
+  friend
+  constexpr
+  Number operator*(const Number& lhs, const Number& rhs) noexcept {
+    Number result;
+
+    result.negative = lhs.negative != rhs.negative;
+    result.value = lhs.value * rhs.value;
+
+    return result;
+  }
+
+  friend
+  constexpr
+  Number operator/(const Number& lhs, const Number& rhs) noexcept {
+    Number result;
+
+    result.negative = lhs.negative != rhs.negative;
+    result.value = lhs.value / rhs.value;
+
+    return result;
+  }
+
+  friend
+  constexpr
+  Number operator%(const Number& lhs, const Number& rhs) noexcept {
+    return {};
+  }
+
   template<std::integral Integer>
   friend
   constexpr
   Number operator+(const Number& number, const Integer& integer) noexcept {
-    return {};
+    return number + Number{integer};
   }
 
   template<std::integral Integer>
   friend
   constexpr
   Number operator-(const Number& number, const Integer& integer) noexcept {
-    return {};
+    return number - Number{integer};
   }
 
   template<std::integral Integer>
   friend
   constexpr
   Number operator*(const Number& number, const Integer& integer) noexcept {
-    return {};
+    return number.sign<Integer>() * (number.value * integer);
   }
 
   template<std::integral Integer>
   friend
   constexpr
   Number operator/(const Number& number, const Integer& integer) noexcept {
+    return number.sign<Integer>() * (number.value / integer);
+  }
+
+  template<std::integral Integer>
+  friend
+  constexpr
+  Number operator%(const Number& number, const Integer& integer) noexcept {
     return {};
   }
 
@@ -79,27 +155,34 @@ struct Number {
   friend
   constexpr
   Number operator+(const Integer& integer, const Number& number) noexcept {
-    return {};
+    return Number{integer} + number;
   }
 
   template<std::integral Integer>
   friend
   constexpr
   Number operator-(const Integer& integer, const Number& number) noexcept {
-    return {};
+    return Number{integer} - number;
   }
 
   template<std::integral Integer>
   friend
   constexpr
   Number operator*(const Integer& integer, const Number& number) noexcept {
-    return {};
+    return number * integer;
   }
 
   template<std::integral Integer>
   friend
   constexpr
   Number operator/(const Integer& integer, const Number& number) noexcept {
+    return number.sign<Integer>() * (integer / number.value);
+  }
+
+  template<std::integral Integer>
+  friend
+  constexpr
+  Number operator%(const Integer& integer, const Number& number) noexcept {
     return {};
   }
 
@@ -186,8 +269,58 @@ struct Number {
     return not number.negative and number.value == sint;
   }
 
+  template<std::signed_integral Integral>
+  [[nodiscard]]
+  constexpr
+  Integral sign() const {
+    return negative ? -1 : 1;
+  }
+
   bool negative = false;
   uint64_t value{};
 };
 
+[[nodiscard]]
+constexpr
+bool would_overflow(const uint64_t lhs, const uint64_t rhs) noexcept {
+  const auto growth_room = std::numeric_limits<uint64_t>::max() - lhs;
+  return growth_room < rhs;
+}
+
+template<typename OStream>
+OStream& operator<<(OStream& ostream, const Number& number) {
+  if (number.negative) {
+    ostream << '-';
+  }
+
+  ostream << number.value;
+
+  return ostream;
+}
+
 } // namespace flp
+
+template<>
+struct std::formatter<flp::Number> : std::formatter<uint64_t> {
+  /*constexpr auto parse(std::format_parse_context& context) {
+    auto iterator = context.begin();
+
+    while (iterator != context.end() and *iterator != '}') {
+      ++iterator;
+    }
+
+    if (iterator == context.end() or *iterator != '}') {
+      throw std::format_error("invalid `Number` format specification");
+    }
+
+    return iterator;
+  }*/
+
+  constexpr auto format(const flp::Number& number, std::format_context& context) const {
+    if (number.negative) {
+      std::format_to(context.out(), "{} ", number.negative);
+    }
+
+    return std::formatter<uint64_t>::format(number.value, context);
+  }
+};
