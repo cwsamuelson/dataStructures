@@ -5,6 +5,10 @@ project(${BASE_PROJECT}_uuid LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/guid.hh
+  header/v1.hh
+  header/v4.hh
+  header/v7.hh
   header/uuid.hh
 )
 set(SOURCES
