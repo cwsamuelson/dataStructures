@@ -47,7 +47,7 @@ add_subdirectory(menu)
 add_subdirectory(mp)
 #add_subdirectory(normal_iterator)
 add_subdirectory(number)
-#add_subdirectory(oct-tree)
+add_subdirectory(oct-tree)
 #add_subdirectory(operators)
 add_subdirectory(optional)
 #add_subdirectory(polymorphic_value)
@@ -144,7 +144,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_mp
   #${PROJECT_NAME}_normal_iterator
   ${PROJECT_NAME}_number
-  #${PROJECT_NAME}_oct-tree
+  ${PROJECT_NAME}_oct-tree
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
   #${PROJECT_NAME}_polymorphic_value

@@ -1,9 +1,9 @@
-#include <template.hh>
+#include <oct-tree.hh>
 
 #include <catch2/catch_all.hpp>
 
 using namespace flp;
 
-TEST_CASE("template") {
+TEST_CASE("`OctTree`") {
 }
 
