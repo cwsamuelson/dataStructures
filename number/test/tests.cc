@@ -6,8 +6,6 @@
 #include <rapidcheck.h>
 #include <rapidcheck/catch.h>
 
-#include <print>
-
 using namespace flp;
 
 TEST_CASE("`Number`::Comparison") {
@@ -32,23 +30,23 @@ TEST_CASE("`Number`::Comparison") {
   }
 
   SECTION("Type and sign changes") {
-    rc::prop("int64_t", [](const int64_t integer) {
-      RC_PRE(integer != 0);
+    rc::prop("int64_t", [] {
+      const auto integer = *rc::gen::nonZero<int64_t>();
       RC_ASSERT(Number{integer} != -integer);
     });
 
-    rc::prop("int32_t", [](const int32_t integer) {
-      RC_PRE(integer != 0);
+    rc::prop("int32_t", [] {
+      const auto integer = *rc::gen::nonZero<int64_t>();
       RC_ASSERT(Number{integer} != -integer);
     });
 
-    rc::prop("-int64_t", [](const int64_t integer) {
-      RC_PRE(integer != 0);
+    rc::prop("-int64_t", [] {
+      const auto integer = *rc::gen::nonZero<int64_t>();
       RC_ASSERT(-Number{integer} == -integer);
     });
 
-    rc::prop("-int32_t", [](const int32_t integer) {
-      RC_PRE(integer != 0);
+    rc::prop("-int32_t", [] {
+      const auto integer = *rc::gen::nonZero<int64_t>();
       RC_ASSERT(-Number{integer} == -integer);
     });
 
@@ -94,19 +92,19 @@ TEST_CASE("`Number`::Comparison") {
     STATIC_CHECK(Number{} != static_cast< int64_t>( 1));
     STATIC_CHECK(Number{} != static_cast< int64_t>(-1));
 
-    rc::prop("N != N", [](const uint64_t left, const uint64_t right) {
-      RC_PRE(left != right);
-      RC_ASSERT(Number{left} != Number{right});
+    rc::prop("N != N", [] {
+      const auto integers = *rc::gen::unique<std::vector<uint64_t>>(2, rc::gen::arbitrary<uint64_t>());
+      RC_ASSERT(Number{integers[0]} != Number{integers[1]});
     });
 
     rc::prop("N != u64_t", [](const uint64_t left, const uint64_t right) {
-      RC_PRE(left != right);
-      RC_ASSERT(Number{left} != right);
+      const auto integers = *rc::gen::unique<std::vector<uint64_t>>(2, rc::gen::arbitrary<uint64_t>());
+      RC_ASSERT(Number{integers[0]} != integers[1]);
     });
 
     rc::prop("u64_t != N", [](const uint64_t left, const uint64_t right) {
-      RC_PRE(left != right);
-      RC_ASSERT(left != Number{right});
+      const auto integers = *rc::gen::unique<std::vector<uint64_t>>(2, rc::gen::arbitrary<uint64_t>());
+      RC_ASSERT(integers[0] != Number{integers[1]});
     });
   }
 
@@ -130,8 +128,8 @@ TEST_CASE("`Number`::Comparison") {
   }
 
   SECTION("Basic greater") {
-    rc::prop("uint32_t >", [](const uint32_t integer) {
-      RC_PRE(integer != 0);
+    rc::prop("uint32_t >", [] {
+      const auto integer = *rc::gen::nonZero<uint32_t>();
       RC_ASSERT(integer > Number{});
     });
 
@@ -165,54 +163,14 @@ TEST_CASE("`Number`::Comparison") {
 
 TEST_CASE("`Number`::Arithmetic") {
   SECTION("Addition") {
-    rc::prop("N + N : 64", [](const uint64_t lhs, const uint64_t rhs) {
-      // 250 + 10
-      // 255 - 250 = 5
-      // 5 < 10
-      //
-      // 0 + 0
-      // 255 - 0 = 255
-      // 255 < 0
-      //
-      // 255 + 255
-      // 255 - 255 = 0
-      // 0 < 255
-      //
-      // 255 + 0
-      // 255 - 255 = 0
-      // 0 < 0
-      //
-      //  + 2513119328165182905
-      // 3379420012734093739 < 2513119328165182905
-      //
-      //
-      // max - lhs == gap
-      // 18446744073709551615 - lhs == 3379420012734093739
-      // 18446744073709551615 - 3379420012734093739 == lhs
-      // 15067324060975457876 == lhs
-      //
-      //
-      // 18,446,744,073,709,551,615
-      //  3,379,420,012,734,093,739
-      // 
-      //
-      // 15,067,324,060,975,457,876
-      //
-      //
-      // 15067324060975457876 + 2513119328165182905
-      //
-      //    1  1   111 1 1 1
-      // 15067324060975457876
-      //  2513119328165182905
-      // --------------------
-      // 17580443389040639781
-      // 17,580,443,389,040,639,781
-      // 
-      //
-      // 18446744073709551615 - 15067324060975457876 = 3379420012734093739
-      // 3,379,420,012,734,093,739 < 2,513,119,328,165,182,905
-      CAPTURE(lhs, rhs);
-      // RC_PRE((std::numeric_limits<uint64_t>::max() - lhs) < rhs);
+    rc::prop("N + N : 64", [] {
+      const auto&& [lhs ,rhs] = *rc::gen::suchThat<std::tuple<uint64_t, uint64_t>>(
+        [](const std::tuple<uint64_t, uint64_t>& values) {
+          const auto [lhs, rhs] = values;
+          return (std::numeric_limits<uint64_t>::max() - lhs) < rhs;
+        }
+      );
+
       RC_ASSERT((Number{lhs} + Number{rhs}) == (lhs + rhs));
     });
 
