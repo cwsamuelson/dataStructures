@@ -8,7 +8,7 @@
 #include "uuid/v5.hh"
 #include "uuid/v7.hh"
 
-namespace flp {
+namespace flp::UUID {
 
 using GUID = UUID::GUID;
 using UUIDv1 = UUID::V1;
