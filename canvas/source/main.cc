@@ -27,11 +27,11 @@ int main() {
 
   Draw(canvas);
 
-  canvas.draw_triangle({5, 0}, {0, 9}, {10, 9}, white);
+  canvas.draw_triangle({5, 0}, {0, 9}, {9, 9}, white);
 
   Draw(canvas);
 
-  canvas.fill_triangle({5, 0}, {0, 9}, {10, 9}, white);
+  canvas.fill_triangle({5, 0}, {0, 9}, {9, 9}, white);
 
   Draw(canvas);
 }

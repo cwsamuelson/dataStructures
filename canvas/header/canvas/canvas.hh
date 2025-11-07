@@ -12,8 +12,6 @@
 #include <string>
 #include <vector>
 
-#include <print>
-
 namespace flp {
 
 using Color1 = bool;
@@ -103,23 +101,16 @@ void Canvas<Color>::draw(const Position& position, Color color) {
 // -- 1D
 template<typename Color>
 void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color color) {
-  std::println("start: {{{}, {}}}", start.x, start.y);
-  std::println("stop: {{{}, {}}}", stop.x, stop.y);
-
   const auto delta = stop - start;
-
-  std::println("delta: {{{}, {}}}", delta.x, delta.y);
 
   // vertical line
   if (delta.x == 0) {
     // jk, just a pixel
     if (delta.y == 0) {
-      std::println("single pixel");
       draw(start, color);
       return;
     }
 
-    std::println("vertical");
     for (auto cursor = start.y; cursor < stop.y; ++cursor) {
       draw({delta.x, cursor}, color);
     }
@@ -128,30 +119,19 @@ void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color
   }
 
   const float slope = static_cast<float>(delta.y) / delta.x;
-
-  std::println("slope: {}", slope);
-
-  auto sign = [](const auto& value) {
-    return value < 0 ? -1 : +1;
-  };
-  const auto direction = sign(delta.x);
   const auto intercept = start.y - (slope * start.x);
+  const auto direction = delta.x < 0 ? -1 : +1;
 
   // this line drawing algorithm can have gaps
   // In particular with sufficiently steep lines
   for (auto cursor = start.x; cursor != stop.x; cursor += direction) {
-    std::println("cursor: {{{}, {}}}", cursor, intercept + (cursor * slope));
     draw({cursor, intercept + (cursor * slope)}, color);
   }
 }
 
 template<typename Color>
 void Canvas<Color>::draw_line(const std::vector<Position>& points, Color color) {
-  std::println("draw_line: {}", points.size());
-
   for (const auto&& span : points | std::views::slide(2)) {
-    std::println("iterate points | slide(2): {}", span.size());
-    std::println("span[0]: {{{}, {}}} span[1]: {{{}, {}}}", span[0].x, span[0].y, span[1].x, span[1].y);
     draw_line(span[0], span[1], color);
   }
 }
@@ -199,10 +179,7 @@ void Canvas<Color>::draw_text(const Position& position, const std::string& text,
 
 template<typename Color>
 void Canvas<Color>::draw_polygon(const std::vector<Position>& points, Color color) {
-  std::println("draw_polygon: {}", points.size());
-
   draw_line(points, color);
-  std::println("closing line");
   draw_line(points.back(), points.front(), color);
 }
 
