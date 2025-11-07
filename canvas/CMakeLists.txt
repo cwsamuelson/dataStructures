@@ -22,8 +22,14 @@ set(HEADERS
   header/fonts/8x8_sga.hh
   header/fonts/render.hh
   header/utility/graphical-term.hh
+  header/ui/button.hh
+  header/ui/control.hh
+  header/ui/manager.hh
+  header/ui/style.hh
+  header/ui/widget.hh
 )
 set(SOURCES
+  source/button.cc
 )
 
 common_library(${PROJECT_NAME}

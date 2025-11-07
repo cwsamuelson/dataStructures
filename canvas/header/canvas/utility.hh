@@ -8,6 +8,9 @@ template<typename Type>
 struct Position2 {
   Type x;
   Type y;
+
+  friend
+  auto operator<=>(const Position2&, const Position2&) noexcept = default;
 };
 
 template<typename Type>
