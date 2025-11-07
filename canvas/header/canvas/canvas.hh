@@ -2,6 +2,8 @@
 
 #include "canvas/color.hh"
 #include "canvas/utility.hh"
+#include "fonts/8x8_basic.hh"
+#include "fonts/render.hh"
 
 #include <error_help.hh>
 
@@ -65,8 +67,7 @@ struct Canvas {
   void fill_rectangle(const Position& top_left, const Size& size, Color color);
   // FillQuad?
   void fill_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color);
-  void fill_text(const Position& position, const std::string& text, Color color);
-  // FillString?
+  void fill_text(const Position& position, std::string_view text, Color color);
   void fill_polygon(const std::vector<Position>& points, Color color);
 
   // sprite?
@@ -117,13 +118,13 @@ void Canvas<Color>::clear(const Color color) {
 
 // -- 0D
 template<typename Color>
-void Canvas<Color>::draw(const Position& position, Color color) {
+void Canvas<Color>::draw(const Position& position, const Color color) {
   canvas.at(position.y).at(position.x) = color;
 }
 
 // -- 1D
 template<typename Color>
-void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color color) {
+void Canvas<Color>::draw_line(const Position& start, const Position& stop, const Color color) {
   const auto delta = stop - start;
 
   // vertical line
@@ -153,7 +154,7 @@ void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color
 }
 
 template<typename Color>
-void Canvas<Color>::draw_line(const std::vector<Position>& points, Color color) {
+void Canvas<Color>::draw_line(const std::vector<Position>& points, const Color color) {
   for (const auto&& span : points | std::views::slide(2)) {
     draw_line(span[0], span[1], color);
   }
@@ -162,7 +163,7 @@ void Canvas<Color>::draw_line(const std::vector<Position>& points, Color color) 
 // -- 2D
 
 template<typename Color>
-void Canvas<Color>::draw_circle(const Position& center, float radius, Color color) {
+void Canvas<Color>::draw_circle(const Position& center, float radius, const Color color) {
   // bad approximation :)
   draw(center, color);
 
@@ -173,7 +174,7 @@ void Canvas<Color>::draw_circle(const Position& center, float radius, Color colo
 }
 
 template<typename Color>
-void Canvas<Color>::draw_rectangle(const Position& top_left, const Position& bot_right, Color color) {
+void Canvas<Color>::draw_rectangle(const Position& top_left, const Position& bot_right, const Color color) {
   draw_line(top_left, {bot_right.x, top_left.y}, color); // top
   draw_line(top_left, {top_left.x, bot_right.y}, color); // left
   draw_line({bot_right.x, top_left.y}, bot_right, color); // right
@@ -181,7 +182,7 @@ void Canvas<Color>::draw_rectangle(const Position& top_left, const Position& bot
 }
 
 template<typename Color>
-void Canvas<Color>::draw_rectangle(const Position& top_left, const Size& size, Color color) {
+void Canvas<Color>::draw_rectangle(const Position& top_left, const Size& size, const Color color) {
   draw_rectangle(top_left, top_left + size, color);
 }
 
@@ -189,19 +190,16 @@ void Canvas<Color>::draw_rectangle(const Position& top_left, const Size& size, C
 //   }
 
 template<typename Color>
-void Canvas<Color>::draw_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color) {
+void Canvas<Color>::draw_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, const Color color) {
   draw_polygon({v1, v2, v3}, color);
 }
 
 template<typename Color>
-void Canvas<Color>::draw_text(const Position& position, const std::string& text, Color color) {
+void Canvas<Color>::draw_text(const Position& position, const std::string& text, const Color color) {
 }
 
-//   Canvas<Color>::DrawString {
-//   }
-
 template<typename Color>
-void Canvas<Color>::draw_polygon(const std::vector<Position>& points, Color color) {
+void Canvas<Color>::draw_polygon(const std::vector<Position>& points, const Color color) {
   draw_line(points, color);
   draw_line(points.back(), points.front(), color);
 }
@@ -213,21 +211,21 @@ void Canvas<Color>::draw_curve(const Polynomial) {
 // - FILL
 
 template<typename Color>
-void Canvas<Color>::fill_circle(const Position& center, float radius, Color color) {
+void Canvas<Color>::fill_circle(const Position& center, float radius, const Color color) {
   // bad approximation :)
   draw_line({center.x - radius, center.y}, {center.x + radius, center.y}, color);
   draw_line({center.x, center.y - radius}, {center.x, center.y + radius}, color);
 }
 
 template<typename Color>
-void Canvas<Color>::fill_rectangle(const Position& top_left, const Position& bot_right, Color color) {
+void Canvas<Color>::fill_rectangle(const Position& top_left, const Position& bot_right, const Color color) {
   for (size_t y = top_left.y; y < bot_right.y; ++y) {
     draw_line({top_left.x, y}, {bot_right.x, y}, color);
   }
 }
 
 template<typename Color>
-void Canvas<Color>::fill_rectangle(const Position& top_left, const Size& size, Color color) {
+void Canvas<Color>::fill_rectangle(const Position& top_left, const Size& size, const Color color) {
   fill_rectangle(top_left, top_left + size, color);
 }
 
@@ -235,7 +233,7 @@ void Canvas<Color>::fill_rectangle(const Position& top_left, const Size& size, C
 //   }
 
 template<typename Color>
-void Canvas<Color>::fill_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color) {
+void Canvas<Color>::fill_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, const Color color) {
   // to guarantee clean drawing, horizontal lines will be preferred
   // otherwise any inconsistency in the algorithm to draw sloped lines will
   // manifest in ugly triangles (likely with holes/gaps etc)
@@ -320,20 +318,31 @@ void Canvas<Color>::fill_triangle(const Vertex& v1, const Vertex& v2, const Vert
 }
 
 template<typename Color>
-void Canvas<Color>::fill_text(const Position& position, const std::string& text, Color color) {
+void Canvas<Color>::fill_text(const Position& position, const std::string_view text, const Color color) {
+  // unsigned char font8x8_basic[128][8];
+  // Fonts::render(canvas, Fonts::basic_8x8, color);
+
+  for (const auto [index, c] : text | std::views::enumerate) {
+    const auto bitmap = Fonts::basic_8x8[c];
+
+    for (size_t y = 0; y < 8; ++y) {
+      for (size_t x = 0; x < 8; ++x) {
+        if ((bitmap[y] & 1 << x) != 0) {
+          draw({position.x + x + (index * 8), position.y + y}, color);
+        }
+      }
+    }
+  }
 }
 
-//   Canvas<Color>::FillString {
-//   }
-
 template<typename Color>
-void Canvas<Color>::fill_polygon(const std::vector<Position>& points, Color color) {
+void Canvas<Color>::fill_polygon(const std::vector<Position>& points, const Color color) {
   // tesselate, then `DrawTringle`s.
 }
 
 // the first 2 vertices will always be the 'flat' edge
 template<typename Color>
-void Canvas<Color>::fill_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, Color color) {
+void Canvas<Color>::fill_flat_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, const Color color) {
   VERIFY(v1.y == v2.y, "Invalid arguments to draw 'flat' triangle.");
 
   // 'reverse' slope.  how much change in x per change in y

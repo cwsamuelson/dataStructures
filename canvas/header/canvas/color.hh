@@ -24,9 +24,9 @@ struct ColorRGBA32 {
     uint32_t value;
   };
 
-  template<std::unsigned_integral UInt>
+  template<std::integral Int>
   constexpr
-  ColorRGBA32(const UInt R, const UInt G, const UInt B, const UInt A)
+  ColorRGBA32(const Int R, const Int G, const Int B, const Int A)
     : red(R)
     , green(G)
     , blue(B)
@@ -36,9 +36,9 @@ struct ColorRGBA32 {
   // assume normalized values
   constexpr
   ColorRGBA32(const float R, const float G, const float B, const float A)
-    : red(R * 255)
+    : red  (R * 255)
     , green(G * 255)
-    , blue(B * 255)
+    , blue (B * 255)
     , alpha(A * 255)
   {}
 

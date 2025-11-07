@@ -4,8 +4,24 @@ project(${BASE_PROJECT}_canvas LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
+# All font header files are based on files found in
+# `https://github.com/dhepper/font8x8`.  They have been taken and adapted for
+# C++.
 set(HEADERS
   header/canvas/canvas.hh
+  header/fonts/8x8.hh
+  header/fonts/8x8_basic.hh
+  header/fonts/8x8_block.hh
+  header/fonts/8x8_box.hh
+  header/fonts/8x8_control.hh
+  header/fonts/8x8_ext_latin.hh
+  header/fonts/8x8_greek.hh
+  header/fonts/8x8_hiragana.hh
+  header/fonts/8x8_latin.hh
+  header/fonts/8x8_misc.hh
+  header/fonts/8x8_sga.hh
+  header/fonts/render.hh
+  header/utility/graphical-term.hh
 )
 set(SOURCES
 )
