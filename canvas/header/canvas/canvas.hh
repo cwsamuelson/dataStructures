@@ -28,6 +28,14 @@ struct Canvas {
   Canvas(size_t width, size_t height);
   ~Canvas();
 
+  [[nodiscard]]
+  size_t width() const noexcept;
+  [[nodiscard]]
+  size_t height() const noexcept;
+
+  [[nodiscard]]
+  Color get(const Position& position) const noexcept;
+
   void clear(Color color);
 
   // 0D
@@ -81,6 +89,21 @@ Canvas<Color>::Canvas(const size_t width, const size_t height)
 template<typename Color>
 Canvas<Color>::~Canvas() = default;
 
+template<typename Color>
+size_t Canvas<Color>::width() const noexcept {
+  return canvas.front().size();
+}
+
+template<typename Color>
+size_t Canvas<Color>::height() const noexcept {
+  return canvas.size();
+}
+
+template<typename Color>
+Color Canvas<Color>::get(const Position& position) const noexcept {
+  return canvas.at(position.y).at(position.x);
+}
+
 // - DRAW
 
 template<typename Color>
@@ -112,7 +135,7 @@ void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color
     }
 
     for (auto cursor = start.y; cursor < stop.y; ++cursor) {
-      draw({delta.x, cursor}, color);
+      draw({start.x, cursor}, color);
     }
 
     return;

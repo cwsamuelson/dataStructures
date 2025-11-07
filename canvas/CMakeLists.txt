@@ -39,6 +39,11 @@ common_executable(${PROJECT_NAME}_exe
   source/main.cc
 )
 
+target_include_directories(${PROJECT_NAME}_exe
+  PUBLIC
+  source
+)
+
 target_link_libraries(${PROJECT_NAME}_exe
   PUBLIC
   ${PROJECT_NAME}
