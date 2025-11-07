@@ -1,5 +1,8 @@
 #pragma once
 
+#include "canvas/color.hh"
+#include "canvas/utility.hh"
+
 #include <error_help.hh>
 
 #include <cmath>
@@ -9,121 +12,9 @@
 #include <string>
 #include <vector>
 
+#include <print>
+
 namespace flp {
-
-template<typename Type>
-struct Position2 {
-  Type x;
-  Type y;
-};
-
-template<typename Type>
-struct Size2 {
-  Type width;
-  Type height;
-};
-
-template<typename Type>
-struct vec2 {
-  Type x;
-  Type y;
-};
-
-// math with constant
-template<typename Type>
-Position2<Type> operator+(const Position2<Type>& position, const Type& constant) {
-  return { position.x + constant, position.y + constant };
-}
-
-template<typename Type>
-Position2<Type> operator-(const Position2<Type>& position, const Type& constant) {
-  return { position.x - constant, position.y - constant };
-}
-
-template<typename Type>
-Position2<Type> operator*(const Position2<Type>& position, const Type& constant) {
-  return { position.x * constant, position.y * constant };
-}
-
-template<typename Type>
-Position2<Type> operator/(const Position2<Type>& position, const Type& constant) {
-  return { position.x / constant, position.y / constant };
-}
-
-// math with self
-
-template<typename Type>
-vec2<Type> operator+(const Position2<Type>& start, const Position2<Type>& stop) {
-  return { start.x + stop.x, start.y + stop.y };
-}
-
-template<typename Type>
-vec2<Type> operator-(const Position2<Type>& start, const Position2<Type>& stop) {
-  return { start.x - stop.x, start.y - stop.y };
-}
-
-// math with vec
-
-template<typename Type>
-Position2<Type> operator+(const Position2<Type>& position, const vec2<Type>& offset) {
-  return { position.x + offset.x, position.y + offset.y };
-}
-
-template<typename Type>
-Position2<Type> operator-(const Position2<Type>& position, const vec2<Type>& offset) {
-  return { position.x - offset.x, position.y - offset.y };
-}
-
-// math with size
-template<typename Type>
-Position2<Type> operator+(const Position2<Type>& position, const Size2<Type>& size) {
-  return { position.x + size.width, position.y + size.height };
-}
-
-template<typename Type>
-Position2<Type> operator-(const Position2<Type>& position, const Size2<Type>& size) {
-  return { position.x - size.width, position.y - size.height };
-}
-
-struct ColorRGBA32 {
-  union {
-    struct {
-      uint8_t r;
-      uint8_t g;
-      uint8_t b;
-      uint8_t a;
-    };
-
-    struct {
-      uint8_t red;
-      uint8_t green;
-      uint8_t blue;
-      uint8_t alpha;
-    };
-
-    uint32_t value;
-  };
-
-  constexpr
-  ColorRGBA32(const uint8_t R, const uint8_t G, const uint8_t B, const uint8_t A)
-    : red(R)
-    , green(G)
-    , blue(B)
-    , alpha(A)
-  {}
-
-  constexpr
-  ColorRGBA32(const uint32_t V)
-    : value(V)
-  {}
-
-  friend auto operator<=>(const ColorRGBA32& lhs, const ColorRGBA32& rhs) noexcept {
-    return lhs.value <=> rhs.value;
-  }
-  friend bool operator==(const ColorRGBA32& lhs, const ColorRGBA32& rhs) noexcept {
-    return lhs.value == rhs.value;
-  }
-};
 
 using Color1 = bool;
 
@@ -212,16 +103,23 @@ void Canvas<Color>::draw(const Position& position, Color color) {
 // -- 1D
 template<typename Color>
 void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color color) {
+  std::println("start: {{{}, {}}}", start.x, start.y);
+  std::println("stop: {{{}, {}}}", stop.x, stop.y);
+
   const auto delta = stop - start;
+
+  std::println("delta: {{{}, {}}}", delta.x, delta.y);
 
   // vertical line
   if (delta.x == 0) {
     // jk, just a pixel
     if (delta.y == 0) {
+      std::println("single pixel");
       draw(start, color);
       return;
     }
 
+    std::println("vertical");
     for (auto cursor = start.y; cursor < stop.y; ++cursor) {
       draw({delta.x, cursor}, color);
     }
@@ -229,18 +127,31 @@ void Canvas<Color>::draw_line(const Position& start, const Position& stop, Color
     return;
   }
 
-  const float slope = delta.y / delta.x;
+  const float slope = static_cast<float>(delta.y) / delta.x;
+
+  std::println("slope: {}", slope);
+
+  auto sign = [](const auto& value) {
+    return value < 0 ? -1 : +1;
+  };
+  const auto direction = sign(delta.x);
+  const auto intercept = start.y - (slope * start.x);
 
   // this line drawing algorithm can have gaps
   // In particular with sufficiently steep lines
-  for (auto cursor = start.x; cursor < stop.x; ++cursor) {
-    draw({cursor, start.y + (cursor * slope)}, color);
+  for (auto cursor = start.x; cursor != stop.x; cursor += direction) {
+    std::println("cursor: {{{}, {}}}", cursor, intercept + (cursor * slope));
+    draw({cursor, intercept + (cursor * slope)}, color);
   }
 }
 
 template<typename Color>
 void Canvas<Color>::draw_line(const std::vector<Position>& points, Color color) {
+  std::println("draw_line: {}", points.size());
+
   for (const auto&& span : points | std::views::slide(2)) {
+    std::println("iterate points | slide(2): {}", span.size());
+    std::println("span[0]: {{{}, {}}} span[1]: {{{}, {}}}", span[0].x, span[0].y, span[1].x, span[1].y);
     draw_line(span[0], span[1], color);
   }
 }
@@ -288,7 +199,10 @@ void Canvas<Color>::draw_text(const Position& position, const std::string& text,
 
 template<typename Color>
 void Canvas<Color>::draw_polygon(const std::vector<Position>& points, Color color) {
+  std::println("draw_polygon: {}", points.size());
+
   draw_line(points, color);
+  std::println("closing line");
   draw_line(points.back(), points.front(), color);
 }
 

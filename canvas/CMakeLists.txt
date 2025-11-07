@@ -26,9 +26,20 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   error_support::error_support
+
+  ${BASE_PROJECT}_core
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
+
+common_executable(${PROJECT_NAME}_exe
+  source/main.cc
+)
+
+target_link_libraries(${PROJECT_NAME}_exe
+  PUBLIC
+  ${PROJECT_NAME}
+)

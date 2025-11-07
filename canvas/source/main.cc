@@ -1,4 +1,4 @@
-#include <canvas.hh>
+#include <canvas/canvas.hh>
 
 #include <print>
 #include <ranges>
@@ -12,23 +12,26 @@ void Draw(const flp::Canvas<>& canvas) {
       return value == black ? 'x' : (value == white ? '#' : '?');
     }) | std::ranges::to<std::string>());
   }
+
+  std::println("");
 }
 
 int main() {
   flp::Canvas<> canvas(10, 10);
 
-  canvas.Clear(black);
-  canvas.Draw({1, 1}, white);
-  canvas.DrawLine({}, {}, white);
-  canvas.DrawLine({0, 9}, {10, 9}, white);
+  canvas.clear(black);
+  canvas.draw({1, 1}, white);
+  canvas.draw_line({}, {}, white);
+  canvas.draw_line({0, 9}, {10, 9}, white);
+  canvas.draw_line({1, 8}, {9, 8}, white);
 
   Draw(canvas);
 
-  canvas.DrawTriangle({5, 0}, {0, 9}, {10, 9}, white);
+  canvas.draw_triangle({5, 0}, {0, 9}, {10, 9}, white);
 
   Draw(canvas);
 
-  canvas.FillTriangle({5, 0}, {0, 9}, {10, 9}, white);
+  canvas.fill_triangle({5, 0}, {0, 9}, {10, 9}, white);
 
   Draw(canvas);
 }
