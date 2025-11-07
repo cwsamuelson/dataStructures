@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+source ./lib/bmp.bash || exit
+
+debug() {
+  echo '[debug]' "$@" >&2
+}
+
+make-bmp() {
+  local width=$1
+  local height=$2
+
+  bmp-header "$width" "$height"
+  local padding="$REPLY"
+
+  local r g b x y
+  for ((y = 0; y < height; y++)); do
+    for ((x = 0; x < width; x++)); do
+      ((r = x * 255 / width))
+      ((b = y * 255 / height))
+      rgb "$r" 0 "$b"
+    done
+    bmp-pad "$padding"
+    debug "$y/$height" # progress bar?
+  done
+}
+
+Main() {
+  local width=400
+  local height=400
+  local output="out.bmp"
+
+  local OPTIND OPTARG opt
+  while getopts 'w:h:o:' opt; do
+    case "$opt" in
+      w) width="$OPTARG";;
+      h) height="$OPTARG";;
+      o) output="$OPTARG";;
+    esac
+  done
+
+  echo "writing ${width}x$height to $output"
+  make-bmp "$width" "$height" > "$output" || exit
+  echo "Wrote ${width}x$height to $output"
+}
+
+Main $@
+unset Main

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+source ./lib/bmp.bash || exit
+
+debug() {
+  echo '[debug]' "$@" >&2
+}
+
+make-bmp() {
+  local SPRITE
+  mapfile -t SPRITE
+
+  local width=${#SPRITE[0]}
+  local height=${#SPRITE[@]}
+
+  bmp-header "$width" "$height"
+  local padding="$REPLY"
+
+  local r g b x y
+  for ((y = 0; y < height; y++)); do
+    for ((x = 0; x < width; x++)); do
+      local c=${SPRITE[height - y - 1]}
+      c=${c:x:1}
+      case "$c" in
+        '.') r=0; g=0; b=0;;
+        '.') r=255; g=255; b=255;;
+      esac
+      rgb "$r" "$g" "$b"
+    done
+    bmp-pad "$padding"
+    debug "$y/$height" # progress bar?
+  done
+}
+
+Main() {
+  local output="out.bmp"
+
+  local OPTIND OPTARG opt
+  while getopts 'o:' opt; do
+    case "$opt" in
+      o) output="$OPTARG";;
+    esac
+  done
+
+  echo "writing image to $output"
+  make-bmp > "$output" || exit
+  echo "Wrote image to $output"
+}
+
+Main $@
+unset Main

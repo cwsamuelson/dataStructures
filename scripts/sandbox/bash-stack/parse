@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+s="GET /foo.txt HTTP/1.1
+HOST: localhost:8080
+User-Agent: curl/8.7.1
+Accept: */*"
+
+parse-request <<< "$s"
+
+echo "REQ_INFO"
+for key in "${!REQ_INFO[@]}"; do
+  value=${REQ_INFO[$key]}
+  echo "$key => $value"
+done
+
+echo "REQ_HEADERS"
+for key in "${!REQ_HEADERS[@]}"; do
+  value=${REQ_HEADERS[$key]}
+  echo "$key => $value"
+done

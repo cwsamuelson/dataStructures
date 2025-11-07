@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+source ./lib/bmp || exit
+
+Main() {
+  width=2
+  height=2
+
+  bmp-header "$width" "$height"
+  padding="$REPLY"
+
+  # Color Data
+  ## bottom row
+  rgb 0 0 0
+  rgb 255 255 255
+  bmp-pad $padding
+
+  ## top row
+  rgb 255 0 0
+  rgb 0 255 0
+  bmp-pad $padding
+}
+
+Main $@
+unset Main

@@ -1,0 +1,2 @@
+devbox run purge
+rm -rf .venv .devbox

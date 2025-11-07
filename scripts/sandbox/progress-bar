@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+
+fatal() {
+  echo "[FATAL] $@" >&2
+  exit 1
+}
+
+init-term() {
+  # ensure progress bar has room
+  printf '\n'
+  # save cursor location
+  printf '\e7'
+  # set scrollable region
+  printf '\e[%d;%dr' 0 "$((LINES - 1))"
+  # restore cursor location
+  printf '\e8'
+  # move cursor above progress bar
+  printf '\e1a'
+}
+
+deinit-term() {
+  # save cursor location
+  printf '\e7'
+  # reset scrollable region
+  printf '\e[%d;%dr' 0 "$LINES"
+  # move cursor to bottom
+  printf '\e[%d;%dH' "$LINES" 0
+  # clear the line/remove progress bar
+  printf '\e[0K'
+  # restore cursor location
+  printf '\e8'
+}
+
+# $COLUMNS -> terminal width in columns/characters.
+# Could use this for a default bar length
+progress-bar() {
+  local current=$1
+  local len=$2
+  local percent=$((current * 100 / len))
+  local width=100
+  local num_bars=$((percent * width / 100))
+
+  local bar_char='|'
+  local empty_char=' '
+
+  local i
+  local bar='['
+  for ((i = 0; i < percent; i++)); do
+    bar+=$bar_char
+  done
+  for ((i = percent; i < 100; i++)); do
+    bar+=$empty_char
+  done
+  bar+=']'
+  bar+=" $current/$len ($percent%)"
+
+  # save cursor location
+  printf '\e7'
+  # move cursor to bottom
+  printf '\e[%d;%dH' "$LINES" 0
+  # clear the line/remove progress bar
+  printf '\e[0K'
+  # print whole bar
+  #echo -ne "\r$bar $current/$len ($percent%)"
+  printf '%s' "$bar"
+  # restore cursor location
+  printf '\e8'
+}
+
+process-files() {
+  local files=($@)
+
+  echo "processing batch of ${#files[@]} files"
+
+  sleep .01
+}
+
+Main() {
+  shopt -s globstar nullglob checkwinsize
+  (:) # forces availability of LINES and COLUMNS
+
+  local batchsize=1
+  local OPTARG OPTIND opt
+  while getopts 'b:' opt; do
+    case "$opt" in
+      b)
+        batchsize=$OPTARG
+        ;;
+      *)
+        fatal "bad option: $OPTARG"
+        ;;
+    esac
+  done
+
+  #local arg
+  #for arg in $@; do
+  #  case $arg in
+  #    -e=*|--extension=*)
+  #      echo ${arg#*=}
+  #      shift
+  #      ;;
+  #    -*|--*)
+  #      echo Unknown $arg
+  #      exit 1
+  #      ;;
+  #    *)
+  #      echo unmatched $arg
+  #      exit 1
+  #      ;;
+  #  esac
+  #done
+
+  trap deinit-term exit
+  init-term
+
+  local files=(./**/*cache)
+  local len=${#files[@]}
+
+  local i
+  for ((i = 0; i < len; i += batchsize)); do
+    progress-bar "$((i+1))" "$len"
+    process-files "${files[@]:i:batchsize}"
+  done
+
+  # 100%
+  progress-bar "$len" "$len"
+}
+
+Main "$@"

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# /etc/passwd
+normalize-path '../../../../../../../../../../../../etc/passwd'
+
+# /tmp
+normalize-path '/./.././.././//././//./././//tmp/././././././'
+
+# '/usr/lib'
+normalize-path '/usr/bin/../lib//./'

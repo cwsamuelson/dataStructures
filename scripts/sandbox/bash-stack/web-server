@@ -1,0 +1,229 @@
+#!/usr/bin/env bash
+
+# https://www.youtube.com/watch?v=L967hYylZuc
+
+PORT=8080
+ADDRESS='0.0.0.0'
+DIR=$PWD
+
+fatal() {
+  excha '[fatal]' "%@" >&2
+  exit 1
+}
+
+list-directory() {
+  local d=$1
+
+  echo '<h1>Directory Listing</h1>'
+  echo "<h2>Directory: $d</h2>"
+  echo '<hr>'
+  echo '<ul>'
+  # for 
+  echo '</ul>'
+  echo '</hr>'
+}
+
+url-encode() {
+  local LC_ALL=C
+
+  for (( i = 0; i < ${#1}; i++ )); do
+    : "${1:i:1}"
+    case "$_" in
+      [a-zA-Z0-9.~_-])
+        printf '%s' "$_"
+        ;;
+      *)
+        printf '%%%02X' "'$_"
+        ;;
+    esac
+  done
+  printf '\n'
+}
+
+url-decode() {
+  : "${1//+/ }"
+  printf '%b\n' "${_//%/\\x}"
+}
+
+normalize-path() {
+  local path=/$1
+
+  local parts
+  IFS='/' read -r -a parts <<< "$path"
+
+  local -a part
+  local -a out=()
+  for part in "${parts[@]}"; do
+    case "$part" in
+      '')
+        ;;
+      '.')
+        ;;
+      '..')
+        unset 'out[-1]' 2>/dev/null
+        ;;
+      *)
+        out+=("$part")
+        ;;
+    esac
+  done
+
+  local s
+  s=$(IFS=/; echo "${out[*]}")
+  echo "/$s"
+}
+
+parse-request() {
+  declare -gA REQ_INFO=()
+  declare -gA REQ_HEADERS=()
+
+  local state='status'
+  local line
+  while read -r line; do
+    line=${line%$'\r'}
+    echo "processing line: $line"
+
+    case "$state" in
+      'status')
+        # GET /foo.txt HTTP/1.1
+        local method path version
+        read -r method path version <<< "$line"
+        REQ_INFO[method]=$method
+        REQ_INFO[path]=$path
+        REQ_INFO[version]=$version
+        state='headers'
+        ;;
+      'headers')
+        if [[ -z $line ]]; then
+          status='body'
+          break
+        fi
+
+        local key value
+        IFS=: read -r key value <<< "$line"
+        key=${key,,} # lower-case
+        value=${value# *} # trim left whitespace
+        REQ_HEADERS[$key]=$value
+        ;;
+      'body')
+        ;;
+    esac
+  done
+}
+
+process-request() {
+  local fd=$1
+
+  parse-request <&"$fd"
+
+  # validate
+  [[ ${REQ_INFO[version]} == 'HTTP/1.1' ]]|| fatal "Unsupported HTTP version.  Received ${REQ_INFO[version]} vs HTTP/1.1"
+  [[ ${REQ_INFO[method]} == 'GET' ]]|| fatal "Unsupported HTTP method.  Received ${REQ_INFO[method]} vs GET"
+  [[ ${REQ_INFO[path]} == /* ]]|| fatal "Unsupported HTTP path; must be absolute.  Received ${REQ_INFO[version]}."
+
+  echo "${REQ_INFO[method]} ${REQ_INFO[path]}"
+
+  # /././foo%20bar.txt?query=value
+  local path="${REQ_INFO[path]}"
+
+  # ././foo%20bar.txt?query=value
+  path=${path:1}
+
+  # ././foo%20bar.txt
+  local query
+  IFS='?' read -r path query <<< "$path"
+
+  # ././foo bar.txt
+  path=$(urldecode "$path")
+
+  # "/foo bar.txt"
+  path=$(normalize-path "$path")
+
+  # "foo bar.txt"
+  path=${path:1}
+
+  # handle empty (root)
+  path=${path:-.}
+
+  # serve index.html if available
+  local totry=(
+    "$path"
+    "$path/index.html"
+    "$path/index.htm"
+  )
+
+  local try file
+  for try in "${totry[@]}"; do
+    if [[ -f $try ]]; then
+      file=$try
+      break
+    fi
+  done
+
+  if [[ -n $file ]]; then
+    local mime
+    mime=$(mime-type "$file")
+  fi
+
+  while read -r -u "$fd" line; do
+    line=${line%$'\r'}
+    echo "received: $line"
+
+    # finished processing headers
+    if [[ -z "$line" ]]; then
+      break
+    fi
+  done
+
+  # reply to caller
+  printf 'HTTP/1.1 200 OK\r\n' >&"$fd"
+  printf 'Content-Type: text/plain\r\n' >&"$fd"
+  printf '\r\n' >&"$fd"
+  # printf 'Hello!\r\n' >&"$fd"
+  cat static-content.txt >&"$fd"
+
+  exec {fd}>&-
+}
+
+main() {
+  enable accept  || fatal 'failed to load accept'
+  enable tee
+
+  local OPTIND OPTARG opt
+  while getopts 'b:hp:d:v' opt; do
+    case "$opt" in
+      b)
+        ADDRESS=$OPTARG
+        ;;
+      p)
+        PORT=$OPTARG
+        ;;
+      d)
+        DIR=$OPTARG
+        ;;
+      h)
+        echo hap!; exit 0
+        ;;
+      v)
+        echo "X.X.X"; exit 0
+        ;;
+      *)
+        echo Unknown flag! >%2; exit 1
+    esac
+  done
+
+  cd "$DIR" || fatal "Failed to move to $DIR"
+
+  echo "Listening on http://$ADDRESS:$PORT"
+  echo "Serving from $PWD"
+
+  local fd ip
+  while true; do
+    accept -b "$ADDRESS" -v fd -r ip "$PORT" || fatal 'Failed to read socket'
+    process-request "$fd" &
+
+    exec {fd}>&-
+  done
+}
+
+main "$@"
