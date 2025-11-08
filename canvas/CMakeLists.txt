@@ -20,7 +20,6 @@ set(HEADERS
   header/fonts/8x8_latin.hh
   header/fonts/8x8_misc.hh
   header/fonts/8x8_sga.hh
-  header/fonts/render.hh
   header/utility/graphical-term.hh
   header/ui/button.hh
   header/ui/control.hh

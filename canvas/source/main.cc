@@ -48,7 +48,7 @@ int main() {
   GraphicalTermFrameEnd(state.get());
 
   flp::UI::Manager ui_manager;
-  ui_manager.add(std::make_shared<flp::UI::Button>("HI!", flp::Position2<size_t>{500, 500}, flp::Size2<size_t>{100, 100}));
+  ui_manager.add(std::make_shared<flp::UI::Button>("HI!", flp::Position2<size_t>{500, 500}, flp::Size2<size_t>{200, 100}));
 
   bool running = true;
   while (running) {

@@ -3,7 +3,6 @@
 #include "canvas/color.hh"
 #include "canvas/utility.hh"
 #include "fonts/8x8_basic.hh"
-#include "fonts/render.hh"
 
 #include <error_help.hh>
 
@@ -319,9 +318,6 @@ void Canvas<Color>::fill_triangle(const Vertex& v1, const Vertex& v2, const Vert
 
 template<typename Color>
 void Canvas<Color>::fill_text(const Position& position, const std::string_view text, const Color color) {
-  // unsigned char font8x8_basic[128][8];
-  // Fonts::render(canvas, Fonts::basic_8x8, color);
-
   for (const auto [index, c] : text | std::views::enumerate) {
     const auto bitmap = Fonts::basic_8x8[c];
 
