@@ -5,6 +5,7 @@
 #include "ui/widget.hh"
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 namespace flp::UI {
@@ -12,40 +13,38 @@ namespace flp::UI {
 struct Manager {
   using Canvas = Canvas<>;
 
-  Manager() = default;
+  Manager();
 
-  Manager(const Style& stl)
-    : style(stl)
-  {}
+  Manager(const Style& stl);
+
+  Manager(const Manager* prnt, const Position2<size_t>& offset);
+
+  Manager(const Manager* prnt, const Position2<size_t>& offset, const Style& stl);
 
   [[nodiscard]]
-  bool visible() const noexcept {
-    return true;
-  }
+  std::optional<const Manager*> parent() const noexcept;
 
-  void visible(const bool state) noexcept {
-    _visible = state;
-  }
+  void parent(const Manager* prnt) noexcept;
 
-  void update(const Widget::MouseState& mouse, const float delta) {
-    for (const auto& control : controls) {
-      control->update(mouse, delta);
-    }
-  }
+  [[nodiscard]]
+  bool visible() const noexcept;
 
-  void draw(Canvas& canvas) {
-    for (const auto& control : controls) {
-      control->draw(canvas, style);
-    }
-  }
+  void visible(const bool state) noexcept;
 
-  void add(std::shared_ptr<Widget> widget) {
-    controls.emplace_back(std::move(widget));
-  }
+  void update(const Widget::MouseState& mouse, const float delta);
+
+  void draw(Canvas& canvas);
+
+  void add(std::shared_ptr<Widget> widget);
+
+  [[nodiscard]]
+  Position2<size_t> position_offset() const noexcept;
 
   bool _visible = true;
   Style style = default_style;
   std::vector<std::shared_ptr<Widget>> controls;
+  std::optional<const Manager*> _parent;
+  Position2<size_t> offset;
 };
 
 }
