@@ -60,7 +60,8 @@ Position2<size_t> Manager::position_offset() const noexcept {
     return {0, 0};
   }
 
-  return _parent.value().position_offset() + offset;
+  // return _parent.value()->position_offset() + offset;
+  return _parent.value()->position_offset();
 }
 
 }
