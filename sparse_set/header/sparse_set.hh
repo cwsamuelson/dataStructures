@@ -12,30 +12,69 @@ namespace flp {
 template<std::unsigned_integral Type>
 class SparseSet {
 public:
+  SparseSet() = default;
+  SparseSet(const SparseSet&) = default;
+  SparseSet(SparseSet&&) noexcept = default;
+  SparseSet& operator=(const SparseSet&) = default;
+  SparseSet& operator=(SparseSet&&) noexcept = default;
+  ~SparseSet() = default;
+
+  template<typename Iterator>
+  SparseSet(Iterator first, Iterator last) {
+    insert(first, last);
+  }
+
   [[nodiscard]]
   bool contains(const Type value) const noexcept {
-    return value < sparse_data.size() and sparse_data.at(value) < element_count
+    return value < sparse_data.size()
+       and sparse_data.at(value) < element_count
+       and sparse_data.at(value) < dense_data.size()
        and dense_data.at(sparse_data.at(value)) == value;
   }
 
   void insert(const Type value) {
-    ensure_size(value + 1);
+    if (contains(value)) {
+      return;
+    }
+
+    if (sparse_data.size() <= value) {
+      sparse_data.resize(value + 1, 0);
+    }
+
+    dense_data.resize(element_count + 1, 0);
+
     dense_data.at(element_count) = value;
     sparse_data.at(value)        = element_count;
     ++element_count;
   }
 
-  void erase(const Type value) {
-    // this could be optimized, I'm sure
-    if (contains(value)) {
-      // swapping this value with the last valid element ensures this one is invalidated, and maintains the dense
-      // invariant
-      const auto index = sparse_data.at(value);
-      std::swap(dense_data.at(index), dense_data.at(element_count - 1));
-      // then the sparse data indexes must be updated
-      sparse_data.at(dense_data.at(index)) = index;
+  template<typename Iterator>
+  void insert(Iterator first, Iterator last) {
+    while (first != last) {
+      insert(*first++);
+    }
+  }
 
-      --element_count;
+  void erase(const Type value) {
+    if (not contains(value)) {
+      return;
+    }
+
+    // this could be optimized, I'm sure
+    // swapping this value with the last valid element ensures this one is
+    // invalidated, and maintains the dense invariant
+    const auto index = sparse_data.at(value);
+    std::swap(dense_data.at(index), dense_data.at(element_count - 1));
+    // then the sparse data indexes must be updated
+    sparse_data.at(dense_data.at(index)) = index;
+
+    --element_count;
+  }
+
+  template<typename Iterator>
+  void erase(Iterator first, Iterator last) {
+    while (first != last) {
+      erase(*first++);
     }
   }
 
@@ -51,13 +90,6 @@ public:
   [[nodiscard]]
   bool empty() const noexcept {
     return size() == 0;
-  }
-
-  void ensure_size(const size_t min_size) {
-    if (element_count < min_size) {
-      sparse_data.resize(min_size, 0);
-      dense_data.resize(min_size, 0);
-    }
   }
 
   [[nodiscard]]
@@ -81,11 +113,11 @@ public:
     return dense_data.begin() + element_count;
   }
 
-private:
+// private:
   std::vector<Type> sparse_data;
   std::vector<Type> dense_data;
 
-  size_t element_count {};
+  size_t element_count{};
 };
 
 } // namespace flp
