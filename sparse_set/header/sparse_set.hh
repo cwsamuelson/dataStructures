@@ -113,7 +113,7 @@ public:
     return dense_data.begin() + element_count;
   }
 
-// private:
+private:
   std::vector<Type> sparse_data;
   std::vector<Type> dense_data;
 
