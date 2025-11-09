@@ -1,16 +1,12 @@
 #pragma once
 
-#include "canvas/utility.hh"
-#include "fonts/8x8.hh"
 #include "ui/control.hh"
-
-#include <string>
 
 namespace flp::UI {
 
-struct Button : Control {
-  Button(std::string_view txt, Position2<size_t> pos, Size2<size_t> sz);
-  ~Button() override = default;
+struct CheckBox : Control {
+  CheckBox(std::string_view txt, Position2<size_t> pos, Size2<size_t> sz);
+  ~CheckBox() override = default;
 
   [[nodiscard]]
   bool visible() const noexcept override;
@@ -29,6 +25,7 @@ struct Button : Control {
   Position2<size_t> position;
   Size2<size_t> size;
   std::string text;
+  bool check_state = false;
 
   bool pressed = false;
   bool held = false;

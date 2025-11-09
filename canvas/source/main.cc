@@ -2,6 +2,7 @@
 
 #include <canvas/canvas.hh>
 #include <ui/button.hh>
+#include <ui/check-box.hh>
 #include <ui/manager.hh>
 #include <ui/style.hh>
 
@@ -48,7 +49,8 @@ int main() {
   GraphicalTermFrameEnd(state.get());
 
   flp::UI::Manager ui_manager;
-  ui_manager.add(std::make_shared<flp::UI::Button>("HI!", flp::Position2<size_t>{500, 500}, flp::Size2<size_t>{200, 100}));
+  ui_manager.add(std::make_shared<flp::UI::Button>("Button!", flp::Position2<size_t>{500, 500}, flp::Size2<size_t>{200, 100}));
+  ui_manager.add(std::make_shared<flp::UI::CheckBox>("Checkbox!", flp::Position2<size_t>{1000, 1000}, flp::Size2<size_t>{200, 100}));
 
   bool running = true;
   while (running) {

@@ -29,6 +29,7 @@ set(HEADERS
 )
 set(SOURCES
   source/button.cc
+  source/check-box.cc
 )
 
 common_library(${PROJECT_NAME}
