@@ -12,6 +12,8 @@ namespace flp {
 template<std::unsigned_integral Type>
 class SparseSet {
 public:
+  static constexpr auto unlikely = std::numeric_limits<Type>::max();
+
   SparseSet() = default;
 
   template<typename Iterator>
@@ -22,7 +24,6 @@ public:
   [[nodiscard]]
   bool contains(const Type value) const noexcept {
     return value < sparse_data.size()
-       and sparse_data.at(value) < element_count
        and sparse_data.at(value) < dense_data.size()
        and dense_data.at(sparse_data.at(value)) == value;
   }
@@ -33,14 +34,13 @@ public:
     }
 
     if (sparse_data.size() <= value) {
-      sparse_data.resize(value + 1, 0);
+      sparse_data.resize(value + 1, unlikely);
     }
 
-    dense_data.resize(element_count + 1, 0);
+    dense_data.resize(dense_data.size() + 1, unlikely);
 
-    dense_data.at(element_count) = value;
-    sparse_data.at(value)        = element_count;
-    ++element_count;
+    dense_data.back()     = value;
+    sparse_data.at(value) = dense_data.size() - 1;
   }
 
   template<typename Iterator>
@@ -59,11 +59,11 @@ public:
     // swapping this value with the last valid element ensures this one is
     // invalidated, and maintains the dense invariant
     const auto index = sparse_data.at(value);
-    std::swap(dense_data.at(index), dense_data.at(element_count - 1));
+    std::swap(dense_data.at(index), dense_data.back());
     // then the sparse data indexes must be updated
     sparse_data.at(dense_data.at(index)) = index;
 
-    --element_count;
+    dense_data.pop_back();
   }
 
   template<typename Iterator>
@@ -73,18 +73,22 @@ public:
     }
   }
 
+  void shrink() {
+    // dense_data.resize(element_count);
+  }
+
   void clear() noexcept {
-    element_count = 0;
+    dense_data.clear();
   }
 
   [[nodiscard]]
   size_t size() const noexcept {
-    return element_count;
+    return dense_data.size();
   }
 
   [[nodiscard]]
   bool empty() const noexcept {
-    return size() == 0;
+    return dense_data.empty();
   }
 
   [[nodiscard]]
@@ -101,18 +105,16 @@ public:
   }
 
   auto end() {
-    return dense_data.begin() + element_count;
+    return dense_data.end();
   }
 
   auto end() const {
-    return dense_data.begin() + element_count;
+    return dense_data.end();
   }
 
 private:
   std::vector<Type> sparse_data;
   std::vector<Type> dense_data;
-
-  size_t element_count{};
 };
 
 } // namespace flp

@@ -8,7 +8,7 @@
 
 using namespace flp;
 
-TEST_CASE("`SparseSet`") {
+TEST_CASE("`SparseSet`::Basics") {
   SparseSet<size_t> sparse_set;
 
   CHECK(sparse_set.size() == 0);
@@ -177,28 +177,61 @@ TEST_CASE("`SparseSet`::Properties") {
     RC_ASSERT(not sparse_set.contains(remove));
   });
 
-  rc::prop("Adding and removing values from set", [] {
-    const auto initial_values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
-    SparseSet<uint16_t> sparse_set(initial_values.begin(), initial_values.end());
+  SECTION("Adding and removing values from set") {
+    rc::prop("Totally random removal", [] {
+      const auto initial_values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
+      SparseSet<uint16_t> sparse_set(initial_values.begin(), initial_values.end());
 
-    const auto removal_values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
+      const auto removal_values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
 
-    for (const auto& value : removal_values) {
-      sparse_set.erase(value);
-      RC_ASSERT(not sparse_set.contains(value));
-    }
+      for (const auto& value : removal_values) {
+        sparse_set.erase(value);
+        RC_ASSERT(not sparse_set.contains(value));
+      }
 
-    for (const auto& value : removal_values) {
-      RC_ASSERT(not sparse_set.contains(value));
-    }
-  });
+      for (const auto& value : removal_values) {
+        RC_ASSERT(not sparse_set.contains(value));
+      }
+    });
+
+    rc::prop("Remove values from the input", [] {
+      const auto initial_values = *rc::gen::nonEmpty(
+        rc::gen::unique<std::vector<uint16_t>>(
+          rc::gen::arbitrary<uint16_t>()
+        )
+      );
+
+      SparseSet<uint16_t> sparse_set(initial_values.begin(), initial_values.end());
+
+      const auto removal_values = *
+        rc::gen::nonEmpty(
+          rc::gen::container<std::vector<uint16_t>>(
+            rc::gen::elementOf(initial_values)
+          )
+        );
+
+      for (const auto& value : removal_values) {
+        sparse_set.erase(value);
+        RC_ASSERT(not sparse_set.contains(value));
+      }
+
+      for (const auto& value : removal_values) {
+        RC_ASSERT(not sparse_set.contains(value));
+      }
+    });
+  }
 }
 
 TEST_CASE("`SparseSet`::Regressions") {
-  SparseSet<uint64_t> sparse_set;
-  sparse_set.insert(2);
-  sparse_set.insert(1);
+  SECTION("1: Tracking between sparse and dense arrays.") {
+    // While introducing property testing, this basic case would fail to
+    // correctly maintain the sparse array.
+    SparseSet<uint64_t> sparse_set;
 
-  CHECK(sparse_set.contains(2));
-  CHECK(sparse_set.contains(1));
+    sparse_set.insert(2);
+    sparse_set.insert(1);
+
+    CHECK(sparse_set.contains(2));
+    CHECK(sparse_set.contains(1));
+  }
 }
