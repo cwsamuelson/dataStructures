@@ -1,7 +1,8 @@
 #include <catch2/catch_all.hpp>
+#include <rapidcheck.h>
+#include <rapidcheck/catch.h>
 
 #include <vector.hh>
-
 #include <memory>
 
 using namespace flp;
@@ -45,17 +46,50 @@ struct RAIISignaler {
   }
 };
 
-TEST_CASE("`Vector` respects object lifetimes", "VECTOR") {
-  SECTION("Constructor is run on emplace_back call") {
+TEST_CASE("`Vector`::Lifetime management") {
+  SECTION("`push_back` calls copy constructor") {
     Vector<RAIISignaler> vector;
+  }
 
-    vector.emplace_back();
-    vector.emplace_back(42);
-    vector.emplace_back(42, 1138);
+  SECTION("`emplace_back` calls the appropriate constructor") {
+    SECTION("Default ctor") {
+      rc::prop("", [] {
+      });
 
-    CHECK(vector[0].default_constructor);
-    CHECK(vector[1].parameterized1_constructor);
-    CHECK(vector[2].parameterized2_constructor);
+      Vector<RAIISignaler> vector;
+
+      vector.emplace_back();
+      vector.emplace_back(42);
+      vector.emplace_back(42, 1138);
+
+      CHECK(vector[0].default_constructor);
+      CHECK(vector[1].parameterized1_constructor);
+      CHECK(vector[2].parameterized2_constructor);
+    }
+
+    SECTION("Single argument ctor") {
+      Vector<RAIISignaler> vector;
+
+      vector.emplace_back();
+      vector.emplace_back(42);
+      vector.emplace_back(42, 1138);
+
+      CHECK(vector[0].default_constructor);
+      CHECK(vector[1].parameterized1_constructor);
+      CHECK(vector[2].parameterized2_constructor);
+    }
+
+    SECTION("Two argument ctor") {
+      Vector<RAIISignaler> vector;
+
+      vector.emplace_back();
+      vector.emplace_back(42);
+      vector.emplace_back(42, 1138);
+
+      CHECK(vector[0].default_constructor);
+      CHECK(vector[1].parameterized1_constructor);
+      CHECK(vector[2].parameterized2_constructor);
+    }
   }
 
   SECTION("Destructor is run on pop_back") {
