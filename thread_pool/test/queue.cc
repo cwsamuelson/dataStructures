@@ -1,6 +1,8 @@
 #include <queue.hh>
 
 #include <catch2/catch_all.hpp>
+#include <rapidcheck.h>
+#include <rapidcheck/catch.h>
 
 #include <chrono>
 #include <iterator>
@@ -17,7 +19,7 @@ TEST_CASE("`ThreadPool::Queue` thread safety") {
   Queue<int>       queue;
   constexpr size_t thread_count { 20 };
   constexpr size_t window_size{5000000};
-  std::latch latch(thread_count);
+  std::latch       latch(thread_count); // Synchronize thread start
 
   CAPTURE(thread_count, window_size);
 
@@ -29,6 +31,7 @@ TEST_CASE("`ThreadPool::Queue` thread safety") {
     std::hash<std::thread::id> id_hasher;
     const auto offset = id_hasher(std::this_thread::get_id());
     const auto start = window_size * ID;
+    const auto end = start + window_size;
     auto counter = start;
 
     std::mt19937 generator(Catch::rngSeed() + offset);
@@ -39,8 +42,8 @@ TEST_CASE("`ThreadPool::Queue` thread safety") {
 
     latch.arrive_and_wait();
 
-    while (not stop_token.stop_requested() and counter < (window_size * (ID + 1))) {
-      if (queue.empty() and tf_dist(generator)) {
+    while (not stop_token.stop_requested() and counter < end) {
+      if (queue.empty() or tf_dist(generator)) {
         queue.push(counter++);
         ++produced;
       } else {
@@ -146,6 +149,30 @@ TEST_CASE("`ThreadPool::Queue` behaves as queue") {
 
   CHECK(queue.empty());
   CHECK(not queue.pop().has_value());
+
+  rc::prop("Random push-pop maintains sequence", [](const std::vector<size_t>& values){
+    std::mt19937 generator(Catch::rngSeed());
+    std::bernoulli_distribution tf_dist(.5);
+
+    Queue<size_t> queue;
+    std::vector<size_t> results;
+
+    for (size_t i = 0; i < values.size();) {
+      if (queue.empty() or tf_dist(generator)) {
+        queue.push(values[i]);
+        ++i;
+      } else {
+        results.push_back(queue.pop().value());
+      }
+    }
+
+    // drain queue
+    while (not queue.empty()) {
+      results.push_back(queue.pop().value());
+    }
+
+    RC_ASSERT(results == values);
+  });
 }
 
 // attempting to create a situation that would create the 'ABA' problem.

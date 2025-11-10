@@ -45,7 +45,7 @@ struct Queue {
     // loop
     while (true) {
       t = tail.load();
-      next = tail.load().pointer->next.load();
+      next = t.pointer->next.load();
 
       if (t == tail.load()) {
         if (next.pointer == nullptr) {
