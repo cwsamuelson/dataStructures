@@ -13,11 +13,6 @@ template<std::unsigned_integral Type>
 class SparseSet {
 public:
   SparseSet() = default;
-  SparseSet(const SparseSet&) = default;
-  SparseSet(SparseSet&&) noexcept = default;
-  SparseSet& operator=(const SparseSet&) = default;
-  SparseSet& operator=(SparseSet&&) noexcept = default;
-  ~SparseSet() = default;
 
   template<typename Iterator>
   SparseSet(Iterator first, Iterator last) {
