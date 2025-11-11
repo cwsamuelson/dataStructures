@@ -49,6 +49,7 @@ struct Number {
   // operator Integer() const noexcept {
   // }
 
+  constexpr
   Number& operator++() noexcept {
     if (value == 0) {
       ++value;
@@ -62,6 +63,7 @@ struct Number {
     return *this;
   }
 
+  constexpr
   Number operator++(int) noexcept {
     const auto result = *this;
 
@@ -77,6 +79,7 @@ struct Number {
     return result;
   }
 
+  constexpr
   Number& operator--() noexcept {
     if (value == 0) {
       ++value;
@@ -90,6 +93,7 @@ struct Number {
     return *this;
   }
 
+  constexpr
   Number operator--(int) noexcept {
     const auto result = *this;
 
