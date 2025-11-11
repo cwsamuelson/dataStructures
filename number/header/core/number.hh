@@ -49,6 +49,46 @@ struct Number {
   // operator Integer() const noexcept {
   // }
 
+  Number& operator++() noexcept {
+    if (negative) {
+      --value;
+    } else {
+      ++value;
+    }
+    return *this;
+  }
+
+  Number operator++(int) const noexcept {
+    auto result = *this;
+
+    if (result.negative) {
+      --result.value;
+    } else {
+      ++result.value;
+    }
+
+    return result;
+  }
+
+  Number& operator--() noexcept {
+    if (negative) {
+      ++value;
+    } else {
+      --value;
+    }
+    return *this;
+  }
+
+  Number operator--(int) const noexcept {
+    auto result = *this;
+    if (negative) {
+      ++result.value;
+    } else {
+      --result.value;
+    }
+    return result;
+  }
+
   friend
   constexpr
   Number operator+(const Number& number) noexcept {

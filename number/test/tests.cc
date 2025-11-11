@@ -196,6 +196,36 @@ TEST_CASE("`Number`::Arithmetic") {
   }
 
   SECTION("Subtraction") {
+    rc::prop("N - N : 64", [] (const uint64_t lhs, const uint64_t rhs) {
+      // const auto&& [lhs ,rhs] = *rc::gen::suchThat<std::tuple<uint64_t, uint64_t>>(
+      //   [](const std::tuple<uint64_t, uint64_t>& values) {
+      //     const auto [lhs, rhs] = values;
+      //     return (std::numeric_limits<uint64_t>::max() - lhs) < rhs;
+      //   }
+      // );
+
+      RC_ASSERT((Number{lhs} + Number{rhs}) == (lhs + rhs));
+    });
+
+    rc::prop("N - N", [](const uint32_t number, const uint32_t integer) {
+      RC_ASSERT((Number{number} - Number{integer}) == static_cast<int64_t>((static_cast<uint64_t>(number) - static_cast<uint64_t>(integer))));
+    });
+
+    rc::prop("N - u32_t", [](const uint32_t number, const uint32_t integer) {
+      RC_ASSERT((Number{number} - integer) == static_cast<int64_t>(static_cast<int64_t>(number) - static_cast<uint64_t>(integer)));
+    });
+
+    rc::prop("N - s32_t", [](const uint32_t number, const int32_t integer) {
+      RC_ASSERT((Number{number} - integer) == (static_cast<int64_t>(number) - static_cast<int32_t>(integer)));
+    });
+
+    rc::prop("u32_t - N", [](const uint32_t integer, const uint32_t number) {
+      RC_ASSERT((integer - Number{number}) == static_cast<int64_t>(static_cast<uint64_t>(integer) - static_cast<uint64_t>(number)));
+    });
+
+    rc::prop("s32_t - N", [](const int32_t integer, const uint32_t number) {
+      RC_ASSERT((integer - Number{number}) == static_cast<int64_t>((static_cast<int64_t>(integer) - static_cast<uint64_t>(number))));
+    });
   }
 
   SECTION("Multiplication") {
@@ -205,6 +235,35 @@ TEST_CASE("`Number`::Arithmetic") {
   }
 
   SECTION("Modulus") {
+  }
+
+  SECTION("Increment") {
+    SECTION("Unsigned input") {
+      rc::prop("Pre-Increment", [](const uint64_t value) {
+        Number number{value};
+        RC_ASSERT(++number == value + 1);
+      });
+
+      rc::prop("Post-Increment", [](const uint64_t value) {
+        Number number{value};
+        RC_ASSERT(number++ == value + 1);
+      });
+    }
+
+    SECTION("Signed input") {
+      rc::prop("Pre-Increment", [](const int64_t value) {
+        Number number{value};
+        RC_ASSERT(++number == value + 1);
+      });
+
+      rc::prop("Post-Increment", [](const int64_t value) {
+        Number number{value};
+        RC_ASSERT(number++ == value + 1);
+      });
+    }
+  }
+
+  SECTION("Decrement") {
   }
 }
 
