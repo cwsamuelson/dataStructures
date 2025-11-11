@@ -1,6 +1,7 @@
 #pragma once
 
 #include <concepts>
+#include <limits>
 #include <vector>
 
 // https://programmingpraxis.com/2012/03/09/sparse-sets/
@@ -10,10 +11,13 @@ namespace flp {
 
 template<std::unsigned_integral Key, typename Value>
 struct SparseMap {
+  static constexpr auto unlikely = std::numeric_limits<Key>::max();
+
   [[nodiscard]]
-  bool contains(const Key value) const noexcept {
-    return value < sparse_data.size() and sparse_data.at(value) < value_data.size()
-       and dense_data.at(sparse_data.at(value)) == value;
+  bool contains(const Key key) const noexcept {
+    return key < sparse_data.size()
+       and sparse_data.at(key) < dense_data.size()
+       and dense_data.at(sparse_data.at(key)) == key;
   }
 
   [[nodiscard]]
@@ -28,37 +32,57 @@ struct SparseMap {
 
   template<typename ...Args>
   void emplace(const Key key, Args&& ...args) {
-    const auto element_count = value_data.size();
-    ensure_size(key + 1);
+    if (contains(key)) {
+      return;
+    }
+
+    if (sparse_data.size() <= key) {
+      sparse_data.resize(key + 1, unlikely);
+    }
+
+    dense_data.resize(dense_data.size() + 1, unlikely);
     value_data.emplace_back(std::forward<Args>(args)...);
-    dense_data.at(element_count) = key;
-    sparse_data.at(key)          = element_count;
+
+    dense_data.back()   = key;
+    sparse_data.at(key) = dense_data.size() - 1;
   }
 
   void insert(const Key key, Value value) {
-    const auto element_count = value_data.size();
-    ensure_size(key + 1);
-    value_data.emplace_back(std::move(value));
-    dense_data.at(element_count) = key;
-    sparse_data.at(key)          = element_count;
+    if (contains(key)) {
+      return;
+    }
+
+    if (sparse_data.size() <= key) {
+      sparse_data.resize(key + 1, unlikely);
+    }
+
+    dense_data.resize(dense_data.size() + 1, unlikely);
+    value_data.push_back(value);
+
+    dense_data.back()   = key;
+    sparse_data.at(key) = dense_data.size() - 1;
   }
 
-  void erase(const Key value) {
-    // this could be optimized, I'm sure
-    if (contains(value)) {
-      // swapping this value with the last valid element ensures this one is invalidated, and maintains the dense
-      // invariant
-      const auto index = sparse_data.at(value);
-      std::swap(dense_data.at(index), dense_data.at(value_data.size() - 1));
-      std::swap(value_data.at(index), value_data.at(value_data.size() - 1));
-      // then the sparse data indexes must be updated
-      sparse_data.at(dense_data.at(index)) = index;
-
-      value_data.pop_back();
+  void erase(const Key key) {
+    if (not contains(key)) {
+      return;
     }
+
+    // this could be optimized, I'm sure
+    // swapping this key with the last valid element ensures this one is
+    // invalidated, and maintains the dense invariant
+    const auto index = sparse_data.at(key);
+    std::swap(dense_data.at(index), dense_data.back());
+    std::swap(value_data.at(index), value_data.back());
+    // then the sparse data indexes must be updated
+    sparse_data.at(dense_data.at(index)) = index;
+
+    dense_data.pop_back();
+    value_data.pop_back();
   }
 
   void clear() noexcept {
+    dense_data.clear();
     value_data.clear();
   }
 
@@ -74,11 +98,37 @@ struct SparseMap {
 
   void ensure_size(const size_t min_size) {
     if (sparse_data.size() < min_size) {
-      sparse_data.resize(min_size, 0);
-      dense_data.resize(min_size, 0);
+      sparse_data.resize(min_size, unlikely);
+      dense_data.resize(min_size, unlikely);
       value_data.reserve(min_size);
     }
   }
+
+  struct Iterator {
+    friend bool operator==(const Iterator& lhs, const Iterator& rhs) noexcept = default;
+    friend auto operator<=>(const Iterator& lhs, const Iterator& rhs) noexcept = default;
+
+    std::tuple<const Key&, Value&> operator*(this auto&& self) {
+      return { *self.dense_iterator, *self.value_iterator };
+    }
+
+    pointer operator->(this auto&& self) noexcept {
+      return &self.block_it->data.at(self.index).get();
+    }
+
+    Iterator& operator++(){
+      return *this;
+    }
+    Iterator operator++(int){}
+
+    Iterator& operator--(){
+      return *this;
+    }
+    Iterator operator--(int){}
+
+    typename std::vector<Key>::iterator dense_iterator;
+    typename std::vector<Value>::iterator value_iterator;
+  };
 
   auto begin() {
     return value_data.begin();
@@ -99,6 +149,8 @@ struct SparseMap {
   std::vector<Key>   sparse_data;
   std::vector<Key>   dense_data;
   std::vector<Value> value_data;
+
+  size_t element_count{};
 };
 
 } // namespace flp
