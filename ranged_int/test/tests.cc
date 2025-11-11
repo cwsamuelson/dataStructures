@@ -2,6 +2,9 @@
 #include <std_ints.hh>
 
 #include <catch2/catch_all.hpp>
+#include <rapidcheck/catch.h>
+#include <rapidcheck/Gen.h>
+#include <rapidcheck/gen/Numeric.h>
 
 #include <limits>
 #include <memory>
@@ -16,7 +19,7 @@ void static_for(F func, std::index_sequence<Is...>) {
   (func(Is), ...);
 }
 
-TEST_CASE("Range type deduction from bounds") {
+TEST_CASE("`DeducedType`::Range type deduction from bounds") {
   SECTION("Intrinsic types, limits bounds") {
     TEST_TYPE_BOUNDS(uint8_t);
     TEST_TYPE_BOUNDS(uint16_t);
@@ -41,7 +44,7 @@ TEST_CASE("Range type deduction from bounds") {
   }
 }
 
-TEST_CASE("Range bounds testing") {
+TEST_CASE("`Range`::Range bounds testing") {
   SECTION("Uint8_t equivalent") {
     constexpr Range range(0, 255);
     STATIC_CHECK(-1 < range);
@@ -67,7 +70,7 @@ TEST_CASE("Range bounds testing") {
   }
 }
 
-TEST_CASE("Ranges math") {
+TEST_CASE("`Range`::Ranges math") {
   STATIC_CHECK(Range{0, 0} == Range{0, 0});
   STATIC_CHECK(Range{0, 1} != Range{0, 0});
   STATIC_CHECK(Range{0, 0} != Range{0, 1});
@@ -81,7 +84,7 @@ TEST_CASE("Ranges math") {
   STATIC_CHECK(Range{0, 0} - Range{1, 2} == Range{-1, -2});
 }
 
-TEST_CASE("Using ranged integers") {
+TEST_CASE("`RangedInt`::Using ranged integers") {
   SECTION("Expected underlying types") {
     STATIC_CHECK(std::same_as<u8::Type, uint8_t>);
     STATIC_CHECK(std::same_as<s8::Type, int8_t>);
@@ -217,26 +220,91 @@ TEST_CASE("Using ranged integers") {
   }
 }
 
-template<typename, typename>
-struct X;
-
-template<std::signed_integral LType, std::signed_integral RType>
-struct X<LType, RType> {};
-
-template<std::unsigned_integral LType, std::unsigned_integral RType>
-struct X<LType, RType> {
-  // std::common_type_t<LType, RType>;
-};
-
-template<std::signed_integral LType, std::unsigned_integral RType>
-struct X<LType, RType> {};
-
-template<std::unsigned_integral LType, std::signed_integral RType>
-struct X<LType, RType> {
-private:
-  X<RType, LType> helper;
-
-public:
-};
-
 TEST_CASE("Mixed sign arithmetic") {}
+
+TEST_CASE("`RangedInt`::Props") {
+  SECTION("u8") {
+    rc::prop("Within Range", [] {
+      const auto value = *rc::gen::inRange(0, 255);
+      const RangedInt<{0, 255}> ranged_value = value;
+      RC_ASSERT(ranged_value == value);
+    });
+
+    rc::prop("Out of Range", [] {
+      const auto value = *rc::gen::inRange(256, 100'000'000);
+      RC_ASSERT_THROWS(u8{value});
+    });
+  }
+
+  SECTION("u16") {
+    rc::prop("Within Range", [] {
+      const auto value = *rc::gen::inRange(0, 65535);
+      const RangedInt<{0, 65535}> ranged_value = value;
+      RC_ASSERT(ranged_value == value);
+    });
+
+    rc::prop("Out of Range", [] {
+      const auto value = *rc::gen::inRange(65536, 100'000'000);
+      RC_ASSERT_THROWS(u16{value});
+    });
+  }
+
+  SECTION("Arbitrary") {
+    rc::prop("Out of Range", [] {
+      const auto value = *rc::gen::inRange(0, 255);
+      using Integer = RangedInt<{256, 10'000}>;
+      RC_ASSERT_THROWS(Integer{value});
+    });
+
+    rc::prop("Within Range", [] {
+      const auto value = *rc::gen::inRange(15, 100);
+      const RangedInt<{15, 100}> ranged_value = value;
+      RC_ASSERT(ranged_value == value);
+    });
+  }
+}
+
+TEST_CASE("`RangedInt`::Arithmetic Props") {
+  SECTION("Arithmetic shifts range bounds") {
+    rc::prop("Addition", [] {
+      const u8 x = *rc::gen::inRange(0, 255);
+      const u8 y = *rc::gen::inRange(0, 255);
+      auto z = x + y;
+
+      SECTION("In range") {
+        const auto value = *rc::gen::inRange(0, 510);
+        z = value;
+
+        RC_ASSERT(z == value);
+      }
+
+      SECTION("Out of Range") {
+        const auto value = *rc::gen::inRange(511, 100'000'000);
+        RC_ASSERT_THROWS(decltype(z){value});
+      }
+    });
+
+    rc::prop("subtraction", [] {
+      const u8 x = *rc::gen::inRange(0, 255);
+      const u8 y = *rc::gen::inRange(0, 255);
+      auto z = x - y;
+
+      SECTION("In range") {
+        const auto value = *rc::gen::inRange(-255, 255);
+        z = value;
+
+        RC_ASSERT(z == value);
+      }
+
+      SECTION("Above Range") {
+        const auto value = *rc::gen::inRange(256, 100'000'000);
+        RC_ASSERT_THROWS(decltype(z){value});
+      }
+
+      SECTION("Below Range") {
+        const auto value = *rc::gen::inRange(-100'000'000, -254);
+        RC_ASSERT_THROWS(decltype(z){value});
+      }
+    });
+  }
+}
