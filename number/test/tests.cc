@@ -5,6 +5,7 @@
 #include <catch2/catch_all.hpp>
 #include <rapidcheck.h>
 #include <rapidcheck/catch.h>
+#include <rapidcheck/gen/Predicate.h>
 
 using namespace flp;
 
@@ -242,11 +243,13 @@ TEST_CASE("`Number`::Arithmetic") {
       rc::prop("Pre-Increment", [](const uint64_t value) {
         Number number{value};
         RC_ASSERT(++number == value + 1);
+        RC_ASSERT(number == value + 1);
       });
 
       rc::prop("Post-Increment", [](const uint64_t value) {
         Number number{value};
-        RC_ASSERT(number++ == value + 1);
+        RC_ASSERT(number++ == value);
+        RC_ASSERT(number == value + 1);
       });
     }
 
@@ -254,16 +257,49 @@ TEST_CASE("`Number`::Arithmetic") {
       rc::prop("Pre-Increment", [](const int64_t value) {
         Number number{value};
         RC_ASSERT(++number == value + 1);
+        RC_ASSERT(number == value + 1);
       });
 
       rc::prop("Post-Increment", [](const int64_t value) {
         Number number{value};
-        RC_ASSERT(number++ == value + 1);
+        RC_ASSERT(number++ == value);
+        RC_ASSERT(number == value + 1);
       });
     }
   }
 
   SECTION("Decrement") {
+    SECTION("Unsigned input") {
+      rc::prop("Pre-Decrement", [] {
+        const auto value = *rc::gen::nonZero<uint64_t>();
+        Number number{value};
+        RC_ASSERT(--number == value - 1);
+        RC_ASSERT(number == value - 1);
+      });
+
+      rc::prop("Post-Decrement", [] {
+        const auto value = *rc::gen::nonZero<uint64_t>();
+        Number number{value};
+        RC_ASSERT(number-- == value);
+        RC_ASSERT(number == value - 1);
+      });
+    }
+
+    SECTION("Signed input") {
+      rc::prop("Pre-Decrement", [] {
+        const auto value = *rc::gen::nonZero<uint64_t>();
+        Number number{value};
+        RC_ASSERT(--number == value - 1);
+        RC_ASSERT(number == value - 1);
+      });
+
+      rc::prop("Post-Decrement", [] {
+        const auto value = *rc::gen::nonZero<uint64_t>();
+        Number number{value};
+        RC_ASSERT(number-- == value);
+        RC_ASSERT(number == value - 1);
+      });
+    }
   }
 }
 

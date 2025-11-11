@@ -50,42 +50,58 @@ struct Number {
   // }
 
   Number& operator++() noexcept {
-    if (negative) {
+    if (value == 0) {
+      ++value;
+      negative = false;
+    } else if (negative) {
       --value;
     } else {
       ++value;
     }
+
     return *this;
   }
 
-  Number operator++(int) const noexcept {
-    auto result = *this;
+  Number operator++(int) noexcept {
+    const auto result = *this;
 
-    if (result.negative) {
-      --result.value;
+    if (value == 0) {
+      ++value;
+      negative = false;
+    } else if (negative) {
+      --value;
     } else {
-      ++result.value;
+      ++value;
     }
 
     return result;
   }
 
   Number& operator--() noexcept {
-    if (negative) {
+    if (value == 0) {
+      ++value;
+      negative = true;
+    } else if (negative) {
       ++value;
     } else {
       --value;
     }
+
     return *this;
   }
 
-  Number operator--(int) const noexcept {
-    auto result = *this;
-    if (negative) {
-      ++result.value;
+  Number operator--(int) noexcept {
+    const auto result = *this;
+
+    if (value == 0) {
+      ++value;
+      negative = true;
+    } else if (negative) {
+      ++value;
     } else {
-      --result.value;
+      --value;
     }
+
     return result;
   }
 
