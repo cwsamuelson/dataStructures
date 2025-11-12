@@ -158,6 +158,32 @@ TEST_CASE("`Sockets`::Utilities") {
   // VERIFY(host_res != -1, "... {} ...", errno);
 }
 
+TEST_CASE("`Sockets`::polling, blocking, and async") {
+  // https://beej.us/guide/bgnet/html/split-wide/slightly-advanced-techniques.html#slightly-advanced-techniques
+
+  // polling
+  auto sock = socket(PF_INET, SOCK_STREAM, 0);
+  fcntl(sock, F_SETFL, O_NONBLOCK);
+
+  // select
+
+  timeval tv;
+  fd_set readfds;
+  tv.tv_sec = 2;
+  tv.tv_usec = 500'000;
+
+  FD_ZERO(&readfds);
+  FD_SET(STDIN, &readfds);
+
+  select(STDIN + 1, &readfds, nullptr, nullptr, &tv);
+
+  if (FD_ISSET(STDIN, &readfds)) {
+    // key pressed!
+  } else {
+    // timeout
+  }
+}
+
 enum class SendFlags {
   // Tell the link layer that forward progress happened: you got
   // a successful reply from the other side.  If the link layer
