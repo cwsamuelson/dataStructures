@@ -12,6 +12,9 @@ using namespace flp;
 struct S {
   int x;
 
+  S() = default;
+  S(int i) : x(i) {}
+
   friend auto operator<=>(const S&, const S&) noexcept = default;
 };
 
@@ -40,7 +43,8 @@ TEST_CASE("`SparseMap`::Basics") {
   CHECK(sparse_map.contains(5));
   CHECK(not sparse_map.contains(0));
   CHECK(not sparse_map.contains(1));
-  CHECK(*sparse_map.begin() == S { 6 });
+  CHECK(sparse_map.begin()->first == 5);
+  CHECK(sparse_map.begin()->second == S { 6 });
 
   sparse_map.clear();
   CHECK(sparse_map.size() == 0);
@@ -59,7 +63,8 @@ TEST_CASE("`SparseMap`::Basics") {
   CHECK(sparse_map.contains(10));
   CHECK(not sparse_map.contains(0));
   CHECK(not sparse_map.contains(1));
-  CHECK(*sparse_map.begin() == S { 6 });
+  CHECK(sparse_map.begin()->first == 5);
+  CHECK(sparse_map.begin()->second == S { 6 });
 
   sparse_map.clear();
   CHECK(sparse_map.size() == 0);
@@ -78,9 +83,12 @@ TEST_CASE("`SparseMap`::Basics") {
   CHECK(sparse_map.contains(5));
   CHECK(sparse_map.contains(10));
   CHECK(sparse_map.contains(15));
-  CHECK(*sparse_map.begin() == S { 6 });
-  CHECK(*(++sparse_map.begin()) == S { 12 });
-  CHECK(*(++(++sparse_map.begin())) == S { 18 });
+  CHECK(sparse_map.begin()->first == 5);
+  CHECK(sparse_map.begin()->second == S { 6 });
+  CHECK((++sparse_map.begin())->first == 10);
+  CHECK((++sparse_map.begin())->second == S { 12 });
+  CHECK((++(++sparse_map.begin()))->first == 15);
+  CHECK((++(++sparse_map.begin()))->second == S { 18 });
   CHECK(not sparse_map.contains(0));
   CHECK(not sparse_map.contains(1));
 
@@ -91,8 +99,10 @@ TEST_CASE("`SparseMap`::Basics") {
   CHECK(sparse_map.begin() != sparse_map.end());
   CHECK(sparse_map.contains(5));
   CHECK(sparse_map.contains(15));
-  CHECK(*sparse_map.begin() == S { 6 });
-  CHECK(*(++sparse_map.begin()) == S { 18 });
+  CHECK(sparse_map.begin()->first == 5);
+  CHECK(sparse_map.begin()->second == S { 6 });
+  CHECK((++sparse_map.begin())->first == 15);
+  CHECK((++sparse_map.begin())->second == S { 18 });
   CHECK(not sparse_map.contains(0));
   CHECK(not sparse_map.contains(1));
 }
@@ -117,8 +127,8 @@ TEST_CASE("`SparseMap`::Properties") {
     RC_ASSERT(sparse_map.empty() == values.empty());
 
     size_t count{};
-    for (const auto& value : sparse_map) {
-      RC_ASSERT(sparse_map.contains(value));
+    for (const auto& [key, value] : sparse_map) {
+      RC_ASSERT(sparse_map.contains(key));
       ++count;
     }
 
@@ -135,16 +145,16 @@ TEST_CASE("`SparseMap`::Properties") {
     RC_ASSERT(sparse_map_copy.empty() == sparse_map.empty());
 
     count = 0;
-    for (const auto& value : sparse_map) {
-      RC_ASSERT(sparse_map_copy.contains(value));
+    for (const auto& [key, value] : sparse_map) {
+      RC_ASSERT(sparse_map_copy.contains(key));
       ++count;
     }
 
     RC_ASSERT(count == sparse_map_copy.size());
 
     count = 0;
-    for (const auto& value : sparse_map_copy) {
-      RC_ASSERT(sparse_map.contains(value));
+    for (const auto& [key, value] : sparse_map_copy) {
+      RC_ASSERT(sparse_map.contains(key));
       ++count;
     }
 
@@ -158,36 +168,52 @@ TEST_CASE("`SparseMap`::Properties") {
     }
 
     count = 0;
-    for (const auto& value : sparse_map_copy) {
-      RC_ASSERT(sparse_map_copy.contains(value));
+    for (const auto& [key, value] : sparse_map_copy) {
+      RC_ASSERT(sparse_map_copy.contains(key));
       ++count;
     }
 
     RC_ASSERT(count == 0);
   });
 
-  rc::prop("Acts like a set", [](const std::vector<uint16_t>& values) {
-    const SparseMap<uint16_t, S> sparse_map(values.begin(), values.end());
-    const std::set<uint16_t> std_set(values.begin(), values.end());
-
-    RC_ASSERT(sparse_map.size() == std_set.size());
-    RC_ASSERT(sparse_map.empty() == std_set.empty());
-
-    for (const auto& value : std_set) {
-      RC_ASSERT(sparse_map.contains(value));
-    }
-  });
-
-  rc::prop("Removing values from set", [] {
-    const auto values = *
+  rc::prop("Acts like a set", [] {
+    const auto keys = *
       rc::gen::nonEmpty(
         rc::gen::unique<std::vector<uint16_t>>(
           rc::gen::arbitrary<uint16_t>()
         )
       );
-    SparseMap<uint16_t, S> sparse_map(values.begin(), values.end());
+    const auto values = *
+      rc::gen::container<std::vector<uint16_t>>(keys.size(),
+        rc::gen::arbitrary<uint16_t>()
+      );
+    auto key_value_zip = std::views::zip(keys, values);
+    const SparseMap<uint16_t, S> sparse_map(key_value_zip.begin(), key_value_zip.end());
+    const std::set<uint16_t> std_set(keys.begin(), keys.end());
 
-    const auto remove = *rc::gen::elementOf(values);
+    RC_ASSERT(sparse_map.size() == std_set.size());
+    RC_ASSERT(sparse_map.empty() == std_set.empty());
+
+    for (const auto& key : std_set) {
+      RC_ASSERT(sparse_map.contains(key));
+    }
+  });
+
+  rc::prop("Removing values", [] {
+    const auto keys = *
+      rc::gen::nonEmpty(
+        rc::gen::unique<std::vector<uint16_t>>(
+          rc::gen::arbitrary<uint16_t>()
+        )
+      );
+    const auto values = *
+      rc::gen::container<std::vector<uint16_t>>(keys.size(),
+        rc::gen::arbitrary<uint16_t>()
+      );
+    auto key_value_zip = std::views::zip(keys, values);
+    SparseMap<uint16_t, S> sparse_map(key_value_zip.begin(), key_value_zip.end());
+
+    const auto remove = *rc::gen::elementOf(keys);
     RC_ASSERT(sparse_map.contains(remove));
     sparse_map.erase(remove);
     RC_ASSERT(not sparse_map.contains(remove));
@@ -195,53 +221,63 @@ TEST_CASE("`SparseMap`::Properties") {
 
   SECTION("Adding and removing values from set") {
     rc::prop("Totally random removal", [] {
-      const auto initial_values = *
+      const auto keys = *
         rc::gen::nonEmpty(
           rc::gen::unique<std::vector<uint16_t>>(
             rc::gen::arbitrary<uint16_t>()
           )
         );
-      SparseMap<uint16_t, S> sparse_map(initial_values.begin(), initial_values.end());
+      const auto values = *
+        rc::gen::container<std::vector<uint16_t>>(keys.size(),
+          rc::gen::arbitrary<uint16_t>()
+        );
+      auto key_value_zip = std::views::zip(keys, values);
+      SparseMap<uint16_t, S> sparse_map(key_value_zip.begin(), key_value_zip.end());
 
-      const auto removal_values = *
+      const auto removal_keys = *
         rc::gen::nonEmpty(
           rc::gen::unique<std::vector<uint16_t>>(
             rc::gen::arbitrary<uint16_t>()
           )
         );
 
-      for (const auto& value : removal_values) {
+      for (const auto& value : removal_keys) {
         sparse_map.erase(value);
         RC_ASSERT(not sparse_map.contains(value));
       }
 
-      for (const auto& value : removal_values) {
+      for (const auto& value : removal_keys) {
         RC_ASSERT(not sparse_map.contains(value));
       }
     });
 
     rc::prop("Remove values from the input", [] {
-      const auto initial_values = *rc::gen::nonEmpty(
-        rc::gen::unique<std::vector<uint16_t>>(
+      const auto keys = *
+        rc::gen::nonEmpty(
+          rc::gen::unique<std::vector<uint16_t>>(
+            rc::gen::arbitrary<uint16_t>()
+          )
+        );
+      const auto values = *
+        rc::gen::container<std::vector<uint16_t>>(keys.size(),
           rc::gen::arbitrary<uint16_t>()
-        )
-      );
+        );
+      auto key_value_zip = std::views::zip(keys, values);
+      SparseMap<uint16_t, S> sparse_map(key_value_zip.begin(), key_value_zip.end());
 
-      SparseMap<uint16_t, S> sparse_map(initial_values.begin(), initial_values.end());
-
-      const auto removal_values = *
+      const auto removal_keys = *
         rc::gen::nonEmpty(
           rc::gen::container<std::vector<uint16_t>>(
-            rc::gen::elementOf(initial_values)
+            rc::gen::elementOf(keys)
           )
         );
 
-      for (const auto& value : removal_values) {
+      for (const auto& value : removal_keys) {
         sparse_map.erase(value);
         RC_ASSERT(not sparse_map.contains(value));
       }
 
-      for (const auto& value : removal_values) {
+      for (const auto& value : removal_keys) {
         RC_ASSERT(not sparse_map.contains(value));
       }
     });
