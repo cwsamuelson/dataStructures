@@ -99,7 +99,10 @@ TEST_CASE("`SparseSet`::Basics") {
 // `SparseSet` requires the sparse array to be allocated to that size at minimum.
 TEST_CASE("`SparseSet`::Properties") {
   rc::prop("Contains all of a set of unique values", [] {
-    const auto values = *rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>());
+    const auto values = *
+      rc::gen::unique<std::vector<uint16_t>>(
+        rc::gen::arbitrary<uint16_t>()
+      );
     const SparseSet<uint16_t> sparse_set(values.begin(), values.end());
 
     RC_ASSERT(sparse_set.size() == values.size());
@@ -168,7 +171,12 @@ TEST_CASE("`SparseSet`::Properties") {
   });
 
   rc::prop("Removing values from set", [] {
-    const auto values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
+    const auto values = *
+      rc::gen::nonEmpty(
+        rc::gen::unique<std::vector<uint16_t>>(
+          rc::gen::arbitrary<uint16_t>()
+        )
+      );
     SparseSet<uint16_t> sparse_set(values.begin(), values.end());
 
     const auto remove = *rc::gen::elementOf(values);
@@ -179,10 +187,20 @@ TEST_CASE("`SparseSet`::Properties") {
 
   SECTION("Adding and removing values from set") {
     rc::prop("Totally random removal", [] {
-      const auto initial_values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
+      const auto initial_values = *
+        rc::gen::nonEmpty(
+          rc::gen::unique<std::vector<uint16_t>>(
+            rc::gen::arbitrary<uint16_t>()
+          )
+        );
       SparseSet<uint16_t> sparse_set(initial_values.begin(), initial_values.end());
 
-      const auto removal_values = *rc::gen::nonEmpty(rc::gen::unique<std::vector<uint16_t>>(rc::gen::arbitrary<uint16_t>()));
+      const auto removal_values = *
+        rc::gen::nonEmpty(
+          rc::gen::unique<std::vector<uint16_t>>(
+            rc::gen::arbitrary<uint16_t>()
+          )
+        );
 
       for (const auto& value : removal_values) {
         sparse_set.erase(value);
