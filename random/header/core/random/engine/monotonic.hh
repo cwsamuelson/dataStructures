@@ -8,6 +8,7 @@ namespace flp::Random {
 
 struct Monotonic {
   using Result = size_t;
+  using Seed = size_t;
 
   static
   constexpr
@@ -22,16 +23,17 @@ struct Monotonic {
   }
 
   constexpr
-  Monotonic() = default;
+  Monotonic() noexcept = default;
 
   constexpr
-  Monotonic(const Result seed)
-    : state(seed)
+  Monotonic(const Seed seed) noexcept
+    : _seed(seed)
+    , state(_seed)
   {}
 
   [[nodiscard]]
   constexpr
-  Result operator()() {
+  Result operator()() noexcept {
     return state++;
   }
 
@@ -41,7 +43,33 @@ struct Monotonic {
     return 0.;
   }
 
+  [[nodiscard]]
+  constexpr
+  Seed seed() const noexcept {
+    return _seed;
+  }
+
+  constexpr
+  void seed(const Seed seed) noexcept {
+    _seed = seed;
+    state = _seed;
+  }
+
+  constexpr
+  void discard() noexcept {
+    discard(1);
+  }
+
+  constexpr
+  void discard(size_t count) noexcept {
+    while (count-- > 1) {
+      [[maybe_unused]]const auto x = (*this)();
+    }
+  }
+
+  Seed _seed{};
   Result state{};
 };
+static_assert(Engine<Monotonic>);
 
 }

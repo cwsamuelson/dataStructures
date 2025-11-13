@@ -1,6 +1,9 @@
 #pragma once
 
+#include <array>
+#include <cmath>
 #include <cstddef>
+#include <limits>
 
 namespace flp::Random {
 
@@ -29,16 +32,136 @@ template<
   Type f
 >
 struct MersenneTwister {
+  static_assert(w >= 3);
+  static_assert(w >= r);
+  static_assert(w >= u);
+  static_assert(w >= s);
+  static_assert(w >= t);
+  static_assert(w >= l);
+  static_assert(w <= std::numeric_limits<Type>::digits);
+
+  static constexpr auto w1 = (1u << w) - 1;
+
+  // static_assert(a <= w1);
+  // static_assert(b <= w1);
+  // static_assert(c <= w1);
+  // static_assert(d <= w1);
+  // static_assert(f <= w1);
+
   using Result = Type;
+  using Seed = Type;
+
+  static constexpr size_t word_size   = w;
+  static constexpr size_t state_size  = n;
+  static constexpr size_t shift_size  = m;
+  static constexpr size_t mask_bits   = r;
+  static constexpr Result xor_mask    = a;
+  static constexpr size_t tempering_u = u;
+  static constexpr Result tempering_d = d;
+  static constexpr size_t tempering_s = s;
+  static constexpr Result tempering_b = b;
+  static constexpr size_t tempering_t = t;
+  static constexpr Result tempering_c = c;
+  static constexpr size_t tempering_l = l;
+
+  static constexpr Result default_seed = 5489u;
+
+  static
+  constexpr
+  Result min() noexcept {
+    return std::numeric_limits<Result>::min();
+  }
+
+  static
+  constexpr
+  Result max() noexcept {
+    return std::numeric_limits<Result>::max();
+  }
+
+  constexpr
+  MersenneTwister() noexcept
+    : MersenneTwister(default_seed)
+  {}
+
+  constexpr
+  MersenneTwister(const Seed seed) noexcept
+    : _seed(seed)
+    // , state(_seed)
+  {}
+
+  // The transition algorithm of mersenne_twister_engine (TA(xi)) is defined as
+  // follows:
+  //   1. Concatenate the upper w - r bits of Xi-n with the lower r bits of Xi+1-n
+  //      to obtain an unsigned integer value Y
+  //   2. Let y be a·(Y bitand 1), and set Xi to Xi+m−n xor (Y rshift 1) xor y.
+  constexpr
+  void transition() {
+    constexpr size_t upper_bits = w - r;
+    constexpr size_t lower_bits = r;
+    // const auto Y =
+    // const auto y = a Y & 1
+    // Xi = Ximn xor (Y >> 1) xor y;
+  }
+
+  constexpr
+  auto generate(const auto Xi) {
+    Result Z = state[state_index++];
+    Z =    Z xor (((Z >> u)                 ) & d);
+    Z =    Z xor (((Z << s) % std::pow(2, w)) & b);
+    Z =    Z xor (((Z << t) % std::pow(2, w)) & c);
+    return Z xor   (Z >> l);
+  }
+
+  [[nodiscard]]
+  constexpr
+  Result operator()() noexcept {
+    transition();
+    
+    return generate();
+  }
+
+  [[nodiscard]]
+  constexpr
+  double entropy() const noexcept {
+    return 0.;
+  }
+
+  [[nodiscard]]
+  constexpr
+  Seed seed() const noexcept {
+    return _seed;
+  }
+
+  constexpr
+  void seed(const Seed seed) noexcept {
+    _seed = seed;
+    // state = _seed;
+  }
+
+  constexpr
+  void discard() noexcept {
+    discard(1);
+  }
+
+  constexpr
+  void discard(size_t count) noexcept {
+    while (count-- > 1) {
+      [[maybe_unused]]const auto x = (*this)();
+    }
+  }
+
+  Seed _seed{};
+  Type state_index{};
+  std::array<Type, n> state{};
 };
 
-using MT19937 = MersenneTwister<size_t,
+using MT19937 = MersenneTwister<uint_fast64_t,
   64, 312, 156, 31,
-  0xb5026f5aa96619e9, 29,
-  0x5555555555555555, 17,
-  0x71d67fffeda60000, 37,
-  0xfff7eee000000000, 43,
-  6364136223846793005
+  0xb5026f5aa96619e9ULL, 29,
+  0x5555555555555555ULL, 17,
+  0x71d67fffeda60000ULL, 37,
+  0xfff7eee000000000ULL, 43,
+  6364136223846793005ULL
 >;
 
 }

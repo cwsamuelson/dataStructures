@@ -1,24 +1,27 @@
 #pragma once
 
 #include <concepts>
+#include <cstddef>
 
 namespace flp::Random {
 
 template<typename Type>
 concept Source = requires(Type source) {
-  Type::Result;
+  Type();
+  typename Type::Result;
   { Type::min() } -> std::same_as<typename Type::Result>;
   { Type::max() } -> std::same_as<typename Type::Result>;
   { source() };
 };
 
 template<typename Type>
-concept Engine = Source<Type> and requires(Type engine) {
-  Type::Seed;
-  Type(Type::Seed);
+concept Engine = Source<Type> and requires(Type engine, typename Type::Seed seed, size_t count) {
+  typename Type::Seed;
+  Type(seed);
   { engine.seed() };
+  { engine.seed(seed) };
   { engine.discard() };
-  { engine.engine() };
+  { engine.discard(count) };
 };
 
 template<typename Type>

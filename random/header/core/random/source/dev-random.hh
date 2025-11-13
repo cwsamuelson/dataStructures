@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/random/random.hh"
+
 #include <fstream>
 #include <limits>
 
@@ -28,5 +30,6 @@ struct DevRandom {
     return result;
   }
 };
+static_assert(Source<DevRandom>);
 
 }

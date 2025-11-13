@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
 #include <limits>
 
 // https://en.cppreference.com/w/cpp/numeric/random/linear_congruential_engine.html
@@ -7,15 +9,7 @@
 
 namespace flp::Random {
 
-size_t relation(const size_t seed, const size_t multiplier, const size_t increment, const size_t modulus) {
-  return ((multiplier * seed) + increment) % modulus;
-}
-
-size_t relation(const size_t seed) {
-  return relation(seed, 0, 0, 0);
-}
-
-template<typename Type, size_t Multiplier, size_t Increment, size_t Modulus>
+template<typename Type = uint_fast64_t, size_t Multiplier = 48271, size_t Increment = 0, size_t Modulus = 2147483647>
 struct LinearCongruential {
   using Result = Type;
   using Seed = Type;
@@ -34,33 +28,61 @@ struct LinearCongruential {
     return std::numeric_limits<Type>::max();
   }
 
-  LinearCongruential(const Seed seed)
-    : state(seed)
+  constexpr
+  LinearCongruential() noexcept
+    : LinearCongruential(0)
   {}
 
-  [[nodiscard]]
-  Result operator()() {
-    const auto new_value = ((Multiplier * state) + Increment) % Modulus;
-    state = new_value;
-    return new_value;
-  }
-
-  [[nodiscard]]
-  void seed(const Seed seed) const {
-    state = seed;
-  }
-
-  void discard() {
-    discard(1);
-  }
-
-  void discard(size_t count) {
-    while (--count >= 0) {
-      [[maybe_unused]](*this)();
+  constexpr
+  LinearCongruential(const Seed seed) noexcept
+    : _seed(seed) {
+    if (Increment % Modulus == 0 and seed % Modulus == 0) {
+      state = 1;
+    } else {
+      state = seed % Modulus;
     }
   }
 
-  Seed state{};
+  [[nodiscard]]
+  constexpr
+  Result operator()() noexcept {
+    state = ((Multiplier * state) + Increment) % Modulus;
+    return state;
+  }
+
+  [[nodiscard]]
+  constexpr
+  double entropy() const noexcept {
+    return 0.;
+  }
+
+  [[nodiscard]]
+  constexpr
+  Seed seed() const noexcept {
+    return _seed;
+  }
+
+  constexpr
+  void seed(const Seed seed) noexcept {
+    _seed = seed;
+    state = _seed;
+  }
+
+  constexpr
+  void discard() noexcept {
+    discard(1);
+  }
+
+  constexpr
+  void discard(size_t count) noexcept {
+    while (count-- > 1) {
+      [[maybe_unused]]const auto x = (*this)();
+    }
+  }
+
+  Seed _seed{};
+  Result state{};
 };
+static_assert(Engine<LinearCongruential<>>);
 
 }

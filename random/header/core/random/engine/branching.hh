@@ -1,63 +1,83 @@
 #pragma once
 
+#include "core/random/random.hh"
+
+#include <limits>
+#include <utility>
+
 namespace flp::Random {
 
-template<typename Engine>
+template<typename Engine_t>
 struct Branching {
-  using Result = size_t;
+  static_assert(Engine<Branching<Engine_t>>);
+
+  using Result = Engine_t::Result;
+  using Seed = Engine_t::Seed;
 
   [[nodiscard]]
   static
   constexpr
   Result min() noexcept {
-    return std::numeric_limits<Type>::min();
+    return std::numeric_limits<Result>::min();
   }
 
   [[nodiscard]]
   static
   constexpr
   Result max() noexcept {
-    return std::numeric_limits<Type>::max();
+    return std::numeric_limits<Result>::max();
   }
 
+  template<typename ...Args>
   constexpr
-  Branching(Engine&& engine)
-    : base_engine(std::forward<Engine>(engine))
+  Branching(Args&& ...args)
+    : base_engine(std::forward<Args>(args)...)
   {}
 
   constexpr
-  Branching(const Result seed)
+  Branching(Engine_t&& engine) noexcept
+    : base_engine(std::forward<Engine_t>(engine))
+  {}
+
+  constexpr
+  Branching(const Result seed) noexcept
     : base_engine(seed)
   {}
 
   [[nodiscard]]
   constexpr
-  Result operator()() {
+  Result operator()() noexcept {
     return base_engine();
+  }
+
+  constexpr
+  void seed(const Seed seed) const noexcept {
+    base_engine.seed(seed);
   }
 
   [[nodiscard]]
   constexpr
-  void seed(const Seed seed) const {
-    base_engine.seed(seed);
+  Seed seed() const noexcept {
+    return base_engine.seed();
   }
 
   constexpr
-  void discard() {
+  void discard() noexcept {
     base_engine.discard(1);
   }
 
   constexpr
-  void discard(const size_t count) {
+  void discard(const size_t count) noexcept {
     base_engine.discard(count);
   }
 
+  [[nodiscard]]
   constexpr
-  Branching fork() {
+  Branching fork() const noexcept {
     return {(*this)()};
   }
 
-  Engine base_engine;
+  Engine_t base_engine;
 };
 
 }
