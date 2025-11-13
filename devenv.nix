@@ -4,7 +4,7 @@
     git
 
     cmake
-    gcc
+    gcc15
     gdb
     ninja
 
