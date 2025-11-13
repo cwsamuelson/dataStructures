@@ -5,17 +5,18 @@ project(${BASE_PROJECT}_random LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/core/random/distributions/normal.hh
-  header/core/random/distributions/uniform.hh
-  header/core/random/engines/linear-congruential.hh
-  header/core/random/engines/mersenne-twister.hh
-  header/core/random/engines/philox.hh
-  header/core/random/engines/subtract-with-carry.hh
-  header/core/random/sources/seed.hh
+  header/core/random/distribution/normal.hh
+  header/core/random/distribution/uniform.hh
+  header/core/random/engine/branching.hh
+  header/core/random/engine/linear-congruential.hh
+  header/core/random/engine/mersenne-twister.hh
+  header/core/random/engine/monotonic.hh
+  header/core/random/engine/philox.hh
+  header/core/random/engine/subtract-with-carry.hh
+  header/core/random/source/dev-random.hh
   header/core/random/random.hh
 )
 set(SOURCES
-  source/seed.cc
 )
 
 common_library(${PROJECT_NAME}

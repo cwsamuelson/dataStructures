@@ -1,27 +1,32 @@
 #pragma once
 
+#include <fstream>
 #include <limits>
 
 namespace flp::Random {
 
-// BAD name
-struct Random {
+struct DevURandom {
   using Result = size_t;
 
   static
-  constexpr
   Result min() noexcept {
     return std::numeric_limits<Result>::min();
   }
 
   static
-  constexpr
   Result max() noexcept {
     return std::numeric_limits<Result>::max();
   }
 
   [[nodiscard]]
-  Result operator()();
+  Result operator()() {
+    std::ifstream random("/dev/urandom", std::ios::in | std::ios::binary);
+
+    Result result;
+    random.read(reinterpret_cast<char*>(&result), sizeof(result));
+
+    return result;
+  }
 };
 
 }

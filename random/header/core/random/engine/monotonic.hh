@@ -1,12 +1,12 @@
 #pragma once
 
+#include <cstdint>
 #include <cstddef>
 #include <limits>
 
 namespace flp::Random {
 
-struct Seed {
-  using Seed_t = size_t;
+struct Monotonic {
   using Result = size_t;
 
   static
@@ -21,13 +21,27 @@ struct Seed {
     return std::numeric_limits<Result>::max();
   }
 
-  Seed();
-  Seed(Seed_t seed);
+  constexpr
+  Monotonic() = default;
 
-  Result operator()();
+  constexpr
+  Monotonic(const Result seed)
+    : state(seed)
+  {}
 
   [[nodiscard]]
-  double entropy() const noexcept;
+  constexpr
+  Result operator()() {
+    return state++;
+  }
+
+  [[nodiscard]]
+  constexpr
+  double entropy() const noexcept {
+    return 0.;
+  }
+
+  Result state{};
 };
 
-} // namespace flp
+}
