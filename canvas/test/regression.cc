@@ -7,4 +7,3 @@ using namespace flp;
 TEST_CASE("canvas regressions") {
   Canvas canvas(10, 10);
 }
-

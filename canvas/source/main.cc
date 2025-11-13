@@ -6,6 +6,7 @@
 #include <ui/manager.hh>
 #include <ui/style.hh>
 
+#include <fstream>
 #include <memory>
 #include <print>
 #include <ranges>
@@ -49,8 +50,18 @@ int main() {
   GraphicalTermFrameEnd(state.get());
 
   flp::UI::Manager ui_manager;
-  ui_manager.add(std::make_shared<flp::UI::Button>("Button!", flp::Position2<size_t>{500, 500}, flp::Size2<size_t>{200, 100}));
-  ui_manager.add(std::make_shared<flp::UI::CheckBox>("Checkbox!", flp::Position2<size_t>{1000, 1000}, flp::Size2<size_t>{200, 100}));
+  ui_manager.add(
+    std::make_shared<flp::UI::Button>(
+      "Button!", flp::Position2<size_t>{500, 500}, flp::Size2<size_t>{200, 100}
+    )
+  );
+  ui_manager.add(
+    std::make_shared<flp::UI::CheckBox>(
+      "Checkbox!", flp::Position2<size_t>{1000, 1000}, flp::Size2<size_t>{200, 100}
+    )
+  );
+
+  auto prev_state = state->mouse;
 
   bool running = true;
   while (running) {
@@ -63,6 +74,34 @@ int main() {
     if (state->framebufferPending) {
       canvas.clear(flp::UI::black);
 
+      flp::UI::Widget::MouseState mouse_state;
+
+      mouse_state.position.x = state->mouse.x;
+      mouse_state.position.y = state->mouse.y;
+
+      mouse_state.left_button.pressed = false;
+      mouse_state.left_button.released = false;
+      if (state->mouse.buttons & 0x01 != prev_state.buttons & 0x01) {
+        mouse_state.left_button.pressed = state->mouse.buttons & 0x01;
+        mouse_state.left_button.released = not state->mouse.buttons & 0x01;
+        mouse_state.left_button.held = false;
+      } else {
+        mouse_state.left_button.held = state->mouse.buttons & 0x01;
+      }
+
+      mouse_state.right_button.pressed = false;
+      mouse_state.right_button.released = false;
+      if (state->mouse.buttons & 0x04 != prev_state.buttons & 0x04) {
+        mouse_state.right_button.pressed = state->mouse.buttons & 0x04;
+        mouse_state.right_button.released = not state->mouse.buttons & 0x04;
+        mouse_state.right_button.held = false;
+      } else {
+        mouse_state.right_button.held = state->mouse.buttons & 0x04;
+      }
+
+      prev_state = state->mouse;
+
+      ui_manager.update(mouse_state, 0.f);
       ui_manager.draw(canvas);
 
       for (size_t y = 0; y < state->framebuffer.height; y++) {

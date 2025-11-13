@@ -30,6 +30,8 @@ struct Button : Control {
   Size2<size_t> size;
   std::string text;
 
+  bool clicked = false;
+  bool hovered = false;
   bool pressed = false;
   bool held = false;
   bool released = false;
