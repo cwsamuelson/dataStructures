@@ -4,6 +4,8 @@
 #include <sys/socket.h>
 #include <netdb.h>
 
-namespace flp {
+namespace flp::Net {
 
-} // namespace flp
+using Socket = int;
+
+}
