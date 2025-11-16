@@ -3,46 +3,32 @@
 namespace flp::Net {
 
 enum class RecvErrors {
-  // The socket is marked nonblocking and the receive operation
-  // would block, or a receive timeout had been set and the
-  // timeout expired before data was received.  POSIX.1 allows
-  // either error to be returned for this case, and does not
-  // require these constants to have the same value, so a
-  // portable application should check for both possibilities.
   Again = EAGAIN,
   WouldBlock = EWOULDBLOCK,
 
-  // The argument sockfd is an invalid file descriptor.
-  BadFileDescriptor = EBADF,
-  BadFD = BadFileDescriptor,
+  BadF = EBADF,
+  BadFD = BadF,
+  BadFileDescriptor = BadFD,
 
-  // A remote host refused to allow the network connection
-  // (typically because it is not running the requested
-  // service).
-  ConnectionRefused = ECONNREFUSED,
+  ConnRefused = ECONNREFUSED,
+  ConnectionRefused = ConnRefused,
 
-  // The receive buffer pointer(s) point outside the process's
-  // address space.
   Fault = EFAULT,
 
-  // The receive was interrupted by delivery of a signal before
-  // any data was available; see signal(7).
-  Interrupted = EINTR,
+  Intr = EINTR,
+  Interrupted = Intr,
 
-  // Invalid argument passed.
   Invalid = EINVAL,
   InvalidArgument = Invalid,
 
-  // Could not allocate memory for recvmsg().
-  NoMemory = ENOMEM,
+  NoMem = ENOMEM,
+  NoMemory = NoMem,
 
-  // The socket is associated with a connection-oriented
-  // protocol and has not been connected (see connect(2) and
-  // accept(2)).
-  NotConnected = ENOTCONN,
+  NotConn = ENOTCONN,
+  NotConnected = NotConn,
 
-  // The file descriptor sockfd does not refer to a socket.
-  NotSocket = ENOTSOCK,
+  NotSock = ENOTSOCK,
+  NotSocket = NotSock,
 };
 
 void foo() {
