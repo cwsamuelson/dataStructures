@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 
 #include <cstdint>
+#include <string>
 #include <vector>
 
 namespace flp::Net {
@@ -105,6 +106,22 @@ enum class Error {
   CheckErroNumber = CheckErroNo,
 };
 
+struct Service {
+  Service(const char* srvc)
+    : Service(std::string(srvc))
+  {}
+
+  Service(std::string srvc)
+    : service(std::move(srvc))
+  {}
+
+  Service(const uint16_t port)
+    : service(std::to_string(port))
+  {}
+
+  std::string service;
+};
+
 struct ConnectionParameters {
   Family family;
   SocketType type;
@@ -113,50 +130,31 @@ struct ConnectionParameters {
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host,
-  const std::string& service
-);
-
-std::vector<ConnectionParameters> getaddrinfo(
-  const std::string& host,
-  uint16_t port
+  const Service& service
 );
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host, 
-  const std::string& service, 
+  const Service& service, 
   Family family, 
   SocketType type
 );
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host,
-  uint16_t port,
-  Family family,
+  const Service& service,
   SocketType type
 );
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host,
-  uint16_t port,
-  SocketType type
-);
-
-
-std::vector<ConnectionParameters> getaddrinfo(
-  const std::string& host,
-  const std::string& service,
-  AddrInfoFlags flags
-);
-
-std::vector<ConnectionParameters> getaddrinfo(
-  const std::string& host,
-  uint16_t port,
+  const Service& service,
   AddrInfoFlags flags
 );
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host, 
-  const std::string& service, 
+  const Service& service, 
   Family family, 
   SocketType type,
   AddrInfoFlags flags
@@ -164,15 +162,100 @@ std::vector<ConnectionParameters> getaddrinfo(
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host,
-  uint16_t port,
-  Family family,
+  const Service& service,
+  const SocketType type,
+  const AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host, 
+  Family family, 
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host, 
+  Family family, 
   SocketType type,
   AddrInfoFlags flags
 );
 
 std::vector<ConnectionParameters> getaddrinfo(
   const std::string& host,
-  uint16_t port,
+  const SocketType type,
+  const AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const Service& service
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const Service& service, 
+  Family family, 
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const Service& service,
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const Service& service,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const Service& service, 
+  Family family, 
+  SocketType type,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const Service& service,
+  SocketType type,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  Family family, 
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  Family family, 
+  SocketType type,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
   SocketType type,
   AddrInfoFlags flags
 );
