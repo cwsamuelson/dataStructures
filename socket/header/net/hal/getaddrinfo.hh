@@ -106,46 +106,24 @@ enum class Error {
 
 }
 
-void foo () {
-  addrinfo hints{};
-  addrinfo* info_ptr = nullptr;
-  char ipstr[INET6_ADDRSTRLEN];
+int getaddrinfo(const char* restrict node,
+                const char* service,
+                const addrinfo* hints,
+                addrinfo** res);
 
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM; // TCP
-  hints.ai_flags = AI_PASSIVE;
+struct addrinfo {
+  int       ai_flags;
+  int       ai_family;
+  int       ai_socktype;
+  int       ai_protocol;
+  socklen_t ai_addrlen;
+  sockaddr* ai_addr;
+  char*     ai_canonname;
+  addrinfo* ai_next;
+};
 
-  // VERIFY(getaddrinfo("www.google.com", "80", &hints, &info_ptr) == 0, "{}", gai_strerror(status));
-  if (const auto status = getaddrinfo("www.google.com", "80", &hints, &info_ptr)
-      ; status != 0) {
-    gai_strerror(status);
-    throw std::runtime_error("");
-  }
+void getaddrinfo(std::string_view host, std::string_view service);
 
-  std::unique_ptr<addrinfo, AddrInfo::ServerInfoDeleter> server_info(info_ptr);
-
-  for (addrinfo* p = server_info.get(); p != nullptr; p = p-> ai_next) {
-    void* addr = nullptr;
-    const char* ipver = nullptr;
-    sockaddr_in* ipv4 = nullptr;
-    sockaddr_in6* ipv6 = nullptr;
-
-    if (p->ai_family == AF_INET) {
-      ipv4 = (sockaddr_in*)p->ai_addr;
-      addr = &(ipv4->sin_addr);
-      ipver = "IPv4";
-    } else if (p->ai_family == AF_INET6) {
-      ipv6 = (sockaddr_in6*)p->ai_addr;
-      addr = &(ipv6->sin6_addr);
-      ipver = "IPv6";
-    } else {
-      throw std::runtime_error("");
-    }
-
-    inet_ntop(p->ai_family, addr, ipstr, sizeof(ipstr));
-
-    std::println("\t{}: {}", ipver, ipstr);
-  }
-}
+void getaddrinfo(std::string_view host, uint16_t port);
 
 }

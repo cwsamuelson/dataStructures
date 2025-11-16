@@ -5,7 +5,7 @@ project(${BASE_PROJECT}_socket LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/socket.hh
+  header/net/hal/sockopt.hh
 )
 set(SOURCES
 )
