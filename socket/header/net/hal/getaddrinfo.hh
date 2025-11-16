@@ -1,21 +1,17 @@
 #pragma once
 
+#include <bitflags/bitflags.hpp>
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 
+#include <cstdint>
+#include <vector>
+
 namespace flp::Net {
-
-// getaddrinfo
-namespace AddressInfo {
-
-struct ServerInfoDeleter {
-  void operator()(addrinfo* info) {
-    freeaddrinfo(info);
-  }
-};
 
 enum class Family {
   Inet = AF_INET,
@@ -45,29 +41,34 @@ enum class Protocol {
   Unspecified = Any,
 };
 
-enum class Flags {
-  Passive = AI_PASSIVE,
+template <typename Type>
+struct AddrInfoFlagsImpl {
+  using flag = bf::internal::raw_flag<AddrInfoFlagsImpl, Type>;
+  static constexpr int begin_ = __LINE__;
 
-  NumericServ = AI_NUMERICSERV,
-  NumericService = NumericServ,
+  static constexpr flag None{ 0 };
+  static constexpr flag Passive{ AI_PASSIVE };
+  static constexpr flag NumericServ{ AI_NUMERICSERV };
+  static constexpr flag NumericService{ NumericServ };
+  static constexpr flag CanonName{ AI_CANONNAME };
+  static constexpr flag CanonicalName{ CanonName };
+  static constexpr flag AddrConfig{ AI_ADDRCONFIG };
+  static constexpr flag AddressConfig{ AddrConfig };
+  static constexpr flag V4Mapped{ AI_V4MAPPED };
+  static constexpr flag All{ AI_ALL };
+  static constexpr flag IDN{ AI_IDN };
+  static constexpr flag CanonIDN{ AI_CANONIDN };
+  static constexpr flag IDNAAllowUnassigned{ AI_IDN_ALLOW_UNASSIGNED };
+  static constexpr flag IDNAUseSTD3ASCIIRules{ AI_IDN_USE_STD3_ASCII_RULES };
 
-  CanonName = AI_CANONNAME,
-  CanonicalName = CanonName,
-
-  AddrConfig = AI_ADDRCONFIG,
-  AddressConfig = AddrConfig,
-
-  V4Mapped = AI_V4MAPPED,
-
-  All = AI_ALL,
-
-  IDN = AI_IDN,
-
-  CanonIDN = AI_CANONIDN,
-
-  IDNAAllowUnassigned = AI_IDN_ALLOW_UNASSIGNED,
-  IDNAUseSTD3ASCIIRules = AI_IDN_USE_STD3_ASCII_RULES,
+  static constexpr int end_   = __LINE__;
 };
+
+using AddrInfoFlags = bf::bitflags<
+  AddrInfoFlagsImpl<bf::bitflags<AddrInfoFlagsImpl<uint8_t>>::underlying_type>,
+  bf::bitflags<AddrInfoFlagsImpl<uint8_t>>::underlying_type,
+  bf::internal::raw_flag
+>;
 
 enum class Error {
   Success = 0,
@@ -104,26 +105,76 @@ enum class Error {
   CheckErroNumber = CheckErroNo,
 };
 
-}
-
-int getaddrinfo(const char* restrict node,
-                const char* service,
-                const addrinfo* hints,
-                addrinfo** res);
-
-struct addrinfo {
-  int       ai_flags;
-  int       ai_family;
-  int       ai_socktype;
-  int       ai_protocol;
-  socklen_t ai_addrlen;
-  sockaddr* ai_addr;
-  char*     ai_canonname;
-  addrinfo* ai_next;
+struct ConnectionParameters {
+  Family family;
+  SocketType type;
+  Protocol protocol;
 };
 
-void getaddrinfo(std::string_view host, std::string_view service);
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  const std::string& service
+);
 
-void getaddrinfo(std::string_view host, uint16_t port);
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  uint16_t port
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host, 
+  const std::string& service, 
+  Family family, 
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  uint16_t port,
+  Family family,
+  SocketType type
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  uint16_t port,
+  SocketType type
+);
+
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  const std::string& service,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  uint16_t port,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host, 
+  const std::string& service, 
+  Family family, 
+  SocketType type,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  uint16_t port,
+  Family family,
+  SocketType type,
+  AddrInfoFlags flags
+);
+
+std::vector<ConnectionParameters> getaddrinfo(
+  const std::string& host,
+  uint16_t port,
+  SocketType type,
+  AddrInfoFlags flags
+);
 
 }

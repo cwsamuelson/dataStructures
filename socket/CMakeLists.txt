@@ -3,11 +3,13 @@ set(BASE_PROJECT ${PROJECT_NAME})
 project(${BASE_PROJECT}_socket LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
+find_package(bitflags REQUIRED)
 
 set(HEADERS
   header/net/hal/sockopt.hh
 )
 set(SOURCES
+  source/getaddrinfo.cc
 )
 
 common_library(${PROJECT_NAME}
@@ -25,7 +27,10 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
+  bitflags::bitflags
+
   ${BASE_PROJECT}_core
+
   error_support::error_support
 )
 

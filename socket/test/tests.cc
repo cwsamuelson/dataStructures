@@ -1,5 +1,7 @@
 #include <catch2/catch_all.hpp>
 
+#include <net/hal/getaddrinfo.hh>
+
 #include <netdb.h>
 #include <cstdio>
 #include <cstdlib>
@@ -128,7 +130,7 @@ void do_thing(auto&& ...args) {
 
 void do_thing0() {
   std::println("{}", __FUNCTION__);
-  addrinfo         hints;
+  addrinfo hints;
 
   memset(&hints, 0, sizeof(hints));
   hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
@@ -268,21 +270,45 @@ void do_things() {
   }
 }
 
-TEST_CASE("`Sockets`::...") {
-  // DNS/addrinfo
+// TEST_CASE("`Sockets`::...") {
+//   // DNS/addrinfo
+// 
+//   get_protocols();
+// 
+//   do_thing0();
+//   do_thing1();
+//   do_thing2();
+//   do_thing3();
+//   do_thing4();
+//   do_thing5();
+//   do_thing6();
+//   do_thing7();
+//   do_thing8();
+//   do_things();
+// 
+//   // CHECK(false);
+// }
 
-  get_protocols();
+TEST_CASE("`Sockets`::getaddrinfo") {
+  const auto conn_params = flp::Net::getaddrinfo(
+    "localhost", "80",
+    flp::Net::Family::IPV4,
+    flp::Net::SocketType::Stream,
+    flp::Net::AddrInfoFlags::Passive
+  );
 
-  do_thing0();
-  do_thing1();
-  do_thing2();
-  do_thing3();
-  do_thing4();
-  do_thing5();
-  do_thing6();
-  do_thing7();
-  do_thing8();
-  do_things();
+  // In terms of unit tests this is very weird.  It's probably more reliable in
+  // a virtualized or otherwise contained environment (docker container).  I
+  // will try to constrain the tests to simple things that provide more reliable
+  // results.
 
-  CHECK(false);
+  CHECK(not conn_params.empty());
+  CHECK(conn_params.size() == 2);
+
+  CHECK(conn_params.at(0).family == flp::Net::Family::IPV4);
+  CHECK(conn_params.at(1).family == flp::Net::Family::IPV4);
+  CHECK(conn_params.at(0).type == flp::Net::SocketType::Stream);
+  CHECK(conn_params.at(1).type == flp::Net::SocketType::Stream);
+  // CHECK(conn_params.at(0).protocol == flp::Net::Protocol::...);
+  // CHECK(conn_params.at(1).protocol == flp::Net::Protocol::...);
 }
