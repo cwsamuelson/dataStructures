@@ -1,13 +1,31 @@
 #pragma once
 
 #include <cstddef>
+#include <format>
 #include <string>
+#include <variant>
+#include <vector>
 
 namespace flp::Version {
 
+// https://semver.org/
+// # REGEX
+// ## With Named Groups
+// `^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
+// ## Without Named Groups
+// `^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$`
+// X.Y.Z-pre(.pre)*+build(.build)*
 struct Semantic {
-  struct PreRelease {};
-  struct Build {};
+  struct PreRelease {
+    using Identifier = std::variant<std::string, size_t>;
+
+    std::vector<Identifier> id_sequence;
+  };
+  struct Build {
+    using Identifier = std::variant<std::string, size_t>;
+
+    std::vector<Identifier> id_sequence;
+  };
 
   constexpr
   Semantic(const size_t major)
@@ -36,37 +54,42 @@ struct Semantic {
   // constexpr
   // Semantic& operator=(Semantic&&) noexcept = default;
 
-  [[nodiscard]]
-  constexpr
-  size_t major() const noexcept {
-    return {};
+  explicit
+  operator std::string() const noexcept {
+    return std::format("{}.{}.{}", vmajor, vminor, vpatch);
   }
 
   [[nodiscard]]
   constexpr
+  size_t major() const noexcept {
+    return vmajor;
+  }
+
+  constexpr
   void major(const size_t value) noexcept {
+    vmajor = value;
   }
 
   [[nodiscard]]
   constexpr
   size_t minor() const noexcept {
-    return {};
+    return vminor;
   }
 
-  [[nodiscard]]
   constexpr
   void minor(const size_t value) noexcept {
+    vminor = value;
   }
 
   [[nodiscard]]
   constexpr
   size_t patch() const noexcept {
-    return {};
+    return vpatch;
   }
 
-  [[nodiscard]]
   constexpr
   void patch(const size_t value) noexcept {
+    vpatch = value;
   }
 
   [[nodiscard]]
@@ -75,7 +98,6 @@ struct Semantic {
     return {};
   }
 
-  [[nodiscard]]
   constexpr
   void pre_release(const PreRelease& value) noexcept {
   }
@@ -86,7 +108,6 @@ struct Semantic {
     return {};
   }
 
-  [[nodiscard]]
   constexpr
   void build(const Build& value) noexcept {
   }
@@ -95,6 +116,12 @@ struct Semantic {
   constexpr
   friend
   auto operator<=>(const Semantic&, const Semantic&) noexcept = default;
+
+  size_t vmajor{};
+  size_t vminor{1};
+  size_t vpatch{};
+  PreRelease vpre_release;
+  Build vbuild;
 };
 
 } // namespace flp
