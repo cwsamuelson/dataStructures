@@ -94,6 +94,7 @@ public:
     }*/
 
     for (; first != last; ++first) {
+      push_back(*first);
     }
   }
 
@@ -228,22 +229,22 @@ public:
 
   [[nodiscard]]
   auto begin(this auto&& self) noexcept {
-    return maybe_iterator<IsConst<decltype(self)>>{self.buffer.get()};
+    return maybe_iterator<IsConst<decltype(self)>>{&self.buffer.get()->get()};
   }
 
   [[nodiscard]]
   auto end(this auto&& self) noexcept {
-    return maybe_iterator<IsConst<decltype(self)>>{self.buffer.get() + self.current_size};
+    return maybe_iterator<IsConst<decltype(self)>>{&self.buffer.get()->get() + self.current_size};
   }
 
   [[nodiscard]]
   const_pointer cbegin(this const auto&& self) noexcept {
-    return self.buffer.get();
+    return &self.buffer.get()->get();
   }
 
   [[nodiscard]]
   const_iterator cend(this const auto&& self) noexcept {
-    return self.buffer.get() + self.current_size;
+    return &self.buffer.get()->get() + self.current_size;
   }
 
   [[nodiscard]]

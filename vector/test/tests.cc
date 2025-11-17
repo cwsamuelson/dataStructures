@@ -49,56 +49,43 @@ struct RAIISignaler {
 TEST_CASE("`Vector`::Lifetime management") {
   SECTION("`push_back` calls copy constructor") {
     Vector<RAIISignaler> vector;
+
+    RAIISignaler original;
+    vector.push_back(original);
+
+    CHECK(vector[0].copy_constructor);
   }
 
   SECTION("`emplace_back` calls the appropriate constructor") {
-    SECTION("Default ctor") {
-      rc::prop("", [] {
-      });
+    Vector<RAIISignaler> vector;
 
-      Vector<RAIISignaler> vector;
+    CHECK(vector.empty());
+    CHECK(vector.size() == 0);
+    CHECK_THROWS(vector[0]);
 
-      vector.emplace_back();
-      vector.emplace_back(42);
-      vector.emplace_back(42, 1138);
+    vector.emplace_back();
+    vector.emplace_back(42);
+    vector.emplace_back(42, 1138);
 
-      CHECK(vector[0].default_constructor);
-      CHECK(vector[1].parameterized1_constructor);
-      CHECK(vector[2].parameterized2_constructor);
-    }
+    CHECK(not vector.empty());
+    CHECK(vector.size() == 3);
 
-    SECTION("Single argument ctor") {
-      Vector<RAIISignaler> vector;
-
-      vector.emplace_back();
-      vector.emplace_back(42);
-      vector.emplace_back(42, 1138);
-
-      CHECK(vector[0].default_constructor);
-      CHECK(vector[1].parameterized1_constructor);
-      CHECK(vector[2].parameterized2_constructor);
-    }
-
-    SECTION("Two argument ctor") {
-      Vector<RAIISignaler> vector;
-
-      vector.emplace_back();
-      vector.emplace_back(42);
-      vector.emplace_back(42, 1138);
-
-      CHECK(vector[0].default_constructor);
-      CHECK(vector[1].parameterized1_constructor);
-      CHECK(vector[2].parameterized2_constructor);
-    }
+    CHECK(vector[0].default_constructor);
+    CHECK(vector[1].parameterized1_constructor);
+    CHECK(vector[2].parameterized2_constructor);
   }
 
   SECTION("Destructor is run on pop_back") {
     Vector<RAIISignaler> vector;
 
+    CHECK(vector.size() == 0);
+    CHECK(vector.empty());
+
     vector.emplace_back();
 
     auto dtor_signal = vector.back().destructor;
     CHECK(not *dtor_signal);
+
     vector.pop_back();
     CHECK(*dtor_signal);
 
@@ -107,7 +94,7 @@ TEST_CASE("`Vector`::Lifetime management") {
   }
 }
 
-SCENARIO("Using emplace_back to create new elements") {
+SCENARIO("`Vector` Using emplace_back to create new elements") {
 }
 
 TEST_CASE("`Vector` resizing") {
@@ -147,17 +134,53 @@ TEST_CASE("`Vector` resizing") {
     CHECK(vector.size() == 3);
     CHECK(not vector.empty());
     CHECK(vector.capacity() >= vector.size());
+
+    rc::prop("lifetime cycle", [](const std::vector<size_t>& values) {
+      Vector<RAIISignaler> vector;
+      RC_ASSERT(vector.size() == 0);
+      RC_ASSERT(vector.empty());
+
+      for (size_t count{}; const auto value : values) {
+        vector.emplace_back(value);
+        ++count;
+
+        RC_ASSERT(not vector.empty());
+        RC_ASSERT(vector.size() == count);
+        RC_ASSERT(vector.capacity() >= vector.size());
+        RC_ASSERT(vector.back().parameterized1_constructor);
+      }
+
+      const auto cap = vector.capacity();
+      for (size_t count = vector.size(); not vector.empty();) {
+        auto dtor_signal = vector.back().destructor;
+        RC_ASSERT(not *dtor_signal);
+
+        vector.pop_back();
+        --count;
+
+        RC_ASSERT(*dtor_signal);
+        RC_ASSERT(vector.size() == count);
+        RC_ASSERT(vector.capacity() == cap);
+      }
+
+      RC_ASSERT(vector.empty());
+      RC_ASSERT(vector.size() == 0);
+    });
   }
 
-  SECTION("Resizing increases capacity") {
+  // using uint16_t so as to not have unnecessarily gigantic allocations...
+  rc::prop("Resizing increases capacity", [](const uint16_t new_size) {
     Vector<RAIISignaler> vector;
 
-    vector.resize(1);
+    vector.resize(new_size);
 
-    CHECK(vector.size() == 1);
-    CHECK(vector.capacity() >= 1);
-    CHECK(vector.back().default_constructor);
-  }
+    RC_ASSERT(vector.size() == new_size);
+    RC_ASSERT(vector.capacity() >= new_size);
+
+    for (const auto& signaler : vector) {
+      RC_ASSERT(signaler.default_constructor);
+    }
+  });
 
   SECTION("Shrinking doesn't affect capacity") {
     Vector<RAIISignaler> vector;
@@ -223,8 +246,13 @@ TEST_CASE("`Vector` resizing") {
 }
 
 TEST_CASE("`Vector` iteration") {
-  SECTION("range-based for loops") {
-  }
+  rc::prop("range-based for loops", [](const std::vector<size_t>& values) {
+    const Vector<RAIISignaler> vector(values.begin(), values.end());
+
+    RC_ASSERT(vector.size() == values.size());
+
+    for (const auto& value : vector) {}
+  });
 
   SECTION("Vectors can be iterated like arrays") {
   }
@@ -255,5 +283,61 @@ TEST_CASE("`Vector` holding type without default constructor") {
 
   const NoDefault value(1138);
   vector.push_back(value);
+
+  CHECK(vector.size() == 2);
+  CHECK(vector.capacity() >= 2);
+
+  vector.reserve(100);
+  CHECK(vector.capacity() >= 100);
 }
 
+TEST_CASE("`Vector`::Accessors") {
+  // at
+  // []
+
+  rc::prop("front/back/begin", [](const int value) {
+    Vector<int> vector;
+    vector.push_back(value);
+
+    RC_ASSERT(vector.front() == value);
+    RC_ASSERT(vector.back() == value);
+    RC_ASSERT(*vector.begin() == value);
+  });
+
+  SECTION("from pre-filled containers") {
+    SECTION("resize()") {
+      // at
+      // []
+
+      rc::prop("front/back/begin", [](const uint16_t value) {
+        const auto new_size = *rc::gen::nonZero<uint16_t>();
+
+        Vector<uint16_t> vector;
+        vector.resize(new_size, value);
+
+        RC_ASSERT(vector.front() == value);
+        RC_ASSERT(vector.back() == value);
+        RC_ASSERT(*vector.begin() == value);
+      });
+    }
+
+    SECTION("from std::vector") {
+      // at
+      // []
+
+      rc::prop("front/back/begin", [] {
+        const auto initial_values = *rc::gen::nonEmpty(
+          rc::gen::container<std::vector<size_t>>(
+            rc::gen::arbitrary<size_t>()
+          )
+        );
+
+        const Vector<size_t> vector(initial_values.begin(), initial_values.end());
+
+        RC_ASSERT(vector.front() == initial_values.front());
+        RC_ASSERT(vector.back() == initial_values.back());
+        RC_ASSERT(*vector.begin() == *initial_values.begin());
+      });
+    }
+  }
+}
