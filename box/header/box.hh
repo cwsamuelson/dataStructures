@@ -40,6 +40,11 @@ namespace flp {
 template<typename Type>
 struct Box {
 public:
+  template<typename ...Args>
+  Box(Args&& ...args)
+    : value(std::make_unique<Type>(std::forward<Args>(args)...))
+  {}
+
   // requires default constructible
   Box() // noexcept move constructible
     : value(std::make_unique<Type>())
@@ -109,4 +114,3 @@ private:
 };
 
 } // namespace flp
-
