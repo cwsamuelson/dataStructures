@@ -118,4 +118,97 @@ struct common_type<flp::RangedInt<range1, policy1>, flp::RangedInt<range2, polic
   using type = flp::RangedInt<flp::CommonRange<range1, range2>::Value, policy1>;
 };
 
+template<flp::Range range, typename Policy>
+struct numeric_limits<flp::RangedInt<range, Policy>> {
+  // Member constants
+  static constexpr bool is_specialized = true;
+  static constexpr bool is_signed = range.start < 0;
+  static constexpr bool is_integer = true;
+  static constexpr bool is_exact = true;
+  static constexpr bool has_infinity = false;
+  // static constexpr bool has_quiet_NaN
+  // static constexpr bool has_signaling_NaN
+  // static constexpr bool has_denorm
+  // static constexpr bool has_denorm_loss
+  static constexpr std::float_round_style round_style = std::round_indeterminate; //!@TODO
+  // static constexpr bool is_iec559
+  // static constexpr bool is_bounded
+  // static constexpr bool is_modulo
+  // static constexpr size_t digits
+  // static constexpr size_t digits10
+  // static constexpr size_t max_digits10
+  // static constexpr size_t radix
+  // static constexpr size_t min_exponent
+  // static constexpr size_t min_exponent10
+  // static constexpr size_t max_exponent
+  // static constexpr size_t max_exponent10
+  static constexpr bool traps = true; //!@TODO: determining if 'traps' is less trivial than it sounds.
+  static constexpr bool tinyness_before = false;
+
+  // Member functions
+  [[nodiscard]]
+  static constexpr
+  flp::RangedInt<range, Policy> min() noexcept {
+    return range.start;
+  }
+
+  [[nodiscard]]
+  static constexpr
+  flp::RangedInt<range, Policy> lowest() noexcept {
+    return range.start;
+  }
+
+  [[nodiscard]]
+  static constexpr
+  flp::RangedInt<range, Policy> max() noexcept {
+    return range.finish;
+  }
+
+  //!@NOTE By its definition this one is a bit weird.  'the difference between
+  // 1.0 and the next value representable by the floating-point type `T`'.
+  // `RangedInt` isn't floating point, so this value should be '0'.  But '0' may
+  // not always be valid; 0 may not be in the range!  It is specified that this
+  // function is only meaningful if `is_integer == false`, which may mean it's
+  // allowed to not exist.  This would be optimal since returning `0` may cause
+  // an exception to be thrown, depending on the `Policy` type.
+  // [[nodiscard]]
+  // static constexpr
+  // flp::RangedInt<range, Policy> epsilon() noexcept {
+  //   return 0;
+  // }
+
+  //!@NOTE See note for `epsilon()`
+  // [[nodiscard]]
+  // static constexpr
+  // flp::RangedInt<range, Policy> round_error() noexcept {
+  //   return 0;
+  // }
+
+  //!@NOTE See note for `epsilon()`; except this function may not need to exist
+  //since `has_infinity` will (likely) be false.
+  // [[nodiscard]]
+  // static constexpr
+  // flp::RangedInt<range, Policy> infinity() noexcept {
+  //   return 0;
+  // }
+
+  //!@NOTE See note for `epsilon()`
+  // [[nodiscard]]
+  // static constexpr
+  // flp::RangedInt<range, Policy> quiet_NaN() noexcept {
+  // }
+
+  //!@NOTE See note for `epsilon()`
+  // [[nodiscard]]
+  // static constexpr
+  // flp::RangedInt<range, Policy> signaling_NaN() noexcept {
+  // }
+
+  [[nodiscard]]
+  static constexpr
+  flp::RangedInt<range, Policy> denorm_min() noexcept {
+    return min();
+  }
+};
+
 } // namespace std
