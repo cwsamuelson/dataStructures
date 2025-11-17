@@ -42,6 +42,7 @@ class galactic_structures(ConanFile):
     test_requires = [
         'boost/[^1.86.0]',
         'rapidcheck/cci.20231215',
+        'bitflags/1.5.0',
     ]
 
     tool_requires = [

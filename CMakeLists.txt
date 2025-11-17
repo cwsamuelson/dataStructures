@@ -76,7 +76,7 @@ add_subdirectory(shape)
 add_subdirectory(shared_ptr)
 add_subdirectory(singly_linked_list)
 add_subdirectory(smart_enum)
-# add_subdirectory(socket)
+add_subdirectory(socket)
 add_subdirectory(span)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
@@ -175,7 +175,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_shared_ptr
   ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_smart_enum
-  # ${PROJECT_NAME}_socket
+  ${PROJECT_NAME}_socket
   ${PROJECT_NAME}_span
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
