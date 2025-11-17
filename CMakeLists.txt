@@ -38,6 +38,7 @@ add_subdirectory(geometry)
 #add_subdirectory(hash-map)
 #add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
+add_subdirectory(inout-ptr)
 add_subdirectory(inplace_vector)
 #add_subdirectory(json)
 #add_subdirectory(lifetime)
@@ -138,6 +139,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_hash-map
   #${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive
+  ${PROJECT_NAME}_inout-ptr
   ${PROJECT_NAME}_inplace_vector
   #${PROJECT_NAME}_json
   #${PROJECT_NAME}_lifetime
