@@ -10,10 +10,10 @@ common_test(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   Catch2::Catch2WithMain
+
   ${BASE_PROJECT}
 )
 
 enable_testing()
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
-

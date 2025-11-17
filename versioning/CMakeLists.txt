@@ -41,4 +41,3 @@ target_include_directories(${PROJECT_NAME}
 #  -D DST=${CMAKE_BINARY_DIR}/versioning/header/version.hh
 #  -P ${CMAKE_CURRENT_LIST_DIR}/version.cmake
 #)
-
