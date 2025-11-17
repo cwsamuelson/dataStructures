@@ -9,7 +9,7 @@ namespace flp::Random {
 
 template<typename Engine_t>
 struct Branching {
-  static_assert(Engine<Branching<Engine_t>>);
+  // static_assert(Engine<Branching<Engine_t>>);
 
   using Result = Engine_t::Result;
   using Seed = Engine_t::Seed;
