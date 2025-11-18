@@ -1,19 +1,32 @@
 #include <box.hh>
 
 #include <catch2/catch_all.hpp>
+#include <rapidcheck.h>
+#include <rapidcheck/catch.h>
 
-#include <optional>
 #include <variant>
 
 using namespace flp;
 
 TEST_CASE("box") {
-  SECTION("Mutable") {
+  rc::prop("Default Constructed", [](const int initial, const int final) {
     Box<int> box;
-    CHECK(*box == 0);
-    *box = 42;
-    CHECK(*box == 42);
-  }
+    RC_ASSERT(*box == 0);
+
+    *box = initial;
+    RC_ASSERT(*box == initial);
+
+    *box = final;
+    RC_ASSERT(*box == final);
+  });
+
+  rc::prop("Mutable", [](const int initial, const int final) {
+    Box<int> box = initial;
+    RC_ASSERT(*box == initial);
+
+    *box = final;
+    RC_ASSERT(*box == final);
+  });
 
   SECTION("Immutable") {
     const Box<int> box = 42;
@@ -70,15 +83,33 @@ TEST_CASE("box") {
     //*y = 1138;
   }
 
-  SECTION("Comparison") {
-    const Box<size_t> x{42};
-    const Box<size_t> y{1138};
-    const Box<size_t> z{1138};
+  rc::prop("Value comparison", [](const uint32_t input1) {
+    const uint32_t input2 = *rc::gen::nonZero<uint32_t>();
+    const uint64_t base = input1;
+    const uint64_t difference = input2;
 
-    CHECK(x < y);
-    CHECK(y == z);
-    CHECK(x != y);
-    CHECK(y <= z);
-  }
+    const Box<uint64_t> x{ base };
+    const Box<uint64_t> y{ base + difference };
+    const Box<uint64_t> z{ base };
+
+    RC_ASSERT(x == z);
+    RC_ASSERT(not (x != z));
+    RC_ASSERT(x <= z);
+    RC_ASSERT(x >= z);
+
+    RC_ASSERT(x <  y);
+    RC_ASSERT(x <= y);
+    RC_ASSERT(y >  x);
+    RC_ASSERT(y >= x);
+
+    RC_ASSERT(*x == *z);
+    RC_ASSERT(not (*x != *z));
+    RC_ASSERT(*x <= *z);
+    RC_ASSERT(*x >= *z);
+
+    RC_ASSERT(*x <  *y);
+    RC_ASSERT(*x <= *y);
+    RC_ASSERT(*y >  *x);
+    RC_ASSERT(*y >= *x);
+  });
 }
-
