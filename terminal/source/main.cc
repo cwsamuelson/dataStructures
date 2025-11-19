@@ -70,8 +70,8 @@ constexpr static size_t bg_purple     = 45;
 constexpr static size_t bg_turquoise  = 46;
 constexpr static size_t bg_light_gray = 47;
 
-constexpr static size_t regular = 0;
-constexpr static size_t bold = 1;
+constexpr static size_t regular_value = 0;
+constexpr static size_t bold_value = 1;
 
 template <typename CharT>
 std::basic_ostream<CharT>& bold(std::basic_ostream<CharT>& stream) {
