@@ -12,6 +12,7 @@ set(HEADERS
 )
 set(SOURCES
   source/file_io.cc
+  source/environment.cc
 )
 
 common_library(${PROJECT_NAME}
