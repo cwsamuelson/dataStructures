@@ -56,7 +56,6 @@ function(discover_tests_impl)
     )
   endif()
 
-  message(STATUS "output: ${test_output}")
   string(JSON version GET "${test_output}" "version")
   if (NOT ${version} EQUAL 1)
     message(FATAL_ERROR "Unsupported output format version: ${version}")
