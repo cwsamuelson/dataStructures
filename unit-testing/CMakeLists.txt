@@ -8,8 +8,11 @@ find_package(nlohmann_json REQUIRED)
 
 set(HEADERS
   header/testing/framework.hh
+  header/testing/test_registrar.hh
+  header/testing/test_registry.hh
 )
 set(SOURCES
+  source/test_registry.cc
 )
 
 common_library(${PROJECT_NAME}
@@ -36,6 +39,15 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
+
+common_library(${PROJECT_NAME}Main
+  source/main.cc
+)
+
+target_link_libraries(${PROJECT_NAME}Main
+  PUBLIC
+  ${PROJECT_NAME}
+)
 
 enable_testing()
 add_subdirectory(test)

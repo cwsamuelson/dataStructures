@@ -9,8 +9,7 @@ common_test(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-  # Catch2::Catch2WithMain
-  ${BASE_PROJECT}
+  ${BASE_PROJECT}Main
 )
 
 enable_testing()
