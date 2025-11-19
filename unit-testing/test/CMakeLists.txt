@@ -14,3 +14,5 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 enable_testing()
+include(../cmake/test-discovery.cmake)
+discover_tests(${PROJECT_NAME})
