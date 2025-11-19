@@ -12,6 +12,7 @@ add_subdirectory(affine)
 add_subdirectory(algorithms)
 add_subdirectory(aligned_buffer)
 #add_subdirectory(allocator)
+add_subdirectory(any)
 #add_subdirectory(b+-tree)
 #add_subdirectory(b-tree)
 add_subdirectory(box)
@@ -62,7 +63,7 @@ add_subdirectory(random)
 add_subdirectory(ranged_int)
 add_subdirectory(ranges)
 add_subdirectory(ratio)
-#add_subdirectory(red-black-tree)
+add_subdirectory(red-black-tree)
 #add_subdirectory(ref_count)
 #add_subdirectory(regex)
 add_subdirectory(resource_pack)
@@ -114,6 +115,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_algorithms
   ${PROJECT_NAME}_aligned_buffer
   #${PROJECT_NAME}_allocator
+  ${PROJECT_NAME}_any
   #${PROJECT_NAME}_b+-tree
   #${PROJECT_NAME}_b-tree
   ${PROJECT_NAME}_box
@@ -164,7 +166,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_ranged_int
   ${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
-  #${PROJECT_NAME}_red-black-tree
+  ${PROJECT_NAME}_red-black-tree
   #${PROJECT_NAME}_ref_count
   #${PROJECT_NAME}_regex
   ${PROJECT_NAME}_resource_pack
