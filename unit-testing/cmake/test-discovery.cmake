@@ -24,15 +24,15 @@ function(discover_tests TARGET)
     TARGET ${TARGET} POST_BUILD
     BYPRODUCTS "${ctest_tests_file}"
     COMMAND ${CMAKE_COMMAND}
-      -D "CTEST_FILE=${ctest_test_file}"
+      -D "CTEST_FILE=${ctest_tests_file}"
       -D "TEST_EXECUTABLE=$<TARGET_FILE:${TARGET}>"
       -D "WORKING_DIR=${CMAKE_CURRENT_BINARY_DIR}"
       -P ${add_test_script}
   )
 
   file(WRITE "${ctest_include_file}"
-    "if (EXISTS \"${ctest_test_file}\")\n"
-    "  include(\"${ctest_test_file}\")\n"
+    "if (EXISTS \"${ctest_tests_file}\")\n"
+    "  include(\"${ctest_tests_file}\")\n"
     "else()\n"
     "  add_test(${TARGET} ${TARGET})\n"
     "endif ()\n"

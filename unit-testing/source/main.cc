@@ -9,6 +9,8 @@
 
 using namespace flp;
 
+#include <print>
+
 int main(int argc, char* argv[]) {
   bool show_help = false;
   bool list_tests = false;
@@ -43,6 +45,10 @@ int main(int argc, char* argv[]) {
     std::cout << tests.dump();
 
     return 0;
+  }
+
+  for (size_t i = 0; i < argc; ++i) {
+    std::println("{}: {}", i, argv[i]);
   }
 
   for (const auto& [name, test] : flp::TestRegistry::instance().tests) {

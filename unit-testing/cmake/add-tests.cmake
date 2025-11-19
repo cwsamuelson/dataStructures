@@ -1,11 +1,11 @@
 function(add_command NAME)
   set(args "")
 
-  math(EXPR last_index ${ARGC} - 1)
+  math(EXPR last_index ${ARGC}-1)
   foreach(index RANGE 1 ${last_index})
     set(arg "${ARGV${index}}")
 
-    if (arg MATCHES "")
+    if (arg MATCHES "[^-./:a-zA-Z0-9_]")
       set(args "${args} [==[${arg}]==]")
     else()
       set(args "${args} ${arg}")
@@ -56,6 +56,7 @@ function(discover_tests_impl)
     )
   endif()
 
+  message(STATUS "output: ${test_output}")
   string(JSON version GET "${test_output}" "version")
   if (NOT ${version} EQUAL 1)
     message(FATAL_ERROR "Unsupported output format version: ${version}")
@@ -69,8 +70,9 @@ function(discover_tests_impl)
     return()
   endif()
 
-  foreach(index RANGE ${test_count})
-    string(JSON test_name "${tests_list}" ${index})
+  math(EXPR last_index ${test_count}-1)
+  foreach(index RANGE ${last_index})
+    string(JSON test_name GET "${tests_list}" ${index})
 
     # parse/handle escape characters etc that might otherwise cause weird issues
 
@@ -78,6 +80,7 @@ function(discover_tests_impl)
       add_test
       "${test_name}"
       "${_TEST_EXECUTABLE}"
+      "${test_name}"
     )
     add_command(
       set_tests_properties

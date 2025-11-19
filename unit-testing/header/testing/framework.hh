@@ -12,15 +12,15 @@
 
 #define UNIQUE_NAME(name) UNIQUE_NAME_FROM_LINE(name)
 
-#define TEST_CASE2(TestName) \
+#define TEST_CASE2(TestName, ...) \
   static void TestName(); \
   namespace { \
-    const flp::TestAutoRegistrar UNIQUE_NAME(TestName)(std::source_location::current(), &TestName); \
+    const flp::TestAutoRegistrar UNIQUE_NAME(TestName)(std::source_location::current(), __VA_ARGS__, &TestName); \
   } \
   static void TestName()
 
-#define TEST_CASE() \
-  TEST_CASE2(UNIQUE_NAME(UNIT_TEST_INTERNAL_))
+#define TEST_CASE(...) \
+  TEST_CASE2(UNIQUE_NAME(UNIT_TEST_INTERNAL_), __VA_ARGS__)
 
 // #define INTERNAL_CHECK(result_disposition, ...) 
 
