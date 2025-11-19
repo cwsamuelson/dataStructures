@@ -51,11 +51,11 @@ int main(int argc, char* argv[]) {
   try {
     flp::TestRegistry::instance().tests.at(test_name)();
   } catch(const std::exception& e) {
-    std::cout << "Foo threw an exception!:\t" << e.what() << "\nTests failed :(";
+    std::cout << test_name << " threw an exception:\t" << e.what();
 
     return 1;
   } catch(...) {
-    std::cout << "Foo threw an exception!  Tests failed :(";
+    std::cout << test_name << " threw an exception!";
 
     return 1;
   }
