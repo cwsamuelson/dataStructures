@@ -7,7 +7,9 @@ find_package(lyra REQUIRED)
 find_package(nlohmann_json REQUIRED)
 
 set(HEADERS
-  header/testing/framework.hh
+  header/testing/framework/check.hh
+  header/testing/framework/test-case.hh
+  header/testing/framework/utils.hh
   header/testing/test_registrar.hh
   header/testing/test_registry.hh
 )

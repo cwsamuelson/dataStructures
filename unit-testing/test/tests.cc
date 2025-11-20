@@ -1,4 +1,4 @@
-#include <testing/framework.hh>
+#include <testing/framework/test-case.hh>
 
 #include <stdexcept>
 

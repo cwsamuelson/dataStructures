@@ -1,7 +1,6 @@
 #include <lyra/lyra.hpp>
 #include <nlohmann/json.hpp>
 
-#include <testing/framework.hh>
 #include <testing/test_registry.hh>
 
 #include <iostream>
