@@ -13,6 +13,7 @@ add_subdirectory(algorithms)
 add_subdirectory(aligned_buffer)
 #add_subdirectory(allocator)
 add_subdirectory(any)
+add_subdirectory(args)
 #add_subdirectory(b+-tree)
 #add_subdirectory(b-tree)
 add_subdirectory(box)
@@ -116,6 +117,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_aligned_buffer
   #${PROJECT_NAME}_allocator
   ${PROJECT_NAME}_any
+  ${PROJECT_NAME}_args
   #${PROJECT_NAME}_b+-tree
   #${PROJECT_NAME}_b-tree
   ${PROJECT_NAME}_box
