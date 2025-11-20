@@ -10,8 +10,9 @@ set(HEADERS
   header/testing/framework/check.hh
   header/testing/framework/test-case.hh
   header/testing/framework/utils.hh
-  header/testing/test_registrar.hh
+  header/testing/result_registry.hh
   header/testing/test_registry.hh
+  header/testing/test_runner.hh
 )
 set(SOURCES
   source/test_registry.cc
