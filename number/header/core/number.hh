@@ -246,6 +246,40 @@ struct Number {
     return {};
   }
 
+  template<std::integral Integer>
+  friend
+  constexpr
+  Number operator<<(const Number& number, const Integer& integer) noexcept {
+    Number result(number);
+    result << integer;
+    return result;
+  }
+
+  template<std::integral Integer>
+  friend
+  constexpr
+  Number operator>>(const Number& number, const Integer& integer) noexcept {
+    Number result(number);
+    result >> integer;
+    return result;
+  }
+
+  template<std::integral Integer>
+  friend
+  constexpr
+  Number& operator<<=(Number& number, const Integer& integer) noexcept {
+    number.value << integer;
+    return number;
+  }
+
+  template<std::integral Integer>
+  friend
+  constexpr
+  Number& operator>>=(Number& number, const Integer& integer) noexcept {
+    number.value >> integer;
+    return number;
+  }
+
   friend
   constexpr
   std::strong_ordering operator<=>(const Number& lhs, const Number& rhs) noexcept {
