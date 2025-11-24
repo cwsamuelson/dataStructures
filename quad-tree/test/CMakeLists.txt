@@ -10,8 +10,8 @@ common_test(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
-  rapidcheck::rapidcheck
   Catch2::Catch2WithMain
+  rapidcheck::rapidcheck
 
   ${BASE_PROJECT}
 )
