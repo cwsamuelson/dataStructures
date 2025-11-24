@@ -29,6 +29,21 @@ TEST_CASE("`Base64`::encode") {
       const auto encoding = Base64::encode("M");
       CHECK(encoding == "TQ==");
     }
+
+    SECTION("light w") {
+      const auto message = Base64::encode("light w");
+      CHECK(message == "bGlnaHQgdw==");
+    }
+
+    SECTION("light wo") {
+      const auto message = Base64::encode("light wo");
+      CHECK(message == "bGlnaHQgd28=");
+    }
+
+    SECTION("light wor") {
+      const auto message = Base64::encode("light wor");
+      CHECK(message == "bGlnaHQgd29y");
+    }
   }
 }
 
@@ -52,6 +67,21 @@ TEST_CASE("`Base64`::decode") {
     SECTION("M") {
       const auto message = Base64::decode("TQ==");
       CHECK(message == "M");
+    }
+
+    SECTION("light w") {
+      const auto message = Base64::decode("bGlnaHQgdw==");
+      CHECK(message == "light w");
+    }
+
+    SECTION("light wo") {
+      const auto message = Base64::decode("bGlnaHQgd28=");
+      CHECK(message == "light wo");
+    }
+
+    SECTION("light wor") {
+      const auto message = Base64::decode("bGlnaHQgd29y");
+      CHECK(message == "light wor");
     }
   }
 }

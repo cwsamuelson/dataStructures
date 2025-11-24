@@ -37,6 +37,13 @@ std::string encode(const std::string_view text, const char* const dictionary) no
     }
   }
 
+  if (text.size() % 3 == 1) {
+    encoding[encoding.size() - 1] = '=';
+    encoding[encoding.size() - 2] = '=';
+  } else if (text.size() % 3 == 2) {
+    encoding[encoding.size() - 1] = '=';
+  }
+
   return encoding;
 }
 
