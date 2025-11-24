@@ -64,7 +64,8 @@ TEST_CASE("`OctTree`") {
   {
     const auto full_map_results = oct_tree.query(OctTree<int>::AABB{{ 0.f, 0.f, 0.f }, { 1.f, 1.f, 1.f }});
     CAPTURE(full_map_results);
-    CHECK(full_map_results.size() == 10);
+    CHECK(full_map_results.size() == oct_tree.size());
+    CHECK(oct_tree.size() == 10);
   }
 
   oct_tree.clear();

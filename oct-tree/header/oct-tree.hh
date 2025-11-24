@@ -216,8 +216,8 @@ struct OctTree {
           entity_limit,
           {
             {
-              boundaries.corner.x + sector_dims.x,
-              boundaries.corner.y + sector_dims.y,
+              boundaries.corner.x,
+              boundaries.corner.y,
               boundaries.corner.z + sector_dims.z,
             },
             sector_dims
@@ -378,4 +378,3 @@ struct OctTree {
 };
 
 } // namespace flp
-
