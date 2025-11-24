@@ -67,6 +67,42 @@ struct Monotonic {
     }
   }
 
+  template<typename RType>
+  [[nodiscard]]
+  RType get()
+    requires (sizeof(RType) <= sizeof(Result)) {
+    return static_cast<RType>((*this)() & mask<RType>());
+  }
+
+  template<typename RType>
+  [[nodiscard]]
+  RType get()
+    requires (sizeof(RType) > sizeof(Result)) {
+    RType value{};
+
+    size_t b_counter{};
+    for (;b_counter + sizeof(Result) <= sizeof(RType); b_counter += sizeof(Result)) {
+      value <<= (sizeof(Result) * 8);
+      value |= (*this)();
+    }
+
+    return value;
+  }
+
+  template<typename RType>
+  constexpr
+  static
+  RType mask() {
+    RType value{1};
+
+    for (size_t i = 0; i < sizeof(RType) * 8; ++i) {
+      value <<= 1;
+      value |= 1;
+    }
+
+    return value;
+  }
+
   Seed _seed{};
   Result state{};
 };

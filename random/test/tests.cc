@@ -103,3 +103,12 @@ TEST_CASE("`Random`::Engines") {
     Random::Branching<Random::Monotonic> branching_m;
   }
 }
+
+TEST_CASE("`Random`::sized get") {
+  Random::Monotonic engine;
+
+  CHECK(engine.get<uint8_t>() == 0);
+  CHECK(engine.get<uint16_t>() == 1);
+  CHECK(engine.get<uint32_t>() == 2);
+  CHECK(engine.get<uint64_t>() == 3);
+}
