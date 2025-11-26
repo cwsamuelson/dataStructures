@@ -85,7 +85,7 @@ add_subdirectory(socket)
 add_subdirectory(span)
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
-#add_subdirectory(spline)
+add_subdirectory(spline)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
 add_subdirectory(tagged_arguments)
@@ -98,7 +98,7 @@ add_subdirectory(try_wrap)
 add_subdirectory(type_pack)
 add_subdirectory(type_set)
 add_subdirectory(unique_ptr)
-add_subdirectory(unit-testing)
+# add_subdirectory(unit-testing)
 add_subdirectory(units)
 add_subdirectory(utilities)
 add_subdirectory(uuid)
@@ -190,7 +190,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_span
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
-  #${PROJECT_NAME}_spline
+  ${PROJECT_NAME}_spline
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
   ${PROJECT_NAME}_tagged_arguments
@@ -203,7 +203,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
   ${PROJECT_NAME}_unique_ptr
-  ${PROJECT_NAME}_unit-testing
+  # ${PROJECT_NAME}_unit-testing
   ${PROJECT_NAME}_units
   ${PROJECT_NAME}_utilities
   ${PROJECT_NAME}_uuid
