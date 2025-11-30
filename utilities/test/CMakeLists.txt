@@ -7,8 +7,9 @@ find_package(Catch2 REQUIRED)
 find_package(rapidcheck REQUIRED)
 
 common_test(${PROJECT_NAME}
-  tests.cc
   base64.cc
+  complex.cc
+  tests.cc
 )
 
 target_link_libraries(${PROJECT_NAME}

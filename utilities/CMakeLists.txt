@@ -6,6 +6,9 @@ find_package(error_support REQUIRED)
 
 set(HEADERS
   header/array.hh
+  header/base64.hh
+  header/complex.hh
+  header/environment.hh
   header/file_io/file_handling.hh
   #header/memory.hh
   header/static_loops.hh
@@ -37,4 +40,3 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 
 enable_testing()
 add_subdirectory(test)
-

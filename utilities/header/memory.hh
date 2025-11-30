@@ -23,4 +23,3 @@ std::shared_ptr<Type> make_shared_ptr(boost::shared_ptr<Type>& ptr) {
 }
 
 } // namespace flp
-
