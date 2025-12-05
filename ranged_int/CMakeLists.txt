@@ -5,6 +5,7 @@ project(${BASE_PROJECT}_ranged_int LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/array.hh
   header/deduced_type.hh
   header/ranged_int.hh
   header/std_ints.hh

@@ -1,11 +1,12 @@
 #include <testing/framework/test-case.hh>
+#include <testing/framework/check.hh>
 
 #include <stdexcept>
 
 TEST_CASE("A") {
-  CHECK(false);
+  CHECK(true);
 }
 
 TEST_CASE("B") {
-  CHECK(true);
+  CHECK(false);
 }
