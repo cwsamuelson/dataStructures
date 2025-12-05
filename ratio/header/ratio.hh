@@ -15,11 +15,13 @@ struct Ratio {
 
   template<typename OType>
   [[nodiscard]]
-  constexpr operator OType() const noexcept {
+  constexpr
+  operator OType() const noexcept {
     return static_cast<OType>(numerator) / static_cast<OType>(denominator);
   }
 
   [[nodiscard]]
+  constexpr
   Ratio invert() const noexcept {
     return { denominator, numerator };
   }
@@ -53,8 +55,8 @@ struct Ratio {
   friend
   constexpr
   bool operator==(const Ratio& lhs, const Ratio& rhs) noexcept {
-    const auto lsimple = lhs.simplify();
-    const auto rsimple = rhs.simplify();
+    const auto lsimple = lhs.simplified();
+    const auto rsimple = rhs.simplified();
     return lsimple.numerator == rsimple.numerator and lsimple.denominator == rsimple.denominator;
   }
 
@@ -154,12 +156,20 @@ struct Ratio {
     return { ratio.numerator, ratio.denominator * value };
   }
 
-  [[nodiscard]]
   constexpr
-  Ratio simplify() const noexcept {
+  void simplify() noexcept {
     const auto divisor = gcd();
 
-    return { numerator / divisor, denominator / divisor };
+    numerator /= divisor;
+    denominator /= divisor;
+  }
+
+  [[nodiscard]]
+  constexpr
+  Ratio simplified() const noexcept {
+    auto copy = *this;
+    copy.simplify();
+    return copy;
   }
 };
 

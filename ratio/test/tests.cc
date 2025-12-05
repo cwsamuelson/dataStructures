@@ -1,6 +1,9 @@
 #include <ratio.hh>
 
 #include <catch2/catch_all.hpp>
+// #include <rapidcheck.h>
+#include <rapidcheck/catch.h>
+#include <rapidcheck/gen/Predicate.h>
 
 using namespace flp;
 
