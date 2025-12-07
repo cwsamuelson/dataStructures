@@ -8,8 +8,6 @@
 #include <cstdint>
 #include <format>
 
-#include <print>
-
 namespace flp {
 
 template<typename Type = int64_t>
@@ -167,6 +165,8 @@ struct Ratio {
   friend
   constexpr
   Ratio operator/(const Ratio& lhs, const Ratio& rhs) noexcept {
+    VERIFY(rhs.numerator != 0, "Division with ratio ({}) would cause division by zero.", rhs);
+
     return lhs * rhs.invert();
   }
 
@@ -199,6 +199,8 @@ struct Ratio {
   friend
   constexpr
   Ratio operator/(const Ratio& ratio, const OType& value) noexcept {
+    VERIFY(value != 0, "Ratio ({}) division by zero", ratio);
+
     return { ratio.numerator, ratio.denominator * value };
   }
 
