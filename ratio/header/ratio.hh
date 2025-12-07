@@ -2,16 +2,51 @@
 
 #include <algorithms/numerics.hh>
 
+#include <error_help.hh>
+
 #include <concepts>
 #include <cstdint>
 #include <format>
+
+#include <print>
 
 namespace flp {
 
 template<typename Type = int64_t>
 struct Ratio {
-  Type numerator{};
-  Type denominator{};
+  [[nodiscard]]
+  constexpr
+  Ratio(const Type N, const Type D)
+    : numerator(N)
+    , denominator(D) {
+    VERIFY(denominator != 0, "Invalid denominator for ratio (0) results in infinity or otherwise invalid result.");
+
+    simplify();
+  }
+
+  template<std::integral Integer>
+  constexpr
+  Ratio(const Integer integer)
+    : numerator(integer)
+    , denominator(1)
+  {}
+
+  // template<std::floating_point FloatPt>
+  // constexpr
+  // Ratio(const FloatPt float_point) {
+  //   // try to calculate an integer ratio
+  // }
+
+  constexpr
+  Ratio(const Ratio&) noexcept = default;
+  constexpr
+  Ratio(Ratio&&) noexcept = default;
+  constexpr
+  Ratio& operator=(const Ratio&) noexcept = default;
+  constexpr
+  Ratio& operator=(Ratio&&) noexcept = default;
+  constexpr
+  ~Ratio() noexcept = default;
 
   template<typename OType>
   [[nodiscard]]
@@ -38,20 +73,29 @@ struct Ratio {
     return flp::lcm(numerator, denominator);
   }
 
+  [[nodiscard]]
   friend
   constexpr
-  auto operator<=>(const Ratio& lhs, const Ratio& rhs) noexcept {
-    if (lhs.denominator == rhs.denominator) {
-      return lhs.numerator <=> rhs.numerator;
-    }
+  auto operator<=>(const Ratio& slhs, const Ratio& srhs) noexcept {
+    return (double)slhs <=> (double)srhs;
+    // the above implementation is sufficient.  However it feels as though it's
+    // 'less correct'.  The implementation below seems more correct, but has a
+    // strong technical flaw.  When `lmul` or `rmul` are sufficiently large, it
+    // will cause an overflow when multiplying with their numerators.
+    // const auto lhs = slhs.simplified();
+    // const auto rhs = srhs.simplified();
+    // if (lhs.denominator == rhs.denominator) {
+    //   return lhs.numerator <=> rhs.numerator;
+    // }
 
-    const auto target = flp::lcm(lhs.denominator, rhs.denominator);
-    const auto lmul = target / lhs.denominator;
-    const auto rmul = target / rhs.denominator;
+    // const auto target = flp::lcm(lhs.denominator, rhs.denominator);
+    // const auto lmul = target / lhs.denominator;
+    // const auto rmul = target / rhs.denominator;
 
-    return lhs.numerator * lmul <=> rhs.numerator * rmul;
+    // return lhs.numerator * lmul <=> rhs.numerator * rmul;
   }
 
+  [[nodiscard]]
   friend
   constexpr
   bool operator==(const Ratio& lhs, const Ratio& rhs) noexcept {
@@ -61,6 +105,7 @@ struct Ratio {
   }
 
   template<typename OType>
+  [[nodiscard]]
   friend
   constexpr
   auto operator<=>(const Ratio& lhs, const OType& rhs) noexcept {
@@ -68,6 +113,7 @@ struct Ratio {
   }
 
   template<typename OType>
+  [[nodiscard]]
   friend
   constexpr
   bool operator==(const Ratio& lhs, const OType& rhs) noexcept {
@@ -162,6 +208,16 @@ struct Ratio {
 
     numerator /= divisor;
     denominator /= divisor;
+
+    if (numerator < 0) {
+      if (denominator < 0) {
+        numerator = -numerator;
+        denominator = -denominator;
+      }
+    } else if (denominator < 0) {
+      numerator = -numerator;
+      denominator = -denominator;
+    }
   }
 
   [[nodiscard]]
@@ -171,6 +227,9 @@ struct Ratio {
     copy.simplify();
     return copy;
   }
+
+  Type numerator{};
+  Type denominator{};
 };
 
 } // namespace flp

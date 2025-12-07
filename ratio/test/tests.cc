@@ -9,101 +9,105 @@ using namespace flp;
 
 //! @NOTE Some of the equality checks have additional parens; gcc wouldn't compile without them.
 
-TEST_CASE("`Ratio`") {
+TEST_CASE("`Ratio`::constexpr") {
   STATIC_CHECK(Ratio{ 1, 1 } == 1.0);
   STATIC_CHECK(Ratio{ 1, 2 } == .5);
   STATIC_CHECK(Ratio{ 2, 2 } == 1.0);
   STATIC_CHECK(Ratio{ 2, 1 } == 2.0);
 }
 
-template<typename R>
-struct S {
-  using type = R;
-};
+TEST_CASE("`Ratio`::Comparison") {
+  rc::prop("All comparisons of 2 ratios", [] {
+    const int64_t N1 = *rc::gen::nonZero<int64_t>();
+    const int64_t D1 = *rc::gen::nonZero<int64_t>();
+    const int64_t N2 = *rc::gen::nonZero<int64_t>();
+    const int64_t D2 = *rc::gen::nonZero<int64_t>();
 
-template<auto R>
-struct T {
-  static constexpr auto value = R;
-};
+    const Ratio R1{N1, D1};
+    const Ratio R2{N2, D2};
 
-template<Ratio R>
-struct U {
-  static constexpr auto value = R;
-};
+    const double ratio1 = R1;
+    const double ratio2 = R2;
 
-TEST_CASE("`Ratio`: Template parameter") {
-  STATIC_CHECK(T<Ratio{1, 1}>::value == 1.0);
+    CAPTURE(R1, R2, ratio1, ratio2);
 
-  STATIC_CHECK(U<Ratio{1, 1}>::value == 1.0);
-}
+    RC_ASSERT((R1 <  R2) == (ratio1 <  ratio2));
+    RC_ASSERT((R1 >  R2) == (ratio1 >  ratio2));
+    RC_ASSERT((R1 <= R2) == (ratio1 <= ratio2));
+    RC_ASSERT((R1 >= R2) == (ratio1 >= ratio2));
+    RC_ASSERT((R1 == R2) == (ratio1 == ratio2));
+    RC_ASSERT((R1 != R2) == (ratio1 != ratio2));
+  });
 
-TEST_CASE("`Ratio`: Comparison") {
-  const auto N = GENERATE(2ULL, 3ULL);
-  const auto D = GENERATE(2ULL, 3ULL);
+  SECTION("Repro0") {
+    const int64_t N1 = 1;
+    const int64_t D1 = 1;
+    const int64_t N2 = 1;
+    const int64_t D2 = -1;
 
-  SECTION("Equality") {
-    const Ratio X { N, D };
-    const Ratio Y { N, D };
+    const Ratio R1{N1, D1};
+    const Ratio R2{N2, D2};
 
-    CAPTURE(X, Y);
+    const double ratio1 = R1;
+    const double ratio2 = R2;
 
-    CHECK((X == Y));
-    CHECK(X <= Y);
-    CHECK(X >= Y);
+    CAPTURE(R1, R2, ratio1, ratio2);
+
+    CHECK((R1 <  R2) == (ratio1 <  ratio2));
+    CHECK((R1 >  R2) == (ratio1 >  ratio2));
+    CHECK((R1 <= R2) == (ratio1 <= ratio2));
+    CHECK((R1 >= R2) == (ratio1 >= ratio2));
+    CHECK((R1 == R2) == (ratio1 == ratio2));
+    CHECK((R1 != R2) == (ratio1 != ratio2));
   }
 
-  SECTION("Less") {
-    const Ratio Y { N, D };
+  SECTION("Repro1") {
+    const int64_t N1 = 5;
+    const int64_t D1 = -2;
+    const int64_t N2 = 1;
+    const int64_t D2 = 4;
 
-    CAPTURE(Y);
+    const Ratio R1{N1, D1};
+    const Ratio R2{N2, D2};
 
-    SECTION("By numerator") {
-      const Ratio X { N - 1, D };
+    const double ratio1 = R1;
+    const double ratio2 = R2;
 
-      CAPTURE(X);
+    CAPTURE(R1, R2, ratio1, ratio2);
 
-      CHECK((X != Y));
-      CHECK(X < Y);
-      CHECK(X <= Y);
-    }
-
-    SECTION("By denominator") {
-      const Ratio X { N, D + 1 };
-
-      CAPTURE(X);
-
-      CHECK((X != Y));
-      CHECK(X < Y);
-      CHECK(X <= Y);
-    }
+    CHECK((R1 <  R2) == (ratio1 <  ratio2));
+    CHECK((R1 >  R2) == (ratio1 >  ratio2));
+    CHECK((R1 <= R2) == (ratio1 <= ratio2));
+    CHECK((R1 >= R2) == (ratio1 >= ratio2));
+    CHECK((R1 == R2) == (ratio1 == ratio2));
+    CHECK((R1 != R2) == (ratio1 != ratio2));
   }
 
-  SECTION("Greater") {
-    const Ratio Y { N, D };
+  SECTION("Repro2") {
+    std::println("@@@ Repro2 top");
+    const int64_t N1 = 1507215272;
+    const int64_t D1 = 7;
+    const int64_t N2 = 2;
+    const int64_t D2 = 6119478889;
 
-    CAPTURE(Y);
+    const Ratio R1{N1, D1};
+    const Ratio R2{N2, D2};
 
-    SECTION("By numerator") {
-      const Ratio X { N + 1, D };
+    const double ratio1 = R1;
+    const double ratio2 = R2;
 
-      CAPTURE(X);
+    CAPTURE(R1, R2, ratio1, ratio2);
 
-      CHECK((X != Y));
-      CHECK(X > Y);
-      CHECK(X >= Y);
-    }
-
-    SECTION("By denominator") {
-      const Ratio X { N, D - 1 };
-
-      CAPTURE(X);
-
-      CHECK((X != Y));
-      CHECK(X > Y);
-      CHECK(X >= Y);
-    }
+    CHECK((R1 <  R2) == (ratio1 <  ratio2));
+    CHECK((R1 >  R2) == (ratio1 >  ratio2));
+    CHECK((R1 <= R2) == (ratio1 <= ratio2));
+    CHECK((R1 >= R2) == (ratio1 >= ratio2));
+    CHECK((R1 == R2) == (ratio1 == ratio2));
+    CHECK((R1 != R2) == (ratio1 != ratio2));
   }
 }
 
 TEST_CASE("`Ratio`: Divide by zero") {
+  const auto numerator = GENERATE(0, 1, 2, 3, 4, 5, 100, 1000, 10000);
+  CHECK_THROWS(Ratio{numerator, 0});
 }
