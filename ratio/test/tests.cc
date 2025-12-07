@@ -39,59 +39,15 @@ TEST_CASE("`Ratio`::Comparison") {
     RC_ASSERT((R1 != R2) == (ratio1 != ratio2));
   });
 
-  SECTION("Repro0") {
-    const int64_t N1 = 1;
-    const int64_t D1 = 1;
-    const int64_t N2 = 1;
-    const int64_t D2 = -1;
+  SECTION("Regression Tests") {
+    using RatioPair = std::tuple<Ratio<>, Ratio<>>;
 
-    const Ratio R1{N1, D1};
-    const Ratio R2{N2, D2};
-
-    const double ratio1 = R1;
-    const double ratio2 = R2;
-
-    CAPTURE(R1, R2, ratio1, ratio2);
-
-    CHECK((R1 <  R2) == (ratio1 <  ratio2));
-    CHECK((R1 >  R2) == (ratio1 >  ratio2));
-    CHECK((R1 <= R2) == (ratio1 <= ratio2));
-    CHECK((R1 >= R2) == (ratio1 >= ratio2));
-    CHECK((R1 == R2) == (ratio1 == ratio2));
-    CHECK((R1 != R2) == (ratio1 != ratio2));
-  }
-
-  SECTION("Repro1") {
-    const int64_t N1 = 5;
-    const int64_t D1 = -2;
-    const int64_t N2 = 1;
-    const int64_t D2 = 4;
-
-    const Ratio R1{N1, D1};
-    const Ratio R2{N2, D2};
-
-    const double ratio1 = R1;
-    const double ratio2 = R2;
-
-    CAPTURE(R1, R2, ratio1, ratio2);
-
-    CHECK((R1 <  R2) == (ratio1 <  ratio2));
-    CHECK((R1 >  R2) == (ratio1 >  ratio2));
-    CHECK((R1 <= R2) == (ratio1 <= ratio2));
-    CHECK((R1 >= R2) == (ratio1 >= ratio2));
-    CHECK((R1 == R2) == (ratio1 == ratio2));
-    CHECK((R1 != R2) == (ratio1 != ratio2));
-  }
-
-  SECTION("Repro2") {
-    std::println("@@@ Repro2 top");
-    const int64_t N1 = 1507215272;
-    const int64_t D1 = 7;
-    const int64_t N2 = 2;
-    const int64_t D2 = 6119478889;
-
-    const Ratio R1{N1, D1};
-    const Ratio R2{N2, D2};
+    const auto [R1, R2] =
+      GENERATE(
+        std::make_tuple(Ratio<>{1507215272, 7}, Ratio<>{2, 6119478889}),
+        std::make_tuple(Ratio<>{5, -2}, Ratio<>{1, 4}),
+        std::make_tuple(Ratio<>{1, 1}, Ratio<>{1, -1})
+      );
 
     const double ratio1 = R1;
     const double ratio2 = R2;
