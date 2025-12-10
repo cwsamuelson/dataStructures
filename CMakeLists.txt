@@ -55,6 +55,7 @@ add_subdirectory(oct-tree)
 #add_subdirectory(operators)
 add_subdirectory(optional)
 add_subdirectory(pkg)
+add_subdirectory(plugin-manager)
 #add_subdirectory(polymorphic_value)
 add_subdirectory(polynomial)
 add_subdirectory(process_manager)
@@ -161,6 +162,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
   ${PROJECT_NAME}_pkg
+  ${PROJECT_NAME}_plugin-manager
   #${PROJECT_NAME}_polymorphic_value
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_process_manager
