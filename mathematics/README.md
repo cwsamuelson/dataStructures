@@ -18,6 +18,9 @@ Much of mathematics depends on the minimum of comparing objects to be the same, 
 Finite sets, maps and relations?
 
 ### Algebraic structures
+- Magma
+- Quasigroup
+- Loop
 - Semigroup
 - Monoid
 - Group
