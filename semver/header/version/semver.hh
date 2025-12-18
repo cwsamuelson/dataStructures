@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <format>
+#include <optional>
 #include <string>
 #include <variant>
 #include <vector>
@@ -28,8 +29,56 @@ struct Semantic {
   };
 
   constexpr
+  Semantic() = default;
+
+  constexpr
+  Semantic(const size_t major, const PreRelease& pre_release, const Build& build)
+    : Semantic(major, 0, pre_release, build)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const size_t minor, const PreRelease& pre_release, const Build& build)
+    : Semantic(major, minor, 0, pre_release, build)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const size_t minor, const size_t patch, const PreRelease& pre_release, const Build& build)
+    : Semantic(major, minor, patch, std::optional(pre_release), std::optional(build))
+  {}
+
+  constexpr
+  Semantic(const size_t major, const PreRelease& pre_release)
+    : Semantic(major, 0, pre_release)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const size_t minor, const PreRelease& pre_release)
+    : Semantic(major, minor, 0, pre_release)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const size_t minor, const size_t patch, const PreRelease& pre_release)
+    : Semantic(major, minor, patch, pre_release, std::nullopt)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const Build& build)
+    : Semantic(major, 0, build)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const size_t minor, const Build& build)
+    : Semantic(major, minor, 0, build)
+  {}
+
+  constexpr
+  Semantic(const size_t major, const size_t minor, const size_t patch, const Build& build)
+    : Semantic(major, minor, patch, std::nullopt, build)
+  {}
+
+  constexpr
   Semantic(const size_t major)
-    : Semantic(major, 0, 0)
+    : Semantic(major, 0)
   {}
 
   constexpr
@@ -39,6 +88,7 @@ struct Semantic {
 
   constexpr
   Semantic(const size_t major, const size_t minor, const size_t patch)
+    : Semantic(major, minor, patch, std::nullopt, std::nullopt)
   {}
 
   constexpr
@@ -94,34 +144,96 @@ struct Semantic {
 
   [[nodiscard]]
   constexpr
-  PreRelease pre_release() const noexcept {
-    return {};
+  std::optional<PreRelease> pre_release() const noexcept {
+    return vpre_release;
   }
 
   constexpr
   void pre_release(const PreRelease& value) noexcept {
+    vpre_release = value;
+  }
+
+  constexpr
+  void pre_release(const std::optional<PreRelease>& value) noexcept {
+    vpre_release = value;
   }
 
   [[nodiscard]]
   constexpr
-  Build build() const noexcept {
-    return {};
+  std::optional<Build> build() const noexcept {
+    return vbuild;
   }
 
   constexpr
-  void build(const Build& value) noexcept {
+  void build(const std::optional<Build>& value) noexcept {
+    vbuild = value;
   }
 
   [[nodiscard]]
   constexpr
   friend
-  auto operator<=>(const Semantic&, const Semantic&) noexcept = default;
+  auto operator<=>(const Semantic& lhs, const Semantic& rhs) noexcept {
+    if (lhs.vmajor != rhs.vmajor) {
+      return lhs.vmajor <=> rhs.vmajor;
+    }
+
+    if (lhs.vminor != rhs.vminor) {
+      return lhs.vminor <=> rhs.vminor;
+    }
+
+    if (lhs.vpatch != rhs.vpatch) {
+      return lhs.vpatch <=> rhs.vpatch;
+    }
+
+    if (lhs.vpre_release.has_value() and rhs.vpre_release.has_value()) {
+      throw std::runtime_error("Unimplemented");
+      // return lhs.vpre_release.value() <=> rhs.vpre_release.value();
+    } else if (lhs.vpre_release.has_value()) {
+      return std::strong_ordering::less;
+    } else if (rhs.vpre_release.has_value()) {
+      return std::strong_ordering::greater;
+    }
+
+    if (lhs.vbuild.has_value() and rhs.vbuild.has_value()) {
+      throw std::runtime_error("Unimplemented");
+      // return lhs.vbuild.value() <=> rhs.vbuild.value();
+    } else if (lhs.vbuild.has_value()) {
+      return std::strong_ordering::less;
+    } else if (rhs.vbuild.has_value()) {
+      return std::strong_ordering::greater;
+    }
+
+    return std::strong_ordering::equal;
+  }
+
+  [[nodiscard]]
+  constexpr
+  friend
+  bool operator==(const Semantic& lhs, const Semantic& rhs) noexcept {
+    return
+          lhs.vmajor       == rhs.vmajor
+      and lhs.vminor       == rhs.vminor
+      and lhs.vpatch       == rhs.vpatch
+      // and lhs.vpre_release == rhs.vpre_release
+      // and lhs.vbuild       == rhs.vbuild
+    ;
+  }
 
   size_t vmajor{};
   size_t vminor{1};
   size_t vpatch{};
-  PreRelease vpre_release;
-  Build vbuild;
+  std::optional<PreRelease> vpre_release;
+  std::optional<Build> vbuild;
+
+private:
+  constexpr
+  Semantic(const size_t major, const size_t minor, const size_t patch, std::optional<PreRelease> pre_release, std::optional<Build> build)
+    : vmajor(major)
+    , vminor(minor)
+    , vpatch(patch)
+    , vpre_release(std::move(pre_release))
+    , vbuild(std::move(build))
+  {}
 };
 
 } // namespace flp
