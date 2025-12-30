@@ -65,7 +65,7 @@ add_subdirectory(profiler)
 add_subdirectory(property)
 add_subdirectory(quad-tree)
 add_subdirectory(random)
-add_subdirectory(ranged_int)
+add_subdirectory(ranged_numbers)
 add_subdirectory(ranges)
 add_subdirectory(ratio)
 add_subdirectory(red-black-tree)
@@ -173,7 +173,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_property
   ${PROJECT_NAME}_quad-tree
   ${PROJECT_NAME}_random
-  ${PROJECT_NAME}_ranged_int
+  ${PROJECT_NAME}_ranged_numbers
   ${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
   ${PROJECT_NAME}_red-black-tree
