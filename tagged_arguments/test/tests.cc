@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+#include <print>
+
 // using namespace flp;
 
 struct Arg {
@@ -17,6 +19,7 @@ struct Arg {
     value = std::forward<Type>(argument);
   }
 };
+
 constexpr
 Arg operator""_Arg(const char* string, const size_t length) noexcept {
   return {
@@ -38,4 +41,69 @@ void foo(Args&&... args) {
 
 TEST_CASE("`TaggedArgs`::`Sandbox`") {
   foo(""_Arg, "A"_Arg);
+}
+
+struct S {
+  struct A {
+    int a;
+
+    friend
+    constexpr
+    auto operator<=>(const A&, const A&) noexcept = default;
+
+    friend
+    constexpr
+    bool operator==(const A&, const A&) noexcept = default;
+  };
+
+  struct B {
+    double a;
+
+    friend
+    constexpr
+    auto operator<=>(const B&, const B&) noexcept = default;
+
+    friend
+    constexpr
+    bool operator==(const B&, const B&) noexcept = default;
+  };
+
+  A a;
+  B b;
+
+  void operator()(const A& x) {
+    a = x;
+  }
+
+  void operator()(const B& x) {
+    b = x;
+  }
+
+  template<typename ...Args>
+    requires (sizeof...(Args) > 1)
+  void operator()(Args&& ...args) {
+    ((*this)(std::forward<Args>(args)), ...);
+  }
+
+  friend
+  constexpr
+  auto operator<=>(const S&, const S&) noexcept = default;
+
+  friend
+  constexpr
+  bool operator==(const S&, const S&) noexcept = default;
+};
+
+TEST_CASE("`TaggedArgs`::`Idea`") {
+  S s;
+
+  s(S::A{1}, S::B{1.});
+
+  S t;
+
+  CHECK(s != t);
+
+  t(S::B{1.}, S::A{1});
+
+  CHECK(s == t);
 }
