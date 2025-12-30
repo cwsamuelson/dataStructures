@@ -19,7 +19,7 @@ struct Complex {
 
   constexpr
   Complex operator+() const noexcept {
-    return {real, imaginary};
+    return {+real, +imaginary};
   }
 
   constexpr
@@ -51,7 +51,7 @@ struct Complex {
   constexpr
   Complex& operator/=(const Complex& other) noexcept {
     const Complex complex(*this);
-    *this = complex * other;
+    *this = complex / other;
     return *this;
   }
 
@@ -61,98 +61,109 @@ struct Complex {
     return *this;
   }
 
-  constexpr
-  Complex operator+(const Complex& other) const noexcept {
-    Complex value(*this);
-    value += other;
-    return value;
-  }
-
-  constexpr
-  Complex operator-(const Complex& other) const noexcept {
-    Complex value(*this);
-    value -= other;
-    return value;
-  }
-
-  constexpr
-  Complex operator*(const Complex& other) const noexcept {
-    return {
-      real * other.real - imaginary * other.imaginary,
-      real * other.imaginary + imaginary * other.real
-    };
-  }
-
-  constexpr
-  Complex operator/(const Complex& other) const noexcept {
-    const Type denom = other.real * other.real + other.imaginary * other.imaginary;
-    return {
-      (real * other.real + imaginary * other.imaginary) / denom,
-      (imaginary * other.real - real * other.imaginary) / denom
-    };
-  }
-
-  // ?
-  constexpr
-  Complex operator%(const Complex& other) const noexcept {
-    Complex value(*this);
-    value %= other;
-    return value;
-  }
-
-  constexpr
-  Complex operator+(const Type& value) const noexcept {
-    return (*this) + Complex{value, 0};
-  }
-
-  constexpr
-  Complex operator-(const Type& value) const noexcept {
-    return (*this) - Complex{value, 0};
-  }
-
-  constexpr
-  Complex operator*(const Type& value) const noexcept {
-    return (*this) * Complex{value, 0};
-  }
-
-  constexpr
-  Complex operator/(const Type& value) const noexcept {
-    return (*this) / Complex{value, 0};
-  }
-
-  // ?
-  constexpr
-  Complex operator%(const Type& value) const noexcept {
-    return (*this) % Complex{value, 0};
-  }
-
-  constexpr
   friend
+  constexpr
+  Complex operator+(const Complex& lhs, const Complex& rhs) noexcept {
+    Complex value(lhs);
+    value += rhs;
+    return value;
+  }
+
+  friend
+  constexpr
+  Complex operator-(const Complex& lhs, const Complex& rhs) noexcept {
+    Complex value(lhs);
+    value -= rhs;
+    return value;
+  }
+
+  friend
+  constexpr
+  Complex operator*(const Complex& lhs, const Complex& rhs) noexcept {
+    return {
+      lhs.real * rhs.real - lhs.imaginary * rhs.imaginary,
+      lhs.real * rhs.imaginary + lhs.imaginary * rhs.real
+    };
+  }
+
+  friend
+  constexpr
+  Complex operator/(const Complex& lhs, const Complex& rhs) noexcept {
+    const Type denom = rhs.real * rhs.real + rhs.imaginary * rhs.imaginary;
+    return {
+      (lhs.real * rhs.real + lhs.imaginary * rhs.imaginary) / denom,
+      (lhs.imaginary * rhs.real - lhs.real * rhs.imaginary) / denom
+    };
+  }
+
+  // ?
+  friend
+  constexpr
+  Complex operator%(const Complex& lhs, const Complex& rhs) noexcept {
+    Complex value(lhs);
+    value %= rhs;
+    return value;
+  }
+
+  friend
+  constexpr
+  Complex operator+(const Complex& complex, const Type& value) noexcept {
+    return complex + Complex{value, 0};
+  }
+
+  friend
+  constexpr
+  Complex operator-(const Complex& complex, const Type& value) noexcept {
+    return complex - Complex{value, 0};
+  }
+
+  friend
+  constexpr
+  Complex operator*(const Complex& complex, const Type& value) noexcept {
+    return complex * Complex{value, 0};
+  }
+
+  friend
+  constexpr
+  Complex operator/(const Complex& complex, const Type& value) noexcept {
+    return { complex.real / value, complex.imaginary / value };
+  }
+
+  // ?
+  friend
+  constexpr
+  Complex operator%(const Complex& complex, const Type& value) noexcept {
+    return complex % Complex{value, 0};
+  }
+
+  friend
+  constexpr
   Complex operator+(const Type& value, const Complex& complex) noexcept {
     return complex + value;
   }
 
-  constexpr
   friend
+  constexpr
   Complex operator-(const Type& value, const Complex& complex) noexcept {
-    return complex - value;
+    return -complex + value;
   }
 
-  constexpr
   friend
+  constexpr
   Complex operator*(const Type& value, const Complex& complex) noexcept {
     return complex * value;
   }
 
-  constexpr
   friend
+  constexpr
   Complex operator/(const Type& value, const Complex& complex) noexcept {
+    // this is 100% wrong
     return complex / value;
   }
 
   // ?
-  constexpr
   friend
+  constexpr
   Complex operator%(const Type& value, const Complex& complex) noexcept {
     return complex % value;
   }
