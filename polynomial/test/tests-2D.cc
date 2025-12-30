@@ -1,6 +1,9 @@
 #include <polynomial-2d.hh>
 
 #include <catch2/catch_all.hpp>
+#include <rapidcheck/catch.h>
+#include <rapidcheck/Gen.h>
+#include <rapidcheck/gen/Numeric.h>
 
 #include <random>
 
@@ -8,158 +11,119 @@ using namespace flp;
 using Catch::Matchers::WithinRel;
 using Catch::Matchers::WithinAbs;
 
+// with rapidcheck, many of the special cases like 'zero' or 'linear only' are
+// probably unnecessary.
+// The only caveat to them is the `.order() == N` check, which is dependent on
+// the 'zero-ness' of the coefficients.  While easy enough to fix, I don't feel
+// like it for now.
 TEST_CASE("`Polynomial2D`") {
-  std::mt19937 generator(Catch::rngSeed());
-  std::uniform_real_distribution<float> distribution(0.f, 1000000000.f);
-
   SECTION("`evaluate`") {
     SECTION("constant") {
-      SECTION("zero") {
+      rc::prop("zero", [](const float input) {
         const Polynomial2D<float> polynomial(0);
 
-        CHECK(polynomial.order() == 0);
-        CHECK(polynomial[0] == 0);
+        RC_ASSERT(polynomial.order() == 0);
+        RC_ASSERT(polynomial[0] == 0);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == 0.f);
-        }
-      }
+        RC_ASSERT(polynomial(input) == 0.f);
+      });
 
-      SECTION("Random value") {
-        const auto value = distribution(generator);
+      rc::prop("Random value", [](const float value, const float input) {
         const Polynomial2D<float> polynomial(value);
 
-        CHECK(polynomial.order() == 0);
-        CHECK(polynomial[0] == value);
+        RC_ASSERT(polynomial.order() == 0);
+        RC_ASSERT(polynomial[0] == value);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == value);
-        }
-      }
+        RC_ASSERT(polynomial(input) == value);
+      });
     }
 
     SECTION("linear") {
-      SECTION("zero") {
+      rc::prop("zero", [](const float input) {
         const Polynomial2D<float> polynomial{ 0.f, 0.f };
 
-        CHECK(polynomial.order() == 0);
-        CHECK(polynomial[0] == 0.f);
-        CHECK(polynomial[1] == 0.f);
+        RC_ASSERT(polynomial.order() == 0);
+        RC_ASSERT(polynomial[0] == 0.f);
+        RC_ASSERT(polynomial[1] == 0.f);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == 0.f);
-        }
-      }
+        RC_ASSERT(polynomial(input) == 0.f);
+      });
 
-      SECTION("linear only") {
+      rc::prop("linear only", [](const float input) {
         const Polynomial2D<float> polynomial{ 0.f, 1.f };
 
-        CHECK(polynomial.order() == 1);
-        CHECK(polynomial[0] == 0.f);
-        CHECK(polynomial[1] == 1.f);
+        RC_ASSERT(polynomial.order() == 1);
+        RC_ASSERT(polynomial[0] == 0.f);
+        RC_ASSERT(polynomial[1] == 1.f);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == input);
-        }
-      }
+        RC_ASSERT(polynomial(input) == input);
+      });
 
-      SECTION("1s") {
+      rc::prop("1s", [](const float input) {
         const Polynomial2D<float> polynomial{ 1.f, 1.f };
 
-        CHECK(polynomial.order() == 1);
-        CHECK(polynomial[0] == 1.f);
-        CHECK(polynomial[1] == 1.f);
+        RC_ASSERT(polynomial.order() == 1);
+        RC_ASSERT(polynomial[0] == 1.f);
+        RC_ASSERT(polynomial[1] == 1.f);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == input + 1);
-        }
-      }
+        RC_ASSERT(polynomial(input) == input + 1);
+      });
 
-      SECTION("Random coefficients") {
-        const auto constant = distribution(generator);
-        const auto linear = distribution(generator);
+      rc::prop("Random coefficients", [](const float constant, const float input) {
+        const auto linear = *rc::gen::nonZero<float>();
         const Polynomial2D<float> polynomial{ constant, linear };
 
         CAPTURE(constant, linear);
 
-        CHECK(polynomial.order() == 1);
-        CHECK(polynomial[0] == constant);
-        CHECK(polynomial[1] == linear);
+        RC_ASSERT(polynomial.order() == 1);
+        RC_ASSERT(polynomial[0] == constant);
+        RC_ASSERT(polynomial[1] == linear);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == (input * linear + constant));
-        }
-      }
+        RC_ASSERT(polynomial(input) == (input * linear + constant));
+      });
     }
 
     SECTION("quadratic") {
-      SECTION("zero") {
+      rc::prop("zero", [](const float input) {
         const Polynomial2D<float> polynomial{ 0.f, 0.f, 0.f };
 
-        CHECK(polynomial.order() == 0);
-        CHECK(polynomial[0] == 0.f);
-        CHECK(polynomial[1] == 0.f);
-        CHECK(polynomial[2] == 0.f);
+        RC_ASSERT(polynomial.order() == 0);
+        RC_ASSERT(polynomial[0] == 0.f);
+        RC_ASSERT(polynomial[1] == 0.f);
+        RC_ASSERT(polynomial[2] == 0.f);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          CAPTURE(input, i);
-          CHECK(polynomial(input) == 0.f);
-        }
-      }
+        RC_ASSERT(polynomial(input) == 0.f);
+      });
 
-      SECTION("quad only") {
+      rc::prop("quad only", [](const float input) {
         const Polynomial2D<float> polynomial{ 0.f, 0.f, 1.f };
 
-        CHECK(polynomial.order() == 2);
-        CHECK(polynomial[0] == 0.f);
-        CHECK(polynomial[1] == 0.f);
-        CHECK(polynomial[2] == 1.f);
+        RC_ASSERT(polynomial.order() == 2);
+        RC_ASSERT(polynomial[0] == 0.f);
+        RC_ASSERT(polynomial[1] == 0.f);
+        RC_ASSERT(polynomial[2] == 1.f);
 
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          const auto expected = input * input;
+        const auto expected = input * input;
+        // no RC_ equivalent ...
+        CHECK_THAT(polynomial(input),
+                   WithinRel(expected, 0.001) or WithinAbs(expected, 0.000001));
+      });
 
-          CAPTURE(input, i);
-          CHECK_THAT(polynomial(input),
-                     WithinRel(expected, 0.001) or WithinAbs(expected, 0.000001));
-        }
-      }
-
-      SECTION("Random coefficients") {
-        const auto constant = distribution(generator);
-        const auto linear = distribution(generator);
-        const auto quadratic = distribution(generator);
+      rc::prop("Random coefficients", [](const float constant, const float input) {
+        const auto linear = *rc::gen::nonZero<float>();
+        const auto quadratic = *rc::gen::nonZero<float>();
         const Polynomial2D<float> polynomial{ constant, linear, quadratic };
 
-        CAPTURE(constant, linear, quadratic);
+        RC_ASSERT(polynomial.order() == 2);
+        RC_ASSERT(polynomial[0] == constant);
+        RC_ASSERT(polynomial[1] == linear);
+        RC_ASSERT(polynomial[2] == quadratic);
 
-        CHECK(polynomial.order() == 2);
-        CHECK(polynomial[0] == constant);
-        CHECK(polynomial[1] == linear);
-        CHECK(polynomial[2] == quadratic);
-
-        for (size_t i{}; i < 10; ++i) {
-          const auto input = distribution(generator);
-          const auto expected = (input * input * quadratic) +  (input * linear) + constant;
-
-          CAPTURE(input, i);
-          CHECK_THAT(polynomial(input),
-                     WithinRel(expected, 0.001) or WithinAbs(expected, 0.000001));
-        }
-      }
+        const auto expected = (input * input * quadratic) +  (input * linear) + constant;
+        // no RC_ equivalent ...
+        CHECK_THAT(polynomial(input),
+                   WithinRel(expected, 0.001) or WithinAbs(expected, 0.000001));
+      });
     }
   }
 
@@ -173,8 +137,7 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(roots.empty());
       }
 
-      SECTION("Random value") {
-        const auto value = distribution(generator);
+      rc::prop("Random value", [](const float value) {
         const Polynomial2D<float> polynomial(value);
 
         CHECK(polynomial.order() == 0);
@@ -183,7 +146,7 @@ TEST_CASE("`Polynomial2D`") {
         const auto roots = polynomial.solve();
 
         CHECK(roots.empty());
-      }
+      });
     }
 
     SECTION("linear") {
@@ -222,19 +185,24 @@ TEST_CASE("`Polynomial2D`") {
         CHECK(polynomial.solve() == std::set{ -1.f });
       }
 
-      SECTION("Random coefficients") {
-        const auto constant = distribution(generator);
-        const auto linear = distribution(generator);
+      rc::prop("Random coefficients", [](const float constant) {
+        const auto linear = *rc::gen::nonZero<float>();
         const Polynomial2D<float> polynomial{ constant, linear };
 
-        CAPTURE(constant, linear);
+        RC_ASSERT(polynomial.order() == 1);
+        RC_ASSERT(polynomial[0] == constant);
+        RC_ASSERT(polynomial[1] == linear);
 
-        CHECK(polynomial.order() == 1);
-        CHECK(polynomial[0] == constant);
-        CHECK(polynomial[1] == linear);
+        const auto solutions = polynomial.solve();
+        const auto expected =  -constant / linear;
 
-        CHECK(polynomial.solve() == std::set{ -constant / linear });
-      }
+        // due to the weirdness of floating point, we can't check this simply
+        // most of the time
+        RC_SUCCEED_IF(solutions == std::set{ expected });
+
+        CHECK_THAT(*solutions.begin(),
+                   WithinRel(expected, 0.001) or WithinAbs(expected, 0.000001));
+      });
     }
 
     SECTION("quadratic") {
@@ -280,42 +248,35 @@ TEST_CASE("`Polynomial2D`") {
         }
       }
 
-      SECTION("Random coefficients") {
-        const auto constant = distribution(generator);
-        const auto linear = distribution(generator);
-        const auto quadratic = distribution(generator);
+      rc::prop("Random coefficients", [](const float constant) {
+        const auto linear = *rc::gen::nonZero<float>();
+        const auto quadratic = *rc::gen::nonZero<float>();
         const Polynomial2D<float> polynomial{ constant, linear, quadratic };
 
-        CAPTURE(constant, linear, quadratic);
-
-        CHECK(polynomial.order() == 2);
-        CHECK(polynomial[0] == constant);
-        CHECK(polynomial[1] == linear);
-        CHECK(polynomial[2] == quadratic);
+        RC_ASSERT(polynomial.order() == 2);
+        RC_ASSERT(polynomial[0] == constant);
+        RC_ASSERT(polynomial[1] == linear);
+        RC_ASSERT(polynomial[2] == quadratic);
 
         const auto roots = polynomial.solve();
-      }
+        // ...
+      });
     }
   }
 
   SECTION("calculus") {
     SECTION("`derive`") {
-      SECTION("constant") {
-        const auto value = distribution(generator);
+      rc::prop("constant", [](const float value) {
         const Polynomial2D<float> polynomial{ value };
 
-        CAPTURE(value);
-        CHECK(polynomial.derive() == Polynomial2D<float>{});
-      }
+        RC_ASSERT(polynomial.derive() == Polynomial2D<float>{});
+      });
 
-      SECTION("linear") {
-        const auto constant = distribution(generator);
-        const auto linear = distribution(generator);
+      rc::prop("linear", [](const float constant, const float linear) {
         const Polynomial2D<float> polynomial{ constant, linear };
 
-        CAPTURE(constant, linear);
-        CHECK(polynomial.derive() == Polynomial2D<float>{ linear });
-      }
+        RC_ASSERT(polynomial.derive() == Polynomial2D<float>{ linear });
+      });
     }
 
     SECTION("`antiderive`") {
@@ -326,33 +287,35 @@ TEST_CASE("`Polynomial2D`") {
   }
 
   SECTION("copy") {
-    const auto constant = distribution(generator);
-    const auto linear = distribution(generator);
-    const auto quadratic = distribution(generator);
-    const Polynomial2D<float> poly1{ constant, linear, quadratic };
-
-    SECTION("ctor") {
+    rc::prop("ctor", [](const float constant, const float linear, const float quadratic) {
+      const Polynomial2D<float> poly1{ constant, linear, quadratic };
       const Polynomial2D<float> poly2(poly1);
 
-      CHECK(poly1 == poly2);
-    }
+      RC_ASSERT(poly1 == poly2);
+
+      RC_ASSERT(poly1[0] == poly2[0]);
+      RC_ASSERT(poly1[1] == poly2[1]);
+      RC_ASSERT(poly1[2] == poly2[2]);
+    });
 
     SECTION("operator") {
-      SECTION("elided") {
+      rc::prop("elided", [](const float constant, const float linear, const float quadratic) {
+        const Polynomial2D<float> poly1{ constant, linear, quadratic };
         const Polynomial2D<float> poly2 = poly1;
 
-        CHECK(poly1 == poly2);
-      }
+        RC_ASSERT(poly1 == poly2);
+      });
 
-      SECTION("mutable") {
+      rc::prop("mutable", [](const float constant, const float linear, const float quadratic) {
+        const Polynomial2D<float> poly1{ constant, linear, quadratic };
         Polynomial2D<float> poly2;
 
-        CHECK(poly1 != poly2);
+        RC_ASSERT(poly1 != poly2);
 
         poly2 = poly1;
 
-        CHECK(poly1 == poly2);
-      }
+        RC_ASSERT(poly1 == poly2);
+      });
     }
   }
 
