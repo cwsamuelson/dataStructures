@@ -64,6 +64,16 @@ public:
     : Box(*other)
   {}
 
+  // template<std::convertible_to<Type> OType>
+  // Box(const Box<OType>& other)
+  //   : Box(*other.value)
+  // {}
+
+  template<std::convertible_to<Type> Derived>
+  Box(std::unique_ptr<Derived> ptr)
+    : value(std::move(ptr))
+  {}
+
   // Movable `Box` introduces nullability of `Box`, which we don't want. If
   // that's of interest an `OptionalBox` or `NullableBox` should be written instead.
   // if a `bool Nullable` nttp was created, the existence of the move operations
@@ -88,6 +98,12 @@ public:
     return *this;
   }
 
+  // template<std::convertible_to<Type> OType>
+  // Box& operator=(const Box<OType>& other) {
+  //   value = *other.value;
+  //   return *this;
+  // }
+
   ~Box() = default;
 
         Type& operator*()       { return *value; }
@@ -107,6 +123,13 @@ public:
 
   friend auto operator==(const Box& lhs, const Box& rhs) noexcept {
     return *lhs == *rhs;
+  }
+
+  // Create a (presumably polymorphic) OType object, but return it as `Box<Type>`
+  template<typename OType, typename ...Args>
+  static
+  Box create(Args&& ...args) {
+    return std::make_unique<OType>(std::forward<Args>(args)...);
   }
 
 private:

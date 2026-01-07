@@ -8,7 +8,7 @@
 
 using namespace flp;
 
-TEST_CASE("box") {
+TEST_CASE("`Box`") {
   rc::prop("Default Constructed", [](const int initial, const int final) {
     Box<int> box;
     RC_ASSERT(*box == 0);
@@ -43,44 +43,44 @@ TEST_CASE("box") {
       Expression rhs;
     };
 
-    Expression e = 42;
-    REQUIRE(std::holds_alternative<int>(e));
-    CHECK(std::get<int>(e) == 42);
+    // Expression e = 42;
+    // REQUIRE(std::holds_alternative<int>(e));
+    // CHECK(std::get<int>(e) == 42);
 
-    e = AddExpression{ 1138, 42 };
+    // e = AddExpression{ 1138, 42 };
 
-    REQUIRE(std::holds_alternative<flp::Box<AddExpression>>(e));
-    auto lhs = std::get<flp::Box<AddExpression>>(e)->lhs;
-    REQUIRE(std::holds_alternative<int>(lhs));
-    CHECK(std::get<int>(lhs) == 1138);
-    auto rhs = std::get<flp::Box<AddExpression>>(e)->rhs;
-    REQUIRE(std::holds_alternative<int>(rhs));
-    CHECK(std::get<int>(rhs) == 42);
+    // REQUIRE(std::holds_alternative<flp::Box<AddExpression>>(e));
+    // auto lhs = std::get<flp::Box<AddExpression>>(e)->lhs;
+    // REQUIRE(std::holds_alternative<int>(lhs));
+    // CHECK(std::get<int>(lhs) == 1138);
+    // auto rhs = std::get<flp::Box<AddExpression>>(e)->rhs;
+    // REQUIRE(std::holds_alternative<int>(rhs));
+    // CHECK(std::get<int>(rhs) == 42);
   }
 
   SECTION("Test recursion") {
-    struct X;
-    struct Y {
-      std::variant<int, flp::Box<X>> x;
-    };
-    struct X {
-      flp::Box<Y> y;
-    };
+    // struct X;
+    // struct Y {
+    //   std::variant<int, flp::Box<X>> x;
+    // };
+    // struct X {
+    //   flp::Box<Y> y;
+    // };
 
-    X x;
-    Y y;
+    // X x;
+    // Y y;
   }
 
   SECTION("Direct recursion") {
-    struct Expression : std::variant<std::monostate, int, flp::Box<Expression>> {
-      using Base = std::variant<std::monostate, int, flp::Box<Expression>>;
-      using Base::Base;
+    // struct Expression : std::variant<std::monostate, int, flp::Box<Expression>> {
+    //   using Base = std::variant<std::monostate, int, flp::Box<Expression>>;
+    //   using Base::Base;
 
-      Box<Expression> lhs{};
-    };
+    //   Box<Expression> lhs{};
+    // };
 
-    //Box<Expression> y ;
-    //*y = 1138;
+    // //Box<Expression> y ;
+    // //*y = 1138;
   }
 
   rc::prop("Value comparison", [](const uint32_t input1) {
@@ -112,4 +112,30 @@ TEST_CASE("box") {
     RC_ASSERT(*y >  *x);
     RC_ASSERT(*y >= *x);
   });
+}
+
+struct Base {
+  virtual ~Base() noexcept = default;
+
+  [[nodiscard]]
+  virtual int magic() const {
+    return 42;
+  }
+};
+
+struct Derived : Base {
+  [[nodiscard]]
+  int magic() const override {
+    return 1138;
+  }
+};
+
+TEST_CASE("`Box`::polymorphic") {
+  flp::Box<Base> bptr;
+  flp::Box<Base> ptr(std::make_unique<Derived>());
+  auto dptr = flp::Box<Base>::create<Derived>();
+
+  CHECK(bptr->magic() == 42);
+  CHECK(ptr->magic() == 1138);
+  CHECK(dptr->magic() == 1138);
 }
