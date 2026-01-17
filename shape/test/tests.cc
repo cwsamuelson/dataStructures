@@ -5,10 +5,10 @@
 
 using namespace flp;
 
-TEST_CASE("Shapes: `fvec2`: `constexpr`") {
+TEST_CASE("`shapes`::`fvec2`::`constexpr`") {
 }
 
-TEST_CASE("Shapes: `fvec2`") {
+TEST_CASE("`shapes`::`fvec2`") {
   SECTION("Default ctor") {
     fvec2 v{};
     CAPTURE(v);
@@ -43,7 +43,7 @@ TEST_CASE("Shapes: `fvec2`") {
   }
 }
 
-TEST_CASE("Shapes: `fvec3`") {
+TEST_CASE("`shape`::`fvec3`") {
   SECTION("Default ctor") {
     fvec3 v{};
     CAPTURE(v);
@@ -80,7 +80,7 @@ TEST_CASE("Shapes: `fvec3`") {
   }
 }
 
-TEST_CASE("Shapes: `fvec4`") {
+TEST_CASE("`shapes`::`fvec4`") {
   SECTION("Default ctor") {
     fvec4 v{};
     CAPTURE(v);
@@ -119,7 +119,7 @@ TEST_CASE("Shapes: `fvec4`") {
   }
 }
 
-TEST_CASE("Shapes: functions") {
+TEST_CASE("`shapes`::functions") {
   SECTION("Sign") {
     //float sign(float f)
     CHECK(sign(0.f) == 0.f);
@@ -185,14 +185,17 @@ TEST_CASE("Shapes: functions") {
     //float length(const fvec2& vector)
     CHECK(length(fvec2(1.f, 0.f)) == 1.f);
     CHECK(length(fvec2(0.f, 1.f)) == 1.f);
+
     CHECK(length(fvec2(3.f, 0.f)) == 3.f);
     CHECK(length(fvec2(0.f, 3.f)) == 3.f);
+
     CHECK(length(fvec2(3.f, 4.f)) == 5.f);
 
     //float length(const fvec3& vector)
     CHECK(length(fvec3(1.f, 0.f, 0.f)) == 1.f);
     CHECK(length(fvec3(0.f, 1.f, 0.f)) == 1.f);
     CHECK(length(fvec3(0.f, 0.f, 1.f)) == 1.f);
+
     CHECK(length(fvec3(3.f, 0.f, 0.f)) == 3.f);
     CHECK(length(fvec3(0.f, 3.f, 0.f)) == 3.f);
     CHECK(length(fvec3(0.f, 0.f, 3.f)) == 3.f);
@@ -222,9 +225,65 @@ TEST_CASE("Shapes: functions") {
     //fvec4 min(fvec4 a, fvec4 b)
     //fvec4 max(fvec4 a, fvec4 b)
   }
+
+  SECTION("pow") {
+    // float pow(float a, float b) noexcept;
+    // fvec2 pow(fvec2 a, fvec2 b) noexcept;
+    // fvec3 pow(fvec3 a, fvec3 b) noexcept;
+    // fvec4 pow(fvec4 a, fvec4 b) noexcept;
+  }
+
+  SECTION("all") {
+    // bool all(bvec2& vec) noexcept;
+    // bool all(bvec3& vec) noexcept;
+    // bool all(bvec4& vec) noexcept;
+  }
+
+  SECTION("negate") {
+    // bvec2 negate(bvec2& vec) noexcept;
+    // bvec3 negate(bvec3& vec) noexcept;
+    // bvec4 negate(bvec4& vec) noexcept;
+  }
 }
 
-TEST_CASE("Shapes: swizzling") {
+TEST_CASE("`shapes`::swizzling") {
+  SECTION("sandbox") {
+    SECTION("Member quantity when swizzling") {
+      fvec3 vec(1.f, 2.f, 3.f);
+
+      // this doesn't work for some reason...
+      // CHECK(vec("x"_swz) == 1.f);
+      CHECK(vec("xx"_swz) == vecn<float, 2>(1.f, 1.f));
+      CHECK(vec("xxx"_swz) == vecn<float, 3>(1.f, 1.f, 1.f));
+      CHECK(vec("xxxx"_swz) == vecn<float, 4>(1.f, 1.f, 1.f, 1.f));
+      CHECK(vec("xxxxx"_swz) == vecn<float, 5>(1.f, 1.f, 1.f, 1.f, 1.f));
+      CHECK(vec("xxxxxx"_swz) == vecn<float, 6>(1.f, 1.f, 1.f, 1.f, 1.f, 1.f));
+      CHECK(vec("xxxxxxx"_swz) == vecn<float, 7>(1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f));
+    }
+
+    SECTION("math") {
+      fvec2 vec1;
+      fvec2 vec2;
+
+      vec1 < vec2;
+      vec1 <= vec2;
+      vec1 > vec2;
+      vec1 >= vec2;
+      vec1 != vec2;
+      vec1 == vec2;
+
+      vec1 + vec2;
+      vec1 - vec2;
+      vec1 * vec2;
+      vec1 / vec2;
+
+      vec1 += vec2;
+      vec1 -= vec2;
+      vec1 *= vec2;
+      vec1 /= vec2;
+    }
+  }
+
   SECTION("fvec2") {
     fvec2 vec(1.f, 2.f);
 

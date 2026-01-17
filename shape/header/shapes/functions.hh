@@ -18,57 +18,57 @@ float sign(const float f) noexcept {
 }
 
 constexpr
-fvec2 sign(fvec2 f) noexcept {
+fvec2 sign(const fvec2 f) noexcept {
   return { sign(f.x()), sign(f.y()) };
 }
 
 constexpr
-fvec3 sign(fvec3 f) noexcept {
+fvec3 sign(const fvec3 f) noexcept {
   return { sign(f.x()), sign(f.y()), sign(f.z()) };
 }
 
 constexpr
-fvec4 sign(fvec4 f) noexcept {
+fvec4 sign(const fvec4 f) noexcept {
   return { sign(f.x()), sign(f.y()), sign(f.z()), sign(f.w()) };
 }
 
 constexpr
-float clamp(float f, float l, float h) noexcept {
+float clamp(const float f, const float l, const float h) noexcept {
   return f < l ? l : (f > h ? h : f);
 }
 
 constexpr
-fvec2 clamp(fvec2 f, fvec2 l, fvec2 h) noexcept {
+fvec2 clamp(const fvec2 f, const fvec2 l, const fvec2 h) noexcept {
   return { clamp(f.x(), l.x(), h.x()), clamp(f.y(), l.y(), h.y()) };
 }
 
 constexpr
-fvec2 clamp(fvec2 f, float l, float h) noexcept {
+fvec2 clamp(const fvec2 f, const float l, const float h) noexcept {
   return { clamp(f.x(), l, h), clamp(f.y(), l, h) };
 }
 
 constexpr
-fvec3 clamp(fvec3 f, fvec3 l, fvec3 h) noexcept {
+fvec3 clamp(const fvec3 f, const fvec3 l, const fvec3 h) noexcept {
   return { clamp(f.x(), l.x(), h.x()), clamp(f.y(), l.y(), h.y()), clamp(f.z(), l.z(), h.z()) };
 }
 
 constexpr
-fvec3 clamp(fvec3 f, float l, float h) noexcept {
+fvec3 clamp(const fvec3 f, const float l, const float h) noexcept {
   return { clamp(f.x(), l, h), clamp(f.y(), l, h), clamp(f.z(), l, h) };
 }
 
 constexpr
-fvec4 clamp(fvec4 f, fvec4 l, fvec4 h) noexcept {
+fvec4 clamp(const fvec4 f, const fvec4 l, const fvec4 h) noexcept {
   return { clamp(f.x(), l.x(), h.x()), clamp(f.y(), l.y(), h.y()), clamp(f.z(), l.z(), h.z()), clamp(f.w(), l.w(), h.w()) };
 }
 
 constexpr
-fvec4 clamp(fvec4 f, float l, float h) noexcept {
+fvec4 clamp(const fvec4 f, const float l, const float h) noexcept {
   return { clamp(f.x(), l, h), clamp(f.y(), l, h), clamp(f.z(), l, h), clamp(f.w(), l, h) };
 }
 
 constexpr
-float abs(float f) noexcept {
+float abs(const float f) noexcept {
   if (f < 0.F) {
     return -f;
   } else {
@@ -77,52 +77,53 @@ float abs(float f) noexcept {
 }
 
 constexpr
-fvec2 abs(fvec2 v) noexcept {
+fvec2 abs(const fvec2 v) noexcept {
   return { abs(v.x()), abs(v.y()) };
 }
 
 constexpr
-fvec3 abs(fvec3 v) noexcept {
+fvec3 abs(const fvec3 v) noexcept {
   return { abs(v.x()), abs(v.y()), abs(v.z()) };
 }
 
 constexpr
-fvec4 abs(fvec4 v) noexcept {
+fvec4 abs(const fvec4 v) noexcept {
   return { abs(v.x()), abs(v.y()), abs(v.z()), abs(v.w()) };
 }
 
+//!@TODO implement `dot`
 constexpr
-float dot(fvec2, fvec2) noexcept {
+float dot(const fvec2, const fvec2) noexcept {
   return 0.F;
 }
 
 constexpr
-float dot(fvec3, fvec3) noexcept {
+float dot(const fvec3, const fvec3) noexcept {
   return 0.F;
 }
 
 constexpr
-float dot(fvec4, fvec4) noexcept {
+float dot(const fvec4, const fvec4) noexcept {
   return 0.F;
 }
 
 constexpr
-float dot2(fvec2 v) noexcept {
+float dot2(const fvec2 v) noexcept {
   return dot(v, v);
 }
 
 constexpr
-float dot2(fvec3 v) noexcept {
+float dot2(const fvec3 v) noexcept {
   return dot(v, v);
 }
 
 constexpr
-float dot2(fvec4 v) noexcept {
+float dot2(const fvec4 v) noexcept {
   return dot(v, v);
 }
 
 constexpr
-float ndot(fvec2 a, fvec2 b) noexcept {
+float ndot(const fvec2 a, const fvec2 b) noexcept {
   return a.x() * b.x() - a.y() * b.y();
 }
 

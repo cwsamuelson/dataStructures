@@ -1,7 +1,8 @@
 #pragma once
 
-#include <core/concepts.hh>
 #include "shapes/swizzle.hh"
+
+#include <core/concepts.hh>
 
 #include <array>
 #include <concepts>
@@ -11,6 +12,7 @@
 
 namespace flp {
 
+// GLSL-like vecN type.  Math operations are member-wise
 template<typename Type, size_t Count>
 struct vecn {
   constexpr
@@ -60,6 +62,16 @@ struct vecn {
 
   constexpr
   vecn& operator=(vecn&&) noexcept = default;
+
+  constexpr
+  friend
+  vecn operator+(const vecn& vec) noexcept {
+    auto posate = []<size_t ...Indices>(const vecn& vec, std::integer_sequence<size_t, Indices...>) noexcept {
+      return vecn{ +vec.values[Indices]... };
+    };
+
+    return posate(vec, std::make_integer_sequence<size_t, Count>());
+  }
 
   constexpr
   friend
@@ -173,7 +185,7 @@ struct vecn {
   friend
   constexpr
   vecn operator*(const Other& lhs, const vecn& rhs) noexcept {
-    // commutative property
+    //!@NOTE commutative property may not hold for all `Type`
     return rhs * lhs;
   }
 

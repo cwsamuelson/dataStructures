@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstddef>
+#include <stdexcept>
 
 namespace flp {
 
@@ -72,15 +73,19 @@ size_t get_swiz_index(const char c) {
   switch (c) {
     case 'x':
     case 'r':
+    case 's':
       return 0;
     case 'y':
     case 'g':
+    case 't':
       return 1;
     case 'z':
     case 'b':
+    case 'p':
       return 2;
     case 'w':
     case 'a':
+    case 'q':
       return 3;
     default:
       throw std::runtime_error("Invalid character in swizzle expression");
