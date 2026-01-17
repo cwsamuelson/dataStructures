@@ -163,13 +163,36 @@ void Canvas<Color>::draw_line(const std::vector<Position>& points, const Color c
 
 template<typename Color>
 void Canvas<Color>::draw_circle(const Position& center, float radius, const Color color) {
-  // bad approximation :)
-  draw(center, color);
+  size_t offsetx{};
+  size_t offsety{radius};
 
-  draw({center.x + radius, center.y}, color);
-  draw({center.x - radius, center.y}, color);
-  draw({center.x, center.y + radius}, color);
-  draw({center.x, center.y - radius}, color);
+  int d = radius - 1;
+
+  while (offsety >= offsetx) {
+    draw({center.x + offsetx, center.y + offsety}, color);
+    draw({center.x + offsety, center.y + offsetx}, color);
+
+    draw({center.x - offsetx, center.y + offsety}, color);
+    draw({center.x - offsety, center.y + offsetx}, color);
+
+    draw({center.x + offsetx, center.y - offsety}, color);
+    draw({center.x + offsety, center.y - offsetx}, color);
+
+    draw({center.x - offsetx, center.y - offsety}, color);
+    draw({center.x - offsety, center.y - offsetx}, color);
+
+    if (d >= 2 * offsetx) {
+      d -= 2 * offsetx + 1;
+      offsetx += 1;
+    } else if (d < 2 * (radius - offsety)) {
+      d += 2 * offsety - 1;
+      offsety -= 1;
+    } else {
+      d += 2 * (offsety - offsetx - 1);
+      offsety -= 1;
+      offsetx += 1;
+    }
+  }
 }
 
 template<typename Color>
@@ -211,9 +234,44 @@ void Canvas<Color>::draw_curve(const Polynomial) {
 
 template<typename Color>
 void Canvas<Color>::fill_circle(const Position& center, float radius, const Color color) {
-  // bad approximation :)
-  draw_line({center.x - radius, center.y}, {center.x + radius, center.y}, color);
-  draw_line({center.x, center.y - radius}, {center.x, center.y + radius}, color);
+  size_t offsetx{0};
+  size_t offsety{radius};
+  int d = radius - 1;
+
+  while (offsety >= offsetx) {
+    draw_line(
+      {center.x - offsety, center.y + offsetx},
+      {center.x + offsety, center.y + offsetx},
+      color
+    );
+    draw_line(
+      {center.x - offsetx, center.y + offsety},
+      {center.x + offsetx, center.y + offsety},
+      color
+    );
+    draw_line(
+      {center.x - offsetx, center.y - offsety},
+      {center.x + offsetx, center.y - offsety},
+      color
+    );
+    draw_line(
+      {center.x - offsety, center.y - offsetx},
+      {center.x + offsety, center.y - offsetx},
+      color
+    );
+
+    if (d >= 2 * offsetx) {
+      d -= 2 * offsetx + 1;
+      offsetx +=1;
+    } else if (d < 2 * (radius - offsety)) {
+      d += 2 * offsety - 1;
+      offsety -= 1;
+    } else {
+      d += 2 * (offsety - offsetx - 1);
+      offsety -= 1;
+      offsetx += 1;
+    }
+  }
 }
 
 template<typename Color>

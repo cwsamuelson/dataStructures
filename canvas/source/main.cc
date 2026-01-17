@@ -104,6 +104,8 @@ int main() {
       ui_manager.update(mouse_state, 0.f);
       ui_manager.draw(canvas);
 
+      canvas.draw_circle({1200, 1200}, 100, {0, 1, 0, 1});
+
       for (size_t y = 0; y < state->framebuffer.height; y++) {
         const size_t yoff = y * state->framebuffer.width;
         for (size_t x = 0; x < state->framebuffer.width; x++) {

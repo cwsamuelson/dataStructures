@@ -4,7 +4,7 @@
 
 using namespace flp;
 
-SCENARIO("Test canvas interface") {
+SCENARIO("`Canvas`::Interface Basics") {
   flp::Canvas canvas(10, 10);
 
   constexpr flp::ColorRGBA32 black{0, 0, 0, 0};
@@ -28,4 +28,28 @@ SCENARIO("Test canvas interface") {
   CHECK(canvas.canvas.at(9).at(6) == white);
 
   CHECK(canvas.canvas.at(9).at(9) == black);
+}
+
+SCENARIO("`Canvas`::Position2") {
+  Position2<size_t> position1;
+  Position2<size_t> position2;
+
+  position1 <  position2;
+  position1 <= position2;
+  position1 >  position2;
+  position1 >= position2;
+  position1 != position2;
+  position1 == position2;
+
+  position1 + position2;
+  // position1 += position2;
+
+  position1 - position2;
+  // position1 -= position2;
+
+  // position1 * position2;
+  // position1 *= position2;
+
+  // position1 / position2;
+  // position1 /= position2;
 }

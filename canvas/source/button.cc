@@ -61,9 +61,12 @@ void Button::draw(Canvas& canvas, const Style& style) {
     return;
   }
 
-  canvas.fill_rectangle(position, size, clicked ? white : style.fill);
-  canvas.draw_rectangle(position, size, style.border);
-  canvas.fill_text(position, text, style.text);
+  // canvas.fill_rectangle(position, size, clicked ? white : style.fill);
+  // canvas.draw_rectangle(position, size, style.border);
+  // canvas.fill_text(position, text, style.text);
+
+  // canvas.draw_circle(position, 100, style.fill);
+  canvas.fill_circle(position, 100, style.fill);
 }
 
 }
