@@ -10,29 +10,20 @@
 namespace flp {
 
 struct Number {
-  constexpr
-  Number() noexcept = default;
-  constexpr
-  Number(const Number&) noexcept = default;
-  constexpr
-  Number(Number&&) noexcept = default;
-  constexpr
-  Number& operator=(const Number&) noexcept = default;
-  constexpr
-  Number& operator=(Number&&) noexcept = default;
-  constexpr
-  ~Number() noexcept = default;
+  constexpr Number() noexcept                         = default;
+  constexpr Number(const Number&) noexcept            = default;
+  constexpr Number(Number&&) noexcept                 = default;
+  constexpr Number& operator=(const Number&) noexcept = default;
+  constexpr Number& operator=(Number&&) noexcept      = default;
+  constexpr ~Number() noexcept                        = default;
 
   template<std::integral Integer>
-  constexpr
-  Number(const Integer& num) noexcept
+  constexpr Number(const Integer& num) noexcept
     : negative(num < 0)
-    , value(negative ? -num : num)
-  {}
+    , value(negative ? -num : num) {}
 
   template<std::integral Integer>
-  constexpr
-  Number& operator=(const Integer& num) noexcept {
+  constexpr Number& operator=(const Integer& num) noexcept {
     negative = num < 0;
 
     if (negative) {
@@ -49,8 +40,7 @@ struct Number {
   // operator Integer() const noexcept {
   // }
 
-  constexpr
-  Number& operator++() noexcept {
+  constexpr Number& operator++() noexcept {
     if (value == 0) {
       ++value;
       negative = false;
@@ -63,8 +53,7 @@ struct Number {
     return *this;
   }
 
-  constexpr
-  Number operator++(int) noexcept {
+  constexpr Number operator++(int) noexcept {
     const auto result = *this;
 
     if (value == 0) {
@@ -79,8 +68,7 @@ struct Number {
     return result;
   }
 
-  constexpr
-  Number& operator--() noexcept {
+  constexpr Number& operator--() noexcept {
     if (value == 0) {
       ++value;
       negative = true;
@@ -93,8 +81,7 @@ struct Number {
     return *this;
   }
 
-  constexpr
-  Number operator--(int) noexcept {
+  constexpr Number operator--(int) noexcept {
     const auto result = *this;
 
     if (value == 0) {
@@ -109,22 +96,16 @@ struct Number {
     return result;
   }
 
-  friend
-  constexpr
-  Number operator+(const Number& number) noexcept {
+  friend constexpr Number operator+(const Number& number) noexcept {
     return number;
   }
 
-  friend
-  constexpr
-  Number operator-(Number number) noexcept {
+  friend constexpr Number operator-(Number number) noexcept {
     number.negative = not number.negative;
     return number;
   }
 
-  friend
-  constexpr
-  Number operator+(const Number& lhs, const Number& rhs) noexcept {
+  friend constexpr Number operator+(const Number& lhs, const Number& rhs) noexcept {
     Number result;
 
     if (lhs.value >= rhs.value) {
@@ -142,147 +123,109 @@ struct Number {
     return result;
   }
 
-  friend
-  constexpr
-  Number operator-(const Number& lhs, const Number& rhs) noexcept {
+  friend constexpr Number operator-(const Number& lhs, const Number& rhs) noexcept {
     return lhs + (-rhs);
   }
 
-  friend
-  constexpr
-  Number operator*(const Number& lhs, const Number& rhs) noexcept {
+  friend constexpr Number operator*(const Number& lhs, const Number& rhs) noexcept {
     Number result;
 
     result.negative = lhs.negative != rhs.negative;
-    result.value = lhs.value * rhs.value;
+    result.value    = lhs.value * rhs.value;
 
     return result;
   }
 
-  friend
-  constexpr
-  Number operator/(const Number& lhs, const Number& rhs) noexcept {
+  friend constexpr Number operator/(const Number& lhs, const Number& rhs) noexcept {
     Number result;
 
     result.negative = lhs.negative != rhs.negative;
-    result.value = lhs.value / rhs.value;
+    result.value    = lhs.value / rhs.value;
 
     return result;
   }
 
-  friend
-  constexpr
-  Number operator%(const Number& lhs, const Number& rhs) noexcept {
+  friend constexpr Number operator%(const Number& lhs, const Number& rhs) noexcept {
     return {};
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator+(const Number& number, const Integer& integer) noexcept {
-    return number + Number{integer};
+  friend constexpr Number operator+(const Number& number, const Integer& integer) noexcept {
+    return number + Number { integer };
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator-(const Number& number, const Integer& integer) noexcept {
-    return number - Number{integer};
+  friend constexpr Number operator-(const Number& number, const Integer& integer) noexcept {
+    return number - Number { integer };
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator*(const Number& number, const Integer& integer) noexcept {
+  friend constexpr Number operator*(const Number& number, const Integer& integer) noexcept {
     return number.sign<Integer>() * (number.value * integer);
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator/(const Number& number, const Integer& integer) noexcept {
+  friend constexpr Number operator/(const Number& number, const Integer& integer) noexcept {
     return number.sign<Integer>() * (number.value / integer);
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator%(const Number& number, const Integer& integer) noexcept {
+  friend constexpr Number operator%(const Number& number, const Integer& integer) noexcept {
     return {};
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator+(const Integer& integer, const Number& number) noexcept {
-    return Number{integer} + number;
+  friend constexpr Number operator+(const Integer& integer, const Number& number) noexcept {
+    return Number { integer } + number;
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator-(const Integer& integer, const Number& number) noexcept {
-    return Number{integer} - number;
+  friend constexpr Number operator-(const Integer& integer, const Number& number) noexcept {
+    return Number { integer } - number;
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator*(const Integer& integer, const Number& number) noexcept {
+  friend constexpr Number operator*(const Integer& integer, const Number& number) noexcept {
     return number * integer;
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator/(const Integer& integer, const Number& number) noexcept {
+  friend constexpr Number operator/(const Integer& integer, const Number& number) noexcept {
     return number.sign<Integer>() * (integer / number.value);
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator%(const Integer& integer, const Number& number) noexcept {
+  friend constexpr Number operator%(const Integer& integer, const Number& number) noexcept {
     return {};
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator<<(const Number& number, const Integer& integer) noexcept {
+  friend constexpr Number operator<<(const Number& number, const Integer& integer) noexcept {
     Number result(number);
     result << integer;
     return result;
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number operator>>(const Number& number, const Integer& integer) noexcept {
+  friend constexpr Number operator>>(const Number& number, const Integer& integer) noexcept {
     Number result(number);
     result >> integer;
     return result;
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number& operator<<=(Number& number, const Integer& integer) noexcept {
+  friend constexpr Number& operator<<=(Number& number, const Integer& integer) noexcept {
     number.value << integer;
     return number;
   }
 
   template<std::integral Integer>
-  friend
-  constexpr
-  Number& operator>>=(Number& number, const Integer& integer) noexcept {
+  friend constexpr Number& operator>>=(Number& number, const Integer& integer) noexcept {
     number.value >> integer;
     return number;
   }
 
-  friend
-  constexpr
-  std::strong_ordering operator<=>(const Number& lhs, const Number& rhs) noexcept {
+  friend constexpr std::strong_ordering operator<=>(const Number& lhs, const Number& rhs) noexcept {
     if (lhs.negative and not rhs.negative) {
       return std::strong_ordering::less;
     }
@@ -300,9 +243,7 @@ struct Number {
   }
 
   template<std::unsigned_integral UInt>
-  friend
-  constexpr
-  std::strong_ordering operator<=>(const Number& number, const UInt& uint) noexcept {
+  friend constexpr std::strong_ordering operator<=>(const Number& number, const UInt& uint) noexcept {
     if (number.negative) {
       return std::strong_ordering::less;
     } else {
@@ -311,12 +252,10 @@ struct Number {
   }
 
   template<std::signed_integral SInt>
-  friend
-  constexpr
-  std::strong_ordering operator<=>(const Number& number, const SInt& sint) noexcept {
+  friend constexpr std::strong_ordering operator<=>(const Number& number, const SInt& sint) noexcept {
     if (number.negative) {
       if (sint < 0) {
-        return sint <=> number.value;
+        return static_cast<uint64_t>(sint) <=> number.value;
       } else {
         return std::strong_ordering::less;
       }
@@ -324,19 +263,15 @@ struct Number {
       if (sint < 0) {
         return std::strong_ordering::greater;
       } else {
-        return number.value <=> sint;
+        return number.value <=> static_cast<uint64_t>(sint);
       }
     }
   }
 
-  friend
-  constexpr
-  bool operator==(const Number&, const Number&) noexcept = default;
+  friend constexpr bool operator==(const Number&, const Number&) noexcept = default;
 
   template<std::unsigned_integral UInt>
-  friend
-  constexpr
-  bool operator==(const Number& number, const UInt& uint) noexcept {
+  friend constexpr bool operator==(const Number& number, const UInt& uint) noexcept {
     if (uint == 0) {
       return number.value == 0;
     }
@@ -349,9 +284,7 @@ struct Number {
   }
 
   template<std::signed_integral SInt>
-  friend
-  constexpr
-  bool operator==(const Number& number, const SInt& sint) noexcept {
+  friend constexpr bool operator==(const Number& number, const SInt& sint) noexcept {
     if (sint == 0) {
       return number.value == 0;
     }
@@ -365,18 +298,16 @@ struct Number {
 
   template<std::signed_integral Integral>
   [[nodiscard]]
-  constexpr
-  Integral sign() const {
+  constexpr Integral sign() const {
     return negative ? -1 : 1;
   }
 
-  bool negative = false;
-  uint64_t value{};
+  bool     negative = false;
+  uint64_t value {};
 };
 
 [[nodiscard]]
-constexpr
-bool would_overflow(const uint64_t lhs, const uint64_t rhs) noexcept {
+constexpr bool would_overflow(const uint64_t lhs, const uint64_t rhs) noexcept {
   const auto growth_room = std::numeric_limits<uint64_t>::max() - lhs;
   return growth_room < rhs;
 }
@@ -396,7 +327,7 @@ OStream& operator<<(OStream& ostream, const Number& number) {
 
 template<>
 struct std::formatter<flp::Number> : std::formatter<uint64_t> {
-  constexpr auto format(const flp::Number& number, std::format_context& context) const {
+  auto format(const flp::Number& number, std::format_context& context) const {
     if (number.negative) {
       std::format_to(context.out(), "{} ", number.negative);
     }

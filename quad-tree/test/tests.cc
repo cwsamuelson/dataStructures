@@ -8,6 +8,7 @@
 
 #include <test-utils/test-utils.hh>
 
+#include <ranges>
 #include <string>
 
 using namespace flp;

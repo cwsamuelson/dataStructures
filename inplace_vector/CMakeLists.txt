@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_template LANGUAGES CXX)
+project(${BASE_PROJECT}_inplace_vector LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
@@ -11,6 +11,7 @@ set(SOURCES
 )
 
 common_library(${PROJECT_NAME}
+  INTERFACE
   ${HEADERS}
   ${SOURCES}
 )
@@ -24,7 +25,7 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC
+  INTERFACE
   ${BASE_PROJECT}_core
   ${BASE_PROJECT}_aligned_buffer
   error_support::error_support

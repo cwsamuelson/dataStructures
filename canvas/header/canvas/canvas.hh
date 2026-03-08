@@ -6,6 +6,7 @@
 
 #include <error_help.hh>
 
+#include <algorithm>
 #include <cmath>
 #include <cstdint>
 #include <format>
@@ -20,8 +21,8 @@ using Color1 = bool;
 template<typename Color = ColorRGBA32>
 struct Canvas {
   using Position = Position2<size_t>;
-  using Vertex = Position;
-  using Size = Size2<size_t>;
+  using Vertex   = Position;
+  using Size     = Size2<size_t>;
 
   std::vector<std::vector<Color>> canvas;
 
@@ -78,13 +79,11 @@ private:
 
 template<typename Color>
 Canvas<Color>::Canvas(Size size)
-  : Canvas(size.width, size.height)
-{}
+  : Canvas(size.width, size.height) {}
 
 template<typename Color>
 Canvas<Color>::Canvas(const size_t width, const size_t height)
-  : canvas(height, std::vector<Color>(width, {uint32_t{0}}))
-{}
+  : canvas(height, std::vector<Color>(width, { uint32_t { 0 } })) {}
 
 template<typename Color>
 Canvas<Color>::~Canvas() = default;
@@ -135,20 +134,20 @@ void Canvas<Color>::draw_line(const Position& start, const Position& stop, const
     }
 
     for (auto cursor = start.y; cursor < stop.y; ++cursor) {
-      draw({start.x, cursor}, color);
+      draw({ start.x, cursor }, color);
     }
 
     return;
   }
 
-  const float slope = static_cast<float>(delta.y) / delta.x;
-  const auto intercept = start.y - (slope * start.x);
-  const auto direction = delta.x < 0 ? -1 : +1;
+  const float slope     = static_cast<float>(delta.y) / delta.x;
+  const auto  intercept = start.y - (slope * start.x);
+  const auto  direction = delta.x < 0 ? -1 : +1;
 
   // this line drawing algorithm can have gaps
   // In particular with sufficiently steep lines
   for (auto cursor = start.x; cursor != stop.x; cursor += direction) {
-    draw({cursor, intercept + (cursor * slope)}, color);
+    draw({ cursor, static_cast<size_t>(intercept + (cursor * slope)) }, color);
   }
 }
 
@@ -163,23 +162,23 @@ void Canvas<Color>::draw_line(const std::vector<Position>& points, const Color c
 
 template<typename Color>
 void Canvas<Color>::draw_circle(const Position& center, float radius, const Color color) {
-  size_t offsetx{};
-  size_t offsety{radius};
+  size_t offsetx {};
+  size_t offsety { radius };
 
   int d = radius - 1;
 
   while (offsety >= offsetx) {
-    draw({center.x + offsetx, center.y + offsety}, color);
-    draw({center.x + offsety, center.y + offsetx}, color);
+    draw({ center.x + offsetx, center.y + offsety }, color);
+    draw({ center.x + offsety, center.y + offsetx }, color);
 
-    draw({center.x - offsetx, center.y + offsety}, color);
-    draw({center.x - offsety, center.y + offsetx}, color);
+    draw({ center.x - offsetx, center.y + offsety }, color);
+    draw({ center.x - offsety, center.y + offsetx }, color);
 
-    draw({center.x + offsetx, center.y - offsety}, color);
-    draw({center.x + offsety, center.y - offsetx}, color);
+    draw({ center.x + offsetx, center.y - offsety }, color);
+    draw({ center.x + offsety, center.y - offsetx }, color);
 
-    draw({center.x - offsetx, center.y - offsety}, color);
-    draw({center.x - offsety, center.y - offsetx}, color);
+    draw({ center.x - offsetx, center.y - offsety }, color);
+    draw({ center.x - offsety, center.y - offsetx }, color);
 
     if (d >= 2 * offsetx) {
       d -= 2 * offsetx + 1;
@@ -197,10 +196,10 @@ void Canvas<Color>::draw_circle(const Position& center, float radius, const Colo
 
 template<typename Color>
 void Canvas<Color>::draw_rectangle(const Position& top_left, const Position& bot_right, const Color color) {
-  draw_line(top_left, {bot_right.x, top_left.y}, color); // top
-  draw_line(top_left, {top_left.x, bot_right.y}, color); // left
-  draw_line({bot_right.x, top_left.y}, bot_right, color); // right
-  draw_line({top_left.x, bot_right.y}, bot_right, color); // bottom
+  draw_line(top_left, { bot_right.x, top_left.y }, color); // top
+  draw_line(top_left, { top_left.x, bot_right.y }, color); // left
+  draw_line({ bot_right.x, top_left.y }, bot_right, color); // right
+  draw_line({ top_left.x, bot_right.y }, bot_right, color); // bottom
 }
 
 template<typename Color>
@@ -213,12 +212,11 @@ void Canvas<Color>::draw_rectangle(const Position& top_left, const Size& size, c
 
 template<typename Color>
 void Canvas<Color>::draw_triangle(const Vertex& v1, const Vertex& v2, const Vertex& v3, const Color color) {
-  draw_polygon({v1, v2, v3}, color);
+  draw_polygon({ v1, v2, v3 }, color);
 }
 
 template<typename Color>
-void Canvas<Color>::draw_text(const Position& position, const std::string& text, const Color color) {
-}
+void Canvas<Color>::draw_text(const Position& position, const std::string& text, const Color color) {}
 
 template<typename Color>
 void Canvas<Color>::draw_polygon(const std::vector<Position>& points, const Color color) {
@@ -227,42 +225,25 @@ void Canvas<Color>::draw_polygon(const std::vector<Position>& points, const Colo
 }
 
 template<typename Color>
-void Canvas<Color>::draw_curve(const Polynomial) {
-}
+void Canvas<Color>::draw_curve(const Polynomial) {}
 
 // - FILL
 
 template<typename Color>
 void Canvas<Color>::fill_circle(const Position& center, float radius, const Color color) {
-  size_t offsetx{0};
-  size_t offsety{radius};
-  int d = radius - 1;
+  size_t offsetx { 0 };
+  size_t offsety = static_cast<size_t>(radius);
+  int    d       = radius - 1;
 
   while (offsety >= offsetx) {
-    draw_line(
-      {center.x - offsety, center.y + offsetx},
-      {center.x + offsety, center.y + offsetx},
-      color
-    );
-    draw_line(
-      {center.x - offsetx, center.y + offsety},
-      {center.x + offsetx, center.y + offsety},
-      color
-    );
-    draw_line(
-      {center.x - offsetx, center.y - offsety},
-      {center.x + offsetx, center.y - offsety},
-      color
-    );
-    draw_line(
-      {center.x - offsety, center.y - offsetx},
-      {center.x + offsety, center.y - offsetx},
-      color
-    );
+    draw_line({ center.x - offsety, center.y + offsetx }, { center.x + offsety, center.y + offsetx }, color);
+    draw_line({ center.x - offsetx, center.y + offsety }, { center.x + offsetx, center.y + offsety }, color);
+    draw_line({ center.x - offsetx, center.y - offsety }, { center.x + offsetx, center.y - offsety }, color);
+    draw_line({ center.x - offsety, center.y - offsetx }, { center.x + offsety, center.y - offsetx }, color);
 
     if (d >= 2 * offsetx) {
       d -= 2 * offsetx + 1;
-      offsetx +=1;
+      offsetx += 1;
     } else if (d < 2 * (radius - offsety)) {
       d += 2 * offsety - 1;
       offsety -= 1;
@@ -277,7 +258,7 @@ void Canvas<Color>::fill_circle(const Position& center, float radius, const Colo
 template<typename Color>
 void Canvas<Color>::fill_rectangle(const Position& top_left, const Position& bot_right, const Color color) {
   for (size_t y = top_left.y; y < bot_right.y; ++y) {
-    draw_line({top_left.x, y}, {bot_right.x, y}, color);
+    draw_line({ top_left.x, y }, { bot_right.x, y }, color);
   }
 }
 
@@ -312,7 +293,7 @@ void Canvas<Color>::fill_triangle(const Vertex& v1, const Vertex& v2, const Vert
   // then they will be drawn separately
 
   // find the vertically middle vertex, and use that as the basis for the shared flat edge
-  const auto [low, high] = std::minmax({v1.y, v2.y, v3.y});
+  const auto [low, high] = std::minmax({ v1.y, v2.y, v3.y });
 
   // high, low, middle, 'synthetic'
   Vertex vh;
@@ -364,7 +345,8 @@ void Canvas<Color>::fill_triangle(const Vertex& v1, const Vertex& v2, const Vert
   const float rslope = (vh.x - vl.x) / (vh.y - vl.y);
 
   // once the middle vertex is identified, the 'synthetic' point must be created.
-  // it will have the same height as the middle point, but it's x-position will be dependent on the slope of the other 2 points
+  // it will have the same height as the middle point, but it's x-position will be dependent on the slope of the other 2
+  // points
   vs.y = vm.y;
   vs.x = vh.x + ((vm.y - vh.y) * rslope);
 
@@ -382,7 +364,7 @@ void Canvas<Color>::fill_text(const Position& position, const std::string_view t
     for (size_t y = 0; y < 8; ++y) {
       for (size_t x = 0; x < 8; ++x) {
         if ((bitmap[y] & 1 << x) != 0) {
-          draw({position.x + x + (index * 8), position.y + y}, color);
+          draw({ position.x + x + (index * 8), position.y + y }, color);
         }
       }
     }
@@ -400,28 +382,24 @@ void Canvas<Color>::fill_flat_triangle(const Vertex& v1, const Vertex& v2, const
   VERIFY(v1.y == v2.y, "Invalid arguments to draw 'flat' triangle.");
 
   // 'reverse' slope.  how much change in x per change in y
-  const float rslope1 =
-    (static_cast<float>(v3.x) - static_cast<float>(v1.x))
-    /
-    (static_cast<float>(v3.y) - static_cast<float>(v1.y));
-  const float rslope2 =
-    (static_cast<float>(v3.x) - static_cast<float>(v2.x))
-    /
-    (static_cast<float>(v3.y) - static_cast<float>(v2.y));
+  const float rslope1
+    = (static_cast<float>(v3.x) - static_cast<float>(v1.x)) / (static_cast<float>(v3.y) - static_cast<float>(v1.y));
+  const float rslope2
+    = (static_cast<float>(v3.x) - static_cast<float>(v2.x)) / (static_cast<float>(v3.y) - static_cast<float>(v2.y));
 
   // increasing vs decreasing
 
-  using C = decltype(v1.x);
+  using C        = decltype(v1.x);
   const auto inc = std::signbit(v3.y - v1.y) ? 1 : -1;
 
   float x1 = v1.x;
   float x2 = v2.x;
   for (C y = v1.y; y != v3.y; y += inc) {
-    draw_line({x1, y}, {x2, y}, color);
+    draw_line({ x1, y }, { x2, y }, color);
 
     x1 += rslope2;
     x2 += rslope1;
   }
 }
 
-}
+} // namespace flp

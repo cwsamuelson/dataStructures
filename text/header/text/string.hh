@@ -10,24 +10,21 @@ namespace flp {
 
 template<typename CharT>
 struct BasicString {
-  constexpr
-  BasicString() noexcept = default;
+  constexpr BasicString() noexcept = default;
 
-  constexpr
-  BasicString(const char* cstring)
+  constexpr BasicString(const char* cstring)
     : ptr(nullptr)
     , length(strlen(cstring))
     , allocated(length) {
     ptr = new CharT[allocated];
 
-    for (size_t i{}; i < allocated; ++i) {
+    for (size_t i {}; i < allocated; ++i) {
       ptr[i] = cstring[i];
     }
   }
 
   template<typename Iterator>
-  constexpr
-  BasicString(Iterator start, Iterator finish)
+  constexpr BasicString(Iterator start, Iterator finish)
     : ptr(nullptr)
     , length(finish - start)
     , allocated(length) {
@@ -38,55 +35,49 @@ struct BasicString {
     }
   }
 
-  constexpr
-  BasicString(const BasicString& other)
+  constexpr BasicString(const BasicString& other)
     : ptr(new CharT[other.length])
     , length(other.length)
     , allocated(length) {
 
-    for (size_t i{}; i < length; ++i) {
+    for (size_t i {}; i < length; ++i) {
       ptr[i] = other.ptr[i];
     }
   }
 
-  constexpr
-  BasicString(BasicString&& other) noexcept
+  constexpr BasicString(BasicString&& other) noexcept
     : ptr(std::exchange(other.ptr, nullptr))
     , length(std::exchange(other.length, 0))
-    , allocated(std::exchange(other.allocated, 0))
-  {}
+    , allocated(std::exchange(other.allocated, 0)) {}
 
-  constexpr
-  BasicString& operator=(BasicString&& other) noexcept {
+  constexpr BasicString& operator=(BasicString&& other) noexcept {
     if (ptr != nullptr) {
       delete[] ptr;
     }
 
-    ptr = std::exchange(other.ptr, nullptr);
-    length = std::exchange(other.length, 0);
+    ptr       = std::exchange(other.ptr, nullptr);
+    length    = std::exchange(other.length, 0);
     allocated = std::exchange(other.allocated, 0);
 
     return *this;
   }
 
-  constexpr
-  BasicString& operator=(const BasicString& other) noexcept {
+  constexpr BasicString& operator=(const BasicString& other) noexcept {
     if (other.length > allocated) {
       delete[] ptr;
-      ptr = new CharT[other.length];
-      length = other.length;
+      ptr       = new CharT[other.length];
+      length    = other.length;
       allocated = length;
     }
 
-    for (size_t i{}; i < length; ++i) {
+    for (size_t i {}; i < length; ++i) {
       ptr[i] = other.ptr[i];
     }
 
     return *this;
   }
 
-  constexpr
-  ~BasicString() {
+  constexpr ~BasicString() {
     if (ptr != nullptr) {
       delete[] ptr;
     }
@@ -100,36 +91,36 @@ struct BasicString {
   }
 
   [[nodiscard]]
-  bool empty() const noexcept {
+  constexpr bool empty() const noexcept {
     return length == 0;
   }
 
   [[nodiscard]]
-  size_t size() const noexcept {
+  constexpr size_t size() const noexcept {
     return length;
   }
 
   [[nodiscard]]
-  size_t capacity() const noexcept {
+  constexpr size_t capacity() const noexcept {
     return allocated;
   }
 
   [[nodiscard]]
-  decltype(auto) begin(this auto&& self) noexcept {
+  constexpr decltype(auto) begin(this auto&& self) noexcept {
     return self.ptr;
   }
 
   [[nodiscard]]
-  decltype(auto) end(this auto&& self) noexcept {
+  constexpr decltype(auto) end(this auto&& self) noexcept {
     return self.ptr + self.length;
   }
 
   [[nodiscard]]
-  decltype(auto) data(this auto&& self) noexcept {
+  constexpr decltype(auto) data(this auto&& self) noexcept {
     return self.ptr;
   }
 
-  void clear() {
+  constexpr void clear() {
     if (ptr == nullptr) {
       return;
     }
@@ -139,15 +130,13 @@ struct BasicString {
   }
 
   [[nodiscard]]
-  friend
-  constexpr
-  bool operator==(const BasicString& lhs, const BasicString& rhs) noexcept {
+  friend constexpr bool operator==(const BasicString& lhs, const BasicString& rhs) noexcept {
     const auto length = lhs.size();
     if (length != rhs.size()) {
       return false;
     }
 
-    size_t i{};
+    size_t i {};
 
     while (i < length and lhs[i] == rhs[i]) {
       ++i;
@@ -157,8 +146,8 @@ struct BasicString {
   }
 
   CharT* ptr = nullptr;
-  size_t length{};
-  size_t allocated{};
+  size_t length {};
+  size_t allocated {};
 };
 
 using String = BasicString<char>;
@@ -172,4 +161,4 @@ OStream& operator<<(OStream& ostream, BasicString<CharT>& string) {
   return ostream;
 }
 
-}
+} // namespace flp

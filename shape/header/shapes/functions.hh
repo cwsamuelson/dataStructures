@@ -129,17 +129,17 @@ float ndot(const fvec2 a, const fvec2 b) noexcept {
 
 constexpr
 float length(const fvec2& vector) noexcept {
-  return std::sqrt(vector.x() * vector.x() + vector.y() * vector.y());
+  return std::sqrt((vector.x() * vector.x()) + (vector.y() * vector.y()));
 }
 
 constexpr
 float length(const fvec3& vector) noexcept {
-  return std::sqrt(vector.x() * vector.x() + vector.y() * vector.y() + vector.z() * vector.z());
+  return std::sqrt((vector.x() * vector.x()) + (vector.y() * vector.y()) + (vector.z() * vector.z()));
 }
 
 constexpr
 float length(const fvec4& vector) noexcept {
-  return std::sqrt(vector.x() * vector.x() + vector.y() * vector.y() + vector.z() * vector.z() + vector.w() * vector.w());
+  return std::sqrt((vector.x() * vector.x()) + (vector.y() * vector.y()) + (vector.z() * vector.z()) + (vector.w() * vector.w()));
 }
 
 constexpr

@@ -3,7 +3,6 @@ set(BASE_PROJECT ${PROJECT_NAME})
 project(${BASE_PROJECT}_red-black-tree LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
-find_package(rapidcheck REQUIRED)
 
 set(HEADERS
   header/core/rb-tree.hh
@@ -12,6 +11,7 @@ set(SOURCES
 )
 
 common_library(${PROJECT_NAME}
+  INTERFACE
   ${HEADERS}
   ${SOURCES}
 )
@@ -25,8 +25,7 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC
-  rapidcheck::rapidcheck
+  INTERFACE
 
   error_support::error_support
 

@@ -3,32 +3,29 @@
 #include <catch2/catch_all.hpp>
 
 #include <optional>
+#include <ranges>
 #include <set>
 
 using namespace flp;
 
 struct RAIITest {
-  bool default_contsructor = false;
-  bool copy_constructor = false;
-  bool move_constructor = false;
-  bool copy_assignment = false;
-  bool move_assignment = false;
-  bool with_args = false;
+  bool                                        default_contsructor = false;
+  bool                                        copy_constructor    = false;
+  bool                                        move_constructor    = false;
+  bool                                        copy_assignment     = false;
+  bool                                        move_assignment     = false;
+  bool                                        with_args           = false;
   std::optional<std::reference_wrapper<bool>> destructor;
 
-  template<typename ...Args>
-  RAIITest(Args&& ...args)
-    : with_args(true)
-  {}
+  template<typename... Args>
+  RAIITest(Args&&... args)
+    : with_args(true) {}
   RAIITest()
-    : default_contsructor(true)
-  {}
+    : default_contsructor(true) {}
   RAIITest(const RAIITest&)
-    : copy_constructor(true)
-  {}
+    : copy_constructor(true) {}
   RAIITest(RAIITest&&)
-    : move_constructor(true)
-  {}
+    : move_constructor(true) {}
 
   RAIITest& operator=(const RAIITest&) {
     copy_assignment = true;
@@ -54,15 +51,15 @@ TEST_CASE("`Hive`") {
     CHECK(hive.size() == 0);
     CHECK(hive.capacity() == 0);
 
-    size_t count{};
+    size_t count {};
     for (auto& _ : hive) {
       ++count;
     }
     CHECK(count == 0);
 
-    RAIITest new_value;
-    bool destructor_called = false;
-    const auto iter = hive.insert(new_value);
+    RAIITest   new_value;
+    bool       destructor_called = false;
+    const auto iter              = hive.insert(new_value);
 
     iter->destructor = destructor_called;
 
@@ -222,7 +219,7 @@ TEST_CASE("`Hive`") {
     CHECK(set.contains(42));
     CHECK(set.contains(1138));
 
-    auto filtered = std::ranges::filter_view(hive, [](const int i) {
+    auto          filtered = std::ranges::filter_view(hive, [](const int i) {
       return i > 100;
     });
     std::set<int> filtered_set;
@@ -261,6 +258,6 @@ TEST_CASE("`Hive`::Evaluate each member function") {
 }
 
 TEST_CASE("`Hive`::formatter") {
-  //Hive<int> hive;
-  //CHECK(std::format("{}", hive) == "[ ]");
+  // Hive<int> hive;
+  // CHECK(std::format("{}", hive) == "[ ]");
 }

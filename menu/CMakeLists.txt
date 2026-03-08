@@ -11,6 +11,7 @@ set(SOURCES
 )
 
 common_library(${PROJECT_NAME}
+  INTERFACE
   ${HEADERS}
   ${SOURCES}
 )
@@ -24,7 +25,7 @@ target_sources(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  PUBLIC
+  INTERFACE
   ${BASE_PROJECT}_core
   error_support::error_support
 )

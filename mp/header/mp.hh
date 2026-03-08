@@ -307,7 +307,7 @@ OStream& operator<<(OStream& ostream, const Integer& integer) {
 
 template<>
 struct std::formatter<flp::MP::Integer> : std::formatter<std::vector<uint64_t>> {
-  constexpr auto format(const flp::MP::Integer& integer, std::format_context& context) const {
+  auto format(const flp::MP::Integer& integer, std::format_context& context) const {
     if (integer.negative) {
       std::format_to(context.out(), "{} ", integer.negative);
     }

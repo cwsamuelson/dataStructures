@@ -58,16 +58,19 @@ install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)
 enable_testing()
 add_subdirectory(test)
 
-common_executable(${PROJECT_NAME}_exe
-  source/main.cc
-)
+if (NOT WIN32)
+  common_executable(${PROJECT_NAME}_exe
+    source/main.cc
+  )
 
-target_include_directories(${PROJECT_NAME}_exe
-  PUBLIC
-  source
-)
+  target_include_directories(${PROJECT_NAME}_exe
+    PUBLIC
+    source
+  )
 
-target_link_libraries(${PROJECT_NAME}_exe
-  PUBLIC
-  ${PROJECT_NAME}
-)
+  target_link_libraries(${PROJECT_NAME}_exe
+    PUBLIC
+    ${PROJECT_NAME}
+  )
+
+endif ()

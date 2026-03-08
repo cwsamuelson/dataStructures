@@ -1,5 +1,6 @@
 #pragma once
 
+#include <compare>
 #include <cstddef>
 
 namespace flp {
@@ -10,7 +11,7 @@ size_t strlen(const char* cstring) noexcept;
 template<typename CharT>
 struct FormatParseContext {
   struct Iterator {
-    CharT c{};
+    CharT c {};
 
     [[nodiscard]]
     decltype(auto) operator*(this auto&& self) noexcept {
@@ -31,7 +32,6 @@ struct FormatParseContext {
 };
 
 template<typename CharT>
-struct FormatContext {
-};
+struct FormatContext {};
 
-}
+} // namespace flp

@@ -16,13 +16,13 @@ struct InplaceVector {
     buffers[count++].construct(value);
   }
 
-  template<typename ...Args>
-  Type& emplace_back(Args&& ...args) {
+  template<typename... Args>
+  Type& emplace_back(Args&&... args) {
     VERIFY(count < Capacity, "Insufficient allocated capacity for inplace vector");
     return *buffers[count++].construct(std::forward<Args>(args)...);
   }
 
-  void pop_back() noexcept(noexcept(buffers[0].destruct())) {
+  void pop_back() {
     VERIFY(not empty(), "`pop_back` called on empty vector container");
     --count;
     buffers[count].destruct();
@@ -121,7 +121,7 @@ struct InplaceVector {
     return &buffers[count].get();
   }
 
-  size_t count{};
+  size_t                                        count {};
   std::array<AlignedTypeBuffer<Type>, Capacity> buffers;
 };
 

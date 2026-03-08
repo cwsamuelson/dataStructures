@@ -2,6 +2,8 @@
 
 #include <core/traits/integral.hh>
 
+#include <compare>
+
 namespace flp {
 
 template<typename Type>
@@ -9,8 +11,7 @@ struct Position2 {
   Type x;
   Type y;
 
-  friend
-  auto operator<=>(const Position2&, const Position2&) noexcept = default;
+  friend auto operator<=>(const Position2&, const Position2&) noexcept = default;
 };
 
 template<typename Type>
@@ -55,7 +56,7 @@ vec2<Type> operator+(const Position2<Type>& start, const Position2<Type>& stop) 
 
 template<typename Type>
 vec2<MakeSigned<Type>> operator-(const Position2<Type>& start, const Position2<Type>& stop) noexcept {
-  return { start.x - stop.x, start.y - stop.y };
+  return { static_cast<MakeSigned<Type>>(start.x - stop.x), static_cast<MakeSigned<Type>>(start.y - stop.y) };
 }
 
 // math with vec
@@ -91,4 +92,4 @@ Size2<Type> operator-(const Size2<Type>& size, const Size2<Type>& delta) noexcep
   return { size.width - delta.width, size.height - delta.height };
 }
 
-}
+} // namespace flp

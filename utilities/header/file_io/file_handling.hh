@@ -3,16 +3,17 @@
 #include <filesystem>
 #include <fstream>
 #include <generator>
+#include <span>
 #include <string>
 #include <vector>
 
 namespace flp {
 
 // basic
-void read_file(const std::filesystem::path& file_path, std::span<std::byte> buffer);
+void                   read_file(const std::filesystem::path& file_path, std::span<std::byte> buffer);
 std::vector<std::byte> read_file(const std::filesystem::path& file_path);
 
-std::string read_text(const std::filesystem::path& file_path);
+std::string            read_text(const std::filesystem::path& file_path);
 std::vector<std::byte> read_binary(const std::filesystem::path& file_path);
 
 // a 'line' is a textual idea
@@ -39,4 +40,4 @@ std::generator<std::vector<std::byte>> read_chunks(const std::filesystem::path& 
 // always yield the same chunk size.
 // std::generator<std::string(size_t)> read_chunks(const std::filesystem::path& file_path);
 
-}
+} // namespace flp

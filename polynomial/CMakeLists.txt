@@ -11,8 +11,9 @@ set(HEADERS
 set(SOURCES
 )
 
-common_library(${PROJECT_NAME} INTERFACE
-  CXX_STANDARD 26
+common_library(${PROJECT_NAME}
+  INTERFACE
+  CXX_STANDARD 23
 
   ${HEADERS}
   ${SOURCES}
