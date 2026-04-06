@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <utility>
 
 namespace flp {
 
@@ -17,7 +18,10 @@ public:
 
   DoublyLinkedList(const DoublyLinkedList& other) {}
 
-  DoublyLinkedList(DoublyLinkedList&& other) {}
+  DoublyLinkedList(DoublyLinkedList&& other)
+    : head(std::exchange(other.head, nullptr))
+    , tail(std::exchange(other.tail, nullptr))
+  {}
 
   [[nodiscard]]
   DoublyLinkedList& operator=(const DoublyLinkedList& other) {
@@ -26,11 +30,8 @@ public:
 
   [[nodiscard]]
   DoublyLinkedList& operator=(DoublyLinkedList&& other) {
-    head = other.head;
-    tail = other.tail;
-
-    other.head = nullptr;
-    other.tail = nullptr;
+    head = std::exchange(other.head, nullptr);
+    tail = std::exchange(other.tail, nullptr);
 
     return *this;
   }
@@ -46,6 +47,34 @@ public:
   void push_back(Type value) {}
 
   void pop_back(Type value) {}
+
+  template<typename ...Args>
+  Type& emplace_front(Args&& ...args) {
+    Node* node = new Node {
+      .prev = nullptr,
+      .next = head,
+      .value = Type(std::forward<Args>(args)...),
+    };
+
+    head->prev = node;
+    head = node;
+
+    return head.value;
+  }
+
+  template<typename ...Args>
+  Type& emplace_back(Args&& ...args) {
+    Node* node = new Node {
+      .prev = tail,
+      .next = nullptr,
+      .value = Type(std::forward<Args>(args)...),
+    };
+
+    tail->next = node;
+    tail = node;
+
+    return tail.value;
+  }
 
   Type& front(this auto&& self) noexcept {
     return self.head->value;
@@ -88,6 +117,7 @@ private:
   struct Node {
     Node* next = nullptr;
     Node* prev = nullptr;
+
     Type  value;
   };
 
