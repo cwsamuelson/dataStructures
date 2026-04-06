@@ -336,7 +336,7 @@ struct std::formatter<flp::Polynomial2D<Type>>
       )
       | std::views::reverse;
 
-    const auto u = 
+    const auto u =
     std::views::concat(
       t,
       std::views::single(std::to_string(polynomial.coefficients.front()))

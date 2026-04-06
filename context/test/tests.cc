@@ -14,11 +14,11 @@ using namespace flp;
 
 struct RAIILogger {
   std::function<void()> func;
-  std::string stub;
+  std::string           stub;
 
-  template<typename Func>
-  RAIILogger(Func&& f, std::string message)
-    : func(std::forward<Func>(f))
+  template<typename Functor>
+  RAIILogger(Functor&& functor, std::string message)
+    : func(std::forward<Functor>(functor))
     , stub(std::move(message))
   {}
 
@@ -51,7 +51,7 @@ struct UseAllocBar {
 };
 
 UseAllocBar get_bar() {
-  return {allocator()};
+  return { allocator() };
 }
 
 struct UseAllocFoo {
@@ -63,14 +63,14 @@ struct UseAllocFoo {
 };
 
 void stack1() {
-  ScopedContext _ (std::make_shared<STDAllocator>());
+  const ScopedContext _(std::make_shared<STDAllocator>());
 
-  UseAllocFoo foo{allocator()};
+  UseAllocFoo foo { allocator() };
 
   {
-    ScopedContext _(std::make_shared<STDAllocator>());
+    const ScopedContext _(std::make_shared<STDAllocator>());
 
-    UseAllocFoo bar{allocator()};
+    UseAllocFoo bar { allocator() };
 
     const auto x = foo.foo();
     const auto y = bar.foo();
@@ -78,12 +78,12 @@ void stack1() {
 }
 
 void stack2() {
-  ScopedContext _ (std::make_shared<STDAllocator>());
+  const ScopedContext _(std::make_shared<STDAllocator>());
 
   auto bar1 = get_bar();
 
-  auto bar2 = []{
-    ScopedContext _ (std::make_shared<STDAllocator>());
+  auto bar2 = [] {
+    const ScopedContext _(std::make_shared<STDAllocator>());
 
     return get_bar();
   }();
@@ -97,7 +97,7 @@ void stack2() {
 
 void stack3() {
   auto bar = get_bar();
-  auto _ = create_scoped_context<PoolAllocator>();
+  auto _   = create_scoped_context<PoolAllocator>();
 
   bar.bar();
 
@@ -120,8 +120,7 @@ void alloc2() {
   v.reserve(43);
   v.push_back(1138);
 
-  //! @TODO Fix this: something to do with rebind
-  //v.shrink_to_fit();
+  v.shrink_to_fit();
 
   v.push_back(42);
 }
@@ -141,32 +140,32 @@ void alloc3() {
 }
 
 TEST_CASE("Context Stack") {
-  std::vector<RAIILogger> vec{
-    {stack1, "stack1"},
-    {stack2, "stack2"},
-    {stack3, "stack3"}
+  const std::vector<RAIILogger> vec {
+    { stack1, "stack1" },
+    { stack2, "stack2" },
+    { stack3, "stack3" }
   };
 
-  //std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+  // std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
 
-  for (const auto& f : vec) {
-    f();
+  for (const auto& logger : vec) {
+    logger();
 
-    //std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
+    // std::cout << "context stack size " << GlobalCtxStack.stack.size() << std::endl;
   }
 }
 
 TEST_CASE("Allocator") {
-  std::vector<RAIILogger> vec{
-    {alloc1, "alloc1"},
-    {alloc2, "alloc2"},
-    {alloc3, "alloc3"}
+  const std::vector<RAIILogger> vec {
+    { alloc1, "alloc1" },
+    { alloc2, "alloc2" },
+    { alloc3, "alloc3" }
   };
 
   std::cout << "alloc_test start\n";
 
-  for (const auto& f : vec) {
-    f();
+  for (const auto& logger : vec) {
+    logger();
   }
   std::cout << "alloc_test end\n";
 }

@@ -1,10 +1,11 @@
 #include <oct-tree.hh>
+
+#include <catch2/catch_all.hpp>
+#define CATCH_TEST_MACROS_HPP_INCLUDED
 #include <rapidcheck/catch.h>
 #include <rapidcheck/gen/Arbitrary.h>
 #include <rapidcheck/gen/Predicate.h>
 #include <test-utils/test-utils.hh>
-
-#include <catch2/catch_all.hpp>
 
 #include <ranges>
 #include <vector>

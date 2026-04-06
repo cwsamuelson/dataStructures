@@ -1,13 +1,13 @@
 #pragma once
 
-//#include align_val_t
+#include <new>
 
 namespace flp {
 
 struct STDAllocator : AllocatorBase {
   STDAllocator() = default;
 
-  STDAllocator(const STDAllocator&) = delete;
+  STDAllocator(const STDAllocator&)   = delete;
   void operator=(const STDAllocator&) = delete;
 
   void* allocate(const size_t size, const size_t alignment) override {
@@ -15,10 +15,10 @@ struct STDAllocator : AllocatorBase {
   }
 
   void deallocate(void* ptr, const size_t size) override {
-    operator delete(ptr, size);
+    operator delete(ptr, size, static_cast<std::align_val_t>(alignof(std::max_align_t)));
   }
 
-  void deallocate(void* pointer, std::align_val_t alignment) {
+  void deallocate(void* pointer, std::align_val_t alignment) override {
     operator delete(pointer, alignment);
   }
 
@@ -27,4 +27,4 @@ struct STDAllocator : AllocatorBase {
   }
 };
 
-}
+} // namespace flp

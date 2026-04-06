@@ -52,16 +52,6 @@ struct Swizzle {
   Vec& vec;
 };
 
-template<char... Cs>
-struct SwizTag {
-  constexpr SwizTag() noexcept = default;
-};
-
-template<char... Chars>
-constexpr SwizTag<Chars...> operator""_swz() noexcept {
-  return {};
-}
-
 constexpr size_t get_swiz_index(const char c) {
   switch (c) {
   case 'x':
@@ -80,9 +70,37 @@ constexpr size_t get_swiz_index(const char c) {
   case 'a':
   case 'q':
     return 3;
+  case '\0':
+    return 0;
   default:
     throw std::runtime_error("Invalid character in swizzle expression");
   }
+}
+
+template<size_t N>
+struct SwizTag {
+  char data[N] {};
+
+  consteval SwizTag(const char (&str)[N]) noexcept {
+    for (size_t i = 0; i < N; ++i) {
+      data[i] = str[i];
+    }
+  }
+};
+
+template<SwizTag Tag>
+struct SwizTagType {};
+
+template<SwizTag Tag>
+consteval auto operator""_swz() noexcept {
+  return SwizTagType<Tag> {};
+}
+
+template<SwizTag Tag>
+consteval auto get_swiz_indices(SwizTagType<Tag>) {
+  return []<size_t... Indices>(std::index_sequence<Indices...>) {
+    return std::integer_sequence<size_t, get_swiz_index(Tag.data[Indices])...> {};
+  }(std::make_index_sequence<sizeof(Tag.data) - 1>());
 }
 
 template<char... Chars>

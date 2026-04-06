@@ -10,7 +10,7 @@ set(HEADERS
 set(SOURCES
 )
 
-common_library(${PROJECT_NAME}
+common_library(${PROJECT_NAME} INTERFACE
   ${HEADERS}
   ${SOURCES}
 )
