@@ -1,80 +1,79 @@
-# Galactic Structures
-
+Galactic Structures
+===================
 This is an umbrella project for various code/tools/utilities I have thought of, or decided to replicate for practice.
 Each subproject/directory will have its own more detailed README to cover its specific contents.
 
-## Examples
+## Features
+- const correctness
+- exception safety
+- conditional noexcept
+- allocator awareness
+- context allocator awareness
+- fancy pointers
+- iterators
 
-## Interfaces
-
-## Existing tools
-
-aligned-buffer
-configuration
-context system
-'core'
-ECS
-future
-hive
-lifetime-tracking
-matrix
-optional
-polynomial
-producer-consumer
-profiler
-ranged-integers
-sparse-set
-'std::hive'
-units
-vector
-versioning
-
-## Planned work
-
-accessor
-algorithms
-allocators
-array
-colony/hive
-date_time
-enumerator
-equation
-event_handler
-function
-graph
-hash_map
-json
-lambda
-list
-locked_resource
-logger
-logic
-long
-map
-memory
-menu
-named_point
-named_type
-normal_iterator
-operators
-pager
-prefix_tree
-ProducerConsumer
-range
-ratio
-reference_wrapper
-remote
-scheduler
-segment_tree
-skip_list
-sparse_set
-spline
-string
-stringify
-threadPool
-timer
-traits
-tuple
+## Tools
+- [ ] accessor
+- [ ] algorithms
+- [ ] aligned-buffer
+- [ ] allocators
+- [ ] array
+- [ ] colony/hive
+- [ ] configuration
+- [ ] context system
+- [ ] 'core'
+- [ ] date-time
+- [ ] ECS
+- [ ] enumerator
+- [ ] equation
+- [ ] event-handler
+- [ ] function
+- [ ] future
+- [ ] graph
+- [ ] hash-map
+- [ ] map
+- [ ] hive
+- [ ] json
+- [ ] lambda
+- [ ] lifetime-tracking
+- [ ] list
+- [ ] locked-resource
+- [ ] logger
+- [ ] logic
+- [ ] long
+- [ ] matrix
+- [ ] memory
+- [ ] menu
+- [ ] named-point
+- [ ] named-type
+- [ ] normal-iterator
+- [ ] operators
+- [ ] optional
+- [ ] pager
+- [ ] polynomial
+- [ ] prefix-tree
+- [ ] producer-consumer
+- [ ] profiler
+- [ ] range
+- [ ] ranged-integers
+- [ ] ratio
+- [ ] reference_wrapper
+- [ ] remote
+- [ ] scheduler
+- [ ] segment_tree
+- [ ] skip-list
+- [ ] sparse-set
+- [ ] 'std::hive'
+- [ ] spline
+- [ ] string
+- [ ] stringify
+- [ ] threadPool
+- [ ] timer
+- [ ] traits
+- [ ] tuple
+- [ ] units
+- [ ] vector
+- [ ] versioning
 
 ## Goals
 
@@ -87,7 +86,6 @@ standards. It is my goal that eventually it will, but given the often necessaril
 nothing can be guaranteed. Improvement changes and ideas are welcome!
 
 ## TODO
-
 - Create subproject READMEs. I'd like them to be reasonably good quality, so this will take time and focus. It also
   implies some level of completeness of the piece it documents, which many of these are certainly not.
 - Add any other
