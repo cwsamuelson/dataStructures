@@ -5,6 +5,7 @@ find_package(Catch2 REQUIRED)
 
 common_test(${PROJECT_NAME}
   additive.cc
+  applications.cc
   comparative.cc
   concepts.cc
   function-traits.cc
@@ -20,7 +21,9 @@ common_test(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PUBLIC
   Catch2::Catch2WithMain
+
   ${BASE_PROJECT}
+  ${BASE_PROJECT}::base
 )
 
 enable_testing()

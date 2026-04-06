@@ -53,12 +53,40 @@ struct Range {
     return { lhs.start - rhs.start, lhs.finish - rhs.finish };
   }
 
+  constexpr friend Range operator*(const Range& lhs, const Range& rhs) noexcept {
+    const auto [min, max] = std::ranges::minmax({
+        lhs.start * rhs.start,
+        lhs.start * rhs.finish,
+        lhs.finish * rhs.start,
+        lhs.finish * rhs.finish
+      });
+    return { min, max };
+  }
+
+  constexpr friend Range operator/(const Range& lhs, const Range& rhs) noexcept {
+    const auto [min, max] = std::ranges::minmax({
+        lhs.start / rhs.start,
+        lhs.start / rhs.finish,
+        lhs.finish / rhs.start,
+        lhs.finish / rhs.finish
+      });
+    return { min, max };
+  }
+
   constexpr friend Range operator+(const Range& range, const Type& shift) noexcept {
     return { range.start + shift, range.finish + shift };
   }
 
   constexpr friend Range operator-(const Range& range, const Type& shift) noexcept {
     return { range.start - shift, range.finish - shift };
+  }
+
+  constexpr friend Range operator>>(const Range& range, const Type& shift) noexcept {
+    return range + shift;
+  }
+
+  constexpr friend Range operator<<(const Range& range, const Type& shift) noexcept {
+    return range - shift;
   }
 };
 
