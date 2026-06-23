@@ -7,8 +7,10 @@ set(HEADERS
   header/core/application.hh
   header/core/comparative.hh
   header/core/concepts.hh
+  header/core/forward-ref.hh
   header/core/layer.hh
   header/core/maybe_const.hh
+  header/core/move-ref.hh
   header/core/multiplicative.hh
   header/core/normal_iterator.hh
   header/core/operators.hh

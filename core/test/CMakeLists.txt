@@ -14,6 +14,7 @@ common_test(${PROJECT_NAME}
   operators.cc
   overloads.cc
   #ranges.cc
+  refs.cc
   tagged_type.cc
   traits.cc
 )
