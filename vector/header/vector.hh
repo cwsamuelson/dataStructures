@@ -64,6 +64,7 @@ public:
   Vector(Vector&&) noexcept(std::is_nothrow_move_constructible_v<value_type>) = default;
 
   Vector& operator=(const Vector& other) noexcept(std::is_nothrow_copy_assignable_v<value_type>) {
+    clear();
     reserve(other.size());
     for (const auto& element : other) {
       push_back(element);
@@ -82,7 +83,7 @@ public:
 
   Vector(const_reference val, size_type count) noexcept(noexcept(reserve(size_t{}))) {
     reserve(count);
-    for (size_t i{}; i < count; ++i) {
+    while (count-- > 0) {
       push_back(val);
     }
   }

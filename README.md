@@ -75,6 +75,8 @@ Each subproject/directory will have its own more detailed README to cover its sp
 - [ ] vector
 - [ ] versioning
 
+Maybe look at [this repo](https://github.com/foonathan/type_safe) to find some more useful ideas.
+
 ## Goals
 
 The primary function for this project for me is practice of varying kinds. It is also a useful collection of 'previous

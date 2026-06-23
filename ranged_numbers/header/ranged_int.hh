@@ -91,6 +91,7 @@ struct RangedInt {
   }
 
   // the problem with integer division, is that the result is not even remotely likely to be integral
+  // perhaps it should return a rational?
   /*template<Range OtherRange, typename OtherPolicy>
   constexpr
   auto operator/(const RangedInt<OtherRange, OtherPolicy>& other) const noexcept {

@@ -1,8 +1,8 @@
-#include <template.hh>
+#include <value_map.hh>
 
 #include <catch2/catch_all.hpp>
 
 using namespace flp;
 
-TEST_CASE("`Template::atomics`") {
+TEST_CASE("`Value Map`") {
 }

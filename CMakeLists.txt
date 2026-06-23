@@ -40,6 +40,7 @@ add_subdirectory(geometry)
 #add_subdirectory(hash-map)
 #add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
+add_subdirectory(immutable)
 add_subdirectory(inout-ptr)
 add_subdirectory(inplace_vector)
 #add_subdirectory(json)
@@ -68,6 +69,7 @@ add_subdirectory(random)
 add_subdirectory(ranged_numbers)
 add_subdirectory(ranges)
 add_subdirectory(ratio)
+add_subdirectory(rc_ptr)
 add_subdirectory(red-black-tree)
 #add_subdirectory(ref_count)
 #add_subdirectory(regex)
@@ -150,6 +152,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_hash-map
   #${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive
+  ${PROJECT_NAME}_immutable
   ${PROJECT_NAME}_inout-ptr
   ${PROJECT_NAME}_inplace_vector
   #${PROJECT_NAME}_json
@@ -178,6 +181,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_ranged_numbers
   ${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
+  ${PROJECT_NAME}_rc_ptr
   ${PROJECT_NAME}_red-black-tree
   #${PROJECT_NAME}_ref_count
   #${PROJECT_NAME}_regex

@@ -319,7 +319,73 @@ TEST_CASE("`Polynomial2D`") {
     }
   }
 
+  SECTION("Arithmetic") {
+    SECTION("Addition") {
+      SECTION("Constant poly") {
+        SECTION("constant additive") {
+          rc::prop("zero", [](const float value, const float input) {
+            const Polynomial2D polynomial(0.f);
+
+            const auto new_poly = polynomial + value;
+            RC_ASSERT(new_poly(input) == value);
+          });
+
+          rc::prop("random value", [](const float coefficient, const float value, const float input) {
+            const Polynomial2D polynomial(coefficient);
+
+            const auto new_poly = polynomial + value;
+            RC_ASSERT(new_poly(input) == coefficient + value);
+          });
+        }
+
+        SECTION("linear additive") {
+          rc::prop("zero", [](const float constant, const float linear, const float input){
+            const Polynomial2D polynomial(0.f);
+            const Polynomial2D additive{constant, linear};
+
+            const auto new_poly = polynomial + additive;
+
+            RC_ASSERT((new_poly(input) - additive(input)) <= 0.00001);
+            RC_ASSERT((new_poly(input) - (input * linear) + constant) <= 0.00001);
+          });
+
+          rc::prop("zero", [](const float value, const float constant, const float linear, const float input){
+            const Polynomial2D polynomial(value);
+            const Polynomial2D additive{constant, linear};
+
+            const auto new_poly = polynomial + additive;
+            RC_ASSERT(new_poly(input) == additive(input) + value);
+            RC_ASSERT(new_poly(input) == (input * linear) + constant + value);
+            RC_ASSERT(new_poly(input) == polynomial(input) + additive(input));
+          });
+        }
+      }
+
+      SECTION("Linear poly") {
+        SECTION("constant additive") {
+          rc::prop("zero", [](const float constant, const float linear, const float additive, const float input) {
+            const Polynomial2D polynomial{constant, linear};
+
+            const auto new_poly = polynomial + additive;
+            RC_ASSERT((new_poly(input) - (polynomial(input) + additive)) <= 0.00001);
+            RC_ASSERT((new_poly(input) - ((linear * input) + constant + additive)) <= 0.00001);
+          });
+        }
+
+        SECTION("linear additive") {
+        }
+      }
+    }
+
+    SECTION("Subtraction") {
+    }
+
+    SECTION("Multiplication") {
+    }
+
+    SECTION("Division") {
+    }
+  }
+
   // auto operator<=>(const Polynomial2D&, const Polynomial2D&) noexcept = default;
-  // Polynomial2D operator*(const Polynomial2D& lhs, const Polynomial2D& rhs) noexcept;
-  // Polynomial2D operator/(const Polynomial2D& lhs, const Polynomial2D& rhs) noexcept;
 }

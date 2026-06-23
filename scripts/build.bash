@@ -2,7 +2,7 @@
 
 # build docs
 
-ROOT=${DEVBOX_PROJECT_ROOT:-.}
+ROOT=${DEVENV_ROOT:-${DEVBOX_PROJECT_ROOT:-.}}
 
 if [ ! -z "$1" -a "$#" -eq 1 -a "$1" == "docker" ]; then
   docker build -f ${ROOT}/docker/Dockerfile.builder -t base-builder ${ROOT}/docker
@@ -36,8 +36,8 @@ typeofvar () {
 build_types=("Debug" "Release" "Fuzz" "Python")
 #! @TODO MSVC
 compilers=("gcc" "clang")
-gcc_versions=("14" "13")
-clang_versions=("19" "18")
+gcc_versions=("15" "14" "13")
+clang_versions=("21" "20" "19" "18")
 
 default_build=${build_types[0]}
 default_compiler=${compilers[0]}
@@ -81,11 +81,11 @@ fi
 
 # Build profile path to build with
 profile_path="${ROOT}/profiles/${build_type^}-${compiler}-${version}"
-echo looking for $profile_path
+echo Looking for $profile_path.
 if [[ ! -f $profile_path ]]; then
   echo $profile_path not found
   exit 1
 fi
 
 # Build
-conan build -pr:a $profile_path $@ .
+cd $ROOT && conan build -pr:a $profile_path $@ . || echo "Conan build failed"

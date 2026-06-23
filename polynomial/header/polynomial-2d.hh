@@ -61,6 +61,14 @@ struct Polynomial2D {
   }
 
   Polynomial2D& operator+=(const Polynomial2D& other) {
+    reduce();
+    other.reduce();
+
+    const auto max_order = std::max(order(), other.order());
+
+    expand(max_order);
+    other.expand(max_order);
+
     for (auto&& [a, b] : std::views::zip(coefficients, other.coefficients)) {
       a += b;
     }
@@ -288,7 +296,7 @@ struct Polynomial2D {
   // friend
   // auto operator<=>(const Polynomial2d&, const Coordinate2D&) noexcept;
 
-private:
+//private:
   void reduce() const {
     while (not coefficients.empty() and coefficients.back() == 0) {
       coefficients.pop_back();
@@ -336,17 +344,18 @@ struct std::formatter<flp::Polynomial2D<Type>>
       )
       | std::views::reverse;
 
-    const auto u =
-    std::views::concat(
-      t,
-      std::views::single(std::to_string(polynomial.coefficients.front()))
-    );
+    // const auto u =
+    // std::views::concat(
+    //   t,
+    //   std::views::single(std::to_string(polynomial.coefficients.front()))
+    // );
 
-    const auto v = u
-      | std::views::join_with('+')
-      | std::ranges::to<std::string>();
+    // const auto v = u
+    //   | std::views::join_with('+')
+    //   | std::ranges::to<std::string>();
 
-    return std::formatter<std::string_view>::format(v, context);
+    // return std::formatter<std::string_view>::format(v, context);
+    return std::formatter<std::string_view>::format("poly2d-placeholder", context);
   }
 };
 
