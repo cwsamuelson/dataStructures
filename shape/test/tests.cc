@@ -253,11 +253,11 @@ TEST_CASE("`shapes`::swizzling") {
 
       // this doesn't work for some reason...
       // CHECK(vec("x"_swz) == 1.f);
-      CHECK(vec("xx"_swz) == vecn<float, 2>(1.f, 1.f));
-      CHECK(vec("xxx"_swz) == vecn<float, 3>(1.f, 1.f, 1.f));
-      CHECK(vec("xxxx"_swz) == vecn<float, 4>(1.f, 1.f, 1.f, 1.f));
-      CHECK(vec("xxxxx"_swz) == vecn<float, 5>(1.f, 1.f, 1.f, 1.f, 1.f));
-      CHECK(vec("xxxxxx"_swz) == vecn<float, 6>(1.f, 1.f, 1.f, 1.f, 1.f, 1.f));
+      CHECK(vec("xx"_swz)      == vecn<float, 2>(1.f, 1.f));
+      CHECK(vec("xxx"_swz)     == vecn<float, 3>(1.f, 1.f, 1.f));
+      CHECK(vec("xxxx"_swz)    == vecn<float, 4>(1.f, 1.f, 1.f, 1.f));
+      CHECK(vec("xxxxx"_swz)   == vecn<float, 5>(1.f, 1.f, 1.f, 1.f, 1.f));
+      CHECK(vec("xxxxxx"_swz)  == vecn<float, 6>(1.f, 1.f, 1.f, 1.f, 1.f, 1.f));
       CHECK(vec("xxxxxxx"_swz) == vecn<float, 7>(1.f, 1.f, 1.f, 1.f, 1.f, 1.f, 1.f));
     }
 

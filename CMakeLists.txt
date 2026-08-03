@@ -18,6 +18,7 @@ add_subdirectory(box)
 add_subdirectory(canvas)
 add_subdirectory(chunked_array)
 add_subdirectory(colors)
+# add_subdirectory(computation_engine)
 add_subdirectory(configuration)
 add_subdirectory(context)
 #add_subdirectory(coordinates)
@@ -119,6 +120,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_canvas
   ${PROJECT_NAME}_chunked_array
   ${PROJECT_NAME}_colors
+  # ${PROJECT_NAME}_computation_engine
   ${PROJECT_NAME}_configuration
   ${PROJECT_NAME}_context
   #${PROJECT_NAME}_coordinates

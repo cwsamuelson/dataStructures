@@ -15,6 +15,8 @@ namespace flp {
 // GLSL-like vecN type.  Math operations are member-wise
 template<typename Type, size_t Count>
 struct vecn {
+  static_assert(sizeof(Type) * Count);
+
   constexpr vecn() noexcept
     : values {} {}
 

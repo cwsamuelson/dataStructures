@@ -17,6 +17,7 @@ target_link_libraries(${PROJECT_NAME}
   ${BASE_PROJECT}
 )
 
+enable_testing()
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
 

@@ -11,6 +11,9 @@
 constexpr static size_t lines = 31;
 constexpr static size_t columns = 99;
 
+void color() {
+}
+
 // Color Codes (ANSI Escape Sequences)
 constexpr static size_t fg_gray       = 30;
 constexpr static size_t fg_red        = 31;
