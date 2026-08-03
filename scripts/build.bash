@@ -10,20 +10,6 @@ if [ ! -z "$1" -a "$#" -eq 1 -a "$1" == "docker" ]; then
   exit
 fi
 
-typeofvar () {
-    local type_signature=$(declare -p "$1" 2>/dev/null)
-
-    if [[ "$type_signature" =~ "declare --" ]]; then
-        printf "string"
-    elif [[ "$type_signature" =~ "declare -a" ]]; then
-        printf "array"
-    elif [[ "$type_signature" =~ "declare -A" ]]; then
-        printf "map"
-    else
-        printf "none"
-    fi
-}
-
 #! @TODO validate the combinatorics of all these..
 # probably by writing a build_all script?
 
@@ -43,7 +29,7 @@ default_build=${build_types[0]}
 default_compiler=${compilers[0]}
 # default version calculated later, once chosen compiler is determined
 
-args=("$@")
+args=( "$@" )
 
 # For each optional argument, we must sort the arrays and pass them to `comm` to find common values
 # Then the result of `comm` is used to determine if there was an argument match.  if there was, we shift it off the arg list
