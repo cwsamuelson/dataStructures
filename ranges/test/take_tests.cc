@@ -1,16 +1,25 @@
 #include <ranges/take.hh>
 
 #include <catch2/catch_all.hpp>
+#include <rapidcheck/catch.h>
+#include <rapidcheck/Gen.h>
+#include <rapidcheck/gen/Numeric.h>
 
 #include <vector>
 
 using namespace flp;
 
 TEST_CASE("`Ranges`::`TakeView`") {
-  std::vector<int> container{ 0, 1, 2, 3, 4, 5, 6 };
+  rc::prop("Only take what's available", [](const uint16_t size, const uint16_t amount) {
+    const auto container = *rc::gen::container<std::vector<int>>(size, rc::gen::arbitrary<int>());
 
-  for (auto i = 0uz; const auto& element : container | views::take(4)) {
-    CHECK(i < 4);
-    CHECK(element == i++);
-  }
+    size_t count{};
+    for (const auto& item: container | views::take(amount)) {
+      RC_ASSERT(item == container.at(count++));
+    }
+
+    RC_ASSERT(count <= amount);
+    RC_ASSERT(count <= size);
+    RC_ASSERT(count == std::min(amount, size));
+  });
 }

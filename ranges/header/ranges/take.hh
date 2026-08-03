@@ -13,9 +13,13 @@ struct TakeView {
   {}
 
   struct Iterator {
-    using Iter = decltype(std::begin(std::declval<Container>()));
+    // change to type_traits
+    using Iter_t = decltype(std::begin(std::declval<Container>()));
 
-    Iter iterator;
+    // instead of counter?
+    // Iter_t first;
+    // Iter_t last;
+    Iter_t iterator;
     TakeView* view;
     size_t counter{};
 
@@ -31,28 +35,34 @@ struct TakeView {
 
     constexpr
     Iterator& operator++(this auto&& self) noexcept {
-      --self.counter;
-      ++self.iterator;
+      if (self.counter != 0) {
+        --self.counter;
+        ++self.iterator;
+      }
+
       return self;
     }
 
     constexpr
     Iterator operator++(this auto&& self, int) noexcept {
-      --self.counter;
-      return {self.iterator++};
+      Iterator other{self};
+      return ++other;
     }
 
     constexpr
     Iterator& operator--(this auto&& self) noexcept {
-      ++self.counter;
-      --self.iterator;
+      if (self.counter <= self.view->counter) {
+        ++self.counter;
+        --self.iterator;
+      }
+
       return self;
     }
 
     constexpr
     Iterator operator--(this auto&& self, int) noexcept {
-      ++self.counter;
-      return {self.iterator--};
+      Iterator other{self};
+      return ++other;
     }
 
     // friend
@@ -86,7 +96,9 @@ struct TakeView {
 
   constexpr
   Iterator end(this auto&& self) noexcept {
-    return {std::end(self.container), &self, 0uz};
+    auto iter = std::begin(self.container);
+    std::advance(iter, self.counter);
+    return {iter, &self, 0uz};
   }
 
   Container& container;
