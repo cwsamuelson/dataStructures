@@ -12,16 +12,23 @@ struct GenerateView {
   {}
 
   struct Iterator {
+    using Iter = decltype(std::declval<Functor>()());
     GenerateView* view;
 
     constexpr
+    Iterator(GenerateView* vw) noexcept
+      : view(vw)
+    {}
+
+    constexpr
     decltype(auto) operator*(this auto&& self) noexcept {
-      return self.view->predicate();
+      return std::forward<decltype(self)>(self).view->predicate();
     }
 
     constexpr
     decltype(auto) operator->(this auto&& self) noexcept {
-      return &self.view->predicate();
+      // ???.......
+      return &std::forward<decltype(self)>(self).view->predicate();
     }
 
     constexpr
@@ -31,7 +38,7 @@ struct GenerateView {
 
     constexpr
     Iterator operator++(this auto&& self, int) noexcept {
-      return {};
+      return {self};
     }
 
     constexpr

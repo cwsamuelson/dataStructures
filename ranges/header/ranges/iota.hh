@@ -9,9 +9,9 @@ namespace flp::ranges {
 template<Incrementable Counting>
 struct IotaView {
   constexpr
-  IotaView(Counting&& start, Counting&& ending) noexcept
-    : first(std::forward<Counting>(start))
-    , last(std::forward<Counting>(ending))
+  IotaView(const Counting start, const Counting ending) noexcept
+    : first(start)
+    , last(ending)
   {}
 
   struct Iterator {
@@ -87,14 +87,16 @@ struct IotaView {
     return {&self, self.last};
   }
 
+  // we COULD capture a const&, so that copies aren't made unnecessarily, but
+  // that would break other things, so it would have to be optional...
   Counting first{};
   Counting last{};
 };
 
 template<Incrementable Counting>
 constexpr
-IotaView<Counting> iota(Counting&& start, Counting&& finish = std::numeric_limits<Counting>::max()) noexcept {
-  return {std::forward<Counting>(start), std::forward<Counting>(finish)};
+IotaView<Counting> iota(const Counting start, const Counting finish = std::numeric_limits<Counting>::max()) noexcept {
+  return {start, finish};
 }
 
 }
