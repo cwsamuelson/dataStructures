@@ -26,6 +26,7 @@ common_test(${PROJECT_NAME}
   span.cc
   tagged_type.cc
   traits.cc
+  type-pack.cc
   variant.cc
 )
 

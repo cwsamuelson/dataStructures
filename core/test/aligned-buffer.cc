@@ -1,4 +1,4 @@
-#include <aligned_buffer.hh>
+#include <core/aligned-buffer.hh>
 
 #include <catch2/catch_all.hpp>
 

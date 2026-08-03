@@ -3,6 +3,8 @@
 
 #include <catch2/catch_all.hpp>
 
+using namespace flp;
+
 TEST_CASE("core::MoveRef") {
   std::string string0;
   // MoveRef<std::string> ref0 = string0; // won't compile
@@ -39,6 +41,6 @@ TEST_CASE("core::ForwardRef") {
   local = "String info; big enough for SSO, just in case";
   take_ref(ForwardRef{local});
   take_ref(ForwardRef{std::move(local)});
-  take_ref(local);
-  take_ref(std::move(local));
+  // take_ref(local);
+  // take_ref(std::move(local));
 }

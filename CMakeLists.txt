@@ -10,7 +10,6 @@ include_directories(header)
 add_subdirectory(abstract)
 add_subdirectory(affine)
 add_subdirectory(algorithms)
-add_subdirectory(aligned_buffer)
 #add_subdirectory(allocator)
 add_subdirectory(args)
 #add_subdirectory(b+-tree)
@@ -94,7 +93,6 @@ add_subdirectory(thread_pool)
 add_subdirectory(tribool)
 #add_subdirectory(trie)
 add_subdirectory(try_wrap)
-add_subdirectory(type_pack)
 add_subdirectory(type_set)
 add_subdirectory(unique_ptr)
 # add_subdirectory(unit-testing)
@@ -113,7 +111,6 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_abstract
   ${PROJECT_NAME}_affine
   ${PROJECT_NAME}_algorithms
-  ${PROJECT_NAME}_aligned_buffer
   #${PROJECT_NAME}_allocator
   ${PROJECT_NAME}_args
   #${PROJECT_NAME}_b+-tree
@@ -195,7 +192,6 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_tribool
   #${PROJECT_NAME}_trie
   ${PROJECT_NAME}_try_wrap
-  ${PROJECT_NAME}_type_pack
   ${PROJECT_NAME}_type_set
   ${PROJECT_NAME}_unique_ptr
   # ${PROJECT_NAME}_unit-testing

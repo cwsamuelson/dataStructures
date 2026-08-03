@@ -26,7 +26,6 @@ target_sources(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
   ${BASE_PROJECT}_core
-  ${BASE_PROJECT}_type_pack
   error_support::error_support
 )
 

@@ -33,7 +33,6 @@ target_link_libraries(${PROJECT_NAME}
   error_support::error_support
 
   ${BASE_PROJECT}_core
-  ${BASE_PROJECT}_random
 )
 
 install(TARGETS ${PROJECT_NAME} FILE_SET public_headers)

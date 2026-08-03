@@ -25,7 +25,8 @@ target_sources(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME}
   INTERFACE
-  ${BASE_PROJECT}_aligned_buffer
+  ${BASE_PROJECT}_core
+
   error_support::error_support
 )
 

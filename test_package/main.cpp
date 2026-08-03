@@ -1,4 +1,4 @@
-#include <aligned_buffer.hh>
+#include <core/aligned-buffer.hh>
 #include <core/additive.hh>
 #include <core/comparative.hh>
 #include <core/concepts.hh>

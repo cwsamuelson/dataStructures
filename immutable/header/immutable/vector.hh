@@ -1,6 +1,6 @@
 #pragma once
 
-#include <aligned_buffer.hh>
+#include <core/aligned-buffer.hh>
 
 #include <error_help.hh>
 

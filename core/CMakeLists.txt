@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
 project(${BASE_PROJECT}_core LANGUAGES CXX)
 
+find_package(Boost REQUIRED)
+
 set(HEADERS
   header/core/additive.hh
+  header/core/aligned-buffer.hh
   header/core/any.hh
   header/core/application.hh
   header/core/comparative.hh
@@ -75,6 +78,7 @@ set(HEADERS
   header/core/traits/reference.hh
   header/core/traits/value_types.hh
   header/core/traits/volatile.hh
+  header/core/type-pack.hh
   header/core/variant.hh
   header/core/verify.hh
 )
@@ -86,6 +90,13 @@ set(SOURCES
 common_library(${PROJECT_NAME}
   ${HEADERS}
   ${SOURCES}
+)
+
+target_link_libraries(${PROJECT_NAME}
+  PUBLIC
+  ${BASE_PROJECT}_algorithms
+
+  Boost::boost
 )
 
 target_sources(${PROJECT_NAME}
@@ -128,8 +139,6 @@ target_sources(${PROJECT_NAME}_main_wrap
 target_link_libraries(${PROJECT_NAME}_main_wrap
   PUBLIC
   ${PROJECT_NAME}::base
-
-  ${PROJECT_NAME}_type_pack
 )
 
 install(TARGETS ${PROJECT_NAME}_main_wrap FILE_SET public_headers)

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "algorithms/numerics.hh"
-#include "aligned_buffer.hh"
-#include "type_pack.hh"
+#include "core/aligned-buffer.hh"
+#include "core/type-pack.hh"
 
 #include <cstddef>
 #include <cstdint>
