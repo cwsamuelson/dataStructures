@@ -19,6 +19,7 @@ TEST_CASE("`Ranges`::`TakeView`") {
     }
 
     RC_ASSERT(count <= size);
+    RC_ASSERT(count <= amount);
     RC_ASSERT(count == std::min(amount, size));
   });
 }

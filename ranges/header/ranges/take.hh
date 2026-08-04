@@ -97,6 +97,16 @@ struct TakeView {
 
   constexpr
   Iterator end(this auto&& self) noexcept {
+    // should this be implemented like so:
+    // ```C++
+    // constexpr
+    // auto end(this auto&& self) noexcept {
+    //   auto iter = std::end(self.container);
+    //   std::advance(iter, std::min(self.counter, std::distance(std::begin(self.container), std::end(self.container))));
+    //   return iter;
+    // }
+    // ```
+    // and eliminate most of this implementation?
     auto iter = std::begin(self.container);
 
     for (size_t i{}; i < self.counter and iter != self.container.end(); ++i) {

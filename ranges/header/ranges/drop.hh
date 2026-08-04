@@ -12,78 +12,17 @@ struct DropView {
     , counter(count)
   {}
 
-  struct Iterator {
-    using Iter = decltype(std::begin(std::declval<Container>()));
-
-    Iter iterator;
-    DropView* view;
-    size_t counter{};
-
-    constexpr
-    Iterator(DropView* vw) noexcept
-      : view(vw)
-    {}
-
-    constexpr
-    decltype(auto) operator*(this auto&& self) noexcept {
-      return *self.iterator;
-    }
-
-    constexpr
-    decltype(auto) operator->(this auto&& self) noexcept {
-      return &*self.iterator;
-    }
-
-    constexpr
-    Iterator& operator++(this auto&& self) noexcept {
-      return self;
-    }
-
-    constexpr
-    Iterator operator++(this auto&& self, int) noexcept {
-      return {self.iterator++};
-    }
-
-    constexpr
-    Iterator& operator--(this auto&& self) noexcept {
-      --self.iterator;
-      return self;
-    }
-
-    constexpr
-    Iterator operator--(this auto&& self, int) noexcept {
-      return {self.iterator--};
-    }
-
-    // friend
-    // constexpr
-    // Iterator operator+(const Iterator& iterator, const ssize_t offset) {
-    //   return {iterator.iterator + offset};
-    // }
-
-    // friend
-    // constexpr
-    // Iterator operator-(const Iterator& iterator, const ssize_t offset) {
-    //   return {iterator.iterator - offset};
-    // }
-
-    friend
-    constexpr
-    auto operator<=>(const Iterator&, const Iterator&) noexcept = default;
-
-    friend
-    constexpr
-    bool operator==(const Iterator&, const Iterator&) noexcept = default;
-  };
-
   constexpr
-  Iterator begin(this auto&& self) noexcept {
-    return {std::begin(self.container), &self, counter};
+  auto begin(this auto&& self) noexcept {
+    auto iterator = std::begin(self.container);
+    // advance the iterator, but don't advance past the end
+    std::advance(iterator, std::min(self.counter, (size_t)std::distance(std::begin(self.container), std::end(self.container))));
+    return iterator;
   }
 
   constexpr
-  Iterator end(this auto&& self) noexcept {
-    return {std::end(self.container), &self};
+  auto end(this auto&& self) noexcept {
+    return self.container.end();
   }
 
   Container& container;
@@ -101,7 +40,7 @@ DropView<Container> operator|(Container&& container, DropAdaptor&& adaptor) noex
 }
 
 constexpr
-DropAdaptor take(const size_t counter) noexcept {
+DropAdaptor drop(const size_t counter) noexcept {
   return {counter};
 }
 
