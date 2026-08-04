@@ -7,7 +7,7 @@
 
 using namespace flp;
 
-TEST_CASE("`Ranges`::`ReverseView`") {
+TEST_CASE("`Ranges`::`DropView`") {
   rc::prop("", []{
   });
 }
