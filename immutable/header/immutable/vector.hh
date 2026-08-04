@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <memory>
 #include <utility>
+#include <vector>
 
 namespace flp::imm {
 
@@ -24,68 +25,37 @@ public:
   static constexpr size_type value_size      = sizeof(value_type);
 
 private:
-  // use a normal vector?
-  using Buffer = std::unique_ptr<AlignedTypeBuffer<Type>[]>;
-  Buffer buffer;
-  size_t current_size {};
+  using Buffer = std::vector<Type>;
 
-  static Buffer create_buffer(const size_type element_count) noexcept {
-    return Buffer { new AlignedTypeBuffer<Type>[element_count] };
-  }
+  std::vector<Type> buffer;
 
-  Vector(Buffer buf, const size_t sz)
+  Vector(Buffer buf)
     : buffer(std::move(buf))
-    , current_size(sz)
   {}
 
 public:
   Vector() noexcept = default;
 
   Vector(const Vector& other) noexcept(std::is_nothrow_copy_constructible_v<value_type>)
-    : buffer(create_buffer(other.size()))
-    , current_size(other.size()) {
-    for (size_t index{}; const auto& element : other) {
-      buffer[index++].construct(element);
-    }
-  }
+    : buffer(other.buffer)
+  {}
 
-  Vector(Vector&&) = delete("Moving implies modification of the other member");
+  Vector(Vector&&) = delete("Moving implies modification of the vector moved from");
 
   Vector& operator=(const Vector&) = delete("Copying changes the state of this vector");
 
-  Vector& operator=(Vector&&) = delete("Moving implies modification of the other member");
+  Vector& operator=(Vector&&) = delete("Moving implies modification of the vector moved from");
 
-  ~Vector() noexcept(std::is_nothrow_destructible_v<value_type>) {
-    for (size_t i{}; i < size(); ++i) {
-      buffer[i].destruct();
-    }
-  }
+  ~Vector() noexcept(std::is_nothrow_destructible_v<value_type>) = default;
 
-  Vector(std::initializer_list<Type> il)
-    : Vector(il.begin(), il.end())
+  template<typename ...Args>
+  Vector(Args&& ...args)
+    : buffer{std::forward<Args>(args)...}
   {}
-
-  Vector(const_reference val, size_type count) noexcept
-    : buffer(create_buffer(count))
-    , current_size(count) {
-    while (count-- > 0) {
-      buffer[count - 1].construct(val);
-    }
-  }
-
-  template<typename inputIter /*, typename = requireInputIter<inputIter>*/>
-  Vector(inputIter first, inputIter last)
-    : buffer(create_buffer(last - first))
-    , current_size(last - first) {
-    for (size_t i{}; first != last; ++i, ++first) {
-      buffer[i].construct(*first);
-    }
-  }
 
   [[nodiscard]]
   const_reference operator[](const size_type index) const {
-    VERIFY(index < size(), "Index ({}) beyond bounds ({})", index, size());
-    return buffer[index].get();
+    return buffer.at(index);
   }
 
   // deliberately excluding this
@@ -95,54 +65,44 @@ public:
   }*/
 
   [[nodiscard]]
-  const_reference front() const noexcept {
+  const_reference front() const {
     VERIFY(not empty(), "Accessing front element, but no data allocated");
-    return buffer[0].get();
+    return buffer.front();
   }
 
   [[nodiscard]]
-  const_reference back() const noexcept {
+  const_reference back() const {
     VERIFY(not empty(), "Accessing back element, but no data allocated");
-    return buffer[size() - 1].get();
+    return buffer.back();
   }
 
   [[nodiscard]]
   Vector push_back(const_reference data) const {
-    auto new_buffer = create_buffer(size() + 1);
+    auto new_buffer = buffer;
 
-    for (size_t i{}; i < size(); ++i) {
-      new_buffer[i].construct(buffer[i].get());
-    }
+    new_buffer.push_back(data);
 
-    new_buffer[size()].construct(data);
-
-    return Vector(std::move(new_buffer), size() + 1);
+    return new_buffer;
   }
 
   template<typename... Args>
     requires std::is_constructible_v<value_type, Args...>
   [[nodiscard]]
   Vector emplace_back(Args&&... args) const {
-    auto new_buffer = create_buffer(size() + 1);
+    auto new_buffer = buffer;
 
-    for (size_t i{}; i < size(); ++i) {
-      new_buffer[i].construct(buffer[i].get());
-    }
+    new_buffer.emplace_back(std::forward<Args>(args)...);
 
-    new_buffer[size()].construct(std::forward<Args>(args)...);
-
-    return {std::move(new_buffer)};
+    return new_buffer;
   }
 
   [[nodiscard]]
   Vector pop_back() const noexcept(std::is_nothrow_destructible_v<value_type>) {
-    auto new_buffer = create_buffer(size() - 1);
+    auto new_buffer = buffer;
 
-    for (size_t i{}; i < size() - 1; ++i) {
-      new_buffer[i].construct(buffer[i].get());
-    }
+    new_buffer.pop_back();
 
-    return {std::move(new_buffer)};
+    return new_buffer;
   }
 
   [[nodiscard]]
@@ -152,30 +112,28 @@ public:
 
   [[nodiscard]]
   bool empty() const noexcept {
-    return size() == 0;
+    return buffer.empty();
   }
 
   [[nodiscard]]
   size_type size() const noexcept {
-    return current_size;
+    return buffer.size();
   }
 
   using const_iterator = const_pointer;
 
   [[nodiscard]]
   const_iterator begin() const noexcept {
-    return const_iterator{&buffer.get()->get()};
+    return buffer.begin();
   }
 
   [[nodiscard]]
   const_iterator end() const noexcept {
-    return const_iterator{&buffer.get()->get() + current_size};
-  }
-
-  [[nodiscard]]
-  const_iterator Iterator(const size_type idx) const {
-    return const_iterator(buffer.get() + idx);
+    return buffer.end();
   }
 };
+
+template<typename ...Args>
+Vector(Args&& ...args) -> Vector<typename decltype(std::vector{std::declval<Args>()...})::value_type>;
 
 } // namespace flp
