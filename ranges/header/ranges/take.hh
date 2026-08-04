@@ -12,108 +12,16 @@ struct TakeView {
     , counter(count)
   {}
 
-  struct Iterator {
-    // change to type_traits
-    using Iter_t = decltype(std::begin(std::declval<Container>()));
-
-    // instead of counter?
-    // Iter_t first;
-    // Iter_t last;
-    Iter_t iterator;
-    TakeView* view;
-    size_t counter{};
-
-    constexpr
-    decltype(auto) operator*(this auto&& self) noexcept {
-      return *self.iterator;
-    }
-
-    constexpr
-    decltype(auto) operator->(this auto&& self) noexcept {
-      return &*self.iterator;
-    }
-
-    constexpr
-    Iterator& operator++() noexcept {
-      if (counter != 0) {
-        --counter;
-        ++iterator;
-      }
-
-      return *this;
-    }
-
-    constexpr
-    Iterator operator++(this auto&& self, int) noexcept {
-      Iterator other{self};
-      return ++other;
-    }
-
-    constexpr
-    Iterator& operator--() noexcept {
-      if (counter <= view->counter) {
-        ++counter;
-        --iterator;
-      }
-
-      return *this;
-    }
-
-    constexpr
-    Iterator operator--(this auto&& self, int) noexcept {
-      Iterator other{self};
-      return ++other;
-    }
-
-    // friend
-    // constexpr
-    // Iterator operator+(const Iterator& iterator, const ssize_t offset) {
-    //   return {iterator.iterator + offset};
-    // }
-
-    // friend
-    // constexpr
-    // Iterator operator-(const Iterator& iterator, const ssize_t offset) {
-    //   return {iterator.iterator - offset};
-    // }
-
-    friend
-    constexpr
-    auto operator<=>(const Iterator&, const Iterator&) noexcept = default;
-
-    friend
-    constexpr
-    bool operator==(const Iterator& lhs, const Iterator& rhs) noexcept {
-      return lhs.view     == rhs.view
-         // and lhs.counter  == rhs.counter
-         and lhs.iterator  == rhs.iterator;
-    }
-  };
-
   constexpr
-  Iterator begin(this auto&& self) noexcept {
-    return {std::begin(self.container), &self, self.counter};
+  auto begin(this auto&& self) noexcept {
+    return std::begin(self.container);
   }
 
   constexpr
-  Iterator end(this auto&& self) noexcept {
-    // should this be implemented like so:
-    // ```C++
-    // constexpr
-    // auto end(this auto&& self) noexcept {
-    //   auto iter = std::end(self.container);
-    //   std::advance(iter, std::min(self.counter, std::distance(std::begin(self.container), std::end(self.container))));
-    //   return iter;
-    // }
-    // ```
-    // and eliminate most of this implementation?
-    auto iter = std::begin(self.container);
-
-    for (size_t i{}; i < self.counter and iter != self.container.end(); ++i) {
-      std::advance(iter, 1);
-    }
-
-    return {iter, &self, 0uz};
+  auto end(this auto&& self) noexcept {
+    auto iterator = std::begin(self.container);
+    std::advance(iterator, std::min(self.counter, (size_t)std::distance(std::begin(self.container), std::end(self.container))));
+    return iterator;
   }
 
   Container& container;
