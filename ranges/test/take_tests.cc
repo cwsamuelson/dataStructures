@@ -14,11 +14,10 @@ TEST_CASE("`Ranges`::`TakeView`") {
     const auto container = *rc::gen::container<std::vector<int>>(size, rc::gen::arbitrary<int>());
 
     size_t count{};
-    for (const auto& item: container | views::take(amount)) {
+    for (const auto& item : container | views::take(amount)) {
       RC_ASSERT(item == container.at(count++));
     }
 
-    RC_ASSERT(count <= amount);
     RC_ASSERT(count <= size);
     RC_ASSERT(count == std::min(amount, size));
   });

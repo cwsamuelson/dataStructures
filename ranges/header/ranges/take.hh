@@ -34,13 +34,13 @@ struct TakeView {
     }
 
     constexpr
-    Iterator& operator++(this auto&& self) noexcept {
-      if (self.counter != 0) {
-        --self.counter;
-        ++self.iterator;
+    Iterator& operator++() noexcept {
+      if (counter != 0) {
+        --counter;
+        ++iterator;
       }
 
-      return self;
+      return *this;
     }
 
     constexpr
@@ -50,13 +50,13 @@ struct TakeView {
     }
 
     constexpr
-    Iterator& operator--(this auto&& self) noexcept {
-      if (self.counter <= self.view->counter) {
-        ++self.counter;
-        --self.iterator;
+    Iterator& operator--() noexcept {
+      if (counter <= view->counter) {
+        ++counter;
+        --iterator;
       }
 
-      return self;
+      return *this;
     }
 
     constexpr
@@ -85,7 +85,8 @@ struct TakeView {
     constexpr
     bool operator==(const Iterator& lhs, const Iterator& rhs) noexcept {
       return lhs.view     == rhs.view
-         and lhs.counter  == rhs.counter;
+         // and lhs.counter  == rhs.counter
+         and lhs.iterator  == rhs.iterator;
     }
   };
 
@@ -97,7 +98,11 @@ struct TakeView {
   constexpr
   Iterator end(this auto&& self) noexcept {
     auto iter = std::begin(self.container);
-    std::advance(iter, self.counter);
+
+    for (size_t i{}; i < self.counter and iter != self.container.end(); ++i) {
+      std::advance(iter, 1);
+    }
+
     return {iter, &self, 0uz};
   }
 
