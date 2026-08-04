@@ -346,7 +346,7 @@ TEST_CASE("`Polynomial2D`") {
             const auto new_poly = polynomial + additive;
 
             RC_ASSERT((new_poly(input) - additive(input)) <= 0.00001);
-            RC_ASSERT((new_poly(input) - (input * linear) + constant) <= 0.00001);
+            RC_ASSERT((new_poly(input) - ((input * linear) + constant)) <= 0.00001);
           });
 
           rc::prop("zero", [](const float value, const float constant, const float linear, const float input){
@@ -367,12 +367,25 @@ TEST_CASE("`Polynomial2D`") {
             const Polynomial2D polynomial{constant, linear};
 
             const auto new_poly = polynomial + additive;
-            RC_ASSERT((new_poly(input) - (polynomial(input) + additive)) <= 0.00001);
-            RC_ASSERT((new_poly(input) - ((linear * input) + constant + additive)) <= 0.00001);
+            CHECK_THAT(new_poly(input),
+                  Catch::Matchers::WithinRel(polynomial(input) + additive)
+              and Catch::Matchers::WithinRel((linear * input) + (constant + additive))
+            );
           });
         }
 
         SECTION("linear additive") {
+          rc::prop("zero", [](const float constant, const float linear, const float additive_constant, const float additive_linear, const float input) {
+            const Polynomial2D polynomial{constant, linear};
+            const Polynomial2D additive{additive_constant, additive_linear};
+
+            const auto new_poly = polynomial + additive;
+
+            CHECK_THAT(new_poly(input),
+                  Catch::Matchers::WithinRel(polynomial(input) + additive(input))
+              and Catch::Matchers::WithinRel(((linear + additive_linear) * input) + (constant + additive_constant))
+            );
+          });
         }
       }
     }
