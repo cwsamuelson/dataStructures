@@ -27,16 +27,12 @@ public:
 private:
   using Buffer = std::vector<Type>;
 
-  std::vector<Type> buffer;
-
-  Vector(Buffer buf)
-    : buffer(std::move(buf))
-  {}
+  Buffer buffer;
 
 public:
   Vector() noexcept = default;
 
-  Vector(const Vector& other) noexcept(std::is_nothrow_copy_constructible_v<value_type>)
+  Vector(const Vector& other) noexcept(std::is_nothrow_copy_constructible_v<Buffer>)
     : buffer(other.buffer)
   {}
 
@@ -49,7 +45,7 @@ public:
   ~Vector() noexcept(std::is_nothrow_destructible_v<value_type>) = default;
 
   template<typename ...Args>
-  Vector(Args&& ...args)
+  Vector(Args&& ...args) noexcept(std::is_nothrow_constructible_v<Buffer, Args...>)
     : buffer{std::forward<Args>(args)...}
   {}
 
