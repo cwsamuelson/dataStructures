@@ -51,6 +51,10 @@ struct vecn {
 
   constexpr vecn& operator=(vecn&&) noexcept = default;
 
+  constexpr void normalize() {
+    *this = normalize(*this);
+  }
+
   constexpr friend vecn operator+(const vecn& vec) noexcept {
     auto posate = []<size_t... Indices>(const vecn& vec, std::integer_sequence<size_t, Indices...>) noexcept {
       return vecn { +vec.values[Indices]... };
