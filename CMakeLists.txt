@@ -84,7 +84,7 @@ if (NOT WIN32)
 endif ()
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
-# add_subdirectory(spline)
+add_subdirectory(spline)
 #add_subdirectory(std_hive)
 #add_subdirectory(sum_type)
 add_subdirectory(tagged_arguments)
@@ -184,7 +184,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_socket
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
-  # ${PROJECT_NAME}_spline
+  ${PROJECT_NAME}_spline
   #${PROJECT_NAME}_std_hive
   #${PROJECT_NAME}_sum_type
   ${PROJECT_NAME}_tagged_arguments
