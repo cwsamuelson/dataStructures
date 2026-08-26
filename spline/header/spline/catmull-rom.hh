@@ -97,50 +97,99 @@ struct CatmullRom {
     // parameters are ordered, per how they're set
     const auto iterator = std::upper_bound(parameters.begin(), parameters.end(), parameter);
     // *iterator >= parameter;
-    // Our objective is i: parameters[i] <= parameter < parameters[i + 1]
-    const auto i = std::distance(parameters.begin(), iterator - 1);
+    // Our objective is index: parameters[index] <= parameter < parameters[index + 1]
+    const auto index = std::distance(parameters.begin(), iterator - 1);
 
-    // now do lots of math
-    const value_type denom21 = 1 / (parameters[i + 1] - parameters[i]);
-    const value_type s0s = parameters[i - 1] - parameter;
-    const value_type s1s = parameters[i] - parameter;
-    const value_type s2s = parameters[i + 1] - parameter;
-    const size_t ip2 = parameters.size() == i + 2 ? 0 : i + 2;
-    const value_type s3s = parameters[ip2] - parameter;
+    // now use Barry-Goldman pyramidial algorithm
 
-    Point A1_or_A3;
-    value_type denom = 1 / (parameters[i] - parameters[i - 1]);
-    for (size_t j{}; j < points.at(i).size(); ++j) {
-      A1_or_A3[j] = denom * (s1s * points[i - 1][j] - s0s * points[i][j]);
+    // Start with 4 points P0, P1, P2, P3
+    // use those to blend into A0, A1, A2
+    // Then blend those to B0, B2
+    // Finally blend these into the final C
+    // P0  P1  P2  P3
+    //   A0  A1  A2
+    //     B0  B1
+    //       C
+    // blend(P0, P1) -> A0
+    // blend(P1, P2) -> A1
+    // blend(P2, P3) -> A2
+    // blend(A0, A1) -> B0
+    // blend(A1, A2) -> B1
+    // blend(B0, B1) -> C
+    // -> C
+
+    const size_t index3 = parameters.size() == index + 2 ? 0 : index + 2;
+    const Point P0 = points[index - 1];
+    const Point P1 = points[index + 0];
+    const Point P2 = points[index + 1];
+    const Point P3 = points[index3];
+
+    const value_type p0 = parameters[index - 1];
+    const value_type p1 = parameters[index + 0];
+    const value_type p2 = parameters[index + 1];
+    const value_type p3 = parameters[index3];
+
+    const value_type s0s = p0 - parameter;
+    const value_type s1s = p1 - parameter;
+    const value_type s2s = p2 - parameter;
+    const value_type s3s = p3 - parameter;
+
+    const value_type inverse_ds21 = 1 / (p2 - p1);
+
+    const auto blendP = [&](
+      const auto& P0, const auto& P1,
+      const auto& p0, const auto& p1,
+      const auto& ds0, const auto& ds1
+    ){
+      Point P;
+      const value_type inverse = 1 / (p1 - p0);
+      for (size_t axis{}; axis < P0.size(); ++axis) {
+        P[axis] = inverse * (ds1 * P0[axis] - ds0 * P1[axis]);
+      }
+      return P;
+    };
+
+    const Point A0 = blendP(P0, P1, p0, p1, s0s, s1s);
+
+    // Point A0;
+    // const value_type inverse_ds10 = 1 / (P1 - P0);
+    // for (size_t axis{}; axis < points.at(index).size(); ++axis) {
+    //   A0[axis] = inverse_ds10 * (s1s * P0[axis] - s0s * P1[axis]);
+    // }
+
+    const Point A1 = blendP(P1, P2, p1, p2, s2s, s1s);
+
+    // Point A1;
+    // for (size_t axis{}; axis < points.at(index).size(); ++axis) {
+    //   A1[axis] = inverse_ds21 * (s2s * P1[axis] - s1s * P2[axis]);
+    // }
+
+    const Point A2 = blendP(P2, P3, p2, p3, s2s, s3s);
+
+    // Point A2;
+    // const value_type inverse_ds32 = 1 / (P3 - P2);
+    // for (size_t axis{}; axis < points.at(index).size(); ++axis) {
+    //   A2[axis] = inverse_ds32 * (s3s * P2[axis] - s2s * P3[axis]);
+    // }
+
+    Point B0;
+    const value_type inverse_ds20 = 1 / (p2 - p0);
+    for (size_t axis{}; axis < points.at(index).size(); ++axis) {
+      B0[axis] = inverse_ds20 * (s2s * A0[axis] - s0s * A1[axis]);
     }
 
-    Point A2_or_B2;
-    for (size_t j{}; j < points.at(i).size(); ++j) {
-      A2_or_B2[j] = denom21 * (s2s * points[i][j] - s1s * points[i + 1][j]);
+    Point B1;
+    const value_type inverse_ds31 = 1 / (p3 - p1);
+    for (size_t axis{}; axis < points.at(index).size(); ++axis) {
+      B1[axis] = inverse_ds31 * (s3s * A1[axis] - s1s * A2[axis]);
     }
 
-    Point B1_or_C;
-    denom = 1 / (parameters[i + 1] - parameters[i - 1]);
-    for (size_t j{}; j < points.at(i).size(); ++j) {
-      B1_or_C[j] = denom * (s2s * A1_or_A3[j] - s0s * A2_or_B2[j]);
+    Point C;
+    for (size_t axis{}; axis < points.at(index).size(); ++axis) {
+      C[axis] = inverse_ds21 * (s2s * B0[axis] - s1s * B1[axis]);
     }
 
-    denom = 1 / (parameters[ip2] - parameters[i + 1]);
-    for (size_t j{}; j < points.at(i).size(); ++j) {
-      A1_or_A3[j] = denom * (s3s * points[i + 1][j] - s2s * points[ip2][j]);
-    }
-
-    Point B2;
-    denom = 1 / (parameters[ip2] - parameters[i]);
-    for (size_t j{}; j < points.at(i).size(); ++j) {
-      B2[j] = denom * (s3s * A2_or_B2[j] - s1s * A1_or_A3[j]);
-    }
-
-    for (size_t j{}; j < points.at(i).size(); ++j) {
-      B1_or_C[j] = denom21 * (s2s * B1_or_C[j] - s1s * B2[j]);
-    }
-
-    return B1_or_C;
+    return C;
   }
 
   value_type parameter(const size_t index) const {
