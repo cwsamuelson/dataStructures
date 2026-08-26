@@ -102,7 +102,6 @@ add_subdirectory(utilities)
 add_subdirectory(uuid)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
-add_subdirectory(vector)
 #add_subdirectory(versioning)
 
 common_library(${PROJECT_NAME} INTERFACE)
@@ -202,7 +201,6 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_uuid
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
-  ${PROJECT_NAME}_vector
   #${PROJECT_NAME}_versioning
 )
 

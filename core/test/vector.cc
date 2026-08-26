@@ -2,7 +2,8 @@
 #include <rapidcheck.h>
 #include <rapidcheck/catch.h>
 
-#include <vector.hh>
+#include <core/vector.hh>
+
 #include <memory>
 
 using namespace flp;

@@ -80,6 +80,7 @@ set(HEADERS
   header/core/traits/volatile.hh
   header/core/type-pack.hh
   header/core/variant.hh
+  header/core/vector.hh
   header/core/verify.hh
 )
 set(SOURCES

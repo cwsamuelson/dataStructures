@@ -5,7 +5,6 @@ project(${BASE_PROJECT}_utilities LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/array.hh
   header/base64.hh
   header/complex.hh
   header/environment.hh

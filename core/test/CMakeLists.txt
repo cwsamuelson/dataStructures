@@ -28,6 +28,7 @@ common_test(${PROJECT_NAME}
   traits.cc
   type-pack.cc
   variant.cc
+  vector.cc
 )
 
 target_link_libraries(${PROJECT_NAME}
