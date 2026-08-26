@@ -42,12 +42,12 @@ struct CatmullRom {
     Default = Open,
   };
 
-  CatmullRom(Container&& container/*, value_type alpha*/, Ending closing = Ending::Default)
+  CatmullRom(Container&& container/*, value_type alpha*/, const Ending closing = Ending::Default)
     : points(std::move(container)) {
     const value_type alpha = (value_type)1 / (value_type)2;
 
-    // VERIFY(points.size() < 4, "Catmull-Rom spline requires at least 4 points ({} given)", points.size());
-    // VERIFY(alpha >= 0 and alpha <= 1, "Catmull-Rom parameterization alpha must be [0, 1]");
+    VERIFY(points.size() >= 4, "Catmull-Rom spline requires at least 4 points ({} given)", points.size());
+    VERIFY(alpha >= 0 and alpha <= 1, "Catmull-Rom parameterization alpha must be [0, 1]");
 
     // { A, B, C, D, ..., Y, Z
 
@@ -101,12 +101,50 @@ struct CatmullRom {
     const auto i = std::distance(parameters.begin(), iterator - 1);
 
     // now do lots of math
+    const value_type denom21 = 1 / (parameters[i + 1] - parameters[i]);
+    const value_type s0s = parameters[i - 1] - parameter;
+    const value_type s1s = parameters[i] - parameter;
+    const value_type s2s = parameters[i + 1] - parameter;
+    const size_t ip2 = parameters.size() == i + 2 ? 0 : i + 2;
+    const value_type s3s = parameters[ip2] - parameter;
 
-    return {};
+    Point A1_or_A3;
+    value_type denom = 1 / (parameters[i] - parameters[i - 1]);
+    for (size_t j{}; j < points.at(i).size(); ++j) {
+      A1_or_A3[j] = denom * (s1s * points[i - 1][j] - s0s * points[i][j]);
+    }
+
+    Point A2_or_B2;
+    for (size_t j{}; j < points.at(i).size(); ++j) {
+      A2_or_B2[j] = denom21 * (s2s * points[i][j] - s1s * points[i + 1][j]);
+    }
+
+    Point B1_or_C;
+    denom = 1 / (parameters[i + 1] - parameters[i - 1]);
+    for (size_t j{}; j < points.at(i).size(); ++j) {
+      B1_or_C[j] = denom * (s2s * A1_or_A3[j] - s0s * A2_or_B2[j]);
+    }
+
+    denom = 1 / (parameters[ip2] - parameters[i + 1]);
+    for (size_t j{}; j < points.at(i).size(); ++j) {
+      A1_or_A3[j] = denom * (s3s * points[i + 1][j] - s2s * points[ip2][j]);
+    }
+
+    Point B2;
+    denom = 1 / (parameters[ip2] - parameters[i]);
+    for (size_t j{}; j < points.at(i).size(); ++j) {
+      B2[j] = denom * (s3s * A2_or_B2[j] - s1s * A1_or_A3[j]);
+    }
+
+    for (size_t j{}; j < points.at(i).size(); ++j) {
+      B1_or_C[j] = denom21 * (s2s * B1_or_C[j] - s1s * B2[j]);
+    }
+
+    return B1_or_C;
   }
 
   value_type parameter(const size_t index) const {
-    return parameters.at(index);
+    return parameters.at(index + 1);
   }
 
   value_type max_parameter() const {
@@ -118,7 +156,7 @@ private:
     // boost uses ADL for things like 'size', 'pow', etc; not necessary yet
     value_type dsq = 0;
 
-    for (size_t i{}; i < p1.size(); ++i) {
+    for (size_t i{}; i < p0.size(); ++i) {
       const auto dx = p0[i] - p1[i];
       dsq += dx * dx;
     }
@@ -129,7 +167,7 @@ private:
 
   Container points;
   std::vector<value_type> parameters;
-  value_type max_param;
+  value_type max_param{};
 };
 
 template<RandomAccessContainer Container>

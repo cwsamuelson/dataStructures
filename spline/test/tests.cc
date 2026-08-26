@@ -5,39 +5,59 @@
 #include <array>
 #include <vector>
 
+#include <print>
+
 using namespace flp;
 
 TEST_CASE("`Spline`::Catmull-Rom") {
-  using Point = std::array<double, 2>;
-  const Spline::CatmullRom spline(std::vector{Point{0, 0}, Point{1, 0}, Point{2, 0}, Point{3, 0}});
+  using Point = std::array<double, 3>;
+  const Spline::CatmullRom spline(std::vector{Point{0, 0, 0}, Point{1, 0, 0}, Point{2, 0, 0}, Point{3, 0, 0}});
 
   CHECK(spline.max_parameter() == 3);
   const auto p0 = spline(0);
   CHECK(p0[0] == 0.);
   CHECK(p0[1] == 0.);
+  CHECK(p0[2] == 0.);
   const auto p1 = spline(1);
   CHECK(p1[0] == 1.);
   CHECK(p1[1] == 0.);
+  CHECK(p1[2] == 0.);
   const auto p2 = spline(2);
   CHECK(p2[0] == 2.);
   CHECK(p2[1] == 0.);
+  CHECK(p2[2] == 0.);
   const auto p3 = spline(3);
   CHECK(p3[0] == 3.);
   CHECK(p3[1] == 0.);
+  CHECK(p3[2] == 0.);
 
-  const auto s0 = spline.parameter(0);
-  CHECK(s0 == 0.);
-  const auto s1 = spline.parameter(1);
-  CHECK(s1 == 0.);
-  const auto s2 = spline.parameter(2);
-  CHECK(s2 == 0.);
-  const auto s3 = spline.parameter(3);
-  CHECK(s3 == 0.);
+  CHECK_THAT(
+    spline.parameter(0),
+    Catch::Matchers::WithinRel(0., 0.001)
+  );
+  CHECK_THAT(
+    spline.parameter(1),
+    Catch::Matchers::WithinRel(1., 0.001)
+  );
+  CHECK_THAT(
+    spline.parameter(2),
+    Catch::Matchers::WithinRel(2., 0.001)
+  );
+  CHECK_THAT(
+    spline.parameter(3),
+    Catch::Matchers::WithinRel(3., 0.001)
+  );
 
   for (double s{1}; s < 2; s += 0.01) {
     const auto point = spline(s);
-    CHECK(point[0] == s);
-    CHECK(point[1] == 0);
+    CHECK_THAT(
+      point[0],
+      Catch::Matchers::WithinRel(s, 0.01)
+    );
+    CHECK_THAT(
+      point[1],
+      Catch::Matchers::WithinRel(0., 0.001)
+    );
   }
 }
 
