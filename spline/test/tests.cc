@@ -11,7 +11,7 @@ using namespace flp;
 
 TEST_CASE("`Spline`::Catmull-Rom") {
   using Point = std::array<double, 3>;
-  const Spline::CatmullRom spline(std::vector{Point{0, 0, 0}, Point{1, 0, 0}, Point{2, 0, 0}, Point{3, 0, 0}});
+  const Spline::CatmullRom spline(std::vector{Point{0, 0, 0}, Point{1, 0, 0}, Point{2, 0, 0}, Point{3, 0, 0}}, 0.5);
 
   CHECK(spline.max_parameter() == 3);
   const auto p0 = spline(0);

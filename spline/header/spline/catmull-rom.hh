@@ -42,10 +42,8 @@ struct CatmullRom {
     Default = Open,
   };
 
-  CatmullRom(Container&& container/*, value_type alpha*/, const Ending closing = Ending::Default)
+  CatmullRom(Container&& container, value_type alpha, const Ending closing = Ending::Default)
     : points(std::move(container)) {
-    const value_type alpha = (value_type)1 / (value_type)2;
-
     VERIFY(points.size() >= 4, "Catmull-Rom spline requires at least 4 points ({} given)", points.size());
     VERIFY(alpha >= 0 and alpha <= 1, "Catmull-Rom parameterization alpha must be [0, 1]");
 
@@ -191,7 +189,34 @@ private:
   value_type max_param{};
 };
 
-template<RandomAccessContainer Container>
-CatmullRom(Container&&) -> CatmullRom<typename Container::value_type, Container>;
+template<RandomAccessContainer Container, typename ...Args>
+CatmullRom(Container&&, Args&& ...) -> CatmullRom<typename Container::value_type, Container>;
+
+template<typename Point, RandomAccessContainer Container = std::vector<Point>>
+struct UniformCatmullRom : CatmullRom<Point, Container> {
+  using Base = CatmullRom<Point, Container>;
+
+  UniformCatmullRom(Container&& container, const Base::Ending closing = Base::Ending::Default)
+    : Base(std::forward<Container>(container), 0, closing)
+  {}
+};
+
+template<typename Point, RandomAccessContainer Container = std::vector<Point>>
+struct CentripetalCatmullRom : CatmullRom<Point, Container> {
+  using Base = CatmullRom<Point, Container>;
+
+  CentripetalCatmullRom(Container&& container, const Base::Ending closing = Base::Ending::Default)
+    : Base(std::forward<Container>(container), 0.5, closing)
+  {}
+};
+
+template<typename Point, RandomAccessContainer Container = std::vector<Point>>
+struct ChordalCatmullRom : CatmullRom<Point, Container> {
+  using Base = CatmullRom<Point, Container>;
+
+  ChordalCatmullRom(Container&& container, const Base::Ending closing = Base::Ending::Default)
+    : Base(std::forward<Container>(container), 1, closing)
+  {}
+};
 
 } // namespace flp
