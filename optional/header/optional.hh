@@ -89,6 +89,7 @@ public:
       buffer.destruct();
       initialized = false;
     }
+    return *this;
   }
 
   [[nodiscard]]
@@ -180,7 +181,128 @@ public:
 
 private:
   AlignedTypeBuffer<Type> buffer;
-  bool                initialized = false;
+  bool initialized = false;
+};
+
+template<typename Type>
+class Optional<Type&> {
+public:
+           Optional() noexcept = default;
+  explicit Optional(const Optional& other)
+    requires std::copy_constructible<Type>
+  {
+    reference = other.reference;
+  }
+  Optional(Optional&& other)
+    requires std::move_constructible<Type>
+  {
+    reference = other.reference;
+    other.reference = nullptr;
+  }
+  Optional(const NullOptional_t)
+    : Optional()
+  {}
+  Optional(const Type& value) {
+    reference = &value;
+  }
+  // Optional(Type&& value) {
+  // }
+
+  // conditional noexcepts..
+  Optional& operator=(const Optional& other) {
+    reference = other.reference;
+    return *this;
+  }
+  Optional& operator=(Optional&& other) noexcept {
+    reference = other.reference;
+    other.reference = nullptr;
+    return *this;
+  }
+  Optional& operator=(const NullOptional_t) {
+    reference = nullptr;
+    return *this;
+  }
+
+  [[nodiscard]]
+  bool has_value() const noexcept {
+    return initialized();
+  }
+
+  [[nodiscard]]
+  explicit
+  operator bool() const noexcept {
+    return has_value();
+  }
+
+  [[nodiscard]]
+  decltype(auto) value(this auto&& self) {
+    VERIFY(self.has_value(), "No value in optional");
+    return self.reference;
+  }
+
+  template<typename T = Type>
+    requires std::same_as<std::decay_t<T>, std::decay_t<Type>>
+  T value_or(this auto&& self, T&& alternative) {
+    if (self.initialized()) {
+      return self.value();
+    } else {
+      return std::forward<T>(alternative);
+    }
+  }
+
+  /*template<typename T, T Type::*member>
+      requires std::is_class_v<Type>
+  Optional<T> and_then() {
+      if (has_value()) {
+          return value().*member;
+      } else {
+          return {};
+      }
+  }*/
+
+  template<typename Functor>
+    requires flp::IsSpecializationOf<
+      std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>,
+      Optional>
+  std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>
+  and_then(Functor&& functor) {
+    if (has_value()) {
+      return std::forward<Functor>(functor)(value());
+    } else {
+      return {};
+    }
+  }
+
+  template<std::invocable Functor>
+  Optional or_else(Functor&& functor) {
+    if (not has_value()) {
+      return std::forward<Functor>(functor)();
+    } else {
+      return value();
+    }
+  }
+
+  template<typename Functor>
+  Optional<std::invoke_result_t<std::decay_t<Functor>, std::add_lvalue_reference_t<std::decay_t<Type>>>>
+  transform(Functor&& functor) {
+    if (has_value()) {
+      return std::forward<Functor>(functor)(value());
+    } else {
+      return {};
+    }
+  }
+
+  void reset() {
+    reference = nullptr;
+  }
+
+private:
+  [[nodiscard]]
+  bool initialized() const {
+    return reference != nullptr;
+  }
+
+  Type* reference{nullptr};
 };
 
 } // namespace flp
