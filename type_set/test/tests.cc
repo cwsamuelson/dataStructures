@@ -4,7 +4,7 @@
 
 using namespace flp;
 
-TEST_CASE("Duplicate Type in TypeSet") {
+TEST_CASE("`TypeSet` Duplicate Type") {
   STATIC_CHECK(TypeSet<float>::Insert<float>{} == TypeSet<float> {});
   STATIC_CHECK(TypeSet<float, float>::Erase<float>{} != TypeSet<float> {});
   STATIC_CHECK(TypeSet<float, float>::Erase<float>{} == TypeSet<> {});
