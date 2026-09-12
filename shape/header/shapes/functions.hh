@@ -78,17 +78,25 @@ constexpr fvec4 abs(const fvec4 v) noexcept {
   return { abs(v.x()), abs(v.y()), abs(v.z()), abs(v.w()) };
 }
 
-//!@TODO implement `dot`
-constexpr float dot(const fvec2, const fvec2) noexcept {
-  return 0.F;
+constexpr float dot(const fvec2 lhs, const fvec2 rhs) noexcept {
+  return
+    (lhs.x() * rhs.x())
+  + (lhs.y() * rhs.y());
 }
 
-constexpr float dot(const fvec3, const fvec3) noexcept {
-  return 0.F;
+constexpr float dot(const fvec3 lhs, const fvec3 rhs) noexcept {
+  return
+    (lhs.x() * rhs.x())
+  + (lhs.y() * rhs.y())
+  + (lhs.z() * rhs.z());
 }
 
-constexpr float dot(const fvec4, const fvec4) noexcept {
-  return 0.F;
+constexpr float dot(const fvec4 lhs, const fvec4 rhs) noexcept {
+  return
+    (lhs.x() * rhs.x())
+  + (lhs.y() * rhs.y())
+  + (lhs.z() * rhs.z())
+  + (lhs.w() * rhs.w());
 }
 
 constexpr float dot2(const fvec2 v) noexcept {
