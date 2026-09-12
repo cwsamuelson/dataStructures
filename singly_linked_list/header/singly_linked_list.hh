@@ -9,7 +9,6 @@ namespace flp {
 //! @TODO allocator awareness
 //! @TODO context allocator awareness
 //! @TODO fancy pointers
-//! @TODO iterators
 
 template<typename Type>
 struct SinglyLinkedList {

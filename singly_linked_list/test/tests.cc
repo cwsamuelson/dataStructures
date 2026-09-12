@@ -152,5 +152,37 @@ SCENARIO("`SinglyLinkedList`::Empty characteristics") {
   }
 }
 
-SCENARIO("`SinglyLinkedList`::") {
+SCENARIO("`SinglyLinkedList`::Iterable") {
+  GIVEN("A populated list") {
+    SinglyLinkedList<int> list;
+
+    list.push_back(0);
+    list.push_back(1);
+    list.push_back(2);
+    list.push_back(3);
+
+    WHEN("The list is iterated") {
+      auto iterate = [&list] {
+        for (size_t counter{}; const auto& element : list) {
+          CHECK(element == counter++);
+        }
+      };
+
+      THEN("The list values are visible") {
+        iterate();
+      }
+    }
+
+    WHEN("The list is modified during iteration") {
+      for (auto& element : list) {
+        ++element;
+      }
+
+      THEN("The modified values are reflected in the list") {
+        for (size_t counter{1}; const auto& element : list) {
+          CHECK(element == counter++);
+        }
+      }
+    }
+  }
 }
