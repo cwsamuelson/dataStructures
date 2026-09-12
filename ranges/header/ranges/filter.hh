@@ -21,7 +21,8 @@ struct FilterView {
     Iterator(Iter iter, FilterView* vw) noexcept
       : iterator(iter)
       , view(vw) {
-      while (iterator != std::end(view->container) and not view->predicate(*++iterator)) {}
+      while (iterator != std::end(view->container) and not view->predicate(*++iterator))
+      {}
     }
 
     constexpr
