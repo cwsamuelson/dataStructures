@@ -13,7 +13,7 @@ add_subdirectory(algorithms)
 #add_subdirectory(allocator)
 add_subdirectory(args)
 #add_subdirectory(b+-tree)
-#add_subdirectory(b-tree)
+add_subdirectory(b-tree)
 add_subdirectory(box)
 add_subdirectory(canvas)
 add_subdirectory(chunked_array)
@@ -25,7 +25,6 @@ add_subdirectory(context)
 #add_subdirectory(coordinates)
 add_subdirectory(core)
 add_subdirectory(delegate)
-add_subdirectory(linked_list)
 #add_subdirectory(ecs)
 add_subdirectory(equation)
 #add_subdirectory(expr_template)
@@ -43,6 +42,7 @@ add_subdirectory(inout-ptr)
 add_subdirectory(inplace_vector)
 #add_subdirectory(json)
 #add_subdirectory(lifetime)
+add_subdirectory(linked_list)
 add_subdirectory(matrix)
 add_subdirectory(mathematics)
 #add_subdirectory(memory_pool)
@@ -126,7 +126,6 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
   ${PROJECT_NAME}_delegate
-  ${PROJECT_NAME}_linked_list
   #${PROJECT_NAME}_ecs
   ${PROJECT_NAME}_equation
   #${PROJECT_NAME}_expr_template
@@ -144,6 +143,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_inplace_vector
   #${PROJECT_NAME}_json
   #${PROJECT_NAME}_lifetime
+  ${PROJECT_NAME}_linked_list
   ${PROJECT_NAME}_matrix
   ${PROJECT_NAME}_mathematics
   #${PROJECT_NAME}_memory_pool

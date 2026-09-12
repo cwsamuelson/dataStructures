@@ -4,7 +4,7 @@
     git
 
     cmake
-    gcc
+    gcc16
     gdb
     ninja
 

@@ -40,7 +40,7 @@ class galactic_structures(ConanFile):
     # it appears that the test_package is picking up this dependency
     # is this always happening? how to stop that..
     test_requires = [
-        'boost/[^1.90.0]',
+        'boost/[^1.91.0]',
         'rapidcheck/cci.20231215',
         'bitflags/1.5.0',
         'lyra/1.7.0',
@@ -48,7 +48,7 @@ class galactic_structures(ConanFile):
     ]
 
     tool_requires = [
-        'cmake_scripts/[^1.2.0]',
+        'cmake_scripts/[^1.6.1]',
     ]
 
     options = {

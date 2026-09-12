@@ -22,7 +22,7 @@ fi
 build_types=("Debug" "Release" "Fuzz" "Python")
 #! @TODO MSVC
 compilers=("gcc" "clang")
-gcc_versions=("15" "14" "13")
+gcc_versions=("16" "15" "14" "13")
 clang_versions=("21" "20" "19" "18")
 
 default_build=${build_types[0]}
@@ -63,7 +63,6 @@ version=${comm_result:-$default_version}
 if [ ! -z "$comm_result" ]; then
   shift 1
 fi
-
 
 # Build profile path to build with
 profile_path="${ROOT}/profiles/${build_type^}-${compiler}-${version}"

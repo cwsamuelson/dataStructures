@@ -5,7 +5,7 @@ project(${BASE_PROJECT}_BTree LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
-  header/template.hh
+  header/b-tree.hh
 )
 set(SOURCES
 )
@@ -13,6 +13,8 @@ set(SOURCES
 common_library(${PROJECT_NAME}
   ${HEADERS}
   ${SOURCES}
+
+  CXX_STANDARD 26
 )
 
 target_sources(${PROJECT_NAME}

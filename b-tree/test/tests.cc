@@ -5,5 +5,7 @@
 using namespace flp;
 
 TEST_CASE("`BTree`") {
-}
+  BTree<int, int, 5> btree;
 
+  CHECK(btree.empty());
+}
