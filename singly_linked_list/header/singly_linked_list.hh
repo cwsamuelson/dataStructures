@@ -12,8 +12,18 @@ namespace flp {
 //! @TODO iterators
 
 template<typename Type>
-class SinglyLinkedList {
+struct SinglyLinkedList {
+private:
+  // if a custom allocator is used (in the future)
+  // this node layout is not very efficient
+  struct Node {
+    // smart pointers or raw pointers?
+    Node* next = nullptr;
+    Type  value;
+  };
+
 public:
+
   SinglyLinkedList() = default;
 
   SinglyLinkedList(const SinglyLinkedList& other) {
@@ -98,15 +108,39 @@ public:
     root = nullptr;
   }
 
-private:
-  // if a custom allocator is used (in the future)
-  // this node layout is not very efficient
-  struct Node {
-    // smart pointers or raw pointers?
-    Node* next = nullptr;
-    Type  value;
+  struct Iterator {
+    Node* cursor{nullptr};
+
+    Type& operator*() {
+      return cursor->value;
+    }
+
+    Type* operator->() {
+      return &cursor->value;
+    }
+
+    Iterator& operator++() {
+      if (cursor != nullptr) {
+        cursor = cursor->next;
+      }
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      auto copy = *this;
+      return ++copy;
+    }
   };
 
+  Iterator begin() {
+    return {root};
+  }
+
+  Iterator end() {
+    return {};
+  }
+
+private:
   Node* root = nullptr;
 };
 
