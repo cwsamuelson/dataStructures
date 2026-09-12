@@ -22,25 +22,23 @@ private:
     Type  value;
   };
 
-public:
+  Node* root{nullptr};
 
+public:
   SinglyLinkedList() = default;
 
   SinglyLinkedList(const SinglyLinkedList& other) {
-    for (Node* node = root; node != nullptr; node = node->next) {
-      push_back(node->value);
-    }
+    *this = other;
   }
 
   SinglyLinkedList(SinglyLinkedList&& other) noexcept
-    : root(other.root) {
-    other.root = nullptr;
-  }
+    : root(std::exchange(other.root, nullptr))
+  {}
 
   [[nodiscard]]
   SinglyLinkedList& operator=(const SinglyLinkedList& other) {
-    for (Node* node = other.root; node != nullptr; node = node->next) {
-      push_back(node->value);
+    for (const auto& element : other) {
+      push_back(element);
     }
 
     return *this;
@@ -48,9 +46,7 @@ public:
 
   [[nodiscard]]
   SinglyLinkedList& operator=(SinglyLinkedList&& other) noexcept {
-    root = other.root;
-    other.root = nullptr;
-
+    root = std::exchange(other.root, nullptr);
     return *this;
   }
 
@@ -108,6 +104,7 @@ public:
     root = nullptr;
   }
 
+  // forward iterator
   struct Iterator {
     Node* cursor{nullptr};
 
@@ -130,18 +127,21 @@ public:
       auto copy = *this;
       return ++copy;
     }
+
+    [[nodiscard]]
+    friend
+    bool operator==(const Iterator& lhs, const Iterator& rhs) {
+      return lhs.cursor == rhs.cursor;
+    }
   };
 
-  Iterator begin() {
-    return {root};
+  Iterator begin(this auto&& self) {
+    return {self.root};
   }
 
-  Iterator end() {
+  Iterator end(this auto&& self) {
     return {};
   }
-
-private:
-  Node* root = nullptr;
 };
 
 } // namespace flp
