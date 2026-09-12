@@ -12,7 +12,18 @@ namespace flp {
 //! @TODO iterators
 
 template<typename Type>
-class DoublyLinkedList {
+struct DoublyLinkedList {
+private:
+  struct Node {
+    Node* next{nullptr};
+    Node* prev{nullptr};
+
+    Type  value;
+  };
+
+  Node* head{nullptr};
+  Node* tail{nullptr};
+
 public:
   DoublyLinkedList() = default;
 
@@ -113,16 +124,47 @@ public:
     tail = nullptr;
   }
 
-private:
-  struct Node {
-    Node* next = nullptr;
-    Node* prev = nullptr;
+  struct Iterator {
+    Node* cursor{nullptr};
 
-    Type  value;
+    Type& operator*() {
+      return cursor->value;
+    }
+
+    Type* operator->() {
+      return &cursor->value;
+    }
+
+    Iterator& operator++() {
+      cursor = cursor->next;
+      return *this;
+    }
+
+    Iterator operator++(int) {
+      auto copy = *this;
+      ++copy;
+      return copy;
+    }
+
+    Iterator& operator--() {
+      cursor = cursor->prev;
+      return *this;
+    }
+
+    Iterator operator--(int) {
+      auto copy = *this;
+      --copy;
+      return copy;
+    }
   };
 
-  Node* head = nullptr;
-  Node* tail = nullptr;
+  Iterator begin(this auto&& self) {
+    return {self.head};
+  }
+
+  Iterator end(this auto&& self) {
+    return {};
+  }
 };
 
 } // namespace flp
