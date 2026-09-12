@@ -37,7 +37,7 @@ public:
   [[nodiscard]]
   SinglyLinkedList& operator=(const SinglyLinkedList& other) {
     for (const auto& element : other) {
-      push_back(element);
+      push_front(element);
     }
 
     return *this;
@@ -60,7 +60,7 @@ public:
 
   [[nodiscard]]
   size_t size() const noexcept {
-    size_t result {};
+    size_t result{};
 
     for (Node* node = root; node != nullptr; node = node->next) {
       ++result;
@@ -69,7 +69,7 @@ public:
     return result;
   }
 
-  void push_back(this auto&& self, Type value) {
+  void push_front(this auto&& self, Type value) {
     Node* node = new Node {
       .next  = self.root,
       .value = std::move(value),
@@ -79,7 +79,7 @@ public:
   }
 
   // UB: empty container
-  void pop_back() noexcept {
+  void pop_front() noexcept {
     Node* node = root->next;
 
     delete root;
@@ -87,7 +87,7 @@ public:
   }
 
   // UB: empty container
-  Type& back() noexcept {
+  Type& front() noexcept {
     return root->value;
   }
 

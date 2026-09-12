@@ -25,7 +25,7 @@ add_subdirectory(context)
 #add_subdirectory(coordinates)
 add_subdirectory(core)
 add_subdirectory(delegate)
-add_subdirectory(doubly_linked_list)
+add_subdirectory(linked_list)
 #add_subdirectory(ecs)
 add_subdirectory(equation)
 #add_subdirectory(expr_template)
@@ -78,7 +78,6 @@ add_subdirectory(semver)
 add_subdirectory(set-theory)
 add_subdirectory(shape)
 add_subdirectory(shared_ptr)
-add_subdirectory(singly_linked_list)
 add_subdirectory(smart_enum)
 if (NOT WIN32)
   add_subdirectory(socket)
@@ -127,7 +126,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
   ${PROJECT_NAME}_delegate
-  ${PROJECT_NAME}_doubly_linked_list
+  ${PROJECT_NAME}_linked_list
   #${PROJECT_NAME}_ecs
   ${PROJECT_NAME}_equation
   #${PROJECT_NAME}_expr_template
@@ -180,7 +179,6 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_set-theory
   ${PROJECT_NAME}_shape
   ${PROJECT_NAME}_shared_ptr
-  ${PROJECT_NAME}_singly_linked_list
   ${PROJECT_NAME}_smart_enum
   ${PROJECT_NAME}_socket
   ${PROJECT_NAME}_sparse_map

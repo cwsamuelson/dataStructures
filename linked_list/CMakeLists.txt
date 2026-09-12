@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.21)
 set(BASE_PROJECT ${PROJECT_NAME})
-project(${BASE_PROJECT}_singly_linked_list LANGUAGES CXX)
+project(${BASE_PROJECT}_linked_list LANGUAGES CXX)
 
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/doubly_linked_list.hh
   header/singly_linked_list.hh
 )
 set(SOURCES
