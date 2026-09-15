@@ -107,3 +107,70 @@ TEST_CASE("`TaggedArgs`::`Idea`") {
 
   CHECK(s == t);
 }
+
+TEST_CASE("`TaggedArgs`::Template-based") {
+  struct Function {
+    template<typename Type>
+    struct ArgBase {
+      Type value;
+
+      template<typename NType = Type>
+      ArgBase(NType&& val)
+        : value(std::forward<NType>(val))
+      {}
+
+      template<typename ...Args>
+      ArgBase(Args&& ...args)
+        : value(std::forward<Args>(args)...)
+      {}
+
+      template<typename OType>
+        requires (not std::same_as<OType, Type>)
+      operator OType() const {
+        return value;
+      }
+
+      operator Type() && {
+        return std::move(value);
+      }
+    };
+
+    struct Arg1 : ArgBase<int> {
+      using ArgBase<int>::ArgBase;
+    };
+    struct Arg2 : ArgBase<int> {
+      using ArgBase<int>::ArgBase;
+    };
+
+    struct ArgConfig {
+      int arg1{12};
+      int arg2{12};
+    };
+
+    void set(ArgConfig& config, Arg1 value) {
+      config.arg1 = std::move(value);
+    }
+
+    void set(ArgConfig& config, Arg2 value) {
+      config.arg2 = std::move(value);
+    }
+
+    template<typename ...Args>
+    void operator()(Args&& ...args) {
+      ArgConfig config;
+
+      (set(config, args), ...);
+
+      return run(config);
+    }
+
+    void run(const ArgConfig& config) {
+      // do the work
+      std::println("do work!! {}", config.arg1);
+    }
+  };
+
+  Function function;
+  function(Function::Arg1{42});
+  function(42);
+}
