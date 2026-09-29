@@ -17,6 +17,7 @@ add_subdirectory(args)
 add_subdirectory(box)
 add_subdirectory(canvas)
 add_subdirectory(chunked_array)
+add_subdirectory(color-theory)
 add_subdirectory(colors)
 # add_subdirectory(computation_engine)
 add_subdirectory(configuration)
@@ -118,6 +119,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_box
   ${PROJECT_NAME}_canvas
   ${PROJECT_NAME}_chunked_array
+  ${PROJECT_NAME}_color-theory
   ${PROJECT_NAME}_colors
   # ${PROJECT_NAME}_computation_engine
   ${PROJECT_NAME}_configuration
