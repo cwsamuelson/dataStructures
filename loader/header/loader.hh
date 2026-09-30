@@ -6,50 +6,51 @@
 #include <functional>
 #include <map>
 #include <optional>
+#include <set>
 
 namespace flp {
 
 template<typename Type>
 struct Loader {
-  using Key = std::filesystem::path;
-  // struct Key {
-  //   std::filesystem::path path;
-
-  //   friend
-  //   auto operator<=>(const Key&, const Key&) noexcept = default;
-  // };
-
   using Resource = std::optional<Type>;
-  // struct Resource {
-  //   std::optional<Type> data;
-  // };
+  using ResourceKey = std::filesystem::path;
+  using AssetPath = std::filesystem::path; // actual path
+  using LoadFunc = std::function<Type(const AssetPath&)>;
 
-  using Storage = std::map<Key, Resource>;
+  struct Metadata {
+    Resource resource;
+    ResourceKey rkey;
+    AssetPath path;
+
+    friend
+    auto operator<=>(const Metadata&, const Metadata&) noexcept = default;
+  };
+
+  using Storage = std::set<Metadata>;
   using Iterator = typename Storage::iterator;
+
   struct Handle {
     Loader* loader{nullptr};
     Iterator iterator;
 
     const Type& operator*() const {
-      auto& opt = iterator->second;
-      if (not opt.has_value()) {
+      auto& res = iterator->resource;
+      if (not res.has_value()) {
         loader->load(iterator);
       }
 
-      return opt.value();
+      return res.value();
     }
 
     Type& operator*() {
-      auto& opt = iterator->second;
-      if (not opt.has_value()) {
+      auto& res = iterator->resource;
+      if (not res.has_value()) {
         load(iterator);
       }
 
-      return opt.value();
+      return res.value();
     }
   };
-
-  using LoadFunc = std::function<Type(const Key&)>;
 
   template<typename Function = Type(*)(const std::filesystem::path&)>
   Loader(Function&& function)
@@ -66,9 +67,9 @@ struct Loader {
     VERIFY(is_directory(root_directory), "Requested loader root path({}) isn't a directory.", root_directory.string());
   }
 
-  Handle load(std::filesystem::path path) {
-    if (storage.contains(path)) {
-      return {this, storage.find(path)};
+  Handle load(AssetPath path) {
+    if (file_keys.contains(path)) {
+      return {this, *file_keys.find(path)};
     }
 
     if (path.is_relative()) {
@@ -78,13 +79,22 @@ struct Loader {
     VERIFY(exists(path), "Requested file({}) doesn't exist.", path.string());
     VERIFY(is_regular_file(path), "Requested path({}) isn't a regular file", path.string());
 
-    const auto [iterator, success] = storage.emplace(Key{std::move(path)}, Resource{});
+    const ResourceKey rkey = relative(path, root_directory);
+    const auto [iterator, success] = storage.emplace({
+        .resource = std::nullopt,
+        .rkey = rkey,
+        .path = path,
+      }
+    );
+    file_keys.insert(path);
+    asset_keys.insert(rkey);
+
     // VERIFY(success, ""); // ?
     return {this, iterator};
   }
 
-  Handle get(const std::filesystem::path& path) {
-    return {this, storage.find(path)};
+  Handle get(const AssetPath& path) {
+    return {this, *file_keys.find(path)};
   }
 
 private:
@@ -94,6 +104,9 @@ private:
 
   std::filesystem::path root_directory;
   LoadFunc load_function;
+
+  std::map<ResourceKey, Iterator> asset_keys;
+  std::map<AssetPath, Iterator> file_keys;
   Storage storage;
 };
 
