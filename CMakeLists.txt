@@ -43,6 +43,7 @@ add_subdirectory(inplace_vector)
 #add_subdirectory(json)
 #add_subdirectory(lifetime)
 add_subdirectory(linked_list)
+add_subdirectory(loader)
 add_subdirectory(matrix)
 add_subdirectory(mathematics)
 #add_subdirectory(memory_pool)
@@ -144,6 +145,7 @@ target_link_libraries(${PROJECT_NAME}
   #${PROJECT_NAME}_json
   #${PROJECT_NAME}_lifetime
   ${PROJECT_NAME}_linked_list
+  ${PROJECT_NAME}_loader
   ${PROJECT_NAME}_matrix
   ${PROJECT_NAME}_mathematics
   #${PROJECT_NAME}_memory_pool
