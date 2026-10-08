@@ -1,29 +1,27 @@
 #pragma once
 
-#include <cstdint>
+#include <color_theory/color.hh>
 
-namespace flp::Colors {
+namespace flp::ColorTheory {
 
-template<typename Type = uint8_t>
-struct RGBA {
-  union {
-    struct {
-      Type red;
-      Type green;
-      Type blue;
-      Type alpha;
-    };
+MakeComponent(Alpha, alpha, a, w);
 
-    struct {
-      Type r;
-      Type g;
-      Type b;
-      Type a;
-    };
+template<typename Type>
+using RGBA = RGBX<Type, RedComponent, GreenComponent, BlueComponent, AlphaComponent>;
 
-    uint32_t value;
-    Type bytes[4];
-  };
-};
+// RGBA32 and RGBA8 are the same
+// The names come from different perspectives
+// 32 referring to the bits of the entire color value
+// 8 referring to the bits of each component
+// These are, notably, also identical to RGBA8888 and R8G8B8A8
 
-} // namespace flp::Colors
+template<typename Type, template<typename...> typename ...Components>
+using RGBAX = RGBX<Type, AlphaComponent, Components...>;
+
+using RGBA32 = RGBAX<uint8_t>;
+using RGBA8 = RGBA32;
+using RGBA8888 = RGBA32;
+using R8G8B8A8 = RGBA32;
+using RGBA32F = RGBAX<float>;
+
+} // namespace flp::ColorTheory

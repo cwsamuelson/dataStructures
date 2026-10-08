@@ -3,8 +3,8 @@
 #include <color_theory/convert.hh>
 
 #include <color_theory/cmyk.hh>
-#include <color_theory/hsl/hsl.hh>
-#include <color_theory/hsv/hsv.hh>
+#include <color_theory/hsl.hh>
+#include <color_theory/hsv.hh>
 #include <color_theory/lab.hh>
 #include <color_theory/linear_rgb.hh>
 #include <color_theory/srgb.hh>

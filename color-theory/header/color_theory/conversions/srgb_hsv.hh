@@ -2,8 +2,8 @@
 
 #include <color_theory/conversions/hsx_common.hh>
 #include <color_theory/convert.hh>
-#include <color_theory/hsv/hsv.hh>
-#include <color_theory/srgb/srgb.hh>
+#include <color_theory/hsv.hh>
+#include <color_theory/srgb.hh>
 
 namespace flp::ColorTheory {
 

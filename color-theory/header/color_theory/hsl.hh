@@ -1,27 +1,10 @@
 #pragma once
 
-#include <cstdint>
+#include <color_theory/color.hh>
 
-namespace flp::Colors {
+namespace flp::ColorTheory {
 
-template<typename Type = uint8_t>
-struct HSL {
-  union {
-    struct {
-      Type hue;
-      Type saturation;
-      Type luminance;
-    };
+template<typename Type>
+using HSL = Color<Type, HueComponent, SaturationComponent, LightnessComponent>;
 
-    struct {
-      Type h;
-      Type s;
-      Type l;
-    };
-
-    uint32_t value;
-    uint8_t bytes[3];
-  };
-};
-
-} // namespace flp::Colors
+} // namespace flp::ColorTheory

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <color_theory/convert.hh>
-#include <color_theory/lab/lab.hh>
-#include <color_theory/xyz/xyz.hh>
+#include <color_theory/lab.hh>
+#include <color_theory/xyz.hh>
 
 #include <cmath>
 
@@ -46,10 +46,10 @@ constexpr Type lab_inverse(Type t) noexcept {
 } // namespace detail
 
 template<std::floating_point Type>
-struct ConversionEdge<Lab<Type>> {
+struct ConversionEdge<LAB<Type>> {
   using Parent = XYZ<Type>;
 
-  static constexpr Parent to_parent(Lab<Type> value) noexcept {
+  static constexpr Parent to_parent(LAB<Type> value) noexcept {
     const Type fy = (Type(value.l) + Type(16)) / Type(116);
     const Type fx = fy + Type(value.a) / Type(500);
     const Type fz = fy - Type(value.b) / Type(200);
@@ -61,12 +61,12 @@ struct ConversionEdge<Lab<Type>> {
     };
   }
 
-  static constexpr Lab<Type> from_parent(Parent value) noexcept {
+  static constexpr LAB<Type> from_parent(Parent value) noexcept {
     const Type fx = detail::lab_forward(Type(value.x) / detail::xyz_d65_xn<Type>);
     const Type fy = detail::lab_forward(Type(value.y) / detail::xyz_d65_yn<Type>);
     const Type fz = detail::lab_forward(Type(value.z) / detail::xyz_d65_zn<Type>);
 
-    using L = Lab<Type>;
+    using L = LAB<Type>;
     return L{
       typename L::Lightness(Type(116) * fy - Type(16)),
       typename L::A(Type(500) * (fx - fy)),

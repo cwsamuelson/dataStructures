@@ -2,8 +2,8 @@
 
 #include <color_theory/conversions/hsx_common.hh>
 #include <color_theory/convert.hh>
-#include <color_theory/hsl/hsl.hh>
-#include <color_theory/srgb/srgb.hh>
+#include <color_theory/hsl.hh>
+#include <color_theory/srgb.hh>
 
 #include <cmath>
 

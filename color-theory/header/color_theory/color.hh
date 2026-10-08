@@ -1,69 +1,13 @@
 #pragma once
 
+#include "color_theory/component.hh"
+
 #include <bit>
 #include <compare>
 #include <cstdint>
 #include <limits>
 
-namespace flp {
-
-#define X0(macro, ...)
-#define X1(macro, A, ...) macro(A) X0(macro, __VA_ARGS__)
-#define X2(macro, A, ...) macro(A) X1(macro, __VA_ARGS__)
-#define X3(macro, A, ...) macro(A) X2(macro, __VA_ARGS__)
-#define X4(macro, A, ...) macro(A) X3(macro, __VA_ARGS__)
-#define X5(macro, A, ...) macro(A) X4(macro, __VA_ARGS__)
-#define X6(macro, A, ...) macro(A) X5(macro, __VA_ARGS__)
-#define X7(macro, A, ...) macro(A) X6(macro, __VA_ARGS__)
-#define X8(macro, A, ...) macro(A) X7(macro, __VA_ARGS__)
-#define X9(macro, A, ...) macro(A) X8(macro, __VA_ARGS__)
-
-#define GET_MACRO(A, B, C, D, E, F, G, H, I, J, ...) J
-
-#define FOR_EACH(macro, ...) \
-  GET_MACRO(__VA_ARGS__, X9, X8, X7, X6, X5, X4, X3, x2, X1, X0)(macro, __VA_ARGS__)
-
-template<typename Type>
-struct Component {
-  constexpr
-  Component() = default;
-
-  constexpr
-  Component(const Type val)
-    : value(val)
-  {}
-
-  Type value{};
-};
-
-#define MakeComponentName(N) \
-  auto& N() noexcept { \
-    return Base::value; \
-  } \
-   \
-  auto& N() const noexcept { \
-    return Base::value; \
-  }
-
-#define MakeComponent(N, ...) \
-template<typename Type> \
-struct N ## Component : Component<Type> { \
-  using Base = Component<Type>; \
- \
-  FOR_EACH(MakeComponentName, __VA_ARGS__) \
-}; \
-static_assert(sizeof(N ## Component<float>) == sizeof(float)); \
-static_assert(sizeof(N ## Component<int>) == sizeof(int))
-
-MakeComponent(Red,   Red,   red,   R, r, x);
-MakeComponent(Green, Green, green, G, g, y);
-MakeComponent(Blue,  Blue,  blue,  B, b, z);
-MakeComponent(Alpha, Alpha, alpha, A, a, w);
-MakeComponent(Hue, Hue, hue, H, h);
-MakeComponent(Saturation, Saturation, saturation, S, s);
-MakeComponent(Value, Value, value, V, v, Brightness, brightness, B, b);
-MakeComponent(Lightness, Lightness, lightness, L, l);
-MakeComponent(Intensity, Intensity, intensity, I, i);
+namespace flp::ColorTheory {
 
 template<typename Type, template<typename...> typename ...Components>
 struct Color : Components<Type>... {
@@ -75,6 +19,7 @@ struct Color : Components<Type>... {
   constexpr
   Color(const FTypes& ...values)
     requires (sizeof...(FTypes) == sizeof...(Components))
+    // that's...not right..
     : Components<Type>(static_cast<Type>(values * std::numeric_limits<Type>::max()))...
   {}
 
@@ -82,16 +27,8 @@ struct Color : Components<Type>... {
   template<std::integral ...ITypes>
   constexpr
   Color(const ITypes& ...values)
-    requires ((sizeof...(ITypes) == sizeof...(Components)) and ((not std::same_as<ITypes, Type>) and ...))
+    requires (sizeof...(ITypes) == sizeof...(Components))
     : Components<Type>(static_cast<Type>(values))...
-  {}
-
-  // accept values to match to each component
-  template<std::same_as<Type> ...Types>
-    requires (sizeof...(Types) == sizeof...(Components))
-  constexpr
-  Color(const Types& ...values)
-    : Components<Type>(values)...
   {}
 
   template<typename OType>
@@ -101,6 +38,19 @@ struct Color : Components<Type>... {
     *this = std::bit_cast<Color>(packed);
   }
 
+  template<template<typename...> typename ...OComponents>
+    requires (sizeof...(OComponents) == sizeof...(Components))
+  constexpr
+  Color(const OComponents<Type>& ...components) {
+    auto try_assign = [this] (const auto& ocomp) {
+      using Other = std::remove_cvref_t<decltype(ocomp)>;
+
+      static_cast<Other&>(*this).value_ = static_cast<const Other&>(ocomp).value_;
+    };
+
+    (try_assign(components), ...);
+  }
+
   // color format interchange
   template<template<typename...> typename ...OComponents>
   constexpr
@@ -108,7 +58,7 @@ struct Color : Components<Type>... {
     auto try_assign = [this] (auto& ocomp) {
       using Other = std::remove_cvref_t<decltype(ocomp)>;
 
-      static_cast<Other&>(*this).value = static_cast<const Other&>(ocomp).value;
+      static_cast<Other&>(*this).value_ = static_cast<const Other&>(ocomp).value_;
     };
 
     (try_assign(static_cast<const Components<Type>&>(other)), ...);
@@ -127,6 +77,14 @@ struct Color : Components<Type>... {
   void value(const Packed& packed) noexcept {
     *this = std::bit_cast<Color>(packed);
   }
+
+  friend
+  constexpr
+  bool operator==(const Color&, const Color&) noexcept = default;
+
+  friend
+  constexpr
+  auto operator<=>(const Color&, const Color&) noexcept = default;
 };
 
 template<typename Type, template<typename...> typename ...Components>
@@ -146,28 +104,5 @@ using BGX = BX<Type, GreenComponent, Components...>;
 
 template<typename Type, template<typename...> typename ...Components>
 using RGBX = Color<Type, RedComponent, GreenComponent, BlueComponent, Components...>;
-
-template<typename Type, template<typename...> typename ...Components>
-using RGBAX = RGBX<Type, AlphaComponent, Components...>;
-
-using RGBA32 = RGBAX<uint8_t>;
-using RGBA8 = RGBA32;
-using RGBA8888 = RGBA32;
-using R8G8B8A8 = RGBA32;
-using RGBA32F = RGBAX<float>;
-
-using RGB8 = RGBX<uint8_t>;
-using RGB888 = RGB8;
-using R8G8B8 = RGB8;
-using RGB32F = RGBX<float>;
-
-template<typename Type>
-using HSL = Color<Type, HueComponent, SaturationComponent, ValueComponent>;
-
-template<typename Type>
-using HSV = Color<Type, HueComponent, SaturationComponent, LightnessComponent>;
-
-template<typename Type>
-using HSI = Color<Type, HueComponent, SaturationComponent, IntensityComponent>;
 
 }

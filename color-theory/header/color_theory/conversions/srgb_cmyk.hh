@@ -1,8 +1,8 @@
 #pragma once
 
-#include <color_theory/cmyk/cmyk.hh>
+#include <color_theory/cmyk.hh>
 #include <color_theory/convert.hh>
-#include <color_theory/srgb/srgb.hh>
+#include <color_theory/srgb.hh>
 
 #include <algorithm>
 

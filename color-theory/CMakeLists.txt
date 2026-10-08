@@ -6,8 +6,9 @@ find_package(error_support REQUIRED)
 
 set(HEADERS
   header/color_theory/cmyk.hh
-  header/color_theory/colors.hh
+  header/color_theory/color.hh
   header/color_theory/color_theory.hh
+  header/color_theory/component.hh
   header/color_theory/convert.hh
   header/color_theory/formatted.hh
   header/color_theory/hsl.hh

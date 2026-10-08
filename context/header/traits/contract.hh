@@ -1,5 +1,11 @@
 #pragma once
 
+#include <cstdint>
+#include <functional>
+#include <memory>
+#include <string_view>
+#include <utility>
+
 namespace flp::trait {
 
 // 'contract group'?

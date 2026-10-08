@@ -1,9 +1,6 @@
 #pragma once
 
-#include <core/tagged_type.hh>
-
-#include <compare>
-#include <concepts>
+#include "color_theory/color.hh"
 
 namespace flp::ColorTheory {
 
@@ -13,38 +10,11 @@ namespace flp::ColorTheory {
 // This is effectively the 'canonical' color space, and is typically used to define other color spaces.
 // Therefore it is the 'hub' or central space ultimately leveraged to convert color spaces between each other.
 
-struct XyzXTag {};
-struct XyzYTag {};
-struct XyzZTag {};
+MakeComponent(X, x);
+MakeComponent(Y, y);
+MakeComponent(Z, z);
 
-template<std::floating_point Type = float>
-struct XYZ {
-  using value_type = Type;
-
-  using X = TaggedType<Type, XyzXTag>;
-  using Y = TaggedType<Type, XyzYTag>;
-  using Z = TaggedType<Type, XyzZTag>;
-
-  constexpr XYZ() noexcept = default;
-  constexpr XYZ(X x, Y y, Z z) noexcept
-    : x(x)
-    , y(y)
-    , z(z)
-  {}
-
-  constexpr XYZ(const XYZ&) noexcept = default;
-  constexpr XYZ(XYZ&&) noexcept      = default;
-
-  constexpr XYZ& operator=(const XYZ&) noexcept = default;
-  constexpr XYZ& operator=(XYZ&&) noexcept      = default;
-
-  constexpr ~XYZ() noexcept = default;
-
-  constexpr friend auto operator<=>(const XYZ&, const XYZ&) noexcept = default;
-
-  X x{};
-  Y y{};
-  Z z{};
-};
+template<typename Type>
+using XYZ = Color<Type, XComponent, YComponent, ZComponent>;
 
 } // namespace flp::ColorTheory

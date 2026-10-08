@@ -5,19 +5,20 @@
 using namespace flp::ColorTheory;
 
 TEST_CASE("Color Theory: Lab construction and comparison") {
-  const Lab<float> value{
-    Lab<float>::Lightness(50.f),
-    Lab<float>::A(10.f),
-    Lab<float>::B(-10.f),
+  const LAB<float> value {
+    LAB<float>::Lightness(50.f),
+    LAB<float>::A(10.f),
+    LAB<float>::B(-10.f),
   };
 
-  CHECK(value.l == Lab<float>::Lightness(50.f));
-  CHECK(value.a == Lab<float>::A(10.f));
-  CHECK(value.b == Lab<float>::B(-10.f));
-  CHECK(value != Lab<float>{});
+   CHECK(value.l() == 50.f);
+   CHECK(value.a() == 10.f);
+   CHECK(value.b() == -10.f);
+   CHECK(value != LAB<float>{});
 }
 
 TEST_CASE("Color Theory: Lab channels are distinct types") {
-  STATIC_CHECK(not std::same_as<Lab<float>::Lightness, Lab<float>::A>);
-  STATIC_CHECK(not std::same_as<Lab<float>::A, Lab<float>::B>);
+  STATIC_CHECK(not std::same_as<LAB<float>::Lightness, LAB<float>::A>);
+  STATIC_CHECK(not std::same_as<LAB<float>::A, LAB<float>::B>);
+  STATIC_CHECK(not std::same_as<LAB<float>::Lightness, LAB<float>::B>);
 }

@@ -1,25 +1,12 @@
 #pragma once
 
-namespace flp::Colors {
+#include <color_theory/color.hh>
 
-template<typename Type = uint8_t>
-struct HSV {
-  union {
-    struct {
-      Type hue;
-      Type saturation;
-      Type value;
-    };
+namespace flp::ColorTheory {
 
-    struct {
-      Type h;
-      Type s;
-      Type v;
-    };
+MakeComponent(Value, value, v, brightness, b);
 
-    //uint32_t value;
-    Type bytes[3];
-  };
-};
+template<typename Type>
+using HSV = Color<Type, HueComponent, SaturationComponent, ValueComponent>;
 
-} // namespace flp::Colors
+} // namespace flp::ColorTheory

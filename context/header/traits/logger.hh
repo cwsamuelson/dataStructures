@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+#include <source_location>
+
 namespace flp::trait {
 
 // type erasure is probably not great for logger performance

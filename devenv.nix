@@ -1,5 +1,9 @@
 { pkgs, lib, config, inputs, ... }:
 {
+  env = {
+    CONAN_HOME = "${config.devenv.root}/.conan";
+  };
+
   packages = with pkgs; [
     git
 

@@ -1,58 +1,69 @@
-#include <colors/rgb.hh>
-#include <colors/rgba.hh>
-#include <colors/hsl.hh>
-#include <colors/hsv.hh>
+#include <color_theory/rgb.hh>
+#include <color_theory/rgba.hh>
+#include <color_theory/hsl.hh>
+#include <color_theory/hsv.hh>
 
 #include <catch2/catch_all.hpp>
 
 using namespace flp;
 
 TEST_CASE("RGB") {
-  Colors::RGB rgb;
-  rgb.red;
-  rgb.green;
-  rgb.blue;
-  rgb.r;
-  rgb.g;
-  rgb.b;
-  rgb.value;
-  rgb.bytes[0];
+  ColorTheory::RGB8 rgb(10, 21, 32);
+  CHECK(rgb.red() == 10);
+  CHECK(rgb.green() == 21);
+  CHECK(rgb.blue() == 32);
+
+  CHECK(rgb.r() == 10);
+  CHECK(rgb.g() == 21);
+  CHECK(rgb.b() == 32);
+
+  // CHECK(rgb.value() == 0x0A1520);
+  // CHECK(rgb.bytes[0] == 10);
+  // CHECK(rgb.bytes[1] == 21);
+  // CHECK(rgb.bytes[2] == 32);
+
+  CHECK(&rgb.red() == &rgb.r());
+  CHECK(&rgb.green() == &rgb.g());
+  CHECK(&rgb.blue() == &rgb.b());
 }
 
 TEST_CASE("RGBA") {
-  Colors::RGBA rgba;
-  rgba.red;
-  rgba.green;
-  rgba.blue;
-  rgba.alpha;
-  rgba.r;
-  rgba.g;
-  rgba.b;
-  rgba.a;
-  rgba.value;
-  rgba.bytes[0];
+  ColorTheory::RGBA8 rgba(10, 21, 32, 255);
+  CHECK(rgba.red() == 10);
+  CHECK(rgba.green() == 21);
+  CHECK(rgba.blue() == 32);
+  CHECK(rgba.alpha() == 255);
+  CHECK(rgba.r() == 10);
+  CHECK(rgba.g() == 21);
+  CHECK(rgba.b() == 32);
+  CHECK(rgba.a() == 255);
+  // CHECK(rgba.value() == 0x0A1520FF);
+  // CHECK(rgba.bytes()[0] == 10);
+  // CHECK(rgba.bytes()[1] == 21);
+  // CHECK(rgba.bytes()[2] == 32);
+  // CHECK(rgba.bytes()[3] == 255);
 }
 
 TEST_CASE("HSL") {
-  Colors::HSL hsl;
-  hsl.hue;
-  hsl.saturation;
-  hsl.luminance;
-  hsl.h;
-  hsl.s;
-  hsl.l;
-  hsl.value;
-  hsl.bytes[0];
+  ColorTheory::HSL<int> hsl(10, 21, 32);
+  CHECK(hsl.hue() == 10);
+  CHECK(hsl.saturation() == 21);
+  CHECK(hsl.lightness() == 32);
+  CHECK(hsl.h() == 10);
+  CHECK(hsl.s() == 21);
+  CHECK(hsl.l() == 32);
+  // hsl.value;
+  // hsl.bytes[0];
 }
 
 TEST_CASE("HSV") {
-  Colors::HSV hsv;
-  hsv.hue;
-  hsv.saturation;
-  hsv.value;
-  hsv.h;
-  hsv.s;
-  hsv.v;
-  hsv.value; // redundant
-  hsv.bytes[0];
+  ColorTheory::HSV<int> hsv(10, 21, 32);
+  CHECK(hsv.hue() == 10);
+  CHECK(hsv.saturation() == 21);
+  // CHECK(hsv.value() == 32);
+  CHECK(hsv.h() == 10);
+  CHECK(hsv.s() == 21);
+  CHECK(hsv.v() == 32);
+  // CHECK(hsv.value; // redundant
+  // CHECK(hsv.bytes[0];
 }

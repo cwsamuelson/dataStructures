@@ -69,7 +69,7 @@ struct Loader {
 
   Handle load(AssetPath path) {
     if (file_keys.contains(path)) {
-      return {this, *file_keys.find(path)};
+      return {this, file_keys.find(path)->second};
     }
 
     if (path.is_relative()) {
@@ -80,21 +80,21 @@ struct Loader {
     VERIFY(is_regular_file(path), "Requested path({}) isn't a regular file", path.string());
 
     const ResourceKey rkey = relative(path, root_directory);
-    const auto [iterator, success] = storage.emplace({
+    const auto [iterator, success] = storage.emplace(Metadata {
         .resource = std::nullopt,
         .rkey = rkey,
         .path = path,
       }
     );
-    file_keys.insert(path);
-    asset_keys.insert(rkey);
+    file_keys.emplace(path, iterator);
+    asset_keys.emplace(rkey, iterator);
 
     // VERIFY(success, ""); // ?
     return {this, iterator};
   }
 
   Handle get(const AssetPath& path) {
-    return {this, *file_keys.find(path)};
+    return {this, file_keys.find(path)->second};
   }
 
 private:

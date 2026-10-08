@@ -1,29 +1,15 @@
 #pragma once
 
-namespace flp::Colors {
+#include "color_theory/color.hh"
 
-template<typename Type = float>
-struct Monochrome {
-  union {
-    Type red;
-    Type green;
-    Type blue;
-    Type alpha;
+namespace flp::ColorTheory {
 
-    Type r;
-    Type g;
-    Type b;
-    Type a;
+MakeComponent(Gray, gray, grey, g, value, shade);
 
-    Type t;
-    Type u;
-    Type v;
-    Type w;
+template<typename ...Args>
+using Grey = Gray<Args...>;
 
-    Type shade;
-    Type value;
-    uint8_t bytes[4];
-  };
-};
+template<typename Type>
+using Monochrome = Color<Type, GrayComponent>;
 
 }

@@ -5,19 +5,23 @@
 using namespace flp::ColorTheory;
 
 TEST_CASE("Color Theory: HSL construction and comparison") {
-  const HSL<float> value{
+  const HSL<float> value {
     HSL<float>::Hue(240.f),
     HSL<float>::Saturation(0.4f),
     HSL<float>::Lightness(0.6f),
   };
 
-  CHECK(value.hue        == HSL<float>::Hue(240.f));
-  CHECK(value.saturation == HSL<float>::Saturation(0.4f));
-  CHECK(value.lightness  == HSL<float>::Lightness(0.6f));
+  CHECK(value.hue()        == 240.f);
+  CHECK(value.saturation() == 0.4f);
+  CHECK(value.lightness()  == 0.6f);
   CHECK(value != HSL<float>{});
+
+  CHECK(value == HSL<float>::Hue(240.f));
+  CHECK(static_cast<HSL<float>::Hue>(value) == 240.f);
 }
 
 TEST_CASE("Color Theory: HSL channels are distinct types") {
   STATIC_CHECK(not std::same_as<HSL<float>::Hue, HSL<float>::Saturation>);
   STATIC_CHECK(not std::same_as<HSL<float>::Saturation, HSL<float>::Lightness>);
+  STATIC_CHECK(not std::same_as<HSL<float>::Lightness, HSL<float>::Hue>);
 }

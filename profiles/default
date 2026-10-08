@@ -13,4 +13,6 @@ compiler.libcxx=libstdc++11
 
 [conf]
 tools.cmake.cmaketoolchain:generator=Ninja
+# tools.build:exelinkflags=["-Wl,--disable-new-dtags"]
+# tools.build:sharedlinkflags=["-Wl,--disable-new-dtags"]
 

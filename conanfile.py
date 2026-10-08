@@ -191,10 +191,10 @@ class galactic_structures(ConanFile):
         # libs
         #self.requires('error_support/[^1.0.0]', transitive_headers=True, transitive_libs=True)
         # applications?
-        self.requires('error_support/[^1.0.0]')
+        self.requires('error_support/[^1.2.0]')
 
         if self.unit_test:
-            self.test_requires('catch2/[^3.7.0]')
+            self.test_requires('catch2/[^3.16.0]')
 
     # running the tests doesn't affect build results
     # if the build produces an invalid package that package would always have

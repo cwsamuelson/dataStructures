@@ -1,8 +1,8 @@
 #pragma once
 
 #include <color_theory/convert.hh>
-#include <color_theory/linear_rgb/linear_rgb.hh>
-#include <color_theory/srgb/srgb.hh>
+#include <color_theory/linear_rgb.hh>
+#include <color_theory/srgb.hh>
 
 #include <cmath>
 

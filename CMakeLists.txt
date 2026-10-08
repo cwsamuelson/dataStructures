@@ -10,10 +10,10 @@ include_directories(header)
 add_subdirectory(abstract)
 add_subdirectory(affine)
 add_subdirectory(algorithms)
-#add_subdirectory(allocator)
+# add_subdirectory(allocator)
 add_subdirectory(args)
-#add_subdirectory(b+-tree)
-add_subdirectory(b-tree)
+# add_subdirectory(b+-tree)
+# add_subdirectory(b-tree)
 add_subdirectory(box)
 add_subdirectory(canvas)
 add_subdirectory(chunked_array)
@@ -21,41 +21,41 @@ add_subdirectory(color-theory)
 # add_subdirectory(computation_engine)
 add_subdirectory(configuration)
 add_subdirectory(context)
-#add_subdirectory(coordinates)
+# add_subdirectory(coordinates)
 add_subdirectory(core)
 add_subdirectory(delegate)
-#add_subdirectory(ecs)
+# add_subdirectory(ecs)
 add_subdirectory(equation)
-#add_subdirectory(expr_template)
+# add_subdirectory(expr_template)
 add_subdirectory(filesystem)
-#add_subdirectory(flat-map)
+# add_subdirectory(flat-map)
 add_subdirectory(function)
 add_subdirectory(future)
 add_subdirectory(gap-buffer)
 add_subdirectory(geometry)
-#add_subdirectory(hash-map)
-#add_subdirectory(hazard_pointer)
+# add_subdirectory(hash-map)
+# add_subdirectory(hazard_pointer)
 add_subdirectory(hive)
 add_subdirectory(immutable)
 add_subdirectory(inout-ptr)
 add_subdirectory(inplace_vector)
-#add_subdirectory(json)
-#add_subdirectory(lifetime)
+# add_subdirectory(json)
+# add_subdirectory(lifetime)
 add_subdirectory(linked_list)
 add_subdirectory(loader)
 add_subdirectory(matrix)
 add_subdirectory(mathematics)
-#add_subdirectory(memory_pool)
+# add_subdirectory(memory_pool)
 add_subdirectory(menu)
 add_subdirectory(mp)
 add_subdirectory(message-bus)
-#add_subdirectory(normal_iterator)
+# add_subdirectory(normal_iterator)
 add_subdirectory(oct-tree)
-#add_subdirectory(operators)
+# add_subdirectory(operators)
 add_subdirectory(optional)
 add_subdirectory(pkg)
 add_subdirectory(plugin-manager)
-#add_subdirectory(polymorphic_value)
+# add_subdirectory(polymorphic_value)
 add_subdirectory(polynomial)
 add_subdirectory(process_manager)
 add_subdirectory(producer_consumer)
@@ -65,15 +65,15 @@ add_subdirectory(ranged_numbers)
 add_subdirectory(ranges)
 add_subdirectory(ratio)
 add_subdirectory(rc_ptr)
-#add_subdirectory(ref_count)
-#add_subdirectory(regex)
+# add_subdirectory(ref_count)
+# add_subdirectory(regex)
 add_subdirectory(resource_pack)
 add_subdirectory(ring_buffer)
 add_subdirectory(ring_view)
-#add_subdirectory(rope)
+# add_subdirectory(rope)
 add_subdirectory(scheduler)
 add_subdirectory(sdf)
-#add_subdirectory(segment-tree)
+# add_subdirectory(segment-tree)
 add_subdirectory(semver)
 add_subdirectory(set-theory)
 add_subdirectory(shape)
@@ -85,14 +85,14 @@ endif ()
 add_subdirectory(sparse_map)
 add_subdirectory(sparse_set)
 add_subdirectory(spline)
-#add_subdirectory(std_hive)
-#add_subdirectory(sum_type)
+# add_subdirectory(std_hive)
+# add_subdirectory(sum_type)
 add_subdirectory(tagged_arguments)
 add_subdirectory(terminal)
 add_subdirectory(text)
 add_subdirectory(thread_pool)
 add_subdirectory(tribool)
-#add_subdirectory(trie)
+# add_subdirectory(trie)
 add_subdirectory(try_wrap)
 add_subdirectory(type_set)
 add_subdirectory(unique_ptr)
@@ -102,7 +102,7 @@ add_subdirectory(utilities)
 add_subdirectory(uuid)
 add_subdirectory(value_pack)
 add_subdirectory(value_set)
-#add_subdirectory(versioning)
+# add_subdirectory(versioning)
 
 common_library(${PROJECT_NAME} INTERFACE)
 
@@ -111,10 +111,10 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_abstract
   ${PROJECT_NAME}_affine
   ${PROJECT_NAME}_algorithms
-  #${PROJECT_NAME}_allocator
+  # ${PROJECT_NAME}_allocator
   ${PROJECT_NAME}_args
-  #${PROJECT_NAME}_b+-tree
-  #${PROJECT_NAME}_b-tree
+  # ${PROJECT_NAME}_b+-tree
+  # ${PROJECT_NAME}_b-tree
   ${PROJECT_NAME}_box
   ${PROJECT_NAME}_canvas
   ${PROJECT_NAME}_chunked_array
@@ -122,41 +122,41 @@ target_link_libraries(${PROJECT_NAME}
   # ${PROJECT_NAME}_computation_engine
   ${PROJECT_NAME}_configuration
   ${PROJECT_NAME}_context
-  #${PROJECT_NAME}_coordinates
+  # ${PROJECT_NAME}_coordinates
   ${PROJECT_NAME}_core
   ${PROJECT_NAME}_delegate
-  #${PROJECT_NAME}_ecs
+  # ${PROJECT_NAME}_ecs
   ${PROJECT_NAME}_equation
-  #${PROJECT_NAME}_expr_template
+  # ${PROJECT_NAME}_expr_template
   ${PROJECT_NAME}_filesystem
-  #${PROJECT_NAME}_flat-map
+  # ${PROJECT_NAME}_flat-map
   ${PROJECT_NAME}_function
   ${PROJECT_NAME}_future
   ${PROJECT_NAME}_gap-buffer
   ${PROJECT_NAME}_geometry
-  #${PROJECT_NAME}_hash-map
-  #${PROJECT_NAME}_hazard_pointer
+  # ${PROJECT_NAME}_hash-map
+  # ${PROJECT_NAME}_hazard_pointer
   ${PROJECT_NAME}_hive
   ${PROJECT_NAME}_immutable
   ${PROJECT_NAME}_inout-ptr
   ${PROJECT_NAME}_inplace_vector
-  #${PROJECT_NAME}_json
-  #${PROJECT_NAME}_lifetime
+  # ${PROJECT_NAME}_json
+  # ${PROJECT_NAME}_lifetime
   ${PROJECT_NAME}_linked_list
   ${PROJECT_NAME}_loader
   ${PROJECT_NAME}_matrix
   ${PROJECT_NAME}_mathematics
-  #${PROJECT_NAME}_memory_pool
+  # ${PROJECT_NAME}_memory_pool
   ${PROJECT_NAME}_menu
   ${PROJECT_NAME}_mp
   ${PROJECT_NAME}_message-bus
-  #${PROJECT_NAME}_normal_iterator
+  # ${PROJECT_NAME}_normal_iterator
   ${PROJECT_NAME}_oct-tree
-  #${PROJECT_NAME}_operators
+  # ${PROJECT_NAME}_operators
   ${PROJECT_NAME}_optional
   ${PROJECT_NAME}_pkg
   ${PROJECT_NAME}_plugin-manager
-  #${PROJECT_NAME}_polymorphic_value
+  # ${PROJECT_NAME}_polymorphic_value
   ${PROJECT_NAME}_polynomial
   ${PROJECT_NAME}_process_manager
   ${PROJECT_NAME}_producer_consumer
@@ -166,15 +166,15 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_ranges
   ${PROJECT_NAME}_ratio
   ${PROJECT_NAME}_rc_ptr
-  #${PROJECT_NAME}_ref_count
-  #${PROJECT_NAME}_regex
+  # ${PROJECT_NAME}_ref_count
+  # ${PROJECT_NAME}_regex
   ${PROJECT_NAME}_resource_pack
   ${PROJECT_NAME}_ring_buffer
   ${PROJECT_NAME}_ring_view
-  #${PROJECT_NAME}_rope
+  # ${PROJECT_NAME}_rope
   ${PROJECT_NAME}_scheduler
   ${PROJECT_NAME}_sdf
-  #${PROJECT_NAME}_segment-tree
+  # ${PROJECT_NAME}_segment-tree
   ${PROJECT_NAME}_semver
   ${PROJECT_NAME}_set-theory
   ${PROJECT_NAME}_shape
@@ -184,14 +184,14 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_sparse_map
   ${PROJECT_NAME}_sparse_set
   ${PROJECT_NAME}_spline
-  #${PROJECT_NAME}_std_hive
-  #${PROJECT_NAME}_sum_type
+  # ${PROJECT_NAME}_std_hive
+  # ${PROJECT_NAME}_sum_type
   ${PROJECT_NAME}_tagged_arguments
   ${PROJECT_NAME}_terminal
   ${PROJECT_NAME}_text
   ${PROJECT_NAME}_thread_pool
   ${PROJECT_NAME}_tribool
-  #${PROJECT_NAME}_trie
+  # ${PROJECT_NAME}_trie
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_set
   ${PROJECT_NAME}_unique_ptr
@@ -201,7 +201,7 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_uuid
   ${PROJECT_NAME}_value_pack
   ${PROJECT_NAME}_value_set
-  #${PROJECT_NAME}_versioning
+  # ${PROJECT_NAME}_versioning
 )
 
 enable_testing()
