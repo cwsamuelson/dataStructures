@@ -1,5 +1,5 @@
-#include <color_theory/hsl/hsl.hh>
-#include <color_theory/hsv/hsv.hh>
+#include <color_theory/hsl.hh>
+#include <color_theory/hsv.hh>
 
 #include <catch2/catch_all.hpp>
 

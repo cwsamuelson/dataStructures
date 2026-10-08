@@ -2,13 +2,13 @@
 
 #include <color_theory/convert.hh>
 
-#include <color_theory/cmyk/cmyk.hh>
+#include <color_theory/cmyk.hh>
 #include <color_theory/hsl/hsl.hh>
 #include <color_theory/hsv/hsv.hh>
-#include <color_theory/lab/lab.hh>
-#include <color_theory/linear_rgb/linear_rgb.hh>
-#include <color_theory/srgb/srgb.hh>
-#include <color_theory/xyz/xyz.hh>
+#include <color_theory/lab.hh>
+#include <color_theory/linear_rgb.hh>
+#include <color_theory/srgb.hh>
+#include <color_theory/xyz.hh>
 
 #include <color_theory/conversions/linear_rgb_xyz.hh>
 #include <color_theory/conversions/srgb_cmyk.hh>

@@ -1,4 +1,4 @@
-#include <color_theory/cmyk/cmyk.hh>
+#include <color_theory/cmyk.hh>
 
 #include <catch2/catch_all.hpp>
 

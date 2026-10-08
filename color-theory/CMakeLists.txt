@@ -5,15 +5,20 @@ project(${BASE_PROJECT}_color-theory LANGUAGES CXX)
 find_package(error_support REQUIRED)
 
 set(HEADERS
+  header/color_theory/cmyk.hh
+  header/color_theory/colors.hh
   header/color_theory/color_theory.hh
   header/color_theory/convert.hh
-  header/color_theory/cmyk/cmyk.hh
-  header/color_theory/hsl/hsl.hh
-  header/color_theory/hsv/hsv.hh
-  header/color_theory/lab/lab.hh
-  header/color_theory/linear_rgb/linear_rgb.hh
-  header/color_theory/srgb/srgb.hh
-  header/color_theory/xyz/xyz.hh
+  header/color_theory/formatted.hh
+  header/color_theory/hsl.hh
+  header/color_theory/hsv.hh
+  header/color_theory/lab.hh
+  header/color_theory/linear_rgb.hh
+  header/color_theory/monochrome.hh
+  header/color_theory/rgb.hh
+  header/color_theory/rgba.hh
+  header/color_theory/srgb.hh
+  header/color_theory/xyz.hh
   header/color_theory/conversions/hsx_common.hh
   header/color_theory/conversions/linear_rgb_xyz.hh
   header/color_theory/conversions/srgb_cmyk.hh

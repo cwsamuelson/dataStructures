@@ -22,7 +22,7 @@ struct Monochrome {
 
     Type shade;
     Type value;
-    Type bytes[4];
+    uint8_t bytes[4];
   };
 };
 

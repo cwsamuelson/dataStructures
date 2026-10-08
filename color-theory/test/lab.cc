@@ -1,4 +1,4 @@
-#include <color_theory/lab/lab.hh>
+#include <color_theory/lab.hh>
 
 #include <catch2/catch_all.hpp>
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 namespace flp::Colors {
 
 template<typename Type = uint8_t>
@@ -18,7 +20,7 @@ struct HSL {
     };
 
     uint32_t value;
-    Type bytes[3];
+    uint8_t bytes[3];
   };
 };
 

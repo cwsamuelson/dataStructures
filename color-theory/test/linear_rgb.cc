@@ -1,5 +1,5 @@
-#include <color_theory/linear_rgb/linear_rgb.hh>
-#include <color_theory/srgb/srgb.hh>
+#include <color_theory/linear_rgb.hh>
+#include <color_theory/srgb.hh>
 
 #include <catch2/catch_all.hpp>
 

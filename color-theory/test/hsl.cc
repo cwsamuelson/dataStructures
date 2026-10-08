@@ -1,4 +1,4 @@
-#include <color_theory/hsl/hsl.hh>
+#include <color_theory/hsl.hh>
 
 #include <catch2/catch_all.hpp>
 
