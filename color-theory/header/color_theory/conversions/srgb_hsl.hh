@@ -15,9 +15,9 @@ struct ConversionEdge<HSL<Type>> {
   using Parent = SRGB<Type>;
 
   static constexpr Parent to_parent(HSL<Type> value) noexcept {
-    const Type h = Type(value.hue);
-    const Type s = Type(value.saturation);
-    const Type l = Type(value.lightness);
+    const Type h = Type(value.hue());
+    const Type s = Type(value.saturation());
+    const Type l = Type(value.lightness());
 
     const Type chroma = (Type(1) - std::abs(Type(2) * l - Type(1))) * s;
     const auto rgb1    = detail::hue_chroma_to_rgb(h, chroma);
@@ -31,9 +31,9 @@ struct ConversionEdge<HSL<Type>> {
   }
 
   static constexpr HSL<Type> from_parent(Parent value) noexcept {
-    const Type r = Type(value.red);
-    const Type g = Type(value.green);
-    const Type b = Type(value.blue);
+    const Type r = Type(value.red());
+    const Type g = Type(value.green());
+    const Type b = Type(value.blue());
 
     const auto mmd = detail::rgb_max_min_delta(r, g, b);
     const Type hue = detail::rgb_hue(r, g, b, mmd);

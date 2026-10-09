@@ -17,7 +17,7 @@ TEST_CASE("RGB") {
   CHECK(rgb.g() == 21);
   CHECK(rgb.b() == 32);
 
-  // CHECK(rgb.value() == 0x0A1520);
+  // CHECK(rgb.bit_value<uint32_t>() == 0x0A1520);
   // CHECK(rgb.bytes[0] == 10);
   // CHECK(rgb.bytes[1] == 21);
   // CHECK(rgb.bytes[2] == 32);
@@ -37,7 +37,7 @@ TEST_CASE("RGBA") {
   CHECK(rgba.g() == 21);
   CHECK(rgba.b() == 32);
   CHECK(rgba.a() == 255);
-  // CHECK(rgba.value() == 0x0A1520FF);
+  // CHECK(rgba.bit_value<uint32_t>() == 0x0A1520FF);
   // CHECK(rgba.bytes()[0] == 10);
   // CHECK(rgba.bytes()[1] == 21);
   // CHECK(rgba.bytes()[2] == 32);
@@ -60,7 +60,7 @@ TEST_CASE("HSV") {
   ColorTheory::HSV<int> hsv(10, 21, 32);
   CHECK(hsv.hue() == 10);
   CHECK(hsv.saturation() == 21);
-  // CHECK(hsv.value() == 32);
+  // CHECK(hsv.bit_value<uint32_t>() == 32);
   CHECK(hsv.h() == 10);
   CHECK(hsv.s() == 21);
   CHECK(hsv.v() == 32);

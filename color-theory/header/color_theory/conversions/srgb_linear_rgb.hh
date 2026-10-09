@@ -39,17 +39,17 @@ struct ConversionEdge<SRGB<Type>> {
   static constexpr Parent to_parent(SRGB<Type> value) noexcept {
     using Linear = LinearRGB<Type>;
     return Linear{
-      typename Linear::Red  (detail::srgb_channel_to_linear(Type(value.red))),
-      typename Linear::Green(detail::srgb_channel_to_linear(Type(value.green))),
-      typename Linear::Blue (detail::srgb_channel_to_linear(Type(value.blue))),
+      typename Linear::LinearRed   (detail::srgb_channel_to_linear(Type(value.red()))),
+      typename Linear::LinearGreen (detail::srgb_channel_to_linear(Type(value.green()))),
+      typename Linear::LinearBlue  (detail::srgb_channel_to_linear(Type(value.blue()))),
     };
   }
 
   static constexpr SRGB<Type> from_parent(Parent value) noexcept {
     return SRGB<Type>{
-      typename SRGB<Type>::Red  (detail::linear_channel_to_srgb(Type(value.red))),
-      typename SRGB<Type>::Green(detail::linear_channel_to_srgb(Type(value.green))),
-      typename SRGB<Type>::Blue (detail::linear_channel_to_srgb(Type(value.blue))),
+      typename SRGB<Type>::Red   (detail::linear_channel_to_srgb(Type(value.red()))),
+      typename SRGB<Type>::Green (detail::linear_channel_to_srgb(Type(value.green()))),
+      typename SRGB<Type>::Blue  (detail::linear_channel_to_srgb(Type(value.blue()))),
     };
   }
 };

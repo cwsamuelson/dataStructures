@@ -14,13 +14,13 @@ struct ConversionEdge<CMYK<Type>> {
   using Parent = SRGB<Type>;
 
   static constexpr Parent to_parent(CMYK<Type> value) noexcept {
-    const Type c = Type(value.cyan);
-    const Type m = Type(value.magenta);
-    const Type y = Type(value.yellow);
-    const Type k = Type(value.key);
+    const Type c = Type(value.cyan());
+    const Type m = Type(value.magenta());
+    const Type y = Type(value.yellow());
+    const Type k = Type(value.key());
 
     const Type inv_k = Type(1) - k;
-    return Parent{
+    return Parent {
       typename Parent::Red  ((Type(1) - c) * inv_k),
       typename Parent::Green((Type(1) - m) * inv_k),
       typename Parent::Blue ((Type(1) - y) * inv_k),
@@ -28,9 +28,9 @@ struct ConversionEdge<CMYK<Type>> {
   }
 
   static constexpr CMYK<Type> from_parent(Parent value) noexcept {
-    const Type r = Type(value.red);
-    const Type g = Type(value.green);
-    const Type b = Type(value.blue);
+    const Type r = Type(value.red());
+    const Type g = Type(value.green());
+    const Type b = Type(value.blue());
 
     const Type k = Type(1) - std::max({r, g, b});
     const Type inv_k = Type(1) - k;

@@ -11,6 +11,8 @@ namespace flp::ColorTheory {
 
 template<typename Type, template<typename...> typename ...Components>
 struct Color : Components<Type>... {
+  using value_type = Type;
+
   constexpr
   Color() = default;
 
@@ -65,16 +67,16 @@ struct Color : Components<Type>... {
   }
 
   template<typename Packed>
-    requires (sizeof(Packed) == sizeof(Color))
+    requires (sizeof(Packed) == sizeof...(Components) * sizeof(Type))
   constexpr
-  Packed value() const noexcept {
+  Packed bit_value() const noexcept {
     return std::bit_cast<Packed>(*this);
   }
 
   template<typename Packed>
     requires (sizeof(Packed) == sizeof(Color))
   constexpr
-  void value(const Packed& packed) noexcept {
+  void bit_value(const Packed& packed) noexcept {
     *this = std::bit_cast<Color>(packed);
   }
 

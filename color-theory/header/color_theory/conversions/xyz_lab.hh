@@ -49,25 +49,25 @@ template<std::floating_point Type>
 struct ConversionEdge<LAB<Type>> {
   using Parent = XYZ<Type>;
 
-  static constexpr Parent to_parent(LAB<Type> value) noexcept {
-    const Type fy = (Type(value.l) + Type(16)) / Type(116);
-    const Type fx = fy + Type(value.a) / Type(500);
-    const Type fz = fy - Type(value.b) / Type(200);
+  static constexpr Parent to_parent(const LAB<Type> value) noexcept {
+    const Type fy = (Type(value.l()) + Type(16)) / Type(116);
+    const Type fx = fy + Type(value.a()) / Type(500);
+    const Type fz = fy - Type(value.b()) / Type(200);
 
-    return Parent{
+    return Parent {
       typename Parent::X(detail::xyz_d65_xn<Type> * detail::lab_inverse(fx)),
       typename Parent::Y(detail::xyz_d65_yn<Type> * detail::lab_inverse(fy)),
       typename Parent::Z(detail::xyz_d65_zn<Type> * detail::lab_inverse(fz)),
     };
   }
 
-  static constexpr LAB<Type> from_parent(Parent value) noexcept {
-    const Type fx = detail::lab_forward(Type(value.x) / detail::xyz_d65_xn<Type>);
-    const Type fy = detail::lab_forward(Type(value.y) / detail::xyz_d65_yn<Type>);
-    const Type fz = detail::lab_forward(Type(value.z) / detail::xyz_d65_zn<Type>);
+  static constexpr LAB<Type> from_parent(const Parent value) noexcept {
+    const Type fx = detail::lab_forward(Type(value.x()) / detail::xyz_d65_xn<Type>);
+    const Type fy = detail::lab_forward(Type(value.y()) / detail::xyz_d65_yn<Type>);
+    const Type fz = detail::lab_forward(Type(value.z()) / detail::xyz_d65_zn<Type>);
 
     using L = LAB<Type>;
-    return L{
+    return L {
       typename L::Lightness(Type(116) * fy - Type(16)),
       typename L::A(Type(500) * (fx - fy)),
       typename L::B(Type(200) * (fy - fz)),

@@ -1,14 +1,14 @@
 { pkgs, lib, config, inputs, ... }:
 {
-  env = {
-    CONAN_HOME = "${config.devenv.root}/.conan";
-  };
+  # env = {
+  #   CONAN_HOME = "${config.devenv.root}/.conan";
+  # };
 
   packages = with pkgs; [
     git
 
     cmake
-    gcc16
+    gcc
     gdb
     ninja
 
@@ -30,9 +30,6 @@
         '';
       };
     };
-
-    # this specifically adds clang; I'm currently focused on gcc
-    # cplusplus.enable = true;
   };
 
   scripts = {
