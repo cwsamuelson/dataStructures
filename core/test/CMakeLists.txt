@@ -26,6 +26,7 @@ common_test(${PROJECT_NAME}
   span.cc
   tagged_type.cc
   traits.cc
+  tribool.cc
   type-pack.cc
   variant.cc
   vector.cc
@@ -43,4 +44,3 @@ target_link_libraries(${PROJECT_NAME}
 enable_testing()
 include(Catch)
 catch_discover_tests(${PROJECT_NAME})
-

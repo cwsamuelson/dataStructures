@@ -24,6 +24,11 @@ struct TriBool {
   {}
 
   constexpr
+  TriBool(const State value)
+    : state(value)
+  {}
+
+  constexpr
   TriBool(const TriBool&) noexcept = default;
   constexpr
   TriBool(TriBool&&) noexcept = default;
@@ -33,6 +38,16 @@ struct TriBool {
   TriBool& operator=(TriBool&&) noexcept = default;
 
   ~TriBool() = default;
+
+  constexpr
+  void clear() {
+    state = Indeterminate;
+  }
+
+  constexpr
+  void reset() {
+    clear();
+  }
 
   [[nodiscard]]
   constexpr
@@ -48,6 +63,12 @@ struct TriBool {
 
   [[nodiscard]]
   constexpr
+  operator State() const noexcept {
+    return state;
+  }
+
+  [[nodiscard]]
+  constexpr
   bool operator==(const bool other) const noexcept {
     return (other and state == True) or (not other and state == False);
   }
@@ -56,7 +77,7 @@ struct TriBool {
   constexpr friend
   auto operator<=>(const TriBool&, const TriBool&) noexcept = default;
 
-  State state = X;
+  State state = Indeterminate;
 };
 
 } // namespace flp

@@ -78,6 +78,7 @@ set(HEADERS
   header/core/traits/reference.hh
   header/core/traits/value_types.hh
   header/core/traits/volatile.hh
+  header/core/tribool.hh
   header/core/type-pack.hh
   header/core/variant.hh
   header/core/vector.hh

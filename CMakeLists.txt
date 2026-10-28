@@ -91,7 +91,6 @@ add_subdirectory(tagged_arguments)
 add_subdirectory(terminal)
 add_subdirectory(text)
 add_subdirectory(thread_pool)
-add_subdirectory(tribool)
 # add_subdirectory(trie)
 add_subdirectory(try_wrap)
 add_subdirectory(type_set)
@@ -190,7 +189,6 @@ target_link_libraries(${PROJECT_NAME}
   ${PROJECT_NAME}_terminal
   ${PROJECT_NAME}_text
   ${PROJECT_NAME}_thread_pool
-  ${PROJECT_NAME}_tribool
   # ${PROJECT_NAME}_trie
   ${PROJECT_NAME}_try_wrap
   ${PROJECT_NAME}_type_set
