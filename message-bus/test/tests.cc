@@ -5,20 +5,21 @@
 #include <rapidcheck/gen/Predicate.h>
 
 using namespace flp;
+using namespace rc;
 
 TEST_CASE("`MessageBus`") {
-  rc::prop("No registered message", [](const std::string& ID) {
+  prop("No registered message", [](const std::string& ID) {
     MessageBus message_bus;
 
     RC_ASSERT_THROWS(message_bus.send_message(ID));
   });
 
-  rc::prop("Trying to send un-registered messages", [](const std::string& ID) {
+  prop("Trying to send un-registered messages", [](const std::string& ID) {
     MessageBus message_bus;
 
     message_bus.register_message(ID);
 
-    const auto other_ID = *rc::gen::distinctFrom(rc::gen::arbitrary<std::string>(), ID);
+    const auto other_ID = *gen::distinctFrom(gen::arbitrary<std::string>(), ID);
     RC_ASSERT_THROWS(message_bus.send_message(other_ID));
     RC_ASSERT_THROWS(message_bus.subscribe(other_ID, [](const auto&){}));
 
@@ -34,17 +35,19 @@ TEST_CASE("`MessageBus`") {
     RC_ASSERT(message_counter == 1);
   });
 
-  rc::prop("Bunch of registered messages", [](const std::vector<std::string>& message_ids) {
+  prop("Bunch of registered messages", []() {
+    const auto message_ids =
+      *gen::unique<std::vector<std::string>>(gen::arbitrary<std::string>());
     MessageBus message_bus;
 
     message_bus.register_messages(message_ids);
 
     size_t messageA_counter{};
-    message_bus.send_message(*rc::gen::elementOf(message_ids));
+    message_bus.send_message(*gen::elementOf(message_ids));
 
     RC_ASSERT(messageA_counter == 0);
 
-    const auto& single_id = *rc::gen::elementOf(message_ids);
+    const auto& single_id = *gen::elementOf(message_ids);
     message_bus.subscribe(single_id, [&messageA_counter](const std::string& m_id) {
       ++messageA_counter;
     });
