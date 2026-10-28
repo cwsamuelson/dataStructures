@@ -48,6 +48,7 @@ class galactic_structures(ConanFile):
 
     tool_requires = [
         'cmake_scripts/[^1.6.1]',
+        'cmake/[^4]',
     ]
 
     options = {
