@@ -30,7 +30,6 @@ class galactic_structures(ConanFile):
     version = '1.0.0'
     description = 'Useful data structures'
     homepage = 'https://gitlab.galacticempire.dev/chris/<please create>'
-    url = ''
     license = 'GPL-3.0-or-later'
     author = 'Chris Samuelson (chris.sam55@gmail.com)'
     topics = ('utility', 'testing', 'reference')
