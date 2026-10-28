@@ -1,18 +1,28 @@
-{% set build_type, compiler, compiler_version = profile_name.split('-') %}
+{% if profile_name.count('-') == 2 -%}
+  {% set build_type, compiler, version = profile_name.split('-') -%}
+  {% set libcxx = "libstdc++11" -%}
+{% else -%}
+  {% set build_type = "Debug" if "Debug" in profile_name else "Release" if "Release" in profile_name else "Release" -%}
+  {% set compiler, version, executable = detect_api.detect_default_compiler() -%}
+  {% set libcxx = detect_api.detect_libcxx(compiler, version) or "libstdc++11" -%}
+  {% set version = detect_api.default_compiler_version(compiler, version) or version -%}
+{% endif -%}
 
 [settings]
-os={{detect_api.detect_os()}}
-arch={{detect_api.detect_arch()}}
+os={{ detect_api.detect_os() }}
+arch={{ detect_api.detect_arch() }}
 
-build_type={{build_type}}
+build_type={{ build_type }}
 
-compiler={{compiler}}
-compiler.version={{compiler_version}}
-compiler.cppstd=26
-compiler.libcxx=libstdc++11
+compiler={{ compiler }}
+compiler.cppstd=gnu26
+compiler.libcxx={{ libcxx }}
+compiler.version={{ version }}
 
 [conf]
+# user.debug:build_type={{ build_type }}
+# user.debug:compiler={{ compiler }}
+# user.debug:version={{ version }}
 tools.cmake.cmaketoolchain:generator=Ninja
 # tools.build:exelinkflags=["-Wl,--disable-new-dtags"]
 # tools.build:sharedlinkflags=["-Wl,--disable-new-dtags"]
-
